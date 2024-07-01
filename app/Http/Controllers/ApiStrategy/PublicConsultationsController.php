@@ -47,13 +47,15 @@ class PublicConsultationsController extends ApiController
         $data = DB::select('
             select
                 pc.id,
+                pct.title as name,
                 pc.reg_num,
                 pc.consultation_level_id as "level",
                 pc.open_from as date_open,
                 pc.open_to as date_close,
                 pc.active,
-                pc.field_of_actions_id
+                pc.field_of_actions_id as policy_area
             from public_consultation pc
+            join public_consultation_translations pct on pct.public_consultation_id = pc.id and pct.locale = \''.$this->locale.'\'
             where true
                 '.(!$this->authanticated ? ' and pc.deleted_at is null ' : '').'
                 '.(isset($active) ? ' and pc.active = '.$active : '').'
@@ -75,6 +77,7 @@ class PublicConsultationsController extends ApiController
         $data = DB::select(
             'select
                         pc.id,
+                        pct.title as name,
                         pc.reg_num,
                         -- pc.consultation_level_id as consultation_level,
                         case when pc.consultation_level_id = '.InstitutionCategoryLevelEnum::CENTRAL->value.'
@@ -122,7 +125,7 @@ class PublicConsultationsController extends ApiController
                         pc.pris_id,
                         u.first_name || \' \' || u.middle_name || \' \' || u.last_name as author_name,
                         (
-                            select jsonb_agg(jsonb_build_object(\'date\', c.created_at::date , \'author_name\', u2.first_name || \' \' || u2.middle_name || \' \' || u2.last_name , \'text\', c."content"))
+                            select jsonb_agg(jsonb_build_object(\'date\', c.created_at::date , \'author_name\', (case when u2.id is not null then u2.first_name || \' \' || u2.last_name else \'\' end) , \'text\', c."content"))
                             from comments c
                             left join users u2 on u2.id = c.user_id
                             where
@@ -212,6 +215,8 @@ class PublicConsultationsController extends ApiController
                 }
                 if(!empty($data->files)){
                     $data->files = json_decode($data->files, true);
+                } else {
+                    $data->files = [];
                 }
         }
         return $this->output($data);
@@ -223,7 +228,7 @@ class PublicConsultationsController extends ApiController
             select
                 c.id,
                 c.created_at::date as date,
-                u2.first_name || \' \' || u2.middle_name || \' \' || u2.last_name as author_name,
+                case when u2.id is not null then u2.first_name || \' \' || u2.last_name else \'\' end as author_name,
                 c."content" as text
                 from comments c
                 left join users u2 on u2.id = c.user_id

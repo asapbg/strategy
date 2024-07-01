@@ -98,6 +98,9 @@ class LegislativeProgramController extends ApiController
                 if(!empty($row->program)){
                     $row->program = json_decode($row->program, true);
                 }
+                if(!empty($row->files)){
+                    $row->files = json_decode($row->files, true);
+                }
                 $finalData[] = $row;
             }
         }
@@ -177,6 +180,9 @@ class LegislativeProgramController extends ApiController
             $data = $data[0];
                 if(!empty($data->program)){
                     $data->program = json_decode($data->program, true);
+                }
+                if(!empty($data->files)){
+                    $data->files = json_decode($data->files, true);
                 }
         }
 

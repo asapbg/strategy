@@ -118,6 +118,7 @@ class AdvisoryBoardController extends ApiController
                                 and f.id_object = max(abe.id)
                                 and f.doc_type = '.DocTypesEnum::AB_ESTABLISHMENT_RULES->value.'
                                 and f.code_object = '.File::CODE_AB.'
+                                and f.locale = \''.$this->locale.'\'
                             ) A
                         ) as establishment_act,
                          -- max(abort2.description) as rules_guide,

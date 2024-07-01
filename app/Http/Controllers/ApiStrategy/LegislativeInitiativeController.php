@@ -181,6 +181,8 @@ class LegislativeInitiativeController extends ApiController
         $data = $q->get()->map(function ($row) {
             if(!empty($row->comments)){
                 $row->comments = json_decode($row->comments, true);
+            } else{
+                $row->comments = [];
             }
             if(!empty($row->institutions)){
                 $row->institutions = json_decode($row->institutions, true);
@@ -201,7 +203,7 @@ class LegislativeInitiativeController extends ApiController
             select
                 li.id,
                 lic.created_at::date as date,
-                u.first_name || \' \' || u.middle_name || \' \' || u.last_name as author_name,
+                (case when u.id is not null then u.first_name || \' \' || u.last_name else \'\' end) as author_name,
                 lic.description as text
                 from legislative_initiative_comments lic
                 left join users u on u.id = lic.user_id
