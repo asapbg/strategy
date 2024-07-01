@@ -52,7 +52,8 @@ class PublicConsultationsController extends ApiController
                 pc.consultation_level_id as "level",
                 pc.open_from as date_open,
                 pc.open_to as date_close,
-                pc.active,
+                pc.active as published,
+                case when NOW()::date >= pc.open_from and NOW()::date <= pc.open_to then true else false end as active,
                 pc.field_of_actions_id as policy_area
             from public_consultation pc
             join public_consultation_translations pct on pct.public_consultation_id = pc.id and pct.locale = \''.$this->locale.'\'
@@ -104,7 +105,8 @@ class PublicConsultationsController extends ApiController
                         pc.open_from as date_open,
                         pc.open_to as date_close,
                         pct.short_term_reason,
-                        (pc.active::int)::bool as active,
+                        (pc.active::int)::bool as published,
+                        case when NOW()::date >= pc.open_from and NOW()::date <= pc.open_to then true else false end as active,
                         foa.id as policy_area_id,
                         foat.name as policy_area,
                         pc.legislative_program_id,
