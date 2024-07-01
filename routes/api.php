@@ -94,7 +94,7 @@ Route::group(['middleware' => 'api'], function ($router){
     Route::controller(\App\Http\Controllers\ApiStrategy\OgpController::class)->group(function () {
         //Ogp
         Route::get('/ogp/plans',       'list');
-        Route::get('/ogp/plans/news',       'news');
+        Route::get('/ogp/news',       'news');
         Route::get('/ogp/plans/{id}',       'show')->where('id', '[0-9]+');
     });
 

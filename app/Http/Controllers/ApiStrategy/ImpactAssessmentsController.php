@@ -182,7 +182,9 @@ class ImpactAssessmentsController extends ApiController
                 $data['contracts'] = json_decode($data['contracts'], true);
             }
         }
-
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
+        }
         return $this->output($data);
     }
 }

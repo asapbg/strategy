@@ -132,7 +132,7 @@ use Illuminate\Support\Facades\Storage;
         Route::get('/strategy-documents/reports', 'reports')->name('strategy-documents.reports');
 //    Route::get('/strategy-document/list/{search?}', 'listStrategicDocuments')->name('strategy-document.list');
 
-        Route::get('/strategy-document/download-file/{id}', 'downloadDocFile')->name('strategy-document.download-file');
+//        Route::get('/strategy-document/download-file/{id}', 'downloadDocFile')->name('strategy-document.download-file');
         Route::get('/strategy-document/file-preview-modal/{id}', 'previewModalFile')->name('strategy-document.preview.file_modal');
 //    Route::get('/strategy-document-institution/{documentLevelIds?}', 'getInstitutions')->name('strategy-document.institutions');
 //    Route::get('/strategy-document/load-pris-acts', 'loadPrisOptions')->name('strategy-document.load-pris-acts');
@@ -161,7 +161,7 @@ use Illuminate\Support\Facades\Storage;
     });
 
     Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
-        Route::get('/download/{file}', 'downloadFile')->name('download.file');
+//        Route::get('/download/{file}', 'downloadFile')->name('download.file');
         Route::get('/select2-ajax/{type}', 'getSelect2Ajax')->name('select2.ajax');
     });
 

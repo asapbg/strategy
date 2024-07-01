@@ -66,7 +66,7 @@ class StrategicDocumentsController extends ApiController
                         sd.document_date_accepted::date as date_accepted,
                         sd.document_date_expiring::date as date_expiring,
                         (
-                            select jsonb_agg(jsonb_build_object(\'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || sdf.id, \'version\', sdf."version"))
+                            select jsonb_agg(jsonb_build_object(\'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || \'/\' || sdf.id, \'version\', sdf."version"))
                             from strategic_document_file sdf where sdf.strategic_document_id = sd.id and sdf.locale = \''.$this->locale.'\'
                         ) as files,
                         null as subdocuments
@@ -148,8 +148,8 @@ class StrategicDocumentsController extends ApiController
                         sd.document_date_accepted::date as date_accepted,
                         sd.document_date_expiring::date as date_expiring,
                         (
-                            select jsonb_agg(jsonb_build_object(\'id\', sdf.id, \'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || sdf.id, \'version\', sdf."version"))
-                            from strategic_document_file sdf where sdf.strategic_document_id = sd.id and sdf.locale = \''.$this->locale.'\'
+                            select jsonb_agg(jsonb_build_object(\'id\', sdf.id, \'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file/').'\' || \'/\' || sdf.id, \'version\', sdf."version"))
+                            from strategic_document_file sdf where sdf.strategic_document_id = sd.id and sdf.deleted_at is null and sdf.locale = \''.$this->locale.'\'
                         ) as files,
                         null as subdocuments
                     from strategic_document sd
@@ -167,7 +167,7 @@ class StrategicDocumentsController extends ApiController
                                     (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
                         ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
                     where true
-                        '.(!$this->authanticated ? ' and sd.deleted_at is null and sd.active = true ' : '').'
+                        '.(!$this->authanticated ? ' and sd.deleted_at is null ' : '').'
                         and sd.id = '.$id.'
                 ');
 
@@ -180,6 +180,9 @@ class StrategicDocumentsController extends ApiController
                 $data->files = json_decode($data->files, true);
             }
             $data->subdocuments = StrategicDocumentChildren::getTreeApi(0, $data->id, true);
+        }
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
         }
         return $this->output($data);
     }

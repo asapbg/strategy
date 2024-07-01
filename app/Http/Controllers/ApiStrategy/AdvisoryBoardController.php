@@ -111,7 +111,7 @@ class AdvisoryBoardController extends ApiController
                         (
                             select jsonb_build_object(\'description\', max(abet.description), \'links\', A.files)
                             from (
-                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
+                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null) as files
                                 from files f
                                 where
                                     f.deleted_at is null
@@ -125,7 +125,7 @@ class AdvisoryBoardController extends ApiController
                         (
                         select jsonb_build_object(\'description\', max(abort2.description), \'links\', A.files)
                             from (
-                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
+                                select jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null) as files
                                 from files f
                                 where
                                     f.deleted_at is null
@@ -144,7 +144,8 @@ class AdvisoryBoardController extends ApiController
                                 join (select type_id, type_name from (
                                     values ('.AdvisoryTypeEnum::CHAIRMAN->value.', \'chairmen\'),
                                         ('.AdvisoryTypeEnum::VICE_CHAIRMAN->value.', \'vice-chairmen\'),
-                                        ('.AdvisoryTypeEnum::SECRETARY->value.', \'secretaries\')
+                                        ('.AdvisoryTypeEnum::SECRETARY->value.', \'secretaries\'),
+                                        ('.AdvisoryTypeEnum::MEMBER->value.', \'members\')
                                     ) E(type_id, type_name)) enums on enums.type_id = abm.advisory_type_id::int
                                 where
                                     abm.deleted_at is null
@@ -189,7 +190,7 @@ class AdvisoryBoardController extends ApiController
                         (
                         select jsonb_agg(jsonb_build_object(\'id\', WP.id, \'year\', WP.working_year::date, \'description\',  WP.description, \'reports\', WP.files))
                             from (
-                                select abf.id, max(abf.working_year) as working_year, max(abft.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f2.id) as files
+                                select abf.id, max(abf.working_year) as working_year, max(abft.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f2.id) filter (where f2.id is not null) as files
                                 from advisory_board_functions abf
                                 join advisory_board_function_translations abft on abft.advisory_board_function_id = abf.id and abft.locale = \''.$this->locale.'\'
                                 left join files f2 on f2.id_object = abf.id
@@ -204,9 +205,9 @@ class AdvisoryBoardController extends ApiController
                             ) WP
                         ) as work_program,
                         (
-                        select jsonb_agg(jsonb_build_object(\'id\', M.id, \'year\', M.next_meeting::date, \'description\',  M.description, \'files\', M.files))
+                        select jsonb_agg(jsonb_build_object(\'id\', M.id, \'date\', M.next_meeting::date, \'description\',  M.description, \'files\', M.files))
                             from (
-                                select abm3.id, max(abm3.next_meeting) as next_meeting, max(abmt2.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) as files
+                                select abm3.id, max(abm3.next_meeting) as next_meeting, max(abmt2.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null) as files
                                 from advisory_board_meetings abm3
                                 join advisory_board_meeting_translations abmt2 on abmt2.advisory_board_meeting_id = abm3.id and abmt2.locale = \''.$this->locale.'\'
                                 left join files f on f.id_object = abm3.id
@@ -255,28 +256,64 @@ class AdvisoryBoardController extends ApiController
             $data = $data[0];
             if(!empty($data->establishment_act)){
                 $data->establishment_act = json_decode($data->establishment_act, true);
+                if (empty($data->establishment_act['links'])) {
+                    $data->establishment_act['links'] = [];
+                }
             }
             if(!empty($data->rules_guide)){
                 $data->rules_guide = json_decode($data->rules_guide, true);
+                if (empty($data->rules_guide['links'])) {
+                    $data->rules_guide['links'] = [];
+                }
             }
             if(!empty($data->members)){
                 $data->members = json_decode($data->members, true);
             }
             if(!empty($data->secretariate_files)){
                 $data->secretariate_files = json_decode($data->secretariate_files, true);
+            } else{
+                $data->secretariate_files = [];
             }
             if(!empty($data->moderators)){
                 $data->moderators = json_decode($data->moderators, true);
+                if (empty($data->moderators['files'])) {
+                    $data->moderators['files'] = [];
+                }
+                if (empty($data->moderators['persons'])) {
+                    $data->moderators['persons'] = [];
+                }
             }
             if(!empty($data->work_program)){
                 $data->work_program = json_decode($data->work_program, true);
+                if(sizeof($data->work_program)){
+                    foreach ($data->work_program as $k => $r) {
+                        if (empty($r['reports'])) {
+                            $data->work_program[$k]['reports'] = [];
+                        }
+                    }
+                }
+            } else{
+                $data->work_program = [];
             }
+
             if(!empty($data->meetings)){
                 $data->meetings = json_decode($data->meetings, true);
+                if(sizeof($data->meetings)){
+                    foreach ($data->meetings as $k => $r) {
+                        if (empty($r['files'])) {
+                            $data->meetings[$k]['files'] = [];
+                        }
+                    }
+                }
+            } else {
+                $data->meetings = [];
             }
             if(!empty($data->news)){
                 $data->news = json_decode($data->news, true);
             }
+        }
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
         }
         return $this->output($data);
     }
@@ -284,7 +321,7 @@ class AdvisoryBoardController extends ApiController
     public function meetings(Request $request, int $id = 0)
     {
         $data = DB::select('
-            select abm3.id, max(abm3.next_meeting) as next_meeting, max(abmt2.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null) as files
+            select abm3.id, max(abm3.next_meeting::date) as date, max(abmt2.description) as description, jsonb_agg(\''.url('/').'\' || \'/download/\' || f.id) filter (where f.id is not null) as files
                 from advisory_board_meetings abm3
                 join advisory_boards ab on ab.id = abm3.advisory_board_id
                 join advisory_board_meeting_translations abmt2 on abmt2.advisory_board_meeting_id = abm3.id and abmt2.locale = \''.$this->locale.'\'

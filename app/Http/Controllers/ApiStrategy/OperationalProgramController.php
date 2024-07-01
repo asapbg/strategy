@@ -186,6 +186,9 @@ class OperationalProgramController extends ApiController
             }
         }
 
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
+        }
         return $this->output($data);
     }
 }

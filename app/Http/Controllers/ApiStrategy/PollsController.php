@@ -112,6 +112,9 @@ class PollsController extends ApiController
                 $data->questions = json_decode($data->questions, true);
             }
         }
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
+        }
         return $this->output($data);
     }
 

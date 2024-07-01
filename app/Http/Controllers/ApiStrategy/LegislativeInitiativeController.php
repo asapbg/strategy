@@ -194,6 +194,9 @@ class LegislativeInitiativeController extends ApiController
             $data = $data[0];
         }
 
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
+        }
         return $this->output($data);
     }
 

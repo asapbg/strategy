@@ -126,6 +126,10 @@ class UsersController extends ApiController
                 $data->roles = json_decode($data->roles, true);
             }
         }
+
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
+        }
         return $this->output($data);
     }
 

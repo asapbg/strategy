@@ -219,6 +219,9 @@ class PublicConsultationsController extends ApiController
                     $data->files = [];
                 }
         }
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
+        }
         return $this->output($data);
     }
 

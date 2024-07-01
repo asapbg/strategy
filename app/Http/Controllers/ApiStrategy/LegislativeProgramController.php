@@ -185,7 +185,9 @@ class LegislativeProgramController extends ApiController
                     $data->files = json_decode($data->files, true);
                 }
         }
-
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
+        }
         return $this->output($data);
     }
 }

@@ -41,6 +41,8 @@ class OgpController extends ApiController
                         select
                             op2.id as id,
                             max(opt2."name") as name,
+                            max(opt2."content") as text,
+                            \'\' as final_version_pdf,
                             op2.from_date as date_start,
                             op2."to_date" as date_end,
                             (
@@ -113,6 +115,7 @@ class OgpController extends ApiController
         $finalData = array();
         if(sizeof($data)){
             foreach ($data as $row){
+                $row->final_version_pdf = route('ogp.national_action_plans.export', $row->id);
                 if(!empty($row->other_files)){
                     $row->other_files = json_decode($row->other_files, true);
                 }
@@ -148,17 +151,6 @@ class OgpController extends ApiController
                             limit 1
                         ) as version_after_public_consultation_pdf,
                         (
-                                select
-                                    jsonb_agg(jsonb_build_object(\'id\', f2.id ,\'name\', f2.description_'.$this->locale.' , \'link\', \'http://strategy.test/download/\' || f2.id))
-                                            from files f2
-                                            where true
-                                                '.(!$this->authanticated ? ' and f2.deleted_at is null ' : '').'
-                                and f2.id_object = op2.id
-                                and f2.code_object = '.File::CODE_OBJ_OGP.'
-                                and f2.doc_type in ('.DocTypesEnum::OGP_REPORT_EVALUATION->value.')
-                                and f2.locale = \''.$this->locale.'\'
-                        ) as other_files,
-                        (
                             select
                                 jsonb_agg(jsonb_build_object(\'id\', oat.id, \'name\', oat."name", \'commitments\',(
                                     select jsonb_agg(jsonb_build_object(\'id\', opa2.id, \'name\', opat."name", \'context\', opat."content", \'npo_partner\', opat.npo_partner, \'values_initiative\', opat.values_initiative, \'problem\', opat.problem, \'solving_problem\', opat.solving_problem, \'responsible_institution\', opat.responsible_administration, \'evaluation\', opat.evaluation, \'evaluation_status\', opat.evaluation_status, \'stakeholders\', opat.interested_org, \'deadline\', opa2.to_date, \'contacts\', opat.contact_names
@@ -177,7 +169,17 @@ class OgpController extends ApiController
                                 '.(!$this->authanticated ? ' and opa.deleted_at is null ' : '').'
                                 and opa.ogp_plan_id = op2.id
                             ) as areas,
-                            \'??\' as reports,
+                            (
+                                select
+                                    jsonb_agg(jsonb_build_object(\'id\', f2.id ,\'name\', f2.description_'.$this->locale.' , \'link\', \'http://strategy.test/download/\' || f2.id))
+                                            from files f2
+                                            where true
+                                                '.(!$this->authanticated ? ' and f2.deleted_at is null and op2.report_evaluation_published_at is not null' : '').'
+                                and f2.id_object = op2.id
+                                and f2.code_object = '.File::CODE_OBJ_OGP.'
+                                and f2.doc_type in ('.DocTypesEnum::OGP_REPORT_EVALUATION->value.')
+                                and f2.locale = \''.$this->locale.'\'
+                            ) as reports,
                             (
                                 select
                                     jsonb_agg(jsonb_build_object(\'id\', ops.id, \'date_from\', ops.start_date , \'date_to\', ops.end_date , \'name\', opst."name"  , \'description\', opst.description))
@@ -206,6 +208,9 @@ class OgpController extends ApiController
             if(!empty($data->areas)){
                 $data->areas = json_decode($data->areas, true);
             }
+        }
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
         }
         return $this->output($data);
     }

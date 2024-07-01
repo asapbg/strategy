@@ -411,8 +411,8 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                         strategic_document_children.document_date_accepted::date as date_accepted,
                         strategic_document_children.document_date_expiring::date as date_expiring,
                         (
-                            select jsonb_agg(jsonb_build_object(\'id\', sdf.id, \'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || sdf.id, \'version\', sdf."version"))
-                            from strategic_document_file sdf where sdf.strategic_document_id = strategic_document_children.id and sdf.locale = \'bg\'
+                            select jsonb_agg(jsonb_build_object(\'id\', sdf.id, \'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || \'/\' || sdf.id, \'version\', sdf."version"))
+                            from strategic_document_file sdf where sdf.strategic_document_id = strategic_document_children.id and sdf.deleted_at is null and sdf.locale = \'bg\'
                         ) as files
                     from strategic_document_children
                     left join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id
@@ -485,8 +485,8 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                         strategic_document_children.document_date_accepted::date as date_accepted,
                         strategic_document_children.document_date_expiring::date as date_expiring,
                         (
-                            select jsonb_agg(jsonb_build_object(\'id\', sdf.id, \'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || sdf.id, \'version\', sdf."version"))
-                            from strategic_document_file sdf where sdf.strategic_document_id = strategic_document_children.id and sdf.locale = \'bg\'
+                            select jsonb_agg(jsonb_build_object(\'id\', sdf.id, \'name\', sdf.description, \'path\', \''.url('/strategy-document/download-file').'\' || \'/\' || sdf.id, \'version\', sdf."version"))
+                            from strategic_document_file sdf where sdf.strategic_document_id = strategic_document_children.id and sdf.deleted_at is null and sdf.locale = \'bg\'
                         ) as files
                     from strategic_document_children
                     left join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id
