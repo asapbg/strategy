@@ -27,7 +27,7 @@ class StoreExecutorRequest extends FormRequest
     {
         $rules = [
             'eik'                           => ['nullable', 'numeric'],
-            'institution_id'                => ['required', 'numeric'],
+            'institution_id'                => ['required', 'numeric', 'exists:institution,id'],
             'contract_date'                 => ['required', 'date'],
             'price'                         => ['required', 'numeric', 'between:0,99999999.99'],
         ];
@@ -35,7 +35,7 @@ class StoreExecutorRequest extends FormRequest
         foreach (Executor::TRANSLATABLE_FIELDS as $field) {
             foreach (AdminController::getLanguages() as $lang) {
                 $condition = ($lang['default']) ? 'required' : 'nullable';
-                $rules[$field."_".$lang['code']] = [$condition, 'string'];
+                $rules[$field."_".$lang['code']] = [$condition, 'string', 'min:3'];
             }
         }
 

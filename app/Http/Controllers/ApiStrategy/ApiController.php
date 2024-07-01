@@ -48,6 +48,15 @@ class ApiController extends Controller
         }
     }
 
+    public function returnErrors($code, $errors = [])
+    {
+        if($this->output_format == 'xml'){
+            //
+        } else{
+            return response()->json(['error' => $errors], $code, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
+        }
+    }
+
     public function checkDate($str, $format = 'Y-m-d')
     {
         switch ($format){
@@ -64,5 +73,53 @@ class ApiController extends Controller
         } else {
             return false;
         }
+    }
+
+    /**
+     * Retiurn only fillable fields from validated request data
+     * @param $validated
+     * @param $item
+     * @return mixed
+     */
+    public function getFillableValidated($validated, $item)
+    {
+        $modelFillable = $item->getFillable();
+        $validatedFillable = $validated;
+        foreach ($validatedFillable as $field => $value) {
+            if( !in_array($field, $modelFillable) ) {
+                unset($validatedFillable[$field]);
+            }
+        }
+        return $validatedFillable;
+    }
+
+    /**
+     * @param $fields  //example model::TRANSLATABLE_FIELDS;
+     * @param $item   //model;
+     * @param $validated //request validated
+     */
+    public function storeTranslateOrNew($fields, $item, $validated, $setDefaultIfEmpty = false)
+    {
+        $defaultLang = config('app.default_lang');
+        foreach (config('available_languages') as $locale) {
+            $mainLang = $locale['code'] == $defaultLang;
+            foreach ($fields as $field) {
+                $fieldName = $field."_".$locale['code'];
+                $fieldNameDefault = $field."_".$defaultLang;
+                if(array_key_exists($fieldName, $validated)) {
+                    $item->translateOrNew($locale['code'])->{$field} = $validated[$fieldName];
+                } else if(!$mainLang && array_key_exists($fieldNameDefault, $validated)){
+                    if($setDefaultIfEmpty) {
+                        //by default set default language translation
+                        $item->translateOrNew($locale['code'])->{$field} = $validated[$fieldNameDefault];
+                    } else{
+                        //do not set default language translation
+                        $item->translateOrNew($locale['code'])->{$field} = '';
+                    }
+                }
+            }
+        }
+
+        $item->save();
     }
 }

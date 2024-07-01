@@ -108,6 +108,8 @@ Route::group(['middleware' => 'api'], function ($router){
         Route::get('/impact-assessments',       'list');
         Route::get('/executors',       'executors');
         Route::get('/executors/{eik}',       'showExecutor');
+        Route::get('/executors-by-id/{id}',       'executorsById');
+        Route::post('/executors',       'executorsCreate');
     });
 
     Route::controller(ReportsController::class)->group(function () {

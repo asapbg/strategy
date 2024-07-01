@@ -7,14 +7,19 @@ use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\OgpStatusEnum;
 use App\Enums\PublicationTypesEnum;
+use App\Http\Requests\StoreExecutorRequest;
+use App\Models\Executor;
 use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
+use App\Models\StrategicDocuments\Institution;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class ImpactAssessmentsController extends ApiController
@@ -186,5 +191,94 @@ class ImpactAssessmentsController extends ApiController
             return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
         }
         return $this->output($data);
+    }
+
+    public function executorsById(Request $request, int $id = 0){
+
+        $q = DB::table('executors')
+            ->select([
+                'executors.eik',
+                DB::raw('max(executor_translations.executor_name) as executor'),
+                DB::raw('json_agg(json_build_object(\'date_contract\', executors.contract_date, \'price\', executors.price, \'active\', executors.active, \'institution_id\', institution.id, \'contract_subject\', executor_translations.contract_subject, \'services_description\', executor_translations.services_description)) as contracts')
+            ])
+            ->leftJoin('executor_translations', function ($j){
+                $j->on('executor_translations.executor_id', '=', 'executors.id')
+                    ->where('executor_translations.locale', '=', $this->locale);
+            })
+            ->leftJoin('institution', 'institution.id', '=', 'executors.institution_id')
+            ->leftJoin('institution_translations', function ($j){
+                $j->on('institution_translations.institution_id', '=', 'institution.id')
+                    ->where('institution_translations.locale', '=', app()->getLocale());
+            })
+            ->where('executors.id', '=', $id);
+
+            if(!$this->authanticated){
+                $q->whereNull('executors.deleted_at')
+                    ->where('executors.active', true);
+            }
+            $q->groupBy('executors.eik');
+
+        if($this->request_limit){
+            $q->limit($this->request_limit);
+        }
+        if($this->request_offset){
+            $q->offset($this->request_offset);
+        }
+
+        $data = $q->get()->map(fn ($row) => (array)$row)->toArray();
+
+        if(sizeof($data)){
+            $data = $data[0];
+            if(!empty($data['contracts'])){
+                $data['contracts'] = json_decode($data['contracts'], true);
+            }
+        }
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
+        }
+        return $this->output($data);
+    }
+
+    public function executorsCreate(Request $request)
+    {
+        Log::channel('strategy_api')->info('Create executor method. Inputs:'.json_encode($this->request_inputs, JSON_UNESCAPED_UNICODE));
+        $rs = new StoreExecutorRequest();
+        $validator = Validator::make($this->request_inputs, $rs->rules());
+        if($validator->fails()){
+            return $this->returnErrors(Response::HTTP_OK, $validator->errors()->toArray());
+        }
+
+        $validated = $validator->validated();
+
+        if(!$this->checkDate($this->request_inputs['contract_date'])){
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'contract_date\'');
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $item = new Executor();
+            $fillable = $this->getFillableValidated($validated, $item);
+            $item->fill($fillable);
+            $item->save();
+
+            $inst = Institution::select('institution.id', 'institution_translations.name')
+                ->joinTranslation(Institution::class)
+                ->find($validated['institution_id']);
+            $validated['contractor_name_bg'] = $inst->name;
+
+            $this->storeTranslateOrNew($item->translatedAttributes, $item, $validated);
+
+            DB::commit();
+
+            return $this->output(['id' => $item->id]);
+
+        } catch (\Exception $e) {
+
+            Log::error($e);
+            DB::rollBack();
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, __('messages.system_error'));
+        }
     }
 }
