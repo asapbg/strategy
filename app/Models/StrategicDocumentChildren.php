@@ -414,7 +414,8 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                             select jsonb_agg(jsonb_build_object(\'id\', sdf.id, \'name\', sdf.description_bg, \'path\', \''.url('/download').'\' || \'/\' || sdf.id, \'version\', sdf."version"))
                             from files sdf
                             where
-                                sdf.strategic_document_id = strategic_document_children.id
+                                sdf.id_object = strategic_document_children.id
+                                sdf.code_object = '.File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN.'
                                 and sdf.deleted_at is null
                                 and sdf.locale = \'bg\'
                         ) as files
@@ -492,7 +493,8 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                             select jsonb_agg(jsonb_build_object(\'id\', sdf.id, \'name\', sdf.description_bg, \'path\', \''.url('/download').'\' || \'/\' || sdf.id, \'version\', sdf."version"))
                             from files sdf
                             where
-                                sdf.strategic_document_id = strategic_document_children.id
+                                sdf.id_object = strategic_document_children.id
+                                sdf.code_object = '.File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN.'
                                 and sdf.deleted_at is null
                                 and sdf.locale = \'bg\'
                         ) as files
