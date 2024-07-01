@@ -31,7 +31,7 @@ class AdvisoryBoardController extends ApiController
             $institutions = explode(',', $this->request_inputs['institution-id']);
             $fa = FieldOfAction::whereHas('institution', function($q) use($institutions){
                 $q->whereIn('id', $institutions);
-            })->get()->pluck('id');
+            })->get()->pluck('id')->toArray();
             if(sizeof($fa)){
                 if(isset($policyAreasIds)){
                     $policyAreasIds .= implode(',', $fa);
