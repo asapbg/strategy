@@ -37,6 +37,11 @@ Route::group(['middleware' => 'api'], function ($router){
         Route::controller(\App\Http\Controllers\ApiStrategy\PollsController::class)->group(function () {
             Route::post('/polls', 'create');
         });
+
+        Route::controller(\App\Http\Controllers\ApiStrategy\PublicConsultationsController::class)->group(function () {
+            //Public consultation
+            Route::post('/consultations',       'create');
+        });
     });
 });
 

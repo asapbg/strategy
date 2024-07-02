@@ -4,10 +4,18 @@ namespace App\Http\Controllers\ApiStrategy;
 
 use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Http\Requests\StorePublicConsultationApiRequest;
+use App\Models\ActType;
+use App\Models\Consultations\LegislativeProgram;
+use App\Models\Consultations\OperationalProgram;
+use App\Models\Consultations\PublicConsultation;
 use App\Models\File;
+use App\Models\StrategicDocuments\Institution;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class PublicConsultationsController extends ApiController
@@ -281,5 +289,138 @@ class PublicConsultationsController extends ApiController
         ');
 
         return $this->output($data);
+    }
+
+    public function create(Request $request)
+    {
+        Log::channel('strategy_api')->info('Create public consultation method. Inputs:'.json_encode($this->request_inputs, JSON_UNESCAPED_UNICODE));
+        $rs = new StorePublicConsultationApiRequest();
+        $validator = Validator::make($this->request_inputs, $rs->rules());
+        if($validator->fails()){
+            return $this->returnErrors(Response::HTTP_OK, $validator->errors()->toArray());
+        }
+
+        $validated = $validator->validated();
+
+        if(!$this->checkDate($validated['open_from'])){
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'open_from\'');
+        }
+
+        if(!$this->checkDate($validated['open_to'])){
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'open_to\'');
+        }
+
+        if(Carbon::parse($validated['open_from'])->format('Y-m-d') > Carbon::parse($validated['open_to'])->format('Y-m-d')){
+            return $this->returnErrors(Response::HTTP_OK, ['open_to' => 'Крайната дата трябва да е след началната']);
+        }
+
+        //Some custom validations
+        $institution = Institution::find((int)$validated['institution_id']);
+        $institutionLevel = $institution && $institution->level ? $institution->level->nomenclature_level : 0;
+        $actType = ActType::find((int)$validated['act_type_id']);
+        $actTypeLevel = $actType ? $actType->consultation_level_id : 0;
+        if($institutionLevel != $actTypeLevel){
+            return $this->returnErrors(Response::HTTP_OK, ['act_type_id' => 'Нивото на \'Вид акт\' не съвпада с нивото на институцията']);
+        }
+
+        if(isset($validated['field_of_actions_id']) && !in_array($validated['field_of_actions_id'], $institution->fieldsOfAction->pluck('id')->toArray())){
+            return $this->returnErrors(Response::HTTP_OK, ['field_of_actions_id' => 'Областта на политика не е асоциирана с избраната институция']);
+        }
+
+        $minDuration = PublicConsultation::MIN_DURATION_DAYS;
+        $hortDuration = PublicConsultation::SHORT_DURATION_DAYS;
+        $from = $validated['open_from'] ? Carbon::parse($validated['open_from']) : null;
+        $to = $validated['open_to'] ? Carbon::parse($validated['open_to']) : null;
+        $diffDays = $to && $from ? $to->diffInDays($from) : null;
+
+        if( $diffDays && $diffDays < $minDuration) {
+            return $this->returnErrors(Response::HTTP_OK, ['open_to' => 'Минималната продължителност е '.$minDuration.' дни']);
+        }
+
+        if( $diffDays && $diffDays <= $hortDuration ) {
+            if(!isset($validated['short_term_reason_bg']) || empty(isset($validated['short_term_reason_bg']))){
+                return $this->returnErrors(Response::HTTP_OK, ['short_term_reason_bg' => 'Моля да посочите \'Причина за кратък срок\'']);
+            }
+        } else{
+            if(isset($validated['short_term_reason_bg'])){
+                unset($validated['short_term_reason_bg']);
+            }
+            if(isset($validated['short_term_reason_en'])){
+                unset($validated['short_term_reason_en']);
+            }
+        }
+
+        //Consultation level
+        $centralConsultationLevel = \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value;
+        //Acts
+        $actLaw = \App\Models\ActType::ACT_LAW;
+        $actMinistry = \App\Models\ActType::ACT_COUNCIL_OF_MINISTERS;
+        if($institution->level->nomenclature_level == $centralConsultationLevel){
+            if(isset($validated['act_type_id']) && $validated['act_type_id'] == $actLaw){
+                foreach (['operational_program_id', 'operational_program_row_id', 'law_id', 'pris_id'] as $field){
+                    $validated[$field] = null;
+                }
+            } elseif (isset($validated['act_type_id']) && $validated['act_type_id'] == $actMinistry){
+                foreach (['legislative_program_id', 'legislative_program_row_id', 'law_id', 'pris_id'] as $field){
+                    $validated[$field] = null;
+                }
+            } else{
+                foreach (['operational_program_id', 'operational_program_row_id', 'legislative_program_id', 'legislative_program_row_id', 'law_id', 'pris_id'] as $field){
+                    $validated[$field] = null;
+                }
+            }
+        } else{
+            foreach (['operational_program_id', 'operational_program_row_id', 'legislative_program_id', 'legislative_program_row_id', 'law_id', 'pris_id'] as $field){
+                $validated[$field] = null;
+            }
+        }
+        $validated['operational_program_row_id'] = isset($validated['operational_program_row_id']) && (int)$validated['operational_program_row_id'] > 0 ? $validated['operational_program_row_id'] : null;
+        $validated['legislative_program_row_id'] = isset($validated['legislative_program_row_id']) && (int)$validated['legislative_program_row_id'] > 0 ? $validated['legislative_program_row_id'] : null;
+        $validated['pris_id'] = isset($validated['pris_id']) && $validated['pris_id'] > 0 ? $validated['pris_id'] : null;
+        $validated['law_id'] = isset($validated['law_id']) && $validated['law_id'] > 0 ? $validated['law_id'] : null;
+
+
+//dd($validated);
+        DB::beginTransaction();
+        try {
+            $item = new PublicConsultation();
+
+            $fillable = $this->getFillableValidated($validated, $item);
+            $fillable['consultation_level_id'] = $institution ? $institution->level->nomenclature_level : 0;
+            $item->fill($fillable);
+            $item->active = $request->filled('active') ? $request->input('active') : 0;
+            $item->importer_institution_id = $institution ? $institution->id : null;
+            $item->responsible_institution_id = $institution ? $institution->id : null;
+            $item->active_in_days = $diffDays;
+            $item->save();
+
+            $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
+
+            $item->consultations()->sync($validated['connected_pc'] ?? []);
+
+            $item->reg_num = $item->id.'-K';
+            $item->save();
+
+            //Locke program if is selected
+            if( isset($validated['legislative_program_id']) ) {
+                LegislativeProgram::where('id', '=', (int)$validated['legislative_program_id'])
+                    ->where('locked', '=', 0)
+                    ->update(['locked' => 1, 'public_consultation_id' => $item->id]);
+            }
+            if( isset($validated['operational_program_id']) ) {
+                OperationalProgram::where('id', '=', (int)$validated['operational_program_id'])
+                    ->where('locked', '=', 0)
+                    ->update(['locked' => 1, 'public_consultation_id' => $item->id]);
+            }
+
+            DB::commit();
+
+            return $this->output(['id' => $item->id]);
+        } catch (\Exception $e) {
+
+            Log::error($e);
+            DB::rollBack();
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, __('messages.system_error'));
+        }
     }
 }
