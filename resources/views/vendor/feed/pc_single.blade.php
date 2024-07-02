@@ -54,7 +54,7 @@
     @foreach($item->comments as $c)
         <entry>
             <author>
-                <name>{{ $c->user?->fullname() }}</name>
+                <name>{{ $c->author?->fullname() }}</name>
                 @if($item->user)
                     <uri>{{ route('user.profile.pc', $item->user) }}</uri>
                 @endif
@@ -67,7 +67,7 @@
             <id>{{ $c->id }}</id>
             <link href="{{ route('public_consultation.view', $item->id) }}"/>
             <updated>{{ \Carbon\Carbon::parse($c->updated_at)->toAtomString() }}</updated>
-            <title>{{ trans_choice('custom.comments', 1) }} #{{ $currentIndex }} {{ __('custom.from') }} {{ $c->user?->fullname() }}</title>
+            <title>{{ trans_choice('custom.comments', 1) }} #{{ $currentIndex }} {{ __('custom.from') }} {{ $c->author?->fullname() }}</title>
         </entry>
         @php($currentIndex -= 1)
     @endforeach
