@@ -310,6 +310,33 @@ if (!function_exists('optionsStatuses')) {
     }
 }
 
+if (!function_exists('optionsPublished')) {
+
+    /**
+     * return regular status options
+     *
+     * @method optionsPublished
+     *
+     * @param bool       $any
+     * @param string|int $anyValue
+     * @param string|int $anyName
+     *
+     * @return array
+     */
+    function optionsPublished(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
+    {
+        $options = array(
+            1 => trans_choice('custom.published', 1),
+            0 => trans_choice('custom.draft', 1),
+        );
+        if ($any) {
+            $options[$anyValue] = $anyName;
+            ksort($options);
+        }
+        return $options;
+    }
+}
+
 if (!function_exists('logError')) {
 
     /**

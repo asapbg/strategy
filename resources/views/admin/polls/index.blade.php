@@ -25,6 +25,7 @@
                                 <th>{{ __('custom.once') }}</th>
                                 <th>{{ __('custom.part_of_pc') }}</th>
                                 <th>{{ __('custom.active_f') }}</th>
+                                <th>Публикувана</th>
                                 <th>{{ __('custom.actions') }}</th>
                             </tr>
                         </thead>
@@ -51,6 +52,7 @@
                                         @endif
                                     </td>
                                     <td>@if($row->inPeriod)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
+                                    <td>@if($row->active)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
                                     <td>
                                         @can('update', $row)
                                             <a href="{{route($editRouteName,['id' => $row->id])}}"
@@ -74,6 +76,11 @@
                         @endif
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer mt-2">
+                    @if(isset($items) && $items instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                        {{ $items->appends(request()->query())->links() }}
+                    @endif
                 </div>
             </div>
         </div>

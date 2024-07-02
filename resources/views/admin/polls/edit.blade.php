@@ -65,7 +65,7 @@
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <select class="form-control form-control-sm @error('status') is-invalid @enderror" name="status">
-                                                @foreach(optionsStatuses() as $k => $v)
+                                                @foreach(optionsPublished() as $k => $v)
                                                     <option value="{{ $k }}"
                                                             @if(old('status', $item->id ? $item->status : 0) == $k ) selected="selected" @endif >
                                                         {{ $v }}
