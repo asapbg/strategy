@@ -94,7 +94,7 @@ class AuthController extends ApiController
             'access_token' => $token,
             'token_type' => 'bearer',
 //            'expires_in' => null
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            'expires_in' => env('JWT_TTL', 60)
         ]);
     }
 }

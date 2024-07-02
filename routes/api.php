@@ -42,6 +42,12 @@ Route::group(['middleware' => 'api'], function ($router){
             //Public consultation
             Route::post('/consultations',       'create');
         });
+
+        Route::controller(\App\Http\Controllers\ApiStrategy\StrategicDocumentsController::class)->group(function () {
+            //Strategic document
+            Route::post('/strategic-documents',       'create');
+            Route::post('/strategic-documents/subdocument',       'createSubDocument');
+        });
     });
 });
 

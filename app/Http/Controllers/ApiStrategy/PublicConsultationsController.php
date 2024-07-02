@@ -379,8 +379,6 @@ class PublicConsultationsController extends ApiController
         $validated['pris_id'] = isset($validated['pris_id']) && $validated['pris_id'] > 0 ? $validated['pris_id'] : null;
         $validated['law_id'] = isset($validated['law_id']) && $validated['law_id'] > 0 ? $validated['law_id'] : null;
 
-
-//dd($validated);
         DB::beginTransaction();
         try {
             $item = new PublicConsultation();

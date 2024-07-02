@@ -5,13 +5,20 @@ namespace App\Http\Controllers\ApiStrategy;
 use App\Enums\AdvisoryTypeEnum;
 use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Http\Requests\StoreStrategicDocumentApiRequest;
+use App\Http\Requests\StrategicDocumentChildStoreApiRequest;
+use App\Models\AuthorityAcceptingStrategic;
 use App\Models\FieldOfAction;
 use App\Models\File;
+use App\Models\Pris;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class StrategicDocumentsController extends ApiController
@@ -197,5 +204,122 @@ class StrategicDocumentsController extends ApiController
 
         $data = StrategicDocumentChildren::getTreeApi(0, $sd->id, true);
         return $this->output($data);
+    }
+
+    public function create(Request $request)
+    {
+        Log::channel('strategy_api')->info('Create strategic document method. Inputs:'.json_encode($this->request_inputs, JSON_UNESCAPED_UNICODE));
+        $rs = new StoreStrategicDocumentApiRequest();
+        $validator = Validator::make($this->request_inputs, $rs->rules());
+        if($validator->fails()){
+            return $this->returnErrors(Response::HTTP_OK, $validator->errors()->toArray());
+        }
+
+        $validated = $validator->validated();
+
+        if(isset($validated['document_date']) && !$this->checkDate($validated['document_date']) && $validated['accept_act_institution_type_id'] != AuthorityAcceptingStrategic::COUNCIL_MINISTERS){
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'document_date\'');
+        }
+
+        if(isset($validated['document_date_accepted']) && !$this->checkDate($validated['document_date_accepted']) && $validated['accept_act_institution_type_id'] != AuthorityAcceptingStrategic::COUNCIL_MINISTERS ){
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'document_date_accepted\'');
+        }
+
+        if(isset($validated['document_date_expiring']) && !$this->checkDate($validated['document_date_expiring']) && (!isset($validated['date_expiring_indefinite']) || !$validated['date_expiring_indefinite']) && $validated['accept_act_institution_type_id'] != AuthorityAcceptingStrategic::COUNCIL_MINISTERS){
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'document_date_expiring\'');
+        }
+
+        DB::beginTransaction();
+        try {
+            if(isset($validated['date_expiring_indefinite']) && $validated['date_expiring_indefinite']){
+                $validated['document_date_expiring'] = null;
+            }
+            $validated['parent_document_id'] = $validated['connected_document_id'] ?? null;
+            if( $validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS ) {
+                $validated['strategic_act_number'] = null;
+                $validated['strategic_act_link'] = null;
+                $validated['document_date'] = null;
+
+                $prisActId = Arr::get($validated, 'pris_act_id');
+                $validated['document_date_accepted'] = $prisActId ? Pris::find($prisActId)->doc_date : ($validated['document_date_accepted'] ?? Carbon::now());
+                $datesToBeParsedToCarbon = [
+                    'document_date_accepted',
+                    'document_date_expiring',
+                    'document_date',
+                ];
+
+                foreach ($datesToBeParsedToCarbon as $date) {
+                    if (array_key_exists($date, $validated)) {
+                        $validated[$date] = $validated[$date] ? Carbon::parse($validated[$date]) : null;
+                    }
+                }
+            } else {
+                $validated['pris_act_id'] = null;
+            }
+            $item = new StrategicDocument();
+
+            $fillable = $this->getFillableValidated($validated, $item);
+
+            $item->fill($fillable);
+            $item->save();
+            $this->storeTranslateOrNew(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
+
+            DB::commit();
+
+            return $this->output(['id' => $item->id]);
+        } catch (\Exception $e) {
+
+            Log::error($e);
+            DB::rollBack();
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, __('messages.system_error'));
+        }
+    }
+
+    public function createSubDocument(Request $request)
+    {
+        Log::channel('strategy_api')->info('Create strategic sub document method. Inputs:'.json_encode($this->request_inputs, JSON_UNESCAPED_UNICODE));
+        $rs = new StrategicDocumentChildStoreApiRequest();
+        $validator = Validator::make($this->request_inputs, $rs->rules());
+        if($validator->fails()){
+            return $this->returnErrors(Response::HTTP_OK, $validator->errors()->toArray());
+        }
+
+        $validated = $validator->validated();
+
+        if(isset($validated['document_date_accepted']) && !$this->checkDate($validated['document_date_accepted']) && !isset($validated['pris_act_id']) ){
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'document_date_accepted\'');
+        }
+
+        if(isset($validated['document_date_expiring']) && !$this->checkDate($validated['document_date_expiring']) && (!isset($validated['date_expiring_indefinite']) || !$validated['date_expiring_indefinite'])){
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'document_date_expiring\'');
+        }
+
+        $sd = StrategicDocument::find((int)$validated['sd_id']);
+        if(!$sd){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Стратегическият документ не съществува');
+        }
+        $validated['doc'] = $validated['sub_doc_parent'] ?? null;
+        $validated['sd'] = $validated['sd_id'] ?? null;
+        $validated['strategic_document_level_id'] = $sd->strategic_document_level_id;
+
+        DB::beginTransaction();
+        try {
+            $validated['document_date_accepted'] = isset($validated['pris_act_id']) ? Pris::find($validated['pris_act_id'])->doc_date : ($validated['document_date_accepted'] ?? Carbon::now());
+            $item = new StrategicDocumentChildren();
+            $fillable = $this->getFillableValidated($validated, $item);
+            $fillable['strategic_document_id'] = $sd->id;
+            $fillable['parent_id'] = $validated['doc'] ?? null;
+            $item->fill($fillable);
+            $item->save();
+            $this->storeTranslateOrNew(StrategicDocumentChildren::TRANSLATABLE_FIELDS, $item, $validated);
+            DB::commit();
+
+            return $this->output(['id' => $item->id]);
+        } catch (\Exception $e) {
+
+            Log::error($e);
+            DB::rollBack();
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, __('messages.system_error'));
+        }
     }
 }
