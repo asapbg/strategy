@@ -29,6 +29,14 @@ Route::group(['middleware' => 'api'], function ($router){
             Route::get('/log/subject-types',       'subjects');
             Route::get('/log/causer-types',       'causers');
         });
+
+        Route::controller(\App\Http\Controllers\ApiStrategy\ImpactAssessmentsController::class)->group(function () {
+            Route::post('/executors',       'executorsCreate');
+        });
+
+        Route::controller(\App\Http\Controllers\ApiStrategy\PollsController::class)->group(function () {
+            Route::post('/polls', 'create');
+        });
     });
 });
 
@@ -109,7 +117,6 @@ Route::group(['middleware' => 'api'], function ($router){
         Route::get('/executors',       'executors');
         Route::get('/executors/{eik}',       'showExecutor');
         Route::get('/executors-by-id/{id}',       'executorsById');
-        Route::post('/executors',       'executorsCreate');
     });
 
     Route::controller(ReportsController::class)->group(function () {

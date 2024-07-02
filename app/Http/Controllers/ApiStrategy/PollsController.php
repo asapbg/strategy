@@ -5,11 +5,16 @@ namespace App\Http\Controllers\ApiStrategy;
 use App\Enums\AdvisoryTypeEnum;
 use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Http\Requests\StoreExecutorRequest;
+use App\Http\Requests\StorePollApiRequest;
 use App\Models\FieldOfAction;
 use App\Models\File;
+use App\Models\Poll;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class PollsController extends ApiController
@@ -149,5 +154,50 @@ class PollsController extends ApiController
         $data = $finalData;
 
         return $this->output($data);
+    }
+
+    public function create(Request $request)
+    {
+        Log::channel('strategy_api')->info('Create poll method. Inputs:'.json_encode($this->request_inputs, JSON_UNESCAPED_UNICODE));
+        $rs = new StorePollApiRequest();
+        $validator = Validator::make($this->request_inputs, $rs->rules());
+        if($validator->fails()){
+            return $this->returnErrors(Response::HTTP_OK, $validator->errors()->toArray());
+        }
+
+        $validated = $validator->validated();
+        if(isset($validated['end_date']) && $validated['end_date'] && Carbon::parse($validated['start_date'])->format('Y-m-d') > Carbon::parse($validated['end_date'])->format('Y-m-d')){
+            return $this->returnErrors(Response::HTTP_OK, ['end_date' => 'Крайната дата трябва да е след началната']);
+        }
+
+
+        DB::beginTransaction();
+        try {
+            $item = new Poll();
+            $fillable = $this->getFillableValidated($validated, $item);
+            $item->fill($fillable);
+            $item->user_id = $this->authanticated?->id;
+            $item->save();
+
+            foreach ($validated['questions'] as $q){
+                $question = $item->questions()->create([
+                    'name' => $q['text'],
+                ]);
+
+                foreach ($q['options'] as $op) {
+                    $question->answers()->create([
+                        'name' => $op,
+                    ]);
+                }
+            }
+            DB::commit();
+
+            return $this->output(['id' => $item->id]);
+        } catch (\Exception $e) {
+
+            Log::error($e);
+            DB::rollBack();
+            return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, __('messages.system_error'));
+        }
     }
 }

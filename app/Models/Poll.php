@@ -25,6 +25,7 @@ class Poll extends ModelActivityExtend implements Feedable
     public $timestamps = true;
 
     protected $table = 'poll';
+    protected $fillable = ['name', 'user_id', 'consultation_id', 'status', 'start_date', 'end_date', 'is_once', 'only_registered'];
 
     //activity
     protected string $logName = "poll";
