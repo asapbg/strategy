@@ -105,7 +105,7 @@ class ReportsController extends Controller
                         sd.document_date_accepted::date as date_accepted,
                         sd.document_date_expiring::date as date_expiring,
                         (
-                            select jsonb_agg(jsonb_build_object(\'name\', sdf.description, \'path\', \'' . url('/strategy-document/download-file') . '\' || sdf.id, \'version\', sdf."version"))
+                            select jsonb_agg(jsonb_build_object(\'name\', sdf.description, \'path\', \'' . url('/strategy-document/download-file') . '\' || \'/\' || sdf.id, \'version\', sdf."version"))
                             from strategic_document_file sdf where sdf.strategic_document_id = sd.id and sdf.locale = \'bg\'
                         ) as files,
                         null as subdocuments
