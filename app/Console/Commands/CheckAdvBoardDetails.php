@@ -46,8 +46,8 @@ class CheckAdvBoardDetails extends Command
             $needCheck = false;
 
         if($lastCheckFile) {
-//            if(Carbon::now()->format('Y-m-d') > Carbon::parse($lastCheckFile)->addMonths((int)$period->value)->format('Y-m-d')){
-            if(true){
+            if(Carbon::now()->format('Y-m-d') > Carbon::parse($lastCheckFile)->addMonths((int)$period->value)->format('Y-m-d')){
+//            if(true){
                 $needCheck = true;
             }
         } else{
