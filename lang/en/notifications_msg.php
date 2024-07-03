@@ -10,6 +10,6 @@ return [
     'adv_board_assigned.extra_info' => 'In the \'Advisory Boards\' section of the Public Consultation Portal, a page has been created for the following advisory board to which you are associated as an \'Advisory Board\' moderator:',
      'legislative_initiative.closed.subject' => 'Canceled legislative initiative',
      'legislative_initiative.closed.main_text' => 'On the Public Consultation Portal, a legislative initiative for which you expressed support has been cancelled. Information about the legislative initiative:',
-     'legislative_initiative.success.subject' => 'Legislative initiative received support',
-     'legislative_initiative.success.main_text' => 'A proposal for improving the legislation (called a legislative initiative) has been created on the Public Consultation Portal in connection with Art. 18 of the Law on normative acts. The initiative has gathered the support determined by the Public Consultation Portal system. This message was sent automatically and should be considered as a proposal under Chapter Eight of the Code of Administrative Procedure. Information about the legislative initiative:',
+     'legislative_initiative.success.subject' => 'A legislative initiative received the necessary support',
+     'legislative_initiative.success.main_text' => 'On the Public Consultation Portal, a legislative initiative in which you participated has been successfully completed. Information about the legislative initiative:',
 ];

@@ -37,7 +37,7 @@ class LegislativeInitiativeVotesController extends Controller
             $new->save();
 
             $item->refresh();
-            if($item->cap <= $item->countSupport()) {
+            if($item->cap == $item->countSupport()) {
                 $item->status = LegislativeInitiativeStatusesEnum::STATUS_SEND->value;
                 $item->ready_to_send = 1;
                 $item->end_support_at = Carbon::now()->format('Y-m-d H:i:s');

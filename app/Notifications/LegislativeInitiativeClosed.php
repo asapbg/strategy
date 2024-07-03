@@ -53,7 +53,7 @@ class LegislativeInitiativeClosed extends Notification
         }
 
         return (new MailMessage)
-            ->subject('[Strategy.bg] '.__('notifications_msg.legislative_initiative.closed.subject').': '.$this->item->facebookTitle)
+            ->subject('[Strategy.bg] '.__('notifications_msg.legislative_initiative.closed.subject').': "'.$this->item->facebookTitle.'"')
             ->markdown('emails.legislative_initiative.unsuccessful', ['data' => $this->data]);
     }
 
