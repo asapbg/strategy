@@ -343,7 +343,7 @@ class LegislativeInitiativeController extends AdminController
                 $users = User::whereIn('id', $likesUserIds)->get();
                 if($users->count()){
                     foreach ($users as $n){
-                        $n->notify(new LegislativeInitiativeClosed($item, 'deleted'));
+                        $n->notify(new LegislativeInitiativeClosed($item, 'deleted', false));
                     }
                 }
             }

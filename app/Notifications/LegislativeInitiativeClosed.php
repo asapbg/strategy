@@ -14,15 +14,17 @@ class LegislativeInitiativeClosed extends Notification
     protected $item;
     protected $action;
     protected $data;
+    protected $subscriptionsLink;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($item, $action)
+    public function __construct($item, $action, $subscriptionsLink = true)
     {
         $this->item = $item;
         $this->action = $action;
+        $this->subscriptionsLink = $subscriptionsLink;
     }
 
     /**
@@ -45,7 +47,7 @@ class LegislativeInitiativeClosed extends Notification
     public function toMail($notifiable)
     {
         $this->data = array('item' => $this->item);
-
+        $this->data['showSubscriptionLink'] = $this->subscriptionsLink;
         if($this->action != 'deleted'){
             $this->data['url'] = route('legislative_initiatives.view', $this->item->id);
         }
