@@ -87,9 +87,9 @@ class StrategicDocumentsController extends ApiController
                     left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \''.$this->locale.'\'
                     left join public_consultation pc on pc.id = sd.public_consultation_id
                     left join (select level_id, level_name from (
-                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
-                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
-                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                                    values ('.InstitutionCategoryLevelEnum::CENTRAL->value.', \'' . __('custom.strategic_document.levels.CENTRAL') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::AREA->value.', \'' . __('custom.strategic_document.levels.AREA') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::MUNICIPAL->value.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
                         ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
                     where true
                         '.(!$this->authanticated ? ' and sd.deleted_at is null and sd.active = true ' : '').'
@@ -169,9 +169,9 @@ class StrategicDocumentsController extends ApiController
                     left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \''.$this->locale.'\'
                     left join public_consultation pc on pc.id = sd.public_consultation_id
                     left join (select level_id, level_name from (
-                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
-                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
-                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                                    values ('.InstitutionCategoryLevelEnum::CENTRAL->value.', \'' . __('custom.strategic_document.levels.CENTRAL') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::AREA->value.', \'' . __('custom.strategic_document.levels.AREA') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::MUNICIPAL->value.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
                         ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
                     where true
                         '.(!$this->authanticated ? ' and sd.deleted_at is null ' : '').'

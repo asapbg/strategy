@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\Consultations\PublicConsultation;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -276,9 +277,9 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                     from strategic_document_children
                     left join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id
                     left join (select level_id, level_name from (
-                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
-                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
-                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                                    values ('.InstitutionCategoryLevelEnum::CENTRAL->value.', \'' . __('custom.strategic_document.levels.CENTRAL') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::AREA->value.', \'' . __('custom.strategic_document.levels.AREA') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::MUNICIPAL->value.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
                         ) E(level_id, level_name)) enums on enums.level_id = strategic_document_children.strategic_document_level_id
                     left join field_of_actions foa on foa.id = strategic_document_children.policy_area_id
                     left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
@@ -352,9 +353,9 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                     from strategic_document_children
                     left join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id
                     left join (select level_id, level_name from (
-                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
-                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
-                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                                    values ('.InstitutionCategoryLevelEnum::CENTRAL->value.', \'' . __('custom.strategic_document.levels.CENTRAL') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::AREA->value.', \'' . __('custom.strategic_document.levels.AREA') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::MUNICIPAL->value.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
                         ) E(level_id, level_name)) enums on enums.level_id = strategic_document_children.strategic_document_level_id
                     left join field_of_actions foa on foa.id = strategic_document_children.policy_area_id
                     left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
@@ -432,9 +433,9 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                     from strategic_document_children
                     left join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id
                     left join (select level_id, level_name from (
-                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
-                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
-                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                                    values ('.InstitutionCategoryLevelEnum::CENTRAL->value.', \'' . __('custom.strategic_document.levels.CENTRAL') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::AREA->value.', \'' . __('custom.strategic_document.levels.AREA') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::MUNICIPAL->value.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
                         ) E(level_id, level_name)) enums on enums.level_id = strategic_document_children.strategic_document_level_id
                     left join field_of_actions foa on foa.id = strategic_document_children.policy_area_id
                     left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
@@ -511,9 +512,9 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                     from strategic_document_children
                     left join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id
                     left join (select level_id, level_name from (
-                                    values (1, \''.__('custom.strategic_document.levels.CENTRAL').'\'),
-                                    (2, \''.__('custom.strategic_document.levels.AREA').'\'),
-                                    (3, \''.__('custom.strategic_document.levels.MUNICIPAL').'\')
+                                    values ('.InstitutionCategoryLevelEnum::CENTRAL->value.', \'' . __('custom.strategic_document.levels.CENTRAL') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::AREA->value.', \'' . __('custom.strategic_document.levels.AREA') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::MUNICIPAL->value.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
                         ) E(level_id, level_name)) enums on enums.level_id = strategic_document_children.strategic_document_level_id
                     left join field_of_actions foa on foa.id = strategic_document_children.policy_area_id
                     left join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \'bg\'
