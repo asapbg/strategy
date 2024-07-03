@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Jobs\SendSubscribedUserEmailJob;
+use App\Library\Facebook;
 use App\Models\CustomRole;
+use App\Models\Setting;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentTranslation;
 use App\Models\User;
@@ -21,7 +23,30 @@ class StrategicDocumentTranslationObserver
      */
     public function created(StrategicDocumentTranslation  $strategicDocumentTranslation)
     {
+        $strategicDocument = $strategicDocumentTranslation->parent;
+        if(!env('DISABLE_OBSERVERS', false)) {
+            if ($strategicDocument->active) {
+                if (!$strategicDocument->parent_document_id) {
+                    //post on facebook
+                    $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                        ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                        ->get()->first();
+                    if ($activeFB->value) {
+                        $facebookApi = new Facebook();
+                        $facebookApi->postOnPage(array(
+                            'message' => 'На Портала за обществени консултации е публикуван нов стратегически документ. Запознайте се с документа тук.',
+//                            'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
+                            'link' => route('strategy-document.view', $strategicDocument->id),
+                            'published' => true
+                        ));
+                    }
+                }
 
+                $this->sendEmails($strategicDocumentTranslation, 'created');
+
+                Log::info('Send subscribe email on creation');
+            }
+        }
     }
 
     /**
@@ -55,6 +80,7 @@ class StrategicDocumentTranslationObserver
      */
     private function sendEmails(StrategicDocumentTranslation  $strategicDocumentTranslation, $event): void
     {
+        $strategicDocument = $strategicDocumentTranslation->parent;
         $administrators = null;
         $moderators = null;
         if ($event == "created") {
@@ -89,35 +115,43 @@ class StrategicDocumentTranslationObserver
             } else{
                 $moderators = null;
             }
+
+            //get users by model ID
+            $subscribedUsers = UserSubscribe::where('subscribable_type', StrategicDocument::class)
+                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                ->where('subscribable_id', '=', $strategicDocumentTranslation->parent->id)
+                ->get();
+
+            //get users by model filter
+            $filterSubscribtions = UserSubscribe::where('subscribable_type', StrategicDocument::class)
+                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                ->whereNull('subscribable_id')
+                ->get();
+
+            if($filterSubscribtions->count()){
+                foreach ($filterSubscribtions as $fSubscribe){
+                    $filterArray = json_decode($fSubscribe->search_filters, true);
+                    if($filterArray){
+                        $modelIds = StrategicDocument::list($filterArray)->pluck('id')->toArray();
+                        if(in_array($strategicDocument->id, $modelIds)){
+                            $subscribedUsers->add($fSubscribe);
+                        }
+                    }
+                }
+            }
+        } else{
+            //get users by model ID
+            $subscribedUsers = UserSubscribe::where('subscribable_type', StrategicDocument::class)
+                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                ->where('subscribable_id', '=', $strategicDocument->id)
+                ->get();
         }
-
-        //get users by model ID
-        $subscribedUsers = UserSubscribe::where('subscribable_type', StrategicDocument::class)
-            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->where('subscribable_id', '=', $strategicDocumentTranslation->parent->id)
-            ->get();
-
-        //get users by model filter
-//        $filterSubscribtions = UserSubscribe::where('subscribable_type', StrategicDocument::class)
-//            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-//            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-//            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-//            ->whereNull('subscribable_id')
-//            ->get();
-//
-//        if($filterSubscribtions->count()){
-//            foreach ($filterSubscribtions as $fSubscribe){
-//                $filterArray = json_decode($fSubscribe->search_filters, true);
-//                if($filterArray){
-//                    $modelIds = StrategicDocument::list($filterArray)->pluck('id')->toArray();
-//                    if(in_array($strategicDocumentTranslation->parent->id, $modelIds)){
-//                        $subscribedUsers->add($fSubscribe);
-//                    }
-//                }
-//            }
-//        }
 
         if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
             return;

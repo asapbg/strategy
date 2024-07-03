@@ -244,7 +244,7 @@
 
             <div class="row mb-0 mt-5">
                 <div class="mb-2">
-                    <h2 class="mb-1">Дъщерни докумнети</h2>
+                    <h2 class="mb-1">Дъщерни документи</h2>
                 </div>
             </div>
             <div class="row p-1 mb-2">

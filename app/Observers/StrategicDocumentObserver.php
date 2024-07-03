@@ -22,29 +22,29 @@ class StrategicDocumentObserver
      */
     public function created(StrategicDocument  $strategicDocument)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
-            if ($strategicDocument->active) {
-                if (!$strategicDocument->parent_document_id) {
-                    //post on facebook
-                    $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                        ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                        ->get()->first();
-                    if ($activeFB->value) {
-                        $facebookApi = new Facebook();
-                        $facebookApi->postOnPage(array(
-                            'message' => 'На Портала за обществени консултации е публикуван нов стратегически документ. Запознайте се с документа тук.',
-//                            'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
-                            'link' => route('strategy-document.view', $strategicDocument->id),
-                            'published' => true
-                        ));
-                    }
-                }
-
-                $this->sendEmails($strategicDocument, 'created');
-
-                Log::info('Send subscribe email on creation');
-            }
-        }
+//        if(!env('DISABLE_OBSERVERS', false)) {
+//            if ($strategicDocument->active) {
+//                if (!$strategicDocument->parent_document_id) {
+//                    //post on facebook
+//                    $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+//                        ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+//                        ->get()->first();
+//                    if ($activeFB->value) {
+//                        $facebookApi = new Facebook();
+//                        $facebookApi->postOnPage(array(
+//                            'message' => 'На Портала за обществени консултации е публикуван нов стратегически документ. Запознайте се с документа тук.',
+////                            'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
+//                            'link' => route('strategy-document.view', $strategicDocument->id),
+//                            'published' => true
+//                        ));
+//                    }
+//                }
+//
+//                $this->sendEmails($strategicDocument, 'created');
+//
+//                Log::info('Send subscribe email on creation');
+//            }
+//        }
     }
 
     /**
