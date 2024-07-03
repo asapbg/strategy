@@ -347,7 +347,7 @@ class LegislativeInitiativeController extends AdminController
                     }
                 }
             }
-            $redirectTo = url()->previous();
+            $redirectTo = route('legislative_initiatives.index');
             return redirect($redirectTo)
                 ->with('success', trans_choice('custom.legislative_initiatives', 1) . " " . __('messages.deleted_successfully_f'));
         } catch (\Exception $e) {
