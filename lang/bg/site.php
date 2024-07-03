@@ -203,6 +203,7 @@ return [
     'contacts.subject.report_problem' => 'Докладване за проблем',
     'contacts.subject.question' => 'Въпрос',
     'contacts.subject.proposal' => 'Предложение',
+    'contacts.subject.missing' => 'Не сте избрали \'Относно\'',
     'contacts.message' => 'Съобщение',
     'contacts.no_admins_for_contact' => 'Не са открити администратори до които да адресираме съобщението Ви. ',
     'contacts.success_send_msg' => 'Съобщението е изпратено успешно',

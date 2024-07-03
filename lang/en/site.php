@@ -202,6 +202,7 @@ return [
     'contacts.subject.report_problem' => 'Report a problem',
     'contacts.subject.question' => 'Question',
     'contacts.subject.proposal' => 'Proposal',
+    'contacts.subject.missing' => 'You must select \'Proposal\'',
     'contacts.message' => 'Message',
     'contacts.no_admins_for_contact' => 'No admins found to address your message to. ',
     'contacts.success_send_msg' => 'Message sent successfully',

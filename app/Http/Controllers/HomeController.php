@@ -677,6 +677,9 @@ class HomeController extends Controller
     {
         $validated = $request->validated();
 
+        if(!in_array($validated['subject'], [__('site.contacts.subject.report_problem'), __('site.contacts.subject.question'), __('site.contacts.subject.proposal')])){
+            return back()->withInput()->with('danger', __('site.contacts.subject.missing'));
+        }
         if(config('app.env') != 'production'){
             $admins = [config('mail.local_to_mail')];
         } else{
@@ -684,7 +687,7 @@ class HomeController extends Controller
         }
 
         if(!sizeof($admins)){
-            return back()->withInput()->with('danger', __('site.no_admins_for_contact'));
+            return back()->withInput()->with('danger', __('site.contacts.no_admins_for_contact'));
         }
 
         Mail::to($admins)->send(new ContactFormMsg($validated));
