@@ -838,6 +838,7 @@ return [
     'strategic_document.dropdown.AREA' => 'Area',
     'strategic_document.dropdown.MUNICIPAL' => 'Municipal',
     'strategic_document.levels.CENTRAL' => 'National',
+    'strategic_document.levels.CENTRAL_OTHER'        => 'National',
     'strategic_document.levels.AREA' => 'Area',
     'strategic_document.levels.MUNICIPAL' => 'Municipal',
     'pris_categories' => 'Type of IC Act|Types of IC Acts',

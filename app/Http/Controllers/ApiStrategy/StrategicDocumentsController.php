@@ -55,7 +55,7 @@ class StrategicDocumentsController extends ApiController
                         sd.pris_act_id,
                         case when sd.pris_act_id is not null then
                         (
-                            select array_agg(it."name")
+                            select array_agg(it."name") filter (where it.id is not null)
                             from pris
                             left join pris_institution pi2 on pi2.pris_id = pris.id
                             left join institution i on i.id = pi2.institution_id
@@ -136,7 +136,7 @@ class StrategicDocumentsController extends ApiController
                         sd.pris_act_id,
                         case when sd.pris_act_id is not null then
                         (
-                            select array_agg(it."name")
+                            select array_agg(it."name") filter (where it.id is not null)
                             from pris
                             left join pris_institution pi2 on pi2.pris_id = pris.id
                             left join institution i on i.id = pi2.institution_id

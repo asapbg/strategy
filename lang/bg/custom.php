@@ -838,6 +838,7 @@ return [
     'strategic_document.dropdown.AREA'        => 'Областно',
     'strategic_document.dropdown.MUNICIPAL'        => 'Общинско',
     'strategic_document.levels.CENTRAL'        => 'Национално',
+    'strategic_document.levels.CENTRAL_OTHER'        => 'Национално',
     'strategic_document.levels.AREA'        => 'Областно',
     'strategic_document.levels.MUNICIPAL'        => 'Общинско',
     'pris_categories' => 'Вид на акт на МС|Видове на актове на МС',

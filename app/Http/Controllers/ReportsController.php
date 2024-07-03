@@ -44,9 +44,9 @@ class ReportsController extends Controller
                     left join authority_accepting_strategic aas on aas.id = strategic_document.accept_act_institution_type_id
                     left join authority_accepting_strategic_translations aast on aast.authority_accepting_strategic_id = aas.id and aast.locale = \'bg\'
                     left join (select level_id, level_name from (
-                                    values (1, \'' . __('custom.strategic_document.levels.CENTRAL') . '\'),
-                                    (2, \'' . __('custom.strategic_document.levels.AREA') . '\'),
-                                    (3, \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
+                                    values ('.InstitutionCategoryLevelEnum::CENTRAL->value.', \'' . __('custom.strategic_document.levels.CENTRAL') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::AREA->value.', \'' . __('custom.strategic_document.levels.AREA') . '\'),
+                                    ('.InstitutionCategoryLevelEnum::MUNICIPAL->value.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
                         ) E(level_id, level_name)) enums on enums.level_id = strategic_document.strategic_document_level_id
                     where
                         strategic_document.active = true
@@ -87,7 +87,7 @@ class ReportsController extends Controller
                         sd.pris_act_id,
                         case when sd.pris_act_id is not null then
                         (
-                            select array_agg(it."name")
+                            select array_agg(it."name") filter (where it.id is not null)
                             from pris
                             left join pris_institution pi2 on pi2.pris_id = pris.id
                             left join institution i on i.id = pi2.institution_id
@@ -158,7 +158,7 @@ class ReportsController extends Controller
                     if (sizeof($data)) {
                         foreach ($data as $row) {
                             $row->subdocuments = StrategicDocumentChildren::getTreeReport(0, $row->sd_id, true);
-//                            unset($row->sd_id);
+                            unset($row->sd_id);
                             if (!empty($row->files)) {
                                 $row->files = json_decode($row->files, true);
                             }
