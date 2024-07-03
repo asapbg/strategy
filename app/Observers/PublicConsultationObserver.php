@@ -21,27 +21,27 @@ class PublicConsultationObserver
      */
     public function created(PublicConsultation $publicConsultation)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
-            if ($publicConsultation->active) {
-                //post on facebook
-                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                    ->get()->first();
-                if ($activeFB->value) {
-                    $facebookApi = new Facebook();
-                    $facebookApi->postOnPage(array(
-                        'message' => 'На Портала за обществени консултации е публикувана нова консултация. Срокът за коментари е: '.displayDate($publicConsultation->open_to).'. Вижте повече тук.',
-//                        'message' => 'Публикувана е Обществена консултация: ' . $publicConsultation->title,
-                        'link' => route('public_consultation.view', $publicConsultation->id),
-                        'published' => true
-                    ));
-                }
-
-                $this->sendEmails($publicConsultation, 'created');
-
-                Log::info('Send subscribe email on creation');
-            }
-        }
+//        if(!env('DISABLE_OBSERVERS', false)) {
+//            if ($publicConsultation->active) {
+//                //post on facebook
+//                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+//                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+//                    ->get()->first();
+//                if ($activeFB->value) {
+//                    $facebookApi = new Facebook();
+//                    $facebookApi->postOnPage(array(
+//                        'message' => 'На Портала за обществени консултации е публикувана нова консултация. Срокът за коментари е: '.displayDate($publicConsultation->open_to).'. Вижте повече тук.',
+////                        'message' => 'Публикувана е Обществена консултация: ' . $publicConsultation->title,
+//                        'link' => route('public_consultation.view', $publicConsultation->id),
+//                        'published' => true
+//                    ));
+//                }
+//
+//                $this->sendEmails($publicConsultation, 'created');
+//
+//                Log::info('Send subscribe email on creation');
+//            }
+//        }
     }
 
     /**
