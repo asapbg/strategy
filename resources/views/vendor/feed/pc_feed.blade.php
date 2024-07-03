@@ -23,25 +23,29 @@
   @endforeach
     @foreach($items as $item)
         <entry>
-            <author>
-                <name>{!! \Spatie\Feed\Helpers\Cdata::out($item->authorName) !!}</name>
-{{--                @if(!empty($item->authorEmail))--}}
-{{--                    <email>{!! \Spatie\Feed\Helpers\Cdata::out($item->authorEmail) !!}</email>--}}
-{{--                @endif--}}
-            </author>
+            <title>{{ $item->title }}</title>
+            <link rel="alternate" href="{{ url($item->link) }}"/>
+            <id>{{ url($item->link) }}</id>
             @foreach($item->category as $category)
                 <category term="{{ $category }}" />
             @endforeach
+            <author>
+                <name>{{ $item->authorName }}</name>
+                @if($item->authorUrl)
+                    <url>{{ $item->authorUrl }}</url>
+                @endif
+            </author>
+            @if($item->enclosure)
+                <summary type="html">
+                    <description><![CDATA[
+                        <img alt="{{ $item->title }}" src="{{ url($item->enclosure) }}" />
+                        ]]></description>
+                </summary>
+            @endif
             <content type="html"><![CDATA[
-                <a href="{{ url($item->link) }}">
-                    <img alt="{{ $item->title }}" src="{{ url($item->enclosure) }}" />
-                </a>
                 {!! $item->summary !!}
                 ]]></content>
-            <id>{{ url($item->id) }}</id>
-            <link href="{{ url($item->link) }}"/>
             <updated>{{ \Carbon\Carbon::parse($item->updated)->toAtomString() }}</updated>
-            <title>{{ $item->title }}</title>
         </entry>
     @endforeach
 </feed>

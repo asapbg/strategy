@@ -78,7 +78,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             'created' => $this->created_at,
             'enclosure' => asset(self::DEFAULT_IMG),
             'link' => route('public_consultation.view', ['id' => $this->id]),
-            'authorName' => '',
+            'authorName' => $this->responsibleInstitution?->name,
+            'authorUrl' => $this->responsibleInstitution ? route('institution.profile.pc', $this->responsibleInstitution) : null,
             'authorEmail' => ''
         ]);
     }
