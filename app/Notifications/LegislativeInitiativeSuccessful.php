@@ -44,7 +44,7 @@ class LegislativeInitiativeSuccessful extends Notification
     {
         $this->data = array(
             'item' => $this->item,
-            'url' => route('legislative_initiatives.view', $notifiable->id)
+            'url' => route('legislative_initiatives.view', $this->item->id)
         );
 
         return (new MailMessage)

@@ -47,7 +47,7 @@ class LegislativeInitiativeClosed extends Notification
         $this->data = array('item' => $this->item);
 
         if($this->action != 'deleted'){
-            $this->data['url'] = route('legislative_initiatives.view', $notifiable->id);
+            $this->data['url'] = route('legislative_initiatives.view', $this->item->id);
         }
 
         return (new MailMessage)
