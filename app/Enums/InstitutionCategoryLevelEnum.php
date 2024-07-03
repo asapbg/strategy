@@ -51,4 +51,14 @@ enum InstitutionCategoryLevelEnum: int
         ];
         return $categories[$value] ?? -1;
     }
+
+    public static function convertFoaLevel($value): int
+    {
+        $categories = [
+            FieldOfAction::CATEGORY_NATIONAL => self::CENTRAL->value,
+            FieldOfAction::CATEGORY_AREA => self::AREA->value,
+            FieldOfAction::CATEGORY_MUNICIPAL => self::MUNICIPAL->value
+        ];
+        return $categories[$value] ?? -1;
+    }
 }

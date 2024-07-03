@@ -219,7 +219,7 @@ class seedOldStrategicDocuments extends Command
             );
 
             $policy_area_id = null;
-            $strategic_document_level_id = InstitutionCategoryLevelEnum::CENTRAL_OTHER->value;
+            $strategic_document_level_id = 0;
 
             //Level
             if((int)$oldStrategicDoc->cat_parentid > 0 && isset($levelMapping[(int)$oldStrategicDoc->cat_parentid])) {
@@ -250,7 +250,8 @@ class seedOldStrategicDocuments extends Command
                 } else{
                     //Main category
                     if(in_array((int)$oldStrategicDoc->category_id, [FieldOfAction::CATEGORY_NATIONAL,FieldOfAction::CATEGORY_AREA,FieldOfAction::CATEGORY_MUNICIPAL])){
-                        $policy_area_id = (int)$oldStrategicDoc->category_id;
+//                        $policy_area_id = (int)$oldStrategicDoc->category_id;
+                        $policy_area_id = null;
                         $strategic_document_level_id = $levelMapping[(int)$oldStrategicDoc->cat_parentid];
                     }
                 }
