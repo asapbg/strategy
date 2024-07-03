@@ -109,6 +109,7 @@ class PublicConsultationTranslationObserver
     private function sendEmails(PublicConsultationTranslation  $publicConsultationTranslation, $event): void
     {
         $publicConsultation = $publicConsultationTranslation->parent;
+        Log::error($publicConsultation);
         $administrators = null;
         $moderators = null;
 

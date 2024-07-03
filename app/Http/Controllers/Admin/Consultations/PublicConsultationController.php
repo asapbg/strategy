@@ -221,7 +221,9 @@ class PublicConsultationController extends AdminController
             $to = $validated['open_to'] ? Carbon::parse($validated['open_to']) : null;
             $item->active_in_days = $to && $from ? $to->diffInDays($from) : null;
             $item->save();
-
+            if( !$id ) {
+                $item->reg_num = $item->id . '-K';
+            }
             $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
 
             $item->consultations()->sync($validated['connected_pc'] ?? []);
@@ -269,12 +271,6 @@ class PublicConsultationController extends AdminController
                 }
             }
             //END Timeline
-
-
-            if( !$id ) {
-                $item->reg_num = $item->id.'-K';
-                $item->save();
-            }
 
             //Update polls if need to
             if( (displayDate($oldOpenFrom) != displayDate($item->open_from)) || (displayDate($oldOpenTo) != displayDate($item->open_from)) ) {

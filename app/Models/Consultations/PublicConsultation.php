@@ -108,7 +108,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
      * Get the model name
      */
     public function getModelName() {
-        return $this->translation?->title;
+        return $this->title;
     }
 
     public static function translationFieldsProperties(): array
