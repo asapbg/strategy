@@ -28,8 +28,6 @@ class GenerateOpenData extends Command
     public function handle()
     {
         $reports = [
-            'pris' => ['standard', 'archive'],
-            'public-consultations' => ['standard', 'field-of-actions', 'field-of-actions-institution', 'institutions', 'full'],
             'strategic-documents' => ['standard', 'full'],
             'legislative-initiatives' => ['standard'],
             'legislative-program' => ['standard'],
@@ -39,6 +37,8 @@ class GenerateOpenData extends Command
             'library' => ['standard'],
             'polls' => ['standard'],
             'ogp' => ['full'],
+            'public-consultations' => ['standard', 'field-of-actions', 'field-of-actions-institution', 'institutions', 'full'],
+            'pris' => ['standard', 'archive'],
 
         ];
         $this->comment('Start at: '.date('Y-m-d H:i:s'));
