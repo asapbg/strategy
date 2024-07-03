@@ -31,11 +31,11 @@
             @endforeach
             <author>
                 <name>{{ $item->authorName }}</name>
-                @if($item->authorUrl)
+                @if(isset($item->authorUrl) && $item->authorUrl)
                     <url>{{ $item->authorUrl }}</url>
                 @endif
             </author>
-            @if($item->enclosure)
+            @if(isset($item->enclosure) && $item->enclosure)
                 <summary type="html">
                     <description><![CDATA[
                         <img alt="{{ $item->title }}" src="{{ url($item->enclosure) }}" />
