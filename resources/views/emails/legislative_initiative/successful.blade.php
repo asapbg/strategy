@@ -8,8 +8,8 @@
 {{ __('site.email.li.change') }}: {{ strip_tags(html_entity_decode($data['item']->description)) ?? '' }}<br>
 {{ __('custom.author') }} : {{ $data['item']->user?->fullName() }}<br>
 {{ __('site.email.li.law_institution') }} : {{ $data['item']->law && $data['item']->law->institutions->count() ? join(';', $data['item']->law->institutions->pluck('name')->toArray()) : '' }}<br>
-{{ __('Link to the legislative initiative on the Public Consultation Portal') }}:
 @if(isset($data['url']) && !empty($data['url']))
+{{ __('Link to the legislative initiative on the Public Consultation Portal') }}:
     @component('mail::link', ['url' => $data['url']])
         {{ __('See the legislative initiative') }}
     @endcomponent
