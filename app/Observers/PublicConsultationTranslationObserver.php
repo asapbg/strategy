@@ -39,7 +39,7 @@ class PublicConsultationTranslationObserver
                     ));
                 }
 
-                $this->sendEmails($publicConsultation, 'created');
+                $this->sendEmails($publicConsultationTranslation, 'created');
 
                 Log::info('Send subscribe email on creation');
             }
