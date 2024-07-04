@@ -117,6 +117,23 @@ class NomenclatureController extends ApiController
         return $this->output($data);
     }
 
+    public function strategicDocumentTypes(Request $request){
+        $data = DB::select('
+            select
+                sdt.id,
+                sdtt."name" as title
+            from strategic_document_type sdt
+            join strategic_document_type_translations sdtt on sdtt.strategic_document_type_id = sdt.id and sdtt.locale = \''.$this->locale.'\'
+            where true
+                '.(!$this->authanticated ? 'and sdt.deleted_at is null ' : '').'
+            order by sdtt."name"
+            '.($this->request_limit ? ' limit '.$this->request_limit : '').'
+            '.($this->request_offset ? ' offset '.$this->request_offset : '').'
+        ');
+
+        return $this->output($data);
+    }
+
     public function consultationLevels(Request $request){
         return $this->output(array(
             [
