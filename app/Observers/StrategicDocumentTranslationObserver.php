@@ -24,7 +24,7 @@ class StrategicDocumentTranslationObserver
     public function created(StrategicDocumentTranslation  $strategicDocumentTranslation)
     {
         $strategicDocument = $strategicDocumentTranslation->parent;
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if(!env('DISABLE_OBSERVERS', false)  && $strategicDocumentTranslation->locale == config('app.default_lang')) {
             if ($strategicDocument->active) {
                 if (!$strategicDocument->parent_document_id) {
                     //post on facebook

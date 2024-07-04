@@ -26,4 +26,9 @@ class PrisTranslation extends Model
             set: fn (string|null $value) => !empty($value) ?  htmlentities(stripHtmlTags($value)) : $value,
         );
     }
+
+    public function parent(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Pris::class, 'id', 'pris_id');
+    }
 }

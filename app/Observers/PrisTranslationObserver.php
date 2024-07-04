@@ -5,106 +5,98 @@ namespace App\Observers;
 use App\Jobs\SendSubscribedUserEmailJob;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\Pris;
-use App\Models\User;
+use App\Models\PrisTranslation;
 use App\Models\UserSubscribe;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class PrisObserver
+class PrisTranslationObserver
 {
     /**
-     * Handle the Pris "created" event.
+     * Handle the PrisTranslation "created" event.
      *
-     * @param  \App\Models\Pris  $pris
+     * @param  \App\Models\PrisTranslation  $prisTranslation
      * @return void
      */
-    public function created(Pris $pris)
+    public function created(PrisTranslation $prisTranslation)
     {
-//        if(!env('DISABLE_OBSERVERS', false)) {
-//            if (!empty($pris->published_at)) {
-//                $this->sendEmails($pris, 'created');
-//                Log::info('Send subscribe email on creation');
-//                if ($pris->public_consultation_id) {
-//                    //send if pris pc
-//                    $this->sendEmails($pris, 'created_with_pc');
-//                    Log::info('Send subscribe email on creation');
-//                }
-//            }
-//        }
-    }
-
-    /**
-     * Handle the Pris "updated" event.
-     *
-     * @param  \App\Models\Pris  $pris
-     * @return void
-     */
-    public function updated(Pris $pris)
-    {
-        if(!env('DISABLE_OBSERVERS', false)) {
-            $old_published_at = (int)$pris->getOriginal('published_at');
-            $old_public_consultation_id = (int)$pris->getOriginal('public_consultation_id');
-
-            //Check for real changes
-            $dirty = $pris->getDirty(); //return all changed fields
-            //skip some fields in specific cases
-            unset($dirty['updated_at']);
-
-//            if (sizeof($dirty) && !$old_published_at && !empty($pris->published_at)) {
-            if (sizeof($dirty) && !empty($pris->published_at)) {
-                $this->sendEmails($pris, 'updated');
-                Log::info('Send subscribe email on update');
-            }
-            if (!$old_public_consultation_id && $pris->public_consultation_id) {
-                //send if pris pc
-                $this->sendEmails($pris, 'updated_with_pc');
+        $pris = $prisTranslation->parent;
+        if(!env('DISABLE_OBSERVERS', false) && $prisTranslation->locale == config('app.default_lang')) {
+            if (!empty($pris->published_at)) {
+                $this->sendEmails($prisTranslation, 'created');
                 Log::info('Send subscribe email on creation');
+                if ($pris->public_consultation_id) {
+                    //send if pris pc
+                    $this->sendEmails($prisTranslation, 'created_with_pc');
+                    Log::info('Send subscribe email on creation');
+                }
             }
         }
     }
 
     /**
-     * Handle the Pris "deleted" event.
+     * Handle the PrisTranslation "updated" event.
      *
-     * @param  \App\Models\Pris  $pris
+     * @param  \App\Models\PrisTranslation  $prisTranslation
      * @return void
      */
-    public function deleted(Pris $pris)
+    public function updated(PrisTranslation $prisTranslation)
+    {
+        if(!env('DISABLE_OBSERVERS', false)) {
+            //Check for real changes
+            $dirty = $prisTranslation->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
+
+            if (sizeof($dirty) && $prisTranslation->parent->published_at) {
+                $this->sendEmails($prisTranslation, 'updated');
+                Log::info('Send subscribe email on update');
+            }
+        }
+    }
+
+    /**
+     * Handle the PrisTranslation "deleted" event.
+     *
+     * @param  \App\Models\PrisTranslation  $prisTranslation
+     * @return void
+     */
+    public function deleted(PrisTranslation $prisTranslation)
     {
         //
     }
 
     /**
-     * Handle the Pris "restored" event.
+     * Handle the PrisTranslation "restored" event.
      *
-     * @param  \App\Models\Pris  $pris
+     * @param  \App\Models\PrisTranslation  $prisTranslation
      * @return void
      */
-    public function restored(Pris $pris)
+    public function restored(PrisTranslation $prisTranslation)
     {
         //
     }
 
     /**
-     * Handle the Pris "force deleted" event.
+     * Handle the PrisTranslation "force deleted" event.
      *
-     * @param  \App\Models\Pris  $pris
+     * @param  \App\Models\PrisTranslation  $prisTranslation
      * @return void
      */
-    public function forceDeleted(Pris $pris)
+    public function forceDeleted(PrisTranslation $prisTranslation)
     {
         //
     }
 
     /**
-     * Send emails
+     * Send emails to all administrators, moderators and subscribed users
      *
-     * @param Pris $pris
+     * @param PrisTranslation  $prisTranslation
      * @param $event
      * @return void
      */
-    private function sendEmails(Pris $pris, $event): void
+    private function sendEmails(PrisTranslation  $prisTranslation, $event): void
     {
+        $pris = $prisTranslation->parent;
         if($event == 'created' || $event == 'updated'){
             $administrators = null;
             $moderators = null;

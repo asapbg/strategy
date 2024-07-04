@@ -23,7 +23,7 @@ class PublicConsultationTranslationObserver
     public function created(PublicConsultationTranslation $publicConsultationTranslation)
     {
         $publicConsultation = $publicConsultationTranslation->parent;
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if(!env('DISABLE_OBSERVERS', false) && $publicConsultationTranslation->locale == config('app.default_lang')) {
             if ($publicConsultation->active) {
                 //post on facebook
                 $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)

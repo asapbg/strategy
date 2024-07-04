@@ -15,6 +15,7 @@ use App\Models\OgpPlan;
 use App\Models\OgpPlanAreaOfferVote;
 use App\Models\Poll;
 use App\Models\Pris;
+use App\Models\PrisTranslation;
 use App\Models\Publication;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
@@ -31,6 +32,7 @@ use App\Observers\OgpPlanObserver;
 use App\Observers\OperationalProgramObserver;
 use App\Observers\PollObserver;
 use App\Observers\PrisObserver;
+use App\Observers\PrisTranslationObserver;
 use App\Observers\PublicationObserver;
 use App\Observers\PublicConsultationObserver;
 use App\Observers\PublicConsultationTranslationObserver;
@@ -76,6 +78,7 @@ class EventServiceProvider extends ServiceProvider
         Publication::class => [PublicationObserver::class],
         AdvisoryBoardMeeting::class => [AdvisoryBoardMeetingObserver::class],
         Pris::class => [PrisObserver::class],
+        PrisTranslation::class => [PrisTranslationObserver::class],
         OperationalProgram::class => [OperationalProgramObserver::class],
         LegislativeProgram::class => [LegislativeProgramObserver::class],
         Poll::class => [PollObserver::class],

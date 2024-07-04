@@ -98,6 +98,12 @@ class LoginController extends Controller
             ]);
         }
 
+        if ($user->activity_status == User::STATUS_REG_IN_PROCESS) {
+            throw ValidationException::withMessages([
+                'error' => [trans('auth.verify_email')],
+            ]);
+        }
+
         if ($this->hasTooManyLoginAttempts($request)) {
             $user->activity_status = User::STATUS_BLOCKED;
             $user->save();
@@ -113,12 +119,6 @@ class LoginController extends Controller
             $this->incrementLoginAttempts($request);
             throw ValidationException::withMessages([
                 'error' => [trans('auth.active')],
-            ]);
-        }
-
-        if ($user->status == User::STATUS_REG_IN_PROCESS) {
-            throw ValidationException::withMessages([
-                'error' => [trans('auth.verify_email')],
             ]);
         }
 

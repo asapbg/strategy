@@ -135,6 +135,12 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 if ($this->data['event'] == "created") {
                     ${$var} = __("New pris $type text");
                     ${$varSubject} = __("New pris");
+                } elseif ($this->data['event'] == "update"){
+                    ${$var} = __("Update pris $type text");
+                    ${$varSubject} = __("Update pris");
+                } else {
+                    ${$var} = __("Update pris $type text");
+                    ${$varSubject} = __("Update pris");
                 }
                 ${$varUrl} = match ($type) {
 //                    'user' => route('strategy-document.view', ['id' => $this->data['modelInstance']->id]),
