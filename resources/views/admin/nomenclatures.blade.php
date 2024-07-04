@@ -62,12 +62,12 @@
                                 {{ trans_choice('custom.nomenclature.strategic_document_type', 2) }}
                             </a>
                         </div>
-                        <div class="col-sm-3">
-                            <a class="btn btn-info btn-block nomenclature-btn" href="{{ route('admin.nomenclature.consultation_type') }}">
-                                <i class="fas fa-folder-open"></i>
-                                {{ trans_choice('custom.nomenclature.consultation_type', 2) }}
-                            </a>
-                        </div>
+{{--                        <div class="col-sm-3">--}}
+{{--                            <a class="btn btn-info btn-block nomenclature-btn" href="{{ route('admin.nomenclature.consultation_type') }}">--}}
+{{--                                <i class="fas fa-folder-open"></i>--}}
+{{--                                {{ trans_choice('custom.nomenclature.consultation_type', 2) }}--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn" href="{{ route('admin.nomenclature.program_project') }}">
                                 <i class="fas fa-folder-open"></i>
@@ -80,15 +80,15 @@
                                 {{ trans_choice('custom.nomenclature.link_category', 2) }}
                             </a>
                         </div>
-                    </div>
-                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
-                                href="{{ route('admin.nomenclature.publication_category') }}">
+                               href="{{ route('admin.nomenclature.publication_category') }}">
                                 <i class="fas fa-folder"></i>
                                 {{ trans_choice('custom.nomenclature.publication_category', 2) }}
                             </a>
                         </div>
+                    </div>
+                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
                                 href="{{ route('admin.nomenclature.regulatory_act_type') }}">
@@ -109,15 +109,14 @@
                                 {{ trans_choice('custom.nomenclature.advisory_act_type', 2) }}
                             </a>
                         </div>
-                    </div>
-                    <div class="row mb-2">
-
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn" href="{{ route('admin.nomenclature.strategic_act_type') }}">
                                 <i class="fas fa-file"></i>
                                 {{ trans_choice('custom.nomenclature.strategic_act_type', 2) }}
                             </a>
                         </div>
+                    </div>
+                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
                                 href="{{ route('admin.nomenclature.advisory_chairman_type') }}">
@@ -133,16 +132,8 @@
                             </a>
                         </div>
                         <div class="col-sm-3">
-                            <a class="btn btn-info btn-block nomenclature-btn" href="{{ route('admin.nomenclature.consultation_level') }}">
-                                <i class="fas fa-folder-open"></i>
-                                {{ trans_choice('custom.nomenclature.consultation_level', 2) }}
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
-                                href="{{ route('admin.nomenclature.authority_accepting_strategic') }}">
+                               href="{{ route('admin.nomenclature.authority_accepting_strategic') }}">
                                 <i class="fas fa-university"></i>
                                 {{ trans_choice('custom.nomenclature.authority_accepting_strategic', 2) }}
                             </a>
@@ -154,6 +145,14 @@
                                 {{ trans_choice('validation.attributes.field_of_action', 2) }}
                             </a>
                         </div>
+{{--                        <div class="col-sm-3">--}}
+{{--                            <a class="btn btn-info btn-block nomenclature-btn" href="{{ route('admin.nomenclature.consultation_level') }}">--}}
+{{--                                <i class="fas fa-folder-open"></i>--}}
+{{--                                {{ trans_choice('custom.nomenclature.consultation_level', 2) }}--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
+                    </div>
+                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
                                href="{{ route('admin.nomenclature.tag') }}">
@@ -169,8 +168,6 @@
                                 {{ trans_choice('custom.nomenclature.consultation_document_type', 2) }}
                             </a>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
                                href="{{ route('admin.nomenclature.law') }}">

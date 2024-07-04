@@ -537,7 +537,7 @@ return [
     'nomenclature_level.CENTRAL'        => 'Централно',
     'nomenclature_level.CENTRAL_OTHER'        => 'Централно друго',
     'nomenclature_level.AREA'        => 'Областно',
-    'nomenclature_level.MUNICIPAL'        => 'Общинско ниво',
+    'nomenclature_level.MUNICIPAL'        => 'Общинско',
     'number_symbol'        => '№',
     'form1' => 'Частична предварителна оценка на въздействието',
     'form1_short' => 'Частична предварителна ОВ',

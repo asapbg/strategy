@@ -60,6 +60,7 @@ Route::group(['middleware' => 'api'], function ($router){
         Route::get('/act-types',       'actTypes');
         Route::get('/legal-act-types',       'legalActTypes');
         Route::get('/policy-areas',       'policyAreas');
+        Route::get('/consultation-levels',       'consultationLevels');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\PublicConsultationsController::class)->group(function () {

@@ -132,7 +132,7 @@ class seedOldPublicConsultations extends Command
                     $oldDbResult = DB::connection('old_strategy_app')
                         ->select('select
                         pc.id as old_id,
-                        -- consultation_level_id
+                        pc.categoryid as consultation_level_id,
                         -- act_type_id
                         -- legislative_program_id
                         -- operational_program_id

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiStrategy;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Exports\AdvBoardReportExport;
 use App\Models\AdvisoryActType;
@@ -46,25 +47,37 @@ class NomenclatureController extends ApiController
             '.($this->request_offset ? ' offset '.$this->request_offset : '').'
         ');
 
+        $finalData = array();
+        if(sizeof($data)){
+            foreach ($data as $row){
+                if(!empty($row->policy_areas)){
+                    $row->policy_areas = json_decode($row->policy_areas, true);
+                } else{
+                    $row->policy_areas = [];
+                }
+                $finalData[] = $row;
+            }
+        }
+        $data = $finalData;
         return $this->output($data);
     }
 
     public function laws(Request $request){
-        $institutionsIds = isset($this->request_inputs['institution-id']) && empty($this->request_inputs['institution-id']) ? $this->request_inputs['institution-id'] : '';
+        $institutionsIds = isset($this->request_inputs['institution-id']) && !empty($this->request_inputs['institution-id']) ? $this->request_inputs['institution-id'] : '';
 
         $data = DB::select('
             select * from (
                 select
                     l.id,
                     max(lt."name") as title,
-                    jsonb_agg(i.id) filter (where i.id is not null)
+                    jsonb_agg(i.id) filter (where i.id is not null) as institutions
                 from law l
                 join law_translations lt on lt.law_id = l.id and lt.locale = \''.$this->locale.'\'
                 left join law_institution li on li.law_id = l.id
                 left join institution i on i.id = li.institution_id
                 where true
                     '.(!$this->authanticated ? 'and l.deleted_at is null ' : '').'
-                    '.(sizeof($institutionsIds) ? '' : '').'
+                    '.(!empty($institutionsIds) ? 'and i.id in ('.$institutionsIds.')' : '').'
                 group by l.id
                 order by max(lt."name")
             ) A
@@ -72,6 +85,18 @@ class NomenclatureController extends ApiController
             '.($this->request_offset ? ' offset '.$this->request_offset : '').'
         ');
 
+        $finalData = array();
+        if(sizeof($data)){
+            foreach ($data as $row){
+                if(!empty($row->institutions)){
+                    $row->institutions = json_decode($row->institutions, true);
+                } else{
+                    $row->institutions = [];
+                }
+                $finalData[] = $row;
+            }
+        }
+        $data = $finalData;
         return $this->output($data);
     }
 
@@ -90,6 +115,23 @@ class NomenclatureController extends ApiController
         ');
 
         return $this->output($data);
+    }
+
+    public function consultationLevels(Request $request){
+        return $this->output(array(
+            [
+                'id' => InstitutionCategoryLevelEnum::CENTRAL->value,
+                'name' => trans('custom.nomenclature_level.'.InstitutionCategoryLevelEnum::CENTRAL->name, [], $this->locale)
+            ],
+            [
+                'id' => InstitutionCategoryLevelEnum::AREA->value,
+                'name' => trans('custom.nomenclature_level.'.InstitutionCategoryLevelEnum::AREA->name, [], $this->locale)
+            ],
+            [
+                'id' => InstitutionCategoryLevelEnum::MUNICIPAL->value,
+                'name' => trans('custom.nomenclature_level.'.InstitutionCategoryLevelEnum::MUNICIPAL->name, [], $this->locale)
+            ],
+        ));
     }
 
     public function legalActTypes(Request $request){
@@ -113,9 +155,16 @@ class NomenclatureController extends ApiController
         $data = DB::select('
             select
                 foa.id,
-                foat."name" as title
+                foat."name" as title,
+                enums.level_id,
+                enums.level_name
             from field_of_actions foa
             join field_of_action_translations foat on foat.field_of_action_id = foa.id and foat.locale = \''.$this->locale.'\'
+            left join (select level_id, level_name from (
+                                    values ('.FieldOfAction::CATEGORY_NATIONAL.', \'' . __('custom.strategic_document.levels.CENTRAL') . '\'),
+                                    ('.FieldOfAction::CATEGORY_AREA.', \'' . __('custom.strategic_document.levels.AREA') . '\'),
+                                    ('.FieldOfAction::CATEGORY_MUNICIPAL.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
+                        ) E(level_id, level_name)) enums on enums.level_id = foa.parentid
             where true
                 '.(!$this->authanticated ? 'and foa.deleted_at is null ' : '').'
                 and foa.parentid is not null
