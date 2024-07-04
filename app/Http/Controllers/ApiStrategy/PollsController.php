@@ -38,7 +38,12 @@ class PollsController extends ApiController
             select
                 "poll".id,
                 "poll"."name",
-                "public_consultation"."reg_num" as "consultation_reg_num",
+                (
+                    select pc.reg_num
+                    from public_consultation_poll pcp
+                    join public_consultation pc on pc.id = pcp.public_consultation_id and pc.deleted_at is null
+                    where pcp.poll_id = "poll"."id" limit 1
+                ) as "consultation_reg_num",
                 "poll"."start_date" as "date_start",
                 "poll"."end_date" as "date_end",
                 "poll"."only_registered",
@@ -56,7 +61,6 @@ class PollsController extends ApiController
                          and poll_question.poll_id = poll.id
                  ) as questions
                 from "poll"
-                left join "public_consultation" on "public_consultation"."id" = "poll"."consultation_id"
                 where true
                     '.(!$this->authanticated ? ' and "poll"."deleted_at" is null ' : '').'
                     '.(isset($from) ? ' and poll.created_at >= \''.$from.' 00:00:00'.'\'' : '').'
@@ -86,7 +90,12 @@ class PollsController extends ApiController
         $data = DB::select('
                     select
                 "poll"."name",
-                "public_consultation"."reg_num" as "consultation_reg_num",
+                (
+                    select pc.reg_num
+                    from public_consultation_poll pcp
+                    join public_consultation pc on pc.id = pcp.public_consultation_id and pc.deleted_at is null
+                    where pcp.poll_id = "poll"."id" limit 1
+                ) as "consultation_reg_num",
                 "poll"."start_date" as "date_start",
                 "poll"."end_date" as "date_end",
                 "poll"."only_registered",
@@ -104,7 +113,6 @@ class PollsController extends ApiController
                          and poll_question.poll_id = poll.id
                  ) as questions
                 from "poll"
-                left join "public_consultation" on "public_consultation"."id" = "poll"."consultation_id"
                 where true
                      '.(!$this->authanticated ? ' and "poll"."deleted_at" is null ' : '').'
                     and "poll".id = '.$id.'
