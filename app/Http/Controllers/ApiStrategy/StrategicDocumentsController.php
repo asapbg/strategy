@@ -326,4 +326,15 @@ class StrategicDocumentsController extends ApiController
             return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, __('messages.system_error'));
         }
     }
+
+    public function showSubdocument(Request $request, $id = 0)
+    {
+        $subd = StrategicDocumentChildren::find($id);
+        if(!$subd){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Strategic sub-document not found');
+        }
+
+        $data = StrategicDocumentChildren::getTreeApi($subd->id, 0, true);
+        return $this->output($data);
+    }
 }

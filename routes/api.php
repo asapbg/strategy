@@ -110,6 +110,7 @@ Route::group(['middleware' => 'api'], function ($router){
         Route::get('/strategic-documents',       'list');
         Route::get('/strategic-documents/{id}',       'show')->where('id', '[0-9]+');
         Route::get('/strategic-documents/{id}/subdocuments',       'subdocuments')->where('id', '[0-9]+');
+        Route::get('/subdocuments/{id}',       'showSubdocument')->where('id', '[0-9]+');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\OgpController::class)->group(function () {
