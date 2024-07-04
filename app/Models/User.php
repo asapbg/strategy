@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\StrategicDocuments\Institution;
+use App\Notifications\AuthVerify;
 use Carbon\Carbon;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
@@ -124,6 +125,11 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
     public function routeNotificationForMail($notification): array|string
     {
         return $this->user_type == User::USER_TYPE_INTERNAL ? (config('app.env') != 'production' ? config('mail.local_to_mail') : $this->email) : $this->email;
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new AuthVerify());
     }
 
     /**
