@@ -216,7 +216,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         if ($administrators) {
             foreach ($administrators as $admin) {
                 $this->data['text'] = $admin_text;
-                $this->data['subject'] = $admin_subject_text;
+                $this->data['subject'] = '[Strategy.bg] '.$admin_subject_text.(isset($this->data['modelName']) ? ': '.$this->data['modelName'] : '');
                 $this->data['url'] = $admin_url;
                 $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $admin->email;
                 Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data));
@@ -225,7 +225,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         if ($moderators) {
             foreach ($moderators as $moderator) {
                 $this->data['text'] = $moderator_text;
-                $this->data['subject'] = $moderator_subject_text;
+                $this->data['subject'] = '[Strategy.bg] '.$moderator_subject_text.(isset($this->data['modelName']) ? ': '.$this->data['modelName'] : '');
                 $this->data['url'] = $moderator_url;
                 $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $moderator->email;
                 Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data));
