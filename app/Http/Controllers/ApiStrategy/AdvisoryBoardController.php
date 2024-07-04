@@ -59,11 +59,11 @@ class AdvisoryBoardController extends ApiController
                     select
                         ab.id as id,
                         max(abt.name) as title,
-                        -- max(aabt."name") as establishment_act_type,
+                        max(aatt."name") as establishment_act_type,
                         max(aabt."name") as institution_type,
-                        max(aabt.id) as institution_id,
+                        -- max(aabt.id) as institution_id,
                         max(actt.name) as chairman_type,
-                        json_agg(distinct(ifoa.institution_id)) filter(where ifoa.institution_id is not null) as institutions_id,
+                        -- json_agg(distinct(ifoa.institution_id)) filter(where ifoa.institution_id is not null) as institutions_id,
                         ab.created_at::date as date_established,
                         ab.meetings_per_year as meetings_year,
                         ab.has_npo_presence as npo_representative
@@ -73,8 +73,10 @@ class AdvisoryBoardController extends ApiController
                     left join authority_advisory_board_translations aabt on aabt.authority_advisory_board_id = aab.id and aabt.locale = \''.$this->locale.'\'
                     left join advisory_chairman_type act on act.id = ab.advisory_chairman_type_id
                     left join advisory_chairman_type_translations actt on actt.advisory_chairman_type_id = act.id and actt.locale = \''.$this->locale.'\'
+                    left join advisory_act_type aat on aat.id = ab.advisory_act_type_id
+                    left join advisory_act_type_translations aatt on aatt.advisory_act_type_id = aat.id and aatt.locale = \''.$this->locale.'\'
                     left join field_of_actions foa2 on foa2.id = ab.policy_area_id
-                    left join institution_field_of_action ifoa on ifoa.field_of_action_id = foa2.id
+                    -- left join institution_field_of_action ifoa on ifoa.field_of_action_id = foa2.id
                     where true
                         '.(!$this->authanticated ? ' and ab.deleted_at is null and ab.public = true ' : '').'
                         '.(isset($active) ? ' and ab.active = '.($active ? 'true' : 'false') : '').'
@@ -87,16 +89,16 @@ class AdvisoryBoardController extends ApiController
                     '.($this->request_offset ? ' offset '.$this->request_offset : '').'
                 ');
 
-        $finalData = array();
-        if(sizeof($data)){
-            foreach ($data as $row){
-                if(!empty($row->institutions_id)){
-                    $row->institutions_id = json_decode($row->institutions_id, true);
-                }
-                $finalData[] = $row;
-            }
-        }
-        $data = $finalData;
+//        $finalData = array();
+//        if(sizeof($data)){
+//            foreach ($data as $row){
+//                if(!empty($row->institutions_id)){
+//                    $row->institutions_id = json_decode($row->institutions_id, true);
+//                }
+//                $finalData[] = $row;
+//            }
+//        }
+//        $data = $finalData;
 
         return $this->output($data);
     }
@@ -108,9 +110,9 @@ class AdvisoryBoardController extends ApiController
                         ab.id,
                         max(abt.name) as name,
                         ab.created_at::date as date_established,
-                        -- max(aabt."name") as establishment_act_type,
+                        max(aatt."name") as establishment_act_type,
                         max(aabt."name") as institution_type,
-                        max(aabt.id) as institution_id,
+                        -- max(aabt.id) as institution_id,
                         -- max(abort2.description) as establishment_act,
                         (
                             select jsonb_build_object(\'description\', max(abet.description), \'links\', A.files)
@@ -240,6 +242,8 @@ class AdvisoryBoardController extends ApiController
                     left join field_of_actions foa2 on foa2.id = ab.policy_area_id
                     left join authority_advisory_board aab on aab.id = ab.authority_id
                     left join authority_advisory_board_translations aabt on aabt.authority_advisory_board_id = aab.id and aabt.locale = \''.$this->locale.'\'
+                    left join advisory_act_type aat on aat.id = ab.advisory_act_type_id
+                    left join advisory_act_type_translations aatt on aatt.advisory_act_type_id = aat.id and aatt.locale = \''.$this->locale.'\'
                     left join advisory_board_establishments abe on abe.advisory_board_id = ab.id
                     left join advisory_board_establishment_translations abet on abet.advisory_board_establishment_id = abe.id and abet.locale = \''.$this->locale.'\'
                     left join advisory_board_organization_rules abor on abor.advisory_board_id = ab.id
@@ -341,6 +345,19 @@ class AdvisoryBoardController extends ApiController
                 '.($this->request_limit ? ' limit '.$this->request_limit : '').'
                 '.($this->request_offset ? ' offset '.$this->request_offset : '').'
         ');
+
+        $finalData = array();
+        if(sizeof($data)){
+            foreach ($data as $row){
+                if(!empty($row->files)){
+                    $row->files = json_decode($row->files, true);
+                } else{
+                    $row->files = [];
+                }
+                $finalData[] = $row;
+            }
+        }
+        $data = $finalData;
         return $this->output($data);
     }
 

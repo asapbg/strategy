@@ -25,6 +25,9 @@ class PublicConsultationsController extends ApiController
         if(isset($this->request_inputs['active'])){
             $active = (int)$this->request_inputs['active'];
         }
+        if(isset($this->request_inputs['published'])){
+            $published = (int)$this->request_inputs['published'];
+        }
 
         if(isset($this->request_inputs['act-type']) && !empty($this->request_inputs['act-type'])){
             $actTypeIds = $this->request_inputs['act-type'];
@@ -56,7 +59,9 @@ class PublicConsultationsController extends ApiController
             select
                 pc.id,
                 pct.title as name,
+                pct.description,
                 pc.reg_num,
+                pc.act_type_id,
                 pc.consultation_level_id as "level",
                 pc.open_from as date_open,
                 pc.open_to as date_close,
@@ -76,8 +81,9 @@ class PublicConsultationsController extends ApiController
             from public_consultation pc
             join public_consultation_translations pct on pct.public_consultation_id = pc.id and pct.locale = \''.$this->locale.'\'
             where true
-                '.(!$this->authanticated ? ' and pc.deleted_at is null ' : '').'
-                '.(isset($active) ? ' and pc.active = '.$active : '').'
+                '.(!$this->authanticated ? ' and pc.deleted_at is null and pc.active = 1 ' : '').'
+                '.(isset($active) ? ($active ? ' and (NOW()::date >= pc.open_from and NOW()::date <= pc.open_to)' : ' and (NOW()::date <= pc.open_from or NOW()::date >= pc.open_to)') : '').'
+                '.(isset($published) ? ' and pc.active = '.$published  : '').'
                 '.(isset($actTypeIds) ? ' and pc.act_type_id in ('.$actTypeIds.')' : '').'
                 '.(isset($policyAreasIds) ? ' and pc.field_of_actions_id in ('.$policyAreasIds.')' : '').'
                 '.(isset($institutionsIds) ? ' and pc.importer_institution_id in ('.$institutionsIds.')' : '').'
@@ -110,7 +116,9 @@ class PublicConsultationsController extends ApiController
             'select
                         pc.id,
                         pct.title as name,
+                        pct.description,
                         pc.reg_num,
+                        pc.act_type_id,
                         -- pc.consultation_level_id as consultation_level,
                         case when pc.consultation_level_id = '.InstitutionCategoryLevelEnum::CENTRAL->value.'
                         then \'Централно\'
