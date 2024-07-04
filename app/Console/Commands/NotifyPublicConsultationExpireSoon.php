@@ -50,23 +50,23 @@ class NotifyPublicConsultationExpireSoon extends Command
                     ->where('subscribable_id', '=', $pc->id)
                     ->get();
 
-                //get users by model filter
-                $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
-                    ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                    ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                    ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                    ->whereNull('subscribable_id')
-                    ->get();
+//                //get users by model filter
+//                $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
+//                    ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+//                    ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+//                    ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+//                    ->whereNull('subscribable_id')
+//                    ->get();
 
-                if($filterSubscribtions->count()){
-                    foreach ($filterSubscribtions as $fSubscribe){
-                        $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-                        $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
-                        if(in_array($pc->id, $modelIds)){
-                            $subscribedUsers->add($fSubscribe);
-                        }
-                    }
-                }
+//                if($filterSubscribtions->count()){
+//                    foreach ($filterSubscribtions as $fSubscribe){
+//                        $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
+//                        $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
+//                        if(in_array($pc->id, $modelIds)){
+//                            $subscribedUsers->add($fSubscribe);
+//                        }
+//                    }
+//                }
                 $data['subscribedUsers'] = $subscribedUsers;
                 if ($data['administrators'] || $data['moderators'] || $data['subscribedUsers']->count()) {
                     SendSubscribedUserEmailJob::dispatch($data);

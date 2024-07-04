@@ -63,15 +63,20 @@ class CommentsObserver
                 ->unique('id');
 
             //get users by model ID
-            $commentedUsers = $item->comments->unique('user_id')->pluck('user_id')->toArray();
-            if(sizeof($commentedUsers)){
+            $commentedUsersIds = $item->comments->unique('user_id')->pluck('user_id')->toArray();
+            if(sizeof($commentedUsersIds)) {
+                $commentedUsers = User::whereIn('id', $commentedUsersIds)->get();
+            } else{
+                $commentedUsers = User::where('id', 0)->get();
+            }
+//            if(sizeof($commentedUsers)){
                 //get users by model ID
                 $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
                     ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
                     ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
                     ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
                     ->where('subscribable_id', '=', $item->id)
-                    ->whereIn('user_id', $commentedUsers)
+//                    ->whereIn('user_id', $commentedUsersIds)
                     ->get();
 
 //                //get users by model filter
@@ -83,22 +88,20 @@ class CommentsObserver
 //                    ->whereIn('user_id', $commentedUsers)
 //                    ->get();
 //
-//                if($filterSubscribtions->count()){
-//                    foreach ($filterSubscribtions as $fSubscribe){
-//                        $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-//                        $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
-//                        if(in_array($item->id, $modelIds)){
-//                            $subscribedUsers->add($fSubscribe);
-//                        }
-//                    }
-//                }
-            }
-            if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
+                if($subscribedUsers->count()){
+                    foreach ($subscribedUsers as $fSubscribe){
+                        if(!in_array($fSubscribe->id, $commentedUsersIds)){
+                            $commentedUsers->add($fSubscribe);
+                        }
+                    }
+                }
+//            }
+            if (!$administrators && !$moderators && $commentedUsers->count() == 0) {
                 return;
             }
             $data['administrators'] = $administrators;
             $data['moderators'] = $moderators;
-            $data['subscribedUsers'] = $subscribedUsers;
+            $data['subscribedUsers'] = $commentedUsers;
             $data['markdown'] = 'public-consultation';
 
             SendSubscribedUserEmailJob::dispatch($data);
