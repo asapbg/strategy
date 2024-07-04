@@ -52,7 +52,7 @@
                                         @endif
                                     </td>
                                     <td>@if($row->inPeriod)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
-                                    <td>@if($row->active)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
+                                    <td>@if($row->status)<i class="fa fa-check text-success"></i>@else<i class="fa fa-minus text-danger"></i>@endif</td>
                                     <td>
                                         @can('update', $row)
                                             <a href="{{route($editRouteName,['id' => $row->id])}}"
