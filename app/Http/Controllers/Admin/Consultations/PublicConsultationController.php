@@ -13,6 +13,7 @@ use App\Http\Requests\PublicConsultationDocStoreRequest;
 use App\Http\Requests\PublicConsultationKdStoreRequest;
 use App\Http\Requests\StorePublicConsultationProposalReport;
 use App\Http\Requests\StorePublicConsultationRequest;
+use App\Jobs\SendSubscribedUserEmailJob;
 use App\Models\ActType;
 use App\Models\Comments;
 use App\Models\ConsultationLevel;
@@ -37,6 +38,7 @@ use App\Models\PublicConsultationContact;
 use App\Models\RegulatoryAct;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Timeline;
+use App\Models\UserSubscribe;
 use App\Services\FileOcr;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -713,6 +715,27 @@ class PublicConsultationController extends AdminController
 
                 if($update) {
                     $poll->save();
+                }
+
+                //Send PC Send notification
+                $data['event'] = 'pc_poll_created';
+                $data['administrators'] = null;
+                $data['moderators'] = null;
+                $data['modelInstance'] = $poll;
+                $data['secondModelInstance'] = $consultation;
+                $data['markdown'] = 'public-consultation-poll';
+
+                //get users by model ID
+                $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
+                    ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
+                    ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
+                    ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
+                    ->where('subscribable_id', '=', $consultation->id)
+                    ->get();
+
+                $data['subscribedUsers'] = $subscribedUsers;
+                if ($data['administrators'] || $data['moderators'] || $data['subscribedUsers']->count()) {
+                    SendSubscribedUserEmailJob::dispatch($data);
                 }
             }
 
