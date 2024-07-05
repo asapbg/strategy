@@ -92,7 +92,8 @@ class StrategicDocumentsController extends ApiController
                                     ('.InstitutionCategoryLevelEnum::MUNICIPAL->value.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
                         ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
                     where true
-                        '.(!$this->authanticated ? ' and sd.deleted_at is null and sd.active = true ' : '').'
+                        and sd.deleted_at is null
+                        '.(!$this->authanticated ? ' and sd.active = true ' : '').'
                         '.(isset($from) ? ' and sd.document_date_accepted >= \''.$from.' 00:00:00'.'\'' : '').'
                         '.(isset($to) ? ' and sd.document_date_expiring <= \''.$to.' 23:59:59'.'\'' : '').'
                         '.(isset($types) && !empty($types)? ' and sdt2.id in ('.$types.')': '').'
@@ -133,7 +134,7 @@ class StrategicDocumentsController extends ApiController
                         -- foat."name" as policy_area,
                         foa.id as policy_area,
                         -- sdtt."name" as strategic_document_type,
-                        sdt.id as strategic_document_type,
+                        sdt2.id as strategic_document_type,
                         -- act_type: <string>,
                         -- act_number: <string>,
                         -- act_link: <string>,
@@ -178,7 +179,7 @@ class StrategicDocumentsController extends ApiController
                                     ('.InstitutionCategoryLevelEnum::MUNICIPAL->value.', \'' . __('custom.strategic_document.levels.MUNICIPAL') . '\')
                         ) E(level_id, level_name)) enums on enums.level_id = sd.strategic_document_level_id
                     where true
-                        '.(!$this->authanticated ? ' and sd.deleted_at is null ' : '').'
+                        and sd.deleted_at is null
                         and sd.id = '.$id.'
                 ');
 
