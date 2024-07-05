@@ -131,6 +131,7 @@ Route::group(['middleware' => 'api'], function ($router){
         Route::get('/executors',       'executors');
         Route::get('/executors/{eik}',       'showExecutor');
         Route::get('/executors-by-id/{id}',       'executorsById');
+        Route::get('/contracts',       'contracts');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\PrisController::class)->group(function () {

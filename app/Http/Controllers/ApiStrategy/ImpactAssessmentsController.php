@@ -281,4 +281,55 @@ class ImpactAssessmentsController extends ApiController
             return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, __('messages.system_error'));
         }
     }
+
+    public function contracts(Request $request){
+
+        if(isset($this->request_inputs['date-after']) && !empty($this->request_inputs['date-after'])){
+            if(!$this->checkDate($this->request_inputs['date-after'])){
+                return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'date-after\'');
+            }
+            $from = Carbon::parse($this->request_inputs['date-after'])->startOfMonth()->format('Y-m-d');
+        }
+
+        if(isset($this->request_inputs['date-before']) && !empty($this->request_inputs['date-before'])){
+            if(!$this->checkDate($this->request_inputs['date-before'])){
+                return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'date-before\'');
+            }
+            $to = Carbon::parse($this->request_inputs['date-before'])->endOfMonth()->format('Y-m-d');
+        }
+
+        if(isset($this->request_inputs['institution-id']) && !empty($this->request_inputs['institution-id'])){
+            $institutionIds = $this->request_inputs['institution-id'];
+        }
+
+        if(isset($this->request_inputs['eik']) && !empty($this->request_inputs['eik'])){
+            $eik = $this->request_inputs['eik'];
+        }
+
+        $data = DB::select('
+            select
+                e.id,
+                e.eik,
+                e.contract_date as date_contract,
+                e.price,
+                e.active,
+                e.institution_id,
+                et.executor_name,
+                et.contract_subject,
+                et.services_description,
+                et.hyperlink
+            from executors e
+            join executor_translations et on et.executor_id = e.id and et.locale = \''.$this->locale.'\'
+            where true
+                '.(!$this->authanticated ? ' and e.deleted_at is null and e.active = true ' : '').'
+                '.(isset($from) ? ' and e.contract_date >= \''.$from.'\'' : '').'
+                '.(isset($to) ? ' and e.contract_date <= \''.$to.'\'' : '').'
+                '.(isset($eik) ? ' and e.eik = \''.$eik.'\'' : '').'
+                '.(isset($institutionIds) ? ' and e.institution_id in ('.$institutionIds.')' : '').'
+                '.($this->request_limit ? ' limit '.$this->request_limit : '').'
+                '.($this->request_offset ? ' offset '.$this->request_offset : '').'
+        ');
+
+        return $this->output($data);
+    }
 }
