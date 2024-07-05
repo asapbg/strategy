@@ -184,7 +184,8 @@ class NomenclatureController extends ApiController
                         ) E(level_id, level_name)) enums on enums.level_id = foa.parentid
             where true
                 '.(!$this->authanticated ? 'and foa.deleted_at is null ' : '').'
-                and foa.parentid is not null
+                and (foa.parentid is not null
+                and foa.parentid <> 0)
             order by foat."name"
             '.($this->request_limit ? ' limit '.$this->request_limit : '').'
             '.($this->request_offset ? ' offset '.$this->request_offset : '').'
