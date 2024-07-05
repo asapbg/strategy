@@ -27,20 +27,6 @@ class AdvisoryBoardController extends ApiController
             $policyAreasIds = $this->request_inputs['policy-area'];
         }
 
-        if(isset($this->request_inputs['institution-id']) && !empty($this->request_inputs['institution-id'])){
-            $institutions = explode(',', $this->request_inputs['institution-id']);
-            $fa = FieldOfAction::whereHas('institution', function($q) use($institutions){
-                $q->whereIn('id', $institutions);
-            })->get()->pluck('id')->toArray();
-            if(sizeof($fa)){
-                if(isset($policyAreasIds)){
-                    $policyAreasIds .= implode(',', $fa);
-                } else{
-                    $policyAreasIds = implode(',', $fa);
-                }
-            }
-        }
-
         if(isset($this->request_inputs['date-established-after']) && !empty($this->request_inputs['date-established-after'])){
             if(!$this->checkDate($this->request_inputs['date-established-after'])){
                 return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'date-established-after\'');

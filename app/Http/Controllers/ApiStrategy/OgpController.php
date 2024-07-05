@@ -45,6 +45,7 @@ class OgpController extends ApiController
                             \'\' as final_version_pdf,
                             op2.from_date as date_start,
                             op2."to_date" as date_end,
+                            max(ost.name) as status,
                             (
                                 select \'http://strategy.test/download/\' || f.id
                                 from files f
@@ -67,7 +68,7 @@ class OgpController extends ApiController
                                     and f2.code_object = '.File::CODE_OBJ_OGP.'
                                     and f2.doc_type in ('.DocTypesEnum::OGP_REPORT_EVALUATION->value.')
                                     and f2.locale = \''.$this->locale.'\'
-                            ) as other_files,
+                            ) as reports,
                             (
                                 select
                                     jsonb_agg(jsonb_build_object(\'name\', oat."name", \'commitments\',(
@@ -87,7 +88,6 @@ class OgpController extends ApiController
                                      '.(!$this->authanticated ? ' and opa.deleted_at is null ' : '').'
                                     and opa.ogp_plan_id = op2.id
                                 ) as areas,
-                                \'??\' as reports,
                                 (
                                     select
                                         jsonb_agg(jsonb_build_object(\'date_from\', ops.start_date , \'date_to\', ops.end_date , \'name\', opst."name"  , \'description\', opst.description))
@@ -101,6 +101,7 @@ class OgpController extends ApiController
                         from ogp_plan op2
                         join ogp_plan_translations opt2 on opt2.ogp_plan_id = op2.id and opt2.locale = \''.$this->locale.'\'
                         join ogp_status os2 on os2.id = op2.ogp_status_id
+                        join ogp_status_translations ost on ost.ogp_status_id = os2.id and ost.locale = \''.$this->locale.'\'
                         where true
                             '.(!$this->authanticated ? ' and op2.deleted_at is null ' : '').'
                             and op2.national_plan = 1
@@ -116,12 +117,21 @@ class OgpController extends ApiController
         if(sizeof($data)){
             foreach ($data as $row){
                 $row->final_version_pdf = route('ogp.national_action_plans.export', $row->id);
-                if(!empty($row->other_files)){
-                    $row->other_files = json_decode($row->other_files, true);
-                }
                 if(!empty($row->areas)){
                     $row->areas = json_decode($row->areas, true);
+                } else {
+                    $row->areas = [];
                 }
+                if(!empty($row->reports)){
+                    $row->reports = json_decode($row->reports, true);
+                } else {
+                    $row->reports = [];
+                }
+
+                if(empty($row->events)){
+                    $row->events = [];
+                }
+
                 $finalData[] = $row;
             }
         }
@@ -138,6 +148,7 @@ class OgpController extends ApiController
                         max(opt2."name") as name,
                         op2.from_date as date_start,
                         op2."to_date" as date_end,
+                        max(ost.name) as status,
                         (
                             select \'http://strategy.test/download/\' || f.id
                             from files f
@@ -192,6 +203,7 @@ class OgpController extends ApiController
                     from ogp_plan op2
                     join ogp_plan_translations opt2 on opt2.ogp_plan_id = op2.id and opt2.locale = \''.$this->locale.'\'
                     join ogp_status os2 on os2.id = op2.ogp_status_id
+                    join ogp_status_translations ost on ost.ogp_status_id = os2.id and ost.locale = \''.$this->locale.'\'
                     where true
                         '.(!$this->authanticated ? ' and op2.deleted_at is null ' : '').'
                         and op2.national_plan = 1
@@ -202,11 +214,19 @@ class OgpController extends ApiController
 
         if(sizeof($data)){
             $data = $data[0];
-            if(!empty($data->other_files)){
-                $data->other_files = json_decode($data->other_files, true);
-            }
             if(!empty($data->areas)){
                 $data->areas = json_decode($data->areas, true);
+            } else {
+                $data->areas = [];
+            }
+            if(!empty($data->reports)){
+                $data->reports = json_decode($data->reports, true);
+            } else {
+                $data->reports = [];
+            }
+
+            if(empty($data->events)){
+                $data->events = [];
             }
         }
         if(empty($data)){
