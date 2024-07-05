@@ -22,16 +22,18 @@ class NotifySubscribedUser extends Mailable
      * @var User
      */
     private User $user;
+    private $subscriptionsLink;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user, $data)
+    public function __construct(User $user, $data, $subscriptionsLink = true)
     {
         $this->user = $user;
         $this->data = $data;
+        $this->subscriptionsLink = $subscriptionsLink;
     }
 
     /**
@@ -41,6 +43,7 @@ class NotifySubscribedUser extends Mailable
      */
     public function build()
     {
+        $showSubscriptionLink = $this->subscriptionsLink;
         $modelInstance = $this->data['modelInstance'];
         $secondModelInstance = $this->data['secondModelInstance'] ?? null;
         $markdown = $this->data['markdown'];
@@ -55,6 +58,6 @@ class NotifySubscribedUser extends Mailable
 
         return $this->from($from, config('mail.from.name'))
             ->subject($this->data['subject'])
-            ->markdown("emails.subscriptions.$markdown", compact('user','modelInstance', 'url', 'text', 'secondModelInstance'));
+            ->markdown("emails.subscriptions.$markdown", compact('user','modelInstance', 'url', 'text', 'secondModelInstance', 'showSubscriptionLink'));
     }
 }

@@ -225,7 +225,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['subject'] = '[Strategy.bg] '.$admin_subject_text.(isset($this->data['modelName']) ? ': '.$this->data['modelName'] : '');
                 $this->data['url'] = $admin_url;
                 $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $admin->email;
-                Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data));
+                Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data, false));
             }
         }
         if ($moderators) {
@@ -234,7 +234,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['subject'] = '[Strategy.bg] '.$moderator_subject_text.(isset($this->data['modelName']) ? ': '.$this->data['modelName'] : '');
                 $this->data['url'] = $moderator_url;
                 $mail = config('app.env') != 'production' ? config('mail.local_to_mail') : $moderator->email;
-                Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data));
+                Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data, false));
             }
         }
         if ($subscribedUsers) {
