@@ -42,7 +42,7 @@ class PublicConsultationEnd extends Mailable
         if($pollsPdf){
             $this->attach(asset('files'.$pollsPdf->path));
         }
-        return $this->from($from)
+        return $this->from($from, config('mail.from.name'))
                     ->subject('Изтекъл срок на Обществена консултация')
                     ->markdown('emails.end_pc', ['url' => $url, 'pc' => $this->pc, 'user' => $this->user ]);
     }

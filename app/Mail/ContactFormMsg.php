@@ -41,7 +41,7 @@ class ContactFormMsg extends Mailable
     {
         $from = (config('mail.from.address')) ? config('mail.from.address') : "info@strategy.bg";
         $message = $this->data['message'];
-        return $this->from($from)
+        return $this->from($from, config('mail.from.name'))
             ->subject('Портал за Обществени консултации: '.$this->data['subject'] )
             ->markdown("emails.contact_form", compact('message'));
     }

@@ -33,7 +33,7 @@ class UsersChangePassword extends Mailable
         $baseUrl = env('APP_URL', "http://www.test/");
         if(substr($baseUrl, -1) != "/") $baseUrl .= "/";
 
-        return $this->from($from)
+        return $this->from($from, config('mail.from.name'))
                     ->subject('Създаване на потребителски профил')
                     ->markdown('emails.change-password', ['url' => $baseUrl."auth/password/user-change/".$this->user->id]);
     }

@@ -53,7 +53,7 @@ class NotifySubscribedUser extends Mailable
 //        $action = "\App\Http\Controllers\\$controller";
         $url = $this->data['url'];
 
-        return $this->from($from, env('APP_NAME', 'Strategy.bg'))
+        return $this->from($from, config('mail.from.name'))
             ->subject($this->data['subject'])
             ->markdown("emails.subscriptions.$markdown", compact('user','modelInstance', 'url', 'text', 'secondModelInstance'));
     }
