@@ -31,6 +31,7 @@ Route::group(['middleware' => 'api'], function ($router){
         });
 
         Route::controller(\App\Http\Controllers\ApiStrategy\ImpactAssessmentsController::class)->group(function () {
+            Route::get('/impact-assessments',       'list');
             Route::post('/executors',       'executorsCreate');
         });
 
@@ -127,7 +128,6 @@ Route::group(['middleware' => 'api'], function ($router){
 
     Route::controller(\App\Http\Controllers\ApiStrategy\ImpactAssessmentsController::class)->group(function () {
         //ImpactAssessments
-        Route::get('/impact-assessments',       'list');
         Route::get('/executors',       'executors');
         Route::get('/executors/{eik}',       'showExecutor');
         Route::get('/executors-by-id/{id}',       'executorsById');
