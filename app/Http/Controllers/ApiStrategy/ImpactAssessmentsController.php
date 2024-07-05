@@ -332,4 +332,33 @@ class ImpactAssessmentsController extends ApiController
 
         return $this->output($data);
     }
+
+    public function showContract(Request $request, $id){
+        $data = DB::select('
+            select
+                e.id,
+                e.eik,
+                e.contract_date as date_contract,
+                e.price,
+                e.active,
+                e.institution_id,
+                et.executor_name,
+                et.contract_subject,
+                et.services_description,
+                et.hyperlink
+            from executors e
+            join executor_translations et on et.executor_id = e.id and et.locale = \''.$this->locale.'\'
+            where true
+                '.(!$this->authanticated ? ' and e.deleted_at is null and e.active = true ' : '').'
+                and e.id = '.$id.'
+        ');
+
+        if(sizeof($data)){
+            $data = $data[0];
+        }
+        if(empty($data)){
+            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
+        }
+        return $this->output($data);
+    }
 }

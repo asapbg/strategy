@@ -130,8 +130,9 @@ Route::group(['middleware' => 'api'], function ($router){
         //ImpactAssessments
         Route::get('/executors',       'executors');
         Route::get('/executors/{eik}',       'showExecutor');
-        Route::get('/executors-by-id/{id}',       'executorsById');
+        Route::get('/executors-by-id/{id}',       'executorsById')->where('id', '[0-9]+');
         Route::get('/contracts',       'contracts');
+        Route::get('/contracts/{id}',       'showContract')->where('id', '[0-9]+');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\PrisController::class)->group(function () {
