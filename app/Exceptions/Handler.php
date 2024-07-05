@@ -70,6 +70,10 @@ class Handler extends ExceptionHandler
             return back()->with('warning', __('messages.unauthorized'));
         }
 
+        if ($e instanceof \Illuminate\Session\TokenMismatchException) {
+            return redirect()->route('site.home');
+        }
+
         return parent::render($request, $e);
     }
 }
