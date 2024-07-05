@@ -79,7 +79,7 @@ class ReportsController extends Controller
                         sdt.title as name,
                         enums.level_name as level,
                         foat."name" as policy_area,
-                        enums2.level_name as policy_area_level,
+                        -- enums2.level_name as policy_area_level,
                         sdtt."name" as strategic_document_type,
                         -- act_type: <string>,
                         -- act_number: <string>,
@@ -700,6 +700,8 @@ class ReportsController extends Controller
                     $data = DB::select(
                         'select
                                     pc.reg_num,
+                                    pct.title as name,
+                                    pct.description,
                                     -- pc.consultation_level_id as consultation_level,
                                     case when pc.consultation_level_id = ' . InstitutionCategoryLevelEnum::CENTRAL->value . '
                                     then \'Централно\'
