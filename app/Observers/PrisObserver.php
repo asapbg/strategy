@@ -50,9 +50,10 @@ class PrisObserver
             //skip some fields in specific cases
             unset($dirty['updated_at']);
 
-//            if (sizeof($dirty) && !$old_published_at && !empty($pris->published_at)) {
-            if (sizeof($dirty) && !empty($pris->published_at)) {
-                $this->sendEmails($pris, 'updated');
+            if (sizeof($dirty)) {
+//            if (sizeof($dirty) && !empty($pris->published_at)) {
+                $event = !$old_published_at && !empty($pris->published_at) ? 'created' : 'updated';
+                $this->sendEmails($pris, $event);
                 Log::info('Send subscribe email on update');
             }
             if (!$old_public_consultation_id && $pris->public_consultation_id) {
