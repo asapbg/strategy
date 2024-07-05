@@ -1,6 +1,6 @@
 <tr>
     <td class="header">
-        <div class="contact-info">
+        <div class="contact-info" style="display: flex;">
             <div>
                 <a class="navbar-brand logo-link" href="{{ $url }}" style="width: 80px; display: block;">
                     <img src="{{ asset('/img/strategy-logo.svg') }}" alt="{{ __('site.seo_title') }}" id="siteLogo">
