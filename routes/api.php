@@ -133,6 +133,12 @@ Route::group(['middleware' => 'api'], function ($router){
         Route::get('/executors-by-id/{id}',       'executorsById');
     });
 
+    Route::controller(\App\Http\Controllers\ApiStrategy\PrisController::class)->group(function () {
+        //Legislative programs
+        Route::get('/pris',       'list');
+        Route::get('/pris/{id}',       'show')->where('id', '[0-9]+');
+    });
+
     Route::controller(ReportsController::class)->group(function () {
         //Impact assessments
         Route::get('/reports/impact_assessments/{type}/view/{inFile?}',       'apiReportImpactAssessments')->name('api.report.ia');

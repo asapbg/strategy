@@ -100,6 +100,8 @@ class OperationalProgramController extends ApiController
                 }
                 if(!empty($row->files)){
                     $row->files = json_decode($row->files, true);
+                } else{
+                    $row->files = [];
                 }
                 $finalData[] = $row;
             }
@@ -183,6 +185,8 @@ class OperationalProgramController extends ApiController
             }
             if(!empty($data->files)){
                 $data->files = json_decode($data->files, true);
+            } else{
+                $data->files = [];
             }
         }
 
