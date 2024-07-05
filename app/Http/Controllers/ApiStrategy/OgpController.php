@@ -63,7 +63,7 @@ class OgpController extends ApiController
                                         jsonb_agg(jsonb_build_object(\'name\', f2.description_'.$this->locale.' , \'link\', \'http://strategy.test/download/\' || f2.id))
                                                 from files f2
                                                 where true
-                                                    '.(!$this->authanticated ? ' and f2.deleted_at is null ' : '').'
+                                                    '.(!$this->authanticated ? ' and f2.deleted_at is null and op2.report_evaluation_published_at is not null' : '').'
                                     and f2.id_object = op2.id
                                     and f2.code_object = '.File::CODE_OBJ_OGP.'
                                     and f2.doc_type in ('.DocTypesEnum::OGP_REPORT_EVALUATION->value.')
