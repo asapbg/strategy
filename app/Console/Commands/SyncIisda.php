@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\InstitutionCategoryLevelEnum;
+use App\Http\Controllers\SsevController;
 use App\Models\EkatteArea;
 use App\Models\EkatteMunicipality;
 use App\Models\EkatteSettlement;
@@ -181,6 +182,12 @@ class SyncIisda extends Command
                                     $localSubject->town = $addressInfo ? $addressInfo['town'] : null;
                                     $localSubject->save();
                                     $updated = true;
+
+                                    $ssevProfile = SsevController::getInstitutionSsevProfile($localSubject);
+                                    if($ssevProfile != $localSubject->ssev_profile_id){
+                                        $localSubject->ssev_profile_id = $ssevProfile;
+                                        $localSubject->save();
+                                    }
                                 }
                                 //update subject translation fields if need to
                                 $translationUpdate = false;

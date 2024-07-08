@@ -29,6 +29,16 @@
                             <form action="{{ $storeRoute }}" method="post" name="form" id="form">
                                 @csrf
                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <strong>SSEV (ID): </strong> {{ $item->ssev_profile_id ?? '---' }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
                                     @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
                                 </div>
                                 <div class="row">
