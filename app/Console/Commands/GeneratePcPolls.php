@@ -44,7 +44,6 @@ class GeneratePcPolls extends Command
             ->whereDoesntHave('pollsDocuments')
             ->whereNull('old_id')
             ->Ended()
-            ->limit(10)
             ->get();
 
         //generate pdf with all comments

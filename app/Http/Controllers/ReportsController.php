@@ -7,6 +7,7 @@ use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\LegislativeInitiativeStatusesEnum;
 use App\Enums\OgpStatusEnum;
+use App\Enums\OldNationalPlanEnum;
 use App\Enums\PrisDocChangeTypeEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Models\ActType;
@@ -15,6 +16,7 @@ use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\File;
 use App\Models\LegalActType;
+use App\Models\OgpStatus;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
 use Carbon\Carbon;
@@ -1512,7 +1514,7 @@ class ReportsController extends Controller
                                                 opa.ogp_plan_id = op2.id
                                                 and opa.deleted_at is null
                                             ),
-                                        \'reports\', \'??\',
+                                        -- \'reports\', \'??\',
                                         \'events\', (
                                             select
                                                 jsonb_agg(jsonb_build_object(\'date_from\', ops.start_date , \'date_to\', ops.end_date , \'name\', opst."name"  , \'description\', opst.description))
@@ -1547,12 +1549,15 @@ class ReportsController extends Controller
                     ) as news
 	            ');
                     $header = [
-                        'next_plan' => __('custom.title'),
-                        'plans' => __('custom.created_at'),
+                        'next_plan' => __('custom.develop_plan'),
+                        'plans' => trans_choice('custom.plans', 2),
                         'news' => trans_choice('custom.news', 2),
                     ];
 
+                    $oldPlans = OldNationalPlanEnum::planData(0, app()->getLocale());
+                    $oldPlanStatus = OgpStatus::Final()->get()->first();
                     $finalData = array();
+
                     if (sizeof($data)) {
                         foreach ($data as $row) {
                             if (!empty($row->next_plan)) {
@@ -1561,12 +1566,33 @@ class ReportsController extends Controller
                             if (!empty($row->plans)) {
                                 $row->plans = json_decode($row->plans, true);
                             }
+                            if(sizeof($oldPlans)){
+                                foreach ($oldPlans as $id => $plan){
+                                    $other_files = [];
+                                    if(!empty($plan['files']) && !empty($plan['files']['bg'])){
+                                        foreach ($plan['files']['bg'] as $file){
+                                            $other_files[] = asset('files/'.$file['path']);
+                                        }
+                                    }
+                                    $row->plans[] = array(
+                                        'name' => OldNationalPlanEnum::nameByValue($id),
+                                        'date_start' => OldNationalPlanEnum::fromDateByValue($id),
+                                        'date_end' => OldNationalPlanEnum::toDateByValue($id),
+                                        'version_after_public_consultation_pdf' => null,
+                                        'other_files' => $other_files,
+                                        'areas' => [],
+                                        'events' => []
+                                    );
+                                }
+                            }
+
                             if (!empty($row->news)) {
                                 $row->news = json_decode($row->news, true);
                             }
                             $finalData[] = $row;
                         }
                     }
+
                     array_unshift($finalData, $header);
                     $data = $finalData;
 

@@ -117,7 +117,7 @@ class OgpController extends ApiController
         $finalData = array();
         if(sizeof($data)){
             foreach ($data as $row){
-                $row->final_version_pdf = [route('ogp.national_action_plans.export', $row->id)];
+                $row->final_version_pdf = route('ogp.national_action_plans.export', $row->id);
                 if(!empty($row->areas)){
                     $row->areas = json_decode($row->areas, true);
                 } else {
@@ -141,15 +141,21 @@ class OgpController extends ApiController
         $oldPlanStatus = OgpStatus::Final()->get()->first();
         if(sizeof($oldPlans)){
             foreach ($oldPlans as $id => $plan){
-                $final_version_pdf = [];
-                if(!empty($plan['files']) && !empty($plan['files'][$this->locale])){
-                    foreach ($plan['files'][$this->locale] as $file){
-                        $final_version_pdf[] = asset('files/'.$file['path']);
-                    }
+                $final_version_pdf = '';
+                switch ($id){
+                    case OldNationalPlanEnum::FIRST->value:
+                        $final_version_pdf = asset('files/old_ogp_plan/1/Plan-BG.pdf');
+                        break;
+                    case OldNationalPlanEnum::SECOND->value:
+                        $final_version_pdf = asset('files/old_ogp_plan/2/Втори-план-ПОУ-финал-одобрен-МС.pdf');
+                        break;
+                    case OldNationalPlanEnum::THIRD->value:
+                        $final_version_pdf = asset('files/old_ogp_plan/3/Трети_план_ПОУ-2.pdf');
+                        break;
                 }
                 //id, name, text, final_version_pdf, date_start, date_end, status, version_after_public_consultation_pdf,reports,areas,events,group_by
                 $finalData[] = array(
-                    'id' => $id,
+                    'id' => 0,
                     'name' => OldNationalPlanEnum::nameByValue($id),
                     'text' => $plan['ogDescription'][$this->locale],
                     'final_version_pdf' => $final_version_pdf,

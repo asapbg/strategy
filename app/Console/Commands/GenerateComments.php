@@ -41,7 +41,6 @@ class GenerateComments extends Command
             ->whereDoesntHave('commentsDocuments')
             ->whereNull('old_id')
             ->Ended()
-            ->limit(10)
             ->get();
         //Foreach generate csv and pdf with all comments
         if($items->count()) {

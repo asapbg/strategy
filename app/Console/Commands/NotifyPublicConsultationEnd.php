@@ -39,7 +39,6 @@ class NotifyPublicConsultationEnd extends Command
             ->where('open_to', '<', $endedBefore)
             ->whereHas('author')
             ->whereNull('end_notify')
-            ->limit(10)
             ->get();
         if($pcs->count()){
             foreach ($pcs as $pc) {
