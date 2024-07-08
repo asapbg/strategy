@@ -56,7 +56,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             'enclosure' => asset(self::DEFAULT_IMG),
             'link' => $this->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($this->actType?->name), 'id' => $this->id]) : route('pris.view', ['category' => Str::slug($this->actType?->name), 'id' => $this->id]),
             'authorName' => '',
-            'authorEmail' => ''
+            'authorEmail' => '',
+            'category' => $this->actType ? [$this->actType->name] : []
         ]);
     }
 

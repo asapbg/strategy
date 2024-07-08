@@ -80,7 +80,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             'link' => route('public_consultation.view', ['id' => $this->id]),
             'authorName' => $this->responsibleInstitution?->name,
             'authorUrl' => $this->responsibleInstitution ? route('institution.profile.pc', $this->responsibleInstitution) : null,
-            'authorEmail' => ''
+            'authorEmail' => '',
+            'category' => !empty($this->nomenclatureLevelLabel) ? [$this->nomenclatureLevelLabel] : []
         ]);
     }
 
