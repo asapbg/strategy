@@ -116,7 +116,7 @@ class OgpController extends ApiController
         $finalData = array();
         if(sizeof($data)){
             foreach ($data as $row){
-                $row->final_version_pdf = route('ogp.national_action_plans.export', $row->id);
+                $row->final_version_pdf = [route('ogp.national_action_plans.export', $row->id)];
                 if(!empty($row->areas)){
                     $row->areas = json_decode($row->areas, true);
                 } else {
