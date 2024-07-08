@@ -79,7 +79,8 @@ class LegislativeInitiativeCommentObserver
     private function sendEmails(LegislativeInitiativeComment  $legislativeInitiativeComment, $event): void
     {
         $item = LegislativeInitiative::find($legislativeInitiativeComment->legislative_initiative_id);
-        $administrators = $moderators = null;
+        $specialUser = $administrators = $moderators = null;
+
         //get users by model ID
         $subscribedUsers = UserSubscribe::where('subscribable_type', LegislativeInitiative::class)
             ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
@@ -90,7 +91,7 @@ class LegislativeInitiativeCommentObserver
 
         //Send to author if comment is not his
         if($item->user && $item->author_id != $legislativeInitiativeComment->user_id){
-            $subscribedUsers->add($item->user);
+            $specialUser = $item->user;
         }
 
 //        //get users by model filter
@@ -113,7 +114,7 @@ class LegislativeInitiativeCommentObserver
 //            }
 //        }
 
-        if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
+        if (!$administrators && !$moderators && $subscribedUsers->count() == 0 && is_null($specialUser)) {
             return;
         }
 
@@ -121,6 +122,7 @@ class LegislativeInitiativeCommentObserver
         $data['administrators'] = $administrators;
         $data['moderators'] = $moderators;
         $data['subscribedUsers'] = $subscribedUsers;
+        $data['specialUser'] = $specialUser;
         $data['modelInstance'] = $item;
         $data['modelName'] = $item->facebookTitle;
         $data['markdown'] = 'legislative-initiative';

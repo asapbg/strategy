@@ -59,7 +59,10 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         $subscribedUsers = isset($this->data['subscribedUsers'])
             ? $this->data['subscribedUsers']
             : null;
-        unset($this->data['administrators'], $this->data['moderators'], $this->data['subscribedUsers']);
+        $specialUser = isset($this->data['specialUser'])
+            ? $this->data['specialUser']
+            : null;
+        unset($this->data['administrators'], $this->data['moderators'], $this->data['subscribedUsers'], $this->data['specialUser']);
 
         foreach (['admin', 'moderator', 'user'] as $type) {
             $var = $type."_text";
@@ -246,6 +249,18 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 if($user){
                     $mail = $user->notification_email ?? $user->email;
                     Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
+                }
+            }
+        }
+        if ($specialUser) {
+            foreach ($subscribedUsers as $subscribedUser) {
+                $this->data['text'] = $user_text;
+                $this->data['subject'] = '[Strategy.bg] '.$user_subject_text.(isset($this->data['modelName']) ? ': '.$this->data['modelName'] : '');
+                $this->data['url'] = $user_url;
+                $user = $specialUser;
+                if($user){
+                    $mail = $user->notification_email ?? $user->email;
+                    Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data, false));
                 }
             }
         }
