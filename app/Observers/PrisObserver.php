@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Jobs\SendSubscribedUserEmailJob;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\CustomRole;
 use App\Models\Pris;
 use App\Models\User;
 use App\Models\UserSubscribe;
@@ -42,7 +43,7 @@ class PrisObserver
     public function updated(Pris $pris)
     {
         if(!env('DISABLE_OBSERVERS', false)) {
-            $old_published_at = (int)$pris->getOriginal('published_at');
+            $old_published_at = $pris->getOriginal('published_at');
             $old_public_consultation_id = (int)$pris->getOriginal('public_consultation_id');
 
             //Check for real changes
@@ -119,6 +120,9 @@ class PrisObserver
                     ->where('subscribable_id', '=', $pris->id)
                     ->get();
             } else{
+                $administrators = User::whereActive(true)
+                    ->hasRole(CustomRole::ADMIN_USER_ROLE)
+                    ->get();
                 $subscribedUsers = UserSubscribe::where('id', 0)->get();
                 //get users by model filter
                 $filterSubscribtions = UserSubscribe::where('subscribable_type', Pris::class)
@@ -168,6 +172,9 @@ class PrisObserver
                         ->where('subscribable_id', '=', $pc->id)
                         ->get();
                 } else{
+                    $administrators = User::whereActive(true)
+                        ->hasRole(CustomRole::ADMIN_USER_ROLE)
+                        ->get();
                     $subscribedUsers = UserSubscribe::where('id', 0)->get();
                     //get users by model filter
                     $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)

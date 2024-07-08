@@ -4,8 +4,10 @@ namespace App\Observers;
 
 use App\Jobs\SendSubscribedUserEmailJob;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\CustomRole;
 use App\Models\Pris;
 use App\Models\PrisTranslation;
+use App\Models\User;
 use App\Models\UserSubscribe;
 use Illuminate\Support\Facades\Log;
 
@@ -42,13 +44,16 @@ class PrisTranslationObserver
     public function updated(PrisTranslation $prisTranslation)
     {
         if(!env('DISABLE_OBSERVERS', false)) {
+            $old_published_at = $prisTranslation->parent->getOriginal('published_at');
             //Check for real changes
             $dirty = $prisTranslation->getDirty(); //return all changed fields
             //skip some fields in specific cases
             unset($dirty['updated_at']);
 
-            if (sizeof($dirty) && $prisTranslation->parent->published_at) {
-                $this->sendEmails($prisTranslation, 'updated');
+            if (sizeof($dirty)) {
+//            if (sizeof($dirty) && !empty($pris->published_at)) {
+                $event = !$old_published_at && !empty($prisTranslation->parent->published_at) ? 'created' : 'updated';
+                $this->sendEmails($prisTranslation, $event);
                 Log::info('Send subscribe email on update');
             }
         }
@@ -98,8 +103,8 @@ class PrisTranslationObserver
     {
         $pris = $prisTranslation->parent;
         if($event == 'created' || $event == 'updated'){
-            $administrators = null;
             $moderators = null;
+            $administrators = null;
 
             if($event == 'updated'){
                 //get users by model ID
@@ -110,6 +115,10 @@ class PrisTranslationObserver
                     ->where('subscribable_id', '=', $pris->id)
                     ->get();
             } else{
+                $administrators = User::whereActive(true)
+                    ->hasRole(CustomRole::ADMIN_USER_ROLE)
+                    ->get();
+
                 $subscribedUsers = UserSubscribe::where('id', 0)->get();
                 //get users by model filter
                 $filterSubscribtions = UserSubscribe::where('subscribable_type', Pris::class)
@@ -159,6 +168,9 @@ class PrisTranslationObserver
                         ->where('subscribable_id', '=', $pc->id)
                         ->get();
                 } else{
+                    $administrators = User::whereActive(true)
+                        ->hasRole(CustomRole::ADMIN_USER_ROLE)
+                        ->get();
                     $subscribedUsers = UserSubscribe::where('id', 0)->get();
                     //get users by model filter
                     $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
