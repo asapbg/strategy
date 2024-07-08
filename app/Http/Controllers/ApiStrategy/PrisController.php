@@ -16,6 +16,7 @@ class PrisController extends ApiController
 {
     public function list(Request $request)
     {
+        $authorsWhereClause = '';
         if(isset($this->request_inputs['date-after']) && !empty($this->request_inputs['date-after'])){
             if(!$this->checkDate($this->request_inputs['date-after'])){
                 return $this->returnError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid date format for \'date-after\'');
@@ -34,7 +35,27 @@ class PrisController extends ApiController
             $legalActTypeIds = $this->request_inputs['legal-act-type'];
         }
         if(isset($this->request_inputs['author']) && !empty($this->request_inputs['author'])){
-            $authorIds = $this->request_inputs['author'];
+            $realAuthors = [];
+            $noAuthor = null;
+            $explodeAuthors = explode(',', $this->request_inputs['author']);
+            if(sizeof($explodeAuthors)){
+                foreach ($explodeAuthors as $a){
+                    if((int)$a > 0){
+                        $realAuthors[] = $a;
+                    }
+                    if((int)$a == -1){
+                        $noAuthor = 1;
+                    }
+                }
+            }
+            if(sizeof($realAuthors)){
+                $authorsWhereClause = ' and (pi2.institution_id in ('.implode(',', $realAuthors).') ';
+            }
+            if($noAuthor){
+                $authorsWhereClause .= empty($authorsWhereClause) ? ' and (pi2.institution_id = '.env('DEFAULT_INSTITUTION_ID').' or pi2.institution_id is null) ' : ' or (pi2.institution_id = '.env('DEFAULT_INSTITUTION_ID').' or pi2.institution_id is null) )';
+            } else if (sizeof($realAuthors)){
+                $authorsWhereClause .= ')';
+            }
         }
         if(isset($this->request_inputs['tags']) && !empty($this->request_inputs['tags'])){
             $splitTags = explode(',', $this->request_inputs['tags']);
@@ -64,7 +85,7 @@ class PrisController extends ApiController
                 '.(isset($to) ? ' and p.doc_date <= \''.$to.'\'' : '').'
                 '.(isset($legalActTypeIds) ? ' and p.legal_act_type_id in ('.$legalActTypeIds.')' : '').'
                 '.(isset($tags) ? ' and tt.label in (\''.implode('\',\'', $tags).'\')' : '').'
-                '.(isset($authorIds) ? ' and pi2.institution_id in ('.$authorIds.')' : '').'
+                '.$authorsWhereClause.'
             group by p.id
             order by p.created_at
             '.($this->request_limit ? ' limit '.$this->request_limit : '').'
