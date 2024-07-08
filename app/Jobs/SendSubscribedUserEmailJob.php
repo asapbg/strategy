@@ -21,6 +21,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -253,15 +254,14 @@ class SendSubscribedUserEmailJob implements ShouldQueue
             }
         }
         if ($specialUser) {
-            foreach ($subscribedUsers as $subscribedUser) {
-                $this->data['text'] = $user_text;
-                $this->data['subject'] = '[Strategy.bg] '.$user_subject_text.(isset($this->data['modelName']) ? ': '.$this->data['modelName'] : '');
-                $this->data['url'] = $user_url;
-                $user = $specialUser;
-                if($user){
-                    $mail = $user->notification_email ?? $user->email;
-                    Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data, false));
-                }
+            Log::error($specialUser);
+            $this->data['text'] = $user_text;
+            $this->data['subject'] = '[Strategy.bg] '.$user_subject_text.(isset($this->data['modelName']) ? ': '.$this->data['modelName'] : '');
+            $this->data['url'] = $user_url;
+            $user = $specialUser;
+            if($user){
+                $mail = $user->notification_email ?? $user->email;
+                Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data, false));
             }
         }
     }
