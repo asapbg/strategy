@@ -119,7 +119,7 @@ Route::group(['middleware' => 'api'], function ($router){
         Route::get('/ogp/plans',       'list');
         Route::get('/ogp/news',       'news');
         Route::get('/ogp/plans/{id}',       'show')->where('id', '[0-9]+');
-        Route::get('/ogp/next-plan',       'devPlan');
+        Route::get('/ogp/develop-plan',       'devPlan');
     });
 
     Route::controller(\App\Http\Controllers\ApiStrategy\LibraryController::class)->group(function () {
