@@ -6,9 +6,11 @@ use App\Enums\AdvisoryTypeEnum;
 use App\Enums\DocTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\OgpStatusEnum;
+use App\Enums\OldNationalPlanEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Models\FieldOfAction;
 use App\Models\File;
+use App\Models\OgpStatus;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
 use Carbon\Carbon;
@@ -72,32 +74,31 @@ class OgpController extends ApiController
                             (
                                 select
                                     jsonb_agg(jsonb_build_object(\'name\', oat."name", \'commitments\',(
-                                        select jsonb_agg(jsonb_build_object(\'name\', opat."name", \'context\', opat."content", \'npo_partner\', opat.npo_partner, \'values_initiative\', opat.values_initiative, \'problem\', opat.problem, \'solving_problem\', opat.solving_problem, \'responsible_institution\', opat.responsible_administration, \'evaluation\', opat.evaluation, \'evaluation_status\', opat.evaluation_status, \'stakeholders\', opat.interested_org, \'deadline\', opa2.to_date, \'contacts\', opat.contact_names
+                                        select jsonb_agg(jsonb_build_object(\'name\', opat."name", \'context\', opat."content", \'npo_partner\', opat.npo_partner, \'values_initiative\', opat.values_initiative, \'problem\', opat.problem, \'solving_problem\', opat.solving_problem, \'responsible_institution\', opat.responsible_administration, \'evaluation\', opat.evaluation, \'evaluation_status\', opat.evaluation_status, \'stakeholders\', opat.interested_org, \'deadline\', opa2.to_date, \'contacts\', opat.contact_names))
+                                        from ogp_plan_arrangement opa2
+                                        join ogp_plan_arrangement_translations opat on opat.ogp_plan_arrangement_id = opa2.id and opat.locale = \''.$this->locale.'\'
+                                        where true
+                                             '.(!$this->authanticated ? ' and opa2.deleted_at is null ' : '').'
+                                            and opa2.ogp_plan_area_id = opa.id
+                                        )
                                     ))
-                                from ogp_plan_arrangement opa2
-                                join ogp_plan_arrangement_translations opat on opat.ogp_plan_arrangement_id = opa2.id and opat.locale = \''.$this->locale.'\'
-                                where true
-                                     '.(!$this->authanticated ? ' and opa2.deleted_at is null ' : '').'
-                                    and opa2.ogp_plan_area_id = opa.id
-                                )
-                                ))
                                 from ogp_plan_area opa
                                 left join ogp_area oa2 on oa2.id = opa.ogp_area_id
                                 left join ogp_area_translations oat on oat.ogp_area_id = oa2.id and oat.locale = \''.$this->locale.'\'
                                 where true
                                      '.(!$this->authanticated ? ' and opa.deleted_at is null ' : '').'
                                     and opa.ogp_plan_id = op2.id
-                                ) as areas,
-                                (
-                                    select
-                                        jsonb_agg(jsonb_build_object(\'date_from\', ops.start_date , \'date_to\', ops.end_date , \'name\', opst."name"  , \'description\', opst.description))
-                                    from ogp_plan_schedule ops
-                                    join ogp_plan_schedule_translations opst on opst.ogp_plan_schedule_id = ops.id and opst.locale = \''.$this->locale.'\'
-                                    where true
-                                        '.(!$this->authanticated ? ' and ops.deleted_at is null ' : '').'
-                                        and ops.ogp_plan_id = op2.id
-                                ) as events,
-                                1 as group_by
+                            ) as areas,
+                            (
+                                select
+                                    jsonb_agg(jsonb_build_object(\'date_from\', ops.start_date , \'date_to\', ops.end_date , \'name\', opst."name"  , \'description\', opst.description))
+                                from ogp_plan_schedule ops
+                                join ogp_plan_schedule_translations opst on opst.ogp_plan_schedule_id = ops.id and opst.locale = \''.$this->locale.'\'
+                                where true
+                                    '.(!$this->authanticated ? ' and ops.deleted_at is null ' : '').'
+                                    and ops.ogp_plan_id = op2.id
+                            ) as events,
+                            1 as group_by
                         from ogp_plan op2
                         join ogp_plan_translations opt2 on opt2.ogp_plan_id = op2.id and opt2.locale = \''.$this->locale.'\'
                         join ogp_status os2 on os2.id = op2.ogp_status_id
@@ -135,6 +136,34 @@ class OgpController extends ApiController
                 $finalData[] = $row;
             }
         }
+
+        $oldPlans = OldNationalPlanEnum::planData(0, app()->getLocale());
+        $oldPlanStatus = OgpStatus::Final()->get()->first();
+        if(sizeof($oldPlans)){
+            foreach ($oldPlans as $id => $plan){
+                $final_version_pdf = [];
+                if(!empty($plan['files']) && !empty($plan['files'][$this->locale])){
+                    foreach ($plan['files'][$this->locale] as $file){
+                        $final_version_pdf[] = asset('files/'.$file['path']);
+                    }
+                }
+                //id, name, text, final_version_pdf, date_start, date_end, status, version_after_public_consultation_pdf,reports,areas,events,group_by
+                $finalData[] = array(
+                    'id' => $id,
+                    'name' => OldNationalPlanEnum::nameByValue($id),
+                    'text' => $plan['ogDescription'][$this->locale],
+                    'final_version_pdf' => $final_version_pdf,
+                    'date_start' => OldNationalPlanEnum::fromDateByValue($id),
+                    'date_end' => OldNationalPlanEnum::toDateByValue($id),
+                    'status' => $oldPlanStatus?->translate($this->locale)->name,
+                    'version_after_public_consultation_pdf' => null,
+                    'reports' => [],
+                    'areas' => [],
+                    'events' => []
+                );
+            }
+        }
+
         $data = $finalData;
         return $this->output($data);
 

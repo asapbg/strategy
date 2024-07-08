@@ -84,7 +84,7 @@ class NationalActionPlans extends Controller
         $status = OgpStatus::Final()->first();
         $planName = OldNationalPlanEnum::nameByValue($id);
         $planId = $id;
-        $planData = $this->planData($id, app()->getLocale());
+        $planData = OldNationalPlanEnum::planData($id, app()->getLocale());
 
         $this->setSeo(OldNationalPlanEnum::nameByValue($id),  $planData['ogDescription'], '', array('title' => OldNationalPlanEnum::nameByValue($id), 'description' => $planData['ogDescription'], 'img' => OgpPlan::DEFAULT_IMG));
 
