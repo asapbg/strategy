@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('generate:comments')->hourly();
         $schedule->command('generate:pc_polls')->hourly();
         $schedule->command('notify:pc_expire_soon')->hourly();
-        $schedule->command('notify:pc_end')->hourly();
+        $schedule->command('notify:pc_end')->everyTwoHours();
 
         //moderators adv board check for actual info reminder
         $schedule->command('adv_board:is_actual')->daily();

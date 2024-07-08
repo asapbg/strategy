@@ -99,9 +99,10 @@ class LoginController extends Controller
         }
 
         if ($user->activity_status == User::STATUS_REG_IN_PROCESS) {
-            throw ValidationException::withMessages([
-                'error' => [trans('auth.verify_email')],
-            ]);
+            return redirect()->route('verification.notice')->with('danger', trans('auth.verify_email'));
+//            throw ValidationException::withMessages([
+//                'error' => [trans('auth.verify_email')],
+//            ]);
         }
 
         if ($this->hasTooManyLoginAttempts($request)) {
