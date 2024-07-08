@@ -266,8 +266,8 @@ class PollController extends AdminController
 
         $object = __('site.label_question');
         $name = $question->name;
-        $delete_url = route('admin.poll.question.delete.confirm');
-        $back_url = route('admin.poll.edit', ['id' => $question->poll_id]);
+        $delete_url = route('admin.polls.question.delete.confirm');
+        $back_url = route('admin.polls.edit', ['id' => $question->poll_id]);
 
         return view('admin.partial.confirm_delete', compact('id', 'name', 'object', 'delete_url', 'back_url'));
     }
@@ -280,18 +280,17 @@ class PollController extends AdminController
         }
 
         if( $request->user()->cannot('update', $question->poll) ) {
-            return back()->with('warning', __('messages.unauthorized'));
+            return to_route('admin.polls.edit', ['id' => $question->poll->id])->with('warning', __('messages.unauthorized'));
         }
 
-        if ($question->poll->questions->count() < 2) {
-            return redirect(route('admin.poll.edit', ['id' => $question->poll_id]))
-                ->with('danger', __('custom.poll_need_al_least_one_question'));
+        if ($question->poll->questions->count() <= 1) {
+            return to_route('admin.polls.edit', ['id' => $question->poll->id])->with('danger', __('custom.poll_need_al_least_one_question'));
         }
 
         $question->answers()->delete();
         $question->delete();
 
-        return redirect(route('admin.poll.edit', ['id' => $question->poll_id]))->with('success', trans_choice('custom.questions', 1).' '.__('messages.deleted_successfully_m'));
+        return redirect(route('admin.polls.edit', ['id' => $question->poll_id]))->with('success', trans_choice('custom.questions', 1).' '.__('messages.deleted_successfully_m'));
     }
 
     /**

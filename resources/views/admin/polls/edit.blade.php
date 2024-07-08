@@ -66,10 +66,12 @@
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <select class="form-control form-control-sm @error('status') is-invalid @enderror" name="status">
                                                 @foreach(optionsPublished() as $k => $v)
-                                                    <option value="{{ $k }}"
-                                                            @if(old('status', $item->id ? $item->status : 0) == $k ) selected="selected" @endif >
-                                                        {{ $v }}
-                                                    </option>
+                                                    @if(($item->id && $item->questions->count()) || $k == 0)
+                                                        <option value="{{ $k }}"
+                                                                @if(old('status', $item->id ? $item->status : 0) == $k ) selected="selected" @endif >
+                                                            {{ $v }}
+                                                        </option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                             @error('status')
@@ -180,7 +182,16 @@
                                                         <div class="form-group">
                                                             <div class="row">
                                                                 <label class="col-sm-12 control-label" for="question_name">
-                                                                    <a href="{{ route('admin.polls.question.delete', ['id' => $q->id ]) }}" class="mr-1"><i class="fas fa-trash-alt text-danger" title="{{ __('site.button_delete') }}"></i></a>
+                                                                    <a href="javascript:;"
+                                                                       class="mr-1 js-toggle-delete-resource-modal"
+                                                                       data-target="#modal-delete-resource"
+                                                                       data-resource-id="{{ $q->id }}"
+                                                                       data-resource-delete-url="{{ route('admin.polls.question.delete.confirm') }}"
+                                                                       data-toggle="tooltip"
+                                                                       title="{{__('custom.delete')}}">
+                                                                        <i class="fas fa-trash-alt text-danger" title="{{ __('site.button_delete') }}"></i>
+                                                                    </a>
+{{--                                                                    <a href="{{ route('admin.polls.question.delete', ['id' => $q->id ]) }}" class="mr-1"><i class="fas fa-trash-alt text-danger" title="{{ __('site.button_delete') }}"></i></a>--}}
                                                                     {{ __('custom.question_with_number', ['number' => ($key+1)]) }} <span class="required">*</span>
                                                                 </label>
                                                                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -219,6 +230,7 @@
             </div>
         </div>
     </section>
+    @includeIf('modals.delete-resource', ['resource' => trans_choice('custom.questions', 1)])
 @endsection
 @include('admin.partial.modal')
 @push('scripts')

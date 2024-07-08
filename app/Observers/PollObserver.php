@@ -19,12 +19,12 @@ class PollObserver
      */
     public function created(Poll $poll)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
-            if ($poll->status != PollStatusEnum::INACTIVE->value && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d')) {
-                $this->sendEmails($poll, 'created');
-                Log::info('Send subscribe email on creation');
-            }
-        }
+//        if(!env('DISABLE_OBSERVERS', false)) {
+//            if ($poll->status != PollStatusEnum::INACTIVE->value && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d')) {
+//                $this->sendEmails($poll, 'created');
+//                Log::info('Send subscribe email on creation');
+//            }
+//        }
     }
 
     /**
@@ -38,6 +38,7 @@ class PollObserver
         if(!env('DISABLE_OBSERVERS', false)) {
             $old_status = (int)$poll->getOriginal('status');
             $start_date = (int)$poll->getOriginal('start_date');
+            $end_date = (int)$poll->getOriginal('end_date');
 
             //Check for real changes
             $dirty = $poll->getDirty(); //return all changed fields
@@ -46,8 +47,8 @@ class PollObserver
 
             if (sizeof($dirty)
                 && (
-                    (!$old_status && $poll->status && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d'))
-                    || ($poll->status && $start_date != $poll->start_date && Carbon::parse($start_date) > Carbon::now()->format('Y-m-d') && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d'))
+                    (!$old_status && $poll->status && Carbon::parse($poll->start_date)->format('Y-m-d') <= Carbon::now()->format('Y-m-d'))
+                    || ($poll->status && ($start_date != $poll->start_date || $end_date != $poll->end_date) && Carbon::parse($start_date)->format('Y-m-d') <= Carbon::now()->format('Y-m-d'))
                 )
             ) {
                 $this->sendEmails($poll, 'created');
