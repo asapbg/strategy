@@ -155,7 +155,7 @@ class OgpController extends ApiController
                 }
                 //id, name, text, final_version_pdf, date_start, date_end, status, version_after_public_consultation_pdf,reports,areas,events,group_by
                 $finalData[] = array(
-                    'id' => 0,
+                    'id' => (0 - $id),
                     'name' => OldNationalPlanEnum::nameByValue($id),
                     'text' => $plan['ogDescription'][$this->locale],
                     'final_version_pdf' => $final_version_pdf,

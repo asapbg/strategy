@@ -666,7 +666,7 @@ class HomeController extends Controller
             ->leftJoin('institution_translations', function ($j){
                 $j->on('institution.id', '=', 'institution_translations.institution_id')->where('locale', '=', app()->getLocale());
             })
-            ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
+            ->whereNotIn('users.email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
             ->orderBy('institution_translations.name')->orderBy('users.first_name')
             ->get();
 
