@@ -49,6 +49,8 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
     const USER_TYPE_EXTERNAL = 2;
     const USER_TYPE_INTERNAL = 1;
 
+    const EXCLUDE_CONTACT_USER_BY_MAIL = ['admin@asap.bg', 'service-user@asap.bg'];
+
     const ROLES_WITH_INSTITUTION = [
         'moderator-advisory',
         'moderator-strategic',

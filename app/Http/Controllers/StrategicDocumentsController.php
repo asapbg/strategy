@@ -256,7 +256,9 @@ class StrategicDocumentsController extends Controller
     public function contacts(Request $request, $itemId = null)
     {
         $pageTitle = $this->pageTitle;
-        $moderators = User::role([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS, CustomRole::MODERATOR_STRATEGIC_DOCUMENT])->get();
+        $moderators = User::role([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS, CustomRole::MODERATOR_STRATEGIC_DOCUMENT])
+            ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
+            ->get();
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
         $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2),  trans_choice('custom.contacts', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2), 'description' => trans_choice('custom.contacts', 2), 'img' => StrategicDocument::DEFAULT_IMG));
         return $this->view('site.strategic_documents.contacts', compact('moderators', 'pageTitle'));

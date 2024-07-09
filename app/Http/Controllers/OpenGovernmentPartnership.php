@@ -59,7 +59,9 @@ class OpenGovernmentPartnership extends Controller
     public function contacts(Request $request, $itemId = null)
     {
         $pageTitle = $this->pageTitle;
-        $moderators = User::role([CustomRole::MODERATOR_PARTNERSHIP])->get();
+        $moderators = User::role([CustomRole::MODERATOR_PARTNERSHIP])
+            ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
+            ->get();
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
         return $this->view('site.ogp.contacts', compact('moderators', 'pageTitle'));
     }

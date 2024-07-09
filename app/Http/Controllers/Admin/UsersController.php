@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUsersRequest;
+use App\Http\Requests\UpdateAdminProfileRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\CustomRole;
 use App\Models\StrategicDocuments\Institution;
@@ -278,7 +279,7 @@ class  UsersController extends Controller
      * @param UpdateUsersRequest $request
      * @return RedirectResponse
      */
-    public function updateProfile(UpdateUsersRequest $request, User $user)
+    public function updateProfile(UpdateAdminProfileRequest $request, User $user)
     {
         $data = $request->except(['_token']);
 

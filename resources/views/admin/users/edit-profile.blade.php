@@ -27,7 +27,7 @@
                             {{ __('validation.attributes.first_name') }}<span class="required">*</span>
                         </label>
                         <div class="col-12">
-                            <input type="text" id="first_name" name="first_name" class="form-control" value="{{ old('first_name') ?? $user->first_name }}">
+                            <input type="text" id="first_name" name="first_name" class="form-control" value="{{ old('first_name', $user->first_name) }}">
                             @error('first_name')
                             <div class="alert alert-danger mt-1">{{ $message }}</div>
                             @enderror
@@ -39,7 +39,7 @@
                             {{ __('validation.attributes.middle_name') }}
                         </label>
                         <div class="col-12">
-                            <input type="text" id="middle_name" name="middle_name" class="form-control" value="{{ old('middle_name') ?? $user->middle_name }}">
+                            <input type="text" id="middle_name" name="middle_name" class="form-control" value="{{ old('middle_name', $user->middle_name) }}">
                             @error('middle_name')
                             <div class="alert alert-danger mt-1">{{ $message }}</div>
                             @enderror
@@ -51,7 +51,7 @@
                             {{ __('validation.attributes.last_name') }}<span class="required">*</span>
                         </label>
                         <div class="col-12">
-                            <input type="text" id="last_name" name="last_name" class="form-control" value="{{ old('last_name') ?? $user->last_name }}">
+                            <input type="text" id="last_name" name="last_name" class="form-control" value="{{ old('last_name', $user->last_name) }}">
                             @error('last_name')
                             <div class="alert alert-danger mt-1">{{ $message }}</div>
                             @enderror
@@ -63,7 +63,7 @@
                             {{ __('validation.attributes.email') }}<span class="required">*</span>
                         </label>
                         <div class="col-12">
-                            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') ?? $user->email }}">
+                            <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $user->email) }}">
                             @error('email')
                             <div class="alert alert-danger mt-1">{{ $message }}</div>
                             @enderror

@@ -659,13 +659,14 @@ class HomeController extends Controller
                 $roles = [CustomRole::ADMIN_USER_ROLE];
         }
 
-        $users = User::role($roles)->orderBy('first_name')->get();
+        $users = User::role($roles)->orderBy('first_name')->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)->get();
 
         $users = User::role($roles)->select('users.*')
             ->leftJoin('institution', 'institution.id', '=', 'users.institution_id')
             ->leftJoin('institution_translations', function ($j){
                 $j->on('institution.id', '=', 'institution_translations.institution_id')->where('locale', '=', app()->getLocale());
             })
+            ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
             ->orderBy('institution_translations.name')->orderBy('users.first_name')
             ->get();
 
