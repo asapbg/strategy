@@ -76,9 +76,9 @@
                                     </a>
                                 @endif
                                 @if(!env('DISABLE_REGISTRATION'))
-                                `<a href="{{ route('register') }}">
-                                    {{ __('auth.do_not_have_account') }}
-                                </a>`
+                                    <a href="{{ route('register') }}">
+                                        {{ __('auth.do_not_have_account') }}
+                                    </a>
                                 @endif
                             </div>
 
