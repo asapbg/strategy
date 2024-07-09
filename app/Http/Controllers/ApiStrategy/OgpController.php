@@ -104,7 +104,6 @@ class OgpController extends ApiController
                         join ogp_status os2 on os2.id = op2.ogp_status_id
                         join ogp_status_translations ost on ost.ogp_status_id = os2.id and ost.locale = \''.$this->locale.'\'
                         where true
-                            '.(!$this->authanticated ? ' and op2.deleted_at is null ' : '').'
                             and op2.national_plan = 1
                             and os2."type" in ('.OgpStatusEnum::ACTIVE->value.( $this->authanticated ? ','.OgpStatusEnum::DRAFT->value : '').') -- OgpStatusEnum::ACTIVE->value
                             '.(isset($from) ? ' and op2.from_date >= \''.$from.'\'' : '').'
