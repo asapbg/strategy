@@ -46,6 +46,7 @@ return [
     'public_consultation.other_documents' => 'Other',
     'registration_in_system' => 'Registration in system',
     'registration_disabled' => 'We are making improvements to the registration system of the Public Consultation Portal, so we have temporarily suspended the possibility to register in the system.<br>Thank you for your understanding!',
+    'login_disabled' => 'We are making improvements to the Public Consultation Portal, so we have temporarily suspended the possibility to register or login in the system. Thank you for your understanding!',
     'calc.standard.title' => 'Standard Cost Model',
     'calc.standard.description' => '<p>This method is used to examine the change in administrative burden with respect to stakeholders. It applies to both the partial assessment and the overall impact assessment. Through the model of standard costs, the administrative costs of individuals and legal entities are assessed, arising from the legally established obligations to periodically provide information (declarations, reports, notifications) to state bodies about their activities. This activity is carried out by citizens, employees of companies, specially hired persons. The costs of the administrative burden are assessed for periodic obligations, for the introduction of a new, albeit one-off obligation, for the introduction of requirements for re-registration and others.</p>',
     'calc.standard.btn' => 'Administrative Burden',

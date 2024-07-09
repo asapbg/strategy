@@ -70,12 +70,16 @@
 {{--                                </div>--}}
                             </div>
                             <div class="mb-4">
-                                <a class="d-inline-block w-100" href="{{ route('forgot_pass') }}">
-                                    {{ __('auth.forgot_password') }}
-                                </a>
-                                <a href="{{ route('register') }}">
+                                @if(!env('DISABLE_LOGIN_FOR_EXTERNAL_USER'))
+                                    <a class="d-inline-block w-100" href="{{ route('forgot_pass') }}">
+                                        {{ __('auth.forgot_password') }}
+                                    </a>
+                                @endif
+                                @if(!env('DISABLE_REGISTRATION'))
+                                `<a href="{{ route('register') }}">
                                     {{ __('auth.do_not_have_account') }}
-                                </a>
+                                </a>`
+                                @endif
                             </div>
 
                         </div>
@@ -86,15 +90,16 @@
                                 {{ __('auth.login') }}
                             </div>
                             </button>
-                            <div class="row">
-                                <a class="col-md-6 offset-md-3 cstm-btn btn btn-primary btn-lg" href="{{ route('eauth.login') }}">
-                                    <span class="btn-label"><i
-                                            class="fa-solid fa-signature main-color "
-                                            ></i></span>
-                                    {{ __('eauth.with_e_auth') }}
-                                </a>
-                            </div>
-
+                            @if(!env('DISABLE_LOGIN_FOR_EXTERNAL_USER') && !env('DISABLE_REGISTRATION'))
+                                <div class="row">
+                                    <a class="col-md-6 offset-md-3 cstm-btn btn btn-primary btn-lg" href="{{ route('eauth.login') }}">
+                                        <span class="btn-label"><i
+                                                class="fa-solid fa-signature main-color "
+                                                ></i></span>
+                                        {{ __('eauth.with_e_auth') }}
+                                    </a>
+                                </div>
+                           @endif
                     </div>
                 </div>
             </div>

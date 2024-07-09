@@ -78,6 +78,7 @@ class LoginController extends Controller
                 'error' => [sprintf('auth.no_guard_found', $guard)],
             ]);
         }
+
         $provider = config('auth')['guards'][$guard]['provider'];
         $model = config('auth')['providers'][$provider]['model'];
 
@@ -95,6 +96,12 @@ class LoginController extends Controller
         if (!$user) {
             throw ValidationException::withMessages([
                 'error' => [trans('auth.no_user_found', ['username' => $username])],
+            ]);
+        }
+
+        if(env('DISABLE_LOGIN_FOR_EXTERNAL_USER') && $user->user_type == User::USER_TYPE_EXTERNAL){
+            throw ValidationException::withMessages([
+                'error' => [__('site.login_disabled')],
             ]);
         }
 
