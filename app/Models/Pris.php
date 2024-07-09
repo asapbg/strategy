@@ -360,7 +360,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
                 $j->on('tag_translations.tag_id', '=', 'tag.id')
                     ->where('tag_translations.locale', '=', app()->getLocale());
             })
-            ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER)
+            ->whereIn('pris.legal_act_type_id', LegalActType::IN_PRIS)
             ->FilterBy($filter)
             ->get();
     }

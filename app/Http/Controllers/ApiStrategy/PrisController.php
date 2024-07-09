@@ -80,6 +80,8 @@ class PrisController extends ApiController
             left join pris_institution pi2 on pi2.pris_id = p.id
             where true
                 and p.last_version = 1
+                and p.legal_act_type_id in ('.implode(',', LegalActType::IN_PRIS).')
+                and p.legal_act_type_id <> '.LegalActType::TYPE_ORDER.'
                 '.(!$this->authanticated ? ' and p.deleted_at is null and p.published_at is not null and p.active = 1 ' : '').'
                 '.(isset($from) ? ' and p.doc_date >= \''.$from.'\'' : '').'
                 '.(isset($to) ? ' and p.doc_date <= \''.$to.'\'' : '').'
@@ -197,7 +199,7 @@ class PrisController extends ApiController
                     ->where('pp_lat_tr.locale', '=', app()->getLocale());
             })
             ->where('pris.id', '=', $id)
-            ->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL, LegalActType::TYPE_ARCHIVE])
+            ->whereIn('pris.legal_act_type_id', LegalActType::IN_PRIS)
             ->where('pris.asap_last_version', '=', 1);
 
             if(!$this->authanticated){

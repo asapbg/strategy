@@ -22,6 +22,8 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     const TYPE_DISPOSITION = 4;
     const TYPE_PROTOCOL = 5;
     const TYPE_TRANSCRIPTS = 6;
+
+    const IN_PRIS = [self::TYPE_DECREES, self::TYPE_DECISION, self::TYPE_PROTOCOL_DECISION, self::TYPE_DISPOSITION, self::TYPE_PROTOCOL, self::TYPE_TRANSCRIPTS];
     /**
      * 2 - Decision
      * 3 - Protocol Decisions
@@ -68,18 +70,15 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
         );
     }
 
-    public static function optionsList($withoutLaw = false, $withoutArchive = false)
+    public static function optionsList($withoutLaw = true, $withoutArchive = false)
     {
         $q = DB::table('legal_act_type')
             ->select(['legal_act_type.id', 'legal_act_type_translations.name'])
             ->join('legal_act_type_translations', 'legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
-            ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+            ->where('legal_act_type_translations.locale', '=', app()->getLocale())
+            ->where('legal_act_type.in_pris','=', 1);
         if($withoutLaw) {
             $q->where('legal_act_type.id', '<>', LegalActType::TYPE_ORDER);
-        }
-
-        if($withoutLaw) {
-            $q->where('legal_act_type.id', '<>', LegalActType::TYPE_ARCHIVE);
         }
 
         return $q->orderBy('legal_act_type_translations.name', 'asc')
