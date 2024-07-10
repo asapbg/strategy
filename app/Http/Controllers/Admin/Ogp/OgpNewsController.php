@@ -142,6 +142,7 @@ class OgpNewsController extends AdminController
                         $file->content_type = $itemImg->getClientMimeType();
                         $file->sys_user = $request->user()->id;
                         $file->save();
+                        generateImageThumbnail($file);
                     }
                 } else{
                     $file = new File([
@@ -157,6 +158,7 @@ class OgpNewsController extends AdminController
                     if( $file ) {
                         $item->file_id = $file->id;
                         $item->save();
+                        generateImageThumbnail($file);
                     }
                 }
             }
