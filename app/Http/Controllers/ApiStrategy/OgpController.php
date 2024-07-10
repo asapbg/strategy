@@ -289,70 +289,118 @@ class OgpController extends ApiController
         return $this->output($data);
     }
 
-    public function devPlan(Request $request){
+    public function devPlans(Request $request){
         $data = DB::select('
-            select
-                op.id,
-                max(opt.name) as title,
-                jsonb_agg(jsonb_build_object(\'name\', oat."name", \'date_start\', op.from_date_develop, \'date_end\', op.to_date_develop, \'proposals\',
-                    (
-                        select jsonb_agg(jsonb_build_object(\'user_name\', u.first_name || \' \' || u.last_name , \'date\', to_char(opao.created_at, \'DD.MM.YYYY\') , \'content\', opao."content" , \'votes_for\', opao.likes_cnt , \'votes_against\', opao.dislikes_cnt, \'comments\',
-                            (
-                                select jsonb_agg(jsonb_build_object(\'date\', to_char(opaoc.created_at, \'DD.MM.YYYY\'), \'author_name\', u2.first_name || \'\' || u2.last_name , \'text\', opaoc."content"))
-                                from ogp_plan_area_offer_comment opaoc
-                                left join users u2 on u2.id = opaoc.users_id
-                                where
-                                    opaoc.ogp_plan_area_offer_id = opao.id
-                                    and opaoc.deleted_at is null
-                            )
-                        ))
-                        from ogp_plan_area_offer opao
-                        left join users u on u.id = opao.users_id
-                        where
-                            opao.deleted_at is null
-                            and opao.ogp_plan_area_id = opa.id
-                    )
-                )) filter (where opa.id is not null) as areas
-            from ogp_plan op
-            join ogp_plan_translations opt on opt.ogp_plan_id = op.id and opt.locale = \''.$this->locale.'\'
-            join ogp_status os on os.id = op.ogp_status_id
-            left join ogp_plan_area opa on opa.ogp_plan_id = op.id
-            left join ogp_area oa on oa.id = opa.ogp_area_id
-            left join ogp_area_translations oat on oat.ogp_area_id = oa.id and oat.locale = \''.$this->locale.'\'
-            where
-                op.deleted_at is null
-                and op.national_plan = 0
-                and os."type" in (' . OgpStatusEnum::IN_DEVELOPMENT->value . ')
-                and opa.deleted_at is null
-            group by op.id, opa.id
-            order by op.id desc
-            limit 1
+            select A.*
+            from (
+                select
+                    op.id,
+                    max(opt.name) as title,
+                    max(ost.name) as status,
+                    jsonb_agg(jsonb_build_object(\'name\', oat."name", \'date_start\', op.from_date_develop, \'date_end\', op.to_date_develop, \'proposals\',
+                        (
+                            select jsonb_agg(jsonb_build_object(\'user_name\', u.first_name || \' \' || u.last_name , \'date\', to_char(opao.created_at, \'DD.MM.YYYY\') , \'content\', opao."content" , \'votes_for\', opao.likes_cnt , \'votes_against\', opao.dislikes_cnt, \'comments\',
+                                (
+                                    select jsonb_agg(jsonb_build_object(\'date\', to_char(opaoc.created_at, \'DD.MM.YYYY\'), \'author_name\', u2.first_name || \'\' || u2.last_name , \'text\', opaoc."content"))
+                                    from ogp_plan_area_offer_comment opaoc
+                                    left join users u2 on u2.id = opaoc.users_id
+                                    where
+                                        opaoc.ogp_plan_area_offer_id = opao.id
+                                        and opaoc.deleted_at is null
+                                )
+                            ))
+                            from ogp_plan_area_offer opao
+                            left join users u on u.id = opao.users_id
+                            where
+                                opao.deleted_at is null
+                                and opao.ogp_plan_area_id = opa.id
+                        )
+                    )) filter (where opa.id is not null) as areas
+                from ogp_plan op
+                join ogp_plan_translations opt on opt.ogp_plan_id = op.id and opt.locale = \''.$this->locale.'\'
+                join ogp_status os on os.id = op.ogp_status_id
+                join ogp_status_translations ost on ost.ogp_status_id = os.id and ost.locale = \''.$this->locale.'\'
+                left join ogp_plan_area opa on opa.ogp_plan_id = op.id
+                left join ogp_area oa on oa.id = opa.ogp_area_id
+                left join ogp_area_translations oat on oat.ogp_area_id = oa.id and oat.locale = \''.$this->locale.'\'
+                where
+                    op.deleted_at is null
+                    and op.national_plan = 0
+                    and os."type" in (' . OgpStatusEnum::IN_DEVELOPMENT->value . ')
+                    and opa.deleted_at is null
+                group by op.id, opa.id
+                order by op.id desc
+                limit 1
+            ) A
+        union all
+            (
+                select
+                    op.id,
+                    max(opt.name) as title,
+                    max(ost.name) as status,
+                    jsonb_agg(jsonb_build_object(\'name\', oat."name", \'date_start\', op.from_date_develop, \'date_end\', op.to_date_develop, \'proposals\',
+                        (
+                            select jsonb_agg(jsonb_build_object(\'user_name\', u.first_name || \' \' || u.last_name , \'date\', to_char(opao.created_at, \'DD.MM.YYYY\') , \'content\', opao."content" , \'votes_for\', opao.likes_cnt , \'votes_against\', opao.dislikes_cnt, \'comments\',
+                                (
+                                    select jsonb_agg(jsonb_build_object(\'date\', to_char(opaoc.created_at, \'DD.MM.YYYY\'), \'author_name\', u2.first_name || \'\' || u2.last_name , \'text\', opaoc."content"))
+                                    from ogp_plan_area_offer_comment opaoc
+                                    left join users u2 on u2.id = opaoc.users_id
+                                    where
+                                        opaoc.ogp_plan_area_offer_id = opao.id
+                                        and opaoc.deleted_at is null
+                                )
+                            ))
+                            from ogp_plan_area_offer opao
+                            left join users u on u.id = opao.users_id
+                            where
+                                opao.deleted_at is null
+                                and opao.ogp_plan_area_id = opa.id
+                        )
+                    )) filter (where opa.id is not null) as areas
+                from ogp_plan op
+                join ogp_plan_translations opt on opt.ogp_plan_id = op.id and opt.locale = \'' . $this->locale . '\'
+                join ogp_status os on os.id = op.ogp_status_id
+                join ogp_status_translations ost on ost.ogp_status_id = os.id and ost.locale = \''.$this->locale.'\'
+                left join ogp_plan_area opa on opa.ogp_plan_id = op.id
+                left join ogp_area oa on oa.id = opa.ogp_area_id
+                left join ogp_area_translations oat on oat.ogp_area_id = oa.id and oat.locale = \'' . $this->locale . '\'
+                where
+                    op.deleted_at is null
+                    and op.national_plan = 0
+                    and (os."type" = ' . OgpStatusEnum::FINAL->value . ' ' . ($this->authanticated ? 'or os."type" = ' . OgpStatusEnum::DRAFT->value : '') . ')
+                    and opa.deleted_at is null
+                group by op.id, opa.id
+                order by op.id desc
+            )
+
+            ' . ($this->request_limit ? ' limit ' . $this->request_limit : '') . '
+            ' . ($this->request_offset ? ' offset ' . $this->request_offset : '') . '
         ');
 
         if(sizeof($data)){
-            $data = $data[0];
-            if(!empty($data->areas)){
-                $data->areas = json_decode($data->areas, true);
-                if(!empty($data->areas)){
-                    foreach ($data->areas as $ka => $va){
-                        if(!empty($va['proposals'])){
-                            foreach ($va['proposals'] as $kp => $vp){
-                                if(empty($vp['comments'])){
-                                    $data->areas[$ka]['proposals'][$kp]['comments'] = [];
+            foreach ($data as $row){
+                if(!empty($row->areas)){
+                    $row->areas = json_decode($row->areas, true);
+                    if(!empty($row->areas)){
+                        foreach ($row->areas as $ka => $va){
+                            if(!empty($va['proposals'])){
+                                foreach ($va['proposals'] as $kp => $vp){
+                                    if(empty($vp['comments'])){
+                                        $row->areas[$ka]['proposals'][$kp]['comments'] = [];
+                                    }
                                 }
+                            } else {
+                                $row->areas[$ka]['proposals'] = [];
                             }
-                        } else {
-                            $data->areas[$ka]['proposals'] = [];
                         }
                     }
                 }
-            } else {
-                $data->areas = [];
+                else {
+                    $row->areas = [];
+                }
             }
         }
-        if(empty($data)){
-            return $this->returnError(Response::HTTP_NOT_FOUND, 'Not found');
-        }
+
         return $this->output($data);
     }
 }
