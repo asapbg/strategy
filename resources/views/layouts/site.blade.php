@@ -17,7 +17,8 @@
     <link href="{{ asset('/vendor/fontawesome-free-6.4.0-web/css/all.css') }}" rel="stylesheet">
 
     <!-- Custom css -->
-    <link href="{{ asset('css/app_vendor.css?v='.date('d')) }}" rel="stylesheet">
+{{--    <link href="{{ asset('css/app_vendor.css?v='.date('d')) }}" rel="stylesheet">--}}
+    <link href="{{ asset('css/app_vendor.css') }}" rel="stylesheet">
     @stack('styles')
 
     <!-- Add favicon -->
@@ -139,7 +140,8 @@
 </div>
 @include('cookie-consent::index')
 <!-- SCRIPTS -->
-<script src="{{ asset('js/app_vendor.js?v='.date('d')) }}"></script>
+{{--<script src="{{ asset('js/app_vendor.js?v='.date('d')) }}"></script>--}}
+<script src="{{ asset('js/app_vendor.js') }}"></script>
 @stack('scripts')
 </body>
 </html>
