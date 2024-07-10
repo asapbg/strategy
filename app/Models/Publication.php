@@ -212,6 +212,21 @@ class Publication extends ModelActivityExtend implements TranslatableContract, F
         );
     }
 
+    protected function thumbListAsset(): Attribute
+    {
+        $type = $this->type == PublicationTypesEnum::TYPE_LIBRARY->value ? 'list_publication' : 'list_news';
+        return Attribute::make(
+            get: fn () => $this->mainImg && file_exists(public_path('files'.DIRECTORY_SEPARATOR.'thumbnails'.DIRECTORY_SEPARATOR.$this->mainImg->id.'_thumbnail_'.$type.'.jpg')) ? asset('files'.DIRECTORY_SEPARATOR.'thumbnails'.DIRECTORY_SEPARATOR.$this->mainImg->id.'_thumbnail_'.$type.'.jpg') : ($this->mainImg ? asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $this->mainImg->path)) : $this->defaultImg),
+        );
+    }
+
+    protected function thumbHomePageAsset(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->mainImg && file_exists(public_path('files'.DIRECTORY_SEPARATOR.'thumbnails'.DIRECTORY_SEPARATOR.$this->mainImg->id.'_thumbnail_home.jpg')) ? asset('files'.DIRECTORY_SEPARATOR.'thumbnails'.DIRECTORY_SEPARATOR.$this->mainImg->id.'_thumbnail_home.jpg') : ($this->mainImg ? asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $this->mainImg->path)) : $this->defaultImg),
+        );
+    }
+
     public static function translationFieldsProperties(): array
     {
         return array(

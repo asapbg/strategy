@@ -18,7 +18,7 @@
                     @foreach($news as $nItem)
                         <div class="col-lg-4 mb-4">
                             <div class="post-box">
-                                <div class="post-img"><img src="{{ asset($nItem->id && $nItem->mainImg ? $nItem->mainImgAsset : $nItem->advDefaultImg) }}" class="img-fluid" alt=""></div>
+                                <div class="post-img"><img src="{{ $nItem->thumbListAsset }}" class="img-fluid" alt=""></div>
                                 <span class="post-date text-secondary">{{ displayDate($nItem->published_at) }}</span>
                                 <h3 class="post-title">{{ $nItem->title }}</h3>
                                 <div class="row mb-2">

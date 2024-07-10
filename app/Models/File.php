@@ -82,6 +82,14 @@ class File extends ModelActivityExtend
     const CONTENT_TYPE_IMAGES = ['jpeg', 'jpg', 'png', 'gif', 'apng', 'avif', 'webp' ];//'image/jpeg', 'image/png', 'image/gif','image/svg+xml', 'image/apng', 'image/avif', 'image/webp'
     const ORDER_BY_CONTENT_TYPE = "'image/png', 'image/jpeg', 'image/gif', 'image/apng', 'image/avif', 'image/webp'";
     const IMG_CONTENT_TYPE = ['image/png', 'image/jpeg', 'image/gif', 'image/apng', 'image/avif', 'image/webp'];
+
+    const THUMBNAIL_LIST_PUBLICATION_IMAGE_MAX_WIDTH = 250;
+    const THUMBNAIL_LIST_PUBLICATION_SMALL_IMAGE_MAX_HEIGHT = 190;
+    const THUMBNAIL_LIST_NEWS_IMAGE_MAX_WIDTH = 534;
+    const THUMBNAIL_LIST_NEWS_SMALL_IMAGE_MAX_HEIGHT = 200;
+    const THUMBNAIL_HOME_PAGE_IMAGE_MAX_WIDTH = 446;
+    const THUMBNAIL_HOME_PAGE_IMAGE_MAX_HEIGHT = 200;
+
     protected $guarded = [];
 
     //activity

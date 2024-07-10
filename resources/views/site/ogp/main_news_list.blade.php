@@ -24,7 +24,7 @@
         @foreach($items as $item)
             <div class="col-lg-4 mb-4">
                 <div class="post-box">
-                    <div class="post-img"><img src="{{ asset($item->id && $item->mainImg ? $item->mainImgAsset : $item->defaultImg) }}" class="img-fluid" alt=""></div>
+                    <div class="post-img"><img src="{{ $item->thumbListAsset }}" class="img-fluid" alt=""></div>
                     <span class="post-date text-secondary">{{ displayDate($item->published_at) }}</span>
                     <h3 class="post-title">{{ $item->title }}</h3>
                     <div class="row mb-2">

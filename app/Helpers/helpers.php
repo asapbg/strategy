@@ -4,6 +4,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
 
 if (!function_exists('currentUser')) {
 
@@ -1049,5 +1050,91 @@ if (!function_exists('transliterate')) {
         ];
 
         return str_replace($lat, $cyr, $str);
+    }
+}
+
+if (!function_exists('generateImageThumbnail')) {
+//    function generateImageThumbnail(\App\Models\File $file, $type = 'list')
+//    {
+//        $source_image_path = Storage::disk('public_uploads')->path($file->path);
+//        $maxWidth = $type == 'list' ? env('THUMBNAIL_LIST_IMAGE_MAX_WIDTH', 250) : env('THUMBNAIL_LIST_IMAGE_MAX_WIDTH', 446);
+//        $maxHeight = $type == 'list' ? env('THUMBNAIL_LIST_SMALL_IMAGE_MAX_HEIGHT', 190) : env('THUMBNAIL_HOME_PAGE_IMAGE_MAX_HEIGHT', 200);
+//        list($source_image_width, $source_image_height, $source_image_type) = getimagesize($source_image_path);
+//        switch ($source_image_type) {
+//            case IMAGETYPE_JPEG:
+//                $source_gd_image = imagecreatefromjpeg($source_image_path);
+//                $thumbnail_image_path_list = Storage::disk('public_uploads')->path('thumbnails/'.$file->id.'/list.jpg');
+//                $thumbnail_image_path_home_page = Storage::disk('public_uploads')->path('thumbnails/'.$file->id.'/home_page.jpg');
+//                break;
+//            case IMAGETYPE_PNG:
+//                $source_gd_image = imagecreatefrompng($source_image_path);
+//                $thumbnail_image_path_list = Storage::disk('public_uploads')->path('thumbnails/'.$file->id.'/list.png');
+//                $thumbnail_image_path_home_page = Storage::disk('public_uploads')->path('thumbnails/'.$file->id.'/home_page.png');
+//                break;
+//        }
+//        if ($source_gd_image === false) {
+//            return false;
+//        }
+//        $source_aspect_ratio = $source_image_width / $source_image_height;
+//        $thumbnail_aspect_ratio = $maxWidth / $maxHeight;
+//        if ($source_image_width <= $maxWidth && $source_image_height <= $maxHeight) {
+//            $thumbnail_image_width = $source_image_width;
+//            $thumbnail_image_height = $source_image_height;
+//        } elseif ($thumbnail_aspect_ratio > $source_aspect_ratio) {
+//            $thumbnail_image_width = (int) ($maxHeight * $source_aspect_ratio);
+//            $thumbnail_image_height = $maxHeight;
+//        } else {
+//            $thumbnail_image_width = $maxWidth;
+//            $thumbnail_image_height = (int) ($maxWidth / $source_aspect_ratio);
+//        }
+//        $thumbnail_gd_image = imagecreatetruecolor($thumbnail_image_width, $thumbnail_image_height);
+//        imagecopyresampled($thumbnail_gd_image, $source_gd_image, 0, 0, 0, 0, $thumbnail_image_width, $thumbnail_image_height, $source_image_width, $source_image_height);
+//
+//        $img_disp = imagecreatetruecolor($maxWidth,$maxWidth);
+//        $backcolor = imagecolorallocate($img_disp,0,0,0);
+//        imagefill($img_disp,0,0,$backcolor);
+//
+//        imagecopy($img_disp, $thumbnail_gd_image, (imagesx($img_disp)/2)-(imagesx($thumbnail_gd_image)/2), (imagesy($img_disp)/2)-(imagesy($thumbnail_gd_image)/2), 0, 0, imagesx($thumbnail_gd_image), imagesy($thumbnail_gd_image));
+//
+//        imagejpeg($img_disp, $thumbnail_image_path, 90);
+//        imagedestroy($source_gd_image);
+//        imagedestroy($thumbnail_gd_image);
+//        imagedestroy($img_disp);
+//        return true;
+//    }
+
+
+    /**
+     * https://image.intervention.io/v3
+     * @param \App\Models\File $file
+     * @return void
+     */
+    function generateImageThumbnail(\App\Models\File $file): void
+    {
+        $destinationPathThumbnail = Storage::disk('public_uploads')->path('thumbnails');
+        mkdirIfNotExists($destinationPathThumbnail);
+        $manager = new ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+
+        $thumbs = array(
+            'list_publication' => [
+                'width' => \App\Models\File::THUMBNAIL_LIST_PUBLICATION_IMAGE_MAX_WIDTH,
+                'height' => \App\Models\File::THUMBNAIL_LIST_PUBLICATION_SMALL_IMAGE_MAX_HEIGHT,
+            ],
+            'list_news' => [
+                'width' => \App\Models\File::THUMBNAIL_LIST_NEWS_IMAGE_MAX_WIDTH,
+                'height' => \App\Models\File::THUMBNAIL_LIST_NEWS_SMALL_IMAGE_MAX_HEIGHT,
+            ],
+            'home' => [
+                'width' => \App\Models\File::THUMBNAIL_HOME_PAGE_IMAGE_MAX_WIDTH ,
+                'height' => \App\Models\File::THUMBNAIL_HOME_PAGE_IMAGE_MAX_HEIGHT ,
+            ]
+        );
+        foreach ($thumbs as $type => $options){
+            $image = $manager->read(Storage::disk('public_uploads')->path($file->path));
+            \Illuminate\Support\Facades\Log::error($options['width']. ' -------------------- ' .$options['height']);
+            $image->cover($options['width'], $options['height'])
+                ->toJpeg()
+                ->save($destinationPathThumbnail.DIRECTORY_SEPARATOR.$file->id.'_thumbnail_'.$type.'.jpg');
+        }
     }
 }

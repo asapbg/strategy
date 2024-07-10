@@ -23,6 +23,7 @@ yarn-error.log
 /public/files/lp
 /public/files/op
 /public/files/ogp_plan
+/public/files/thumbnails
 app/Http/Controllers/Test.php
 /document_library
 /oldfiles
