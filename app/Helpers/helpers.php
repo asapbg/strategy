@@ -1131,7 +1131,6 @@ if (!function_exists('generateImageThumbnail')) {
         );
         foreach ($thumbs as $type => $options){
             $image = $manager->read(Storage::disk('public_uploads')->path($file->path));
-            \Illuminate\Support\Facades\Log::error($options['width']. ' -------------------- ' .$options['height']);
             $image->cover($options['width'], $options['height'])
                 ->toJpeg()
                 ->save($destinationPathThumbnail.DIRECTORY_SEPARATOR.$file->id.'_thumbnail_'.$type.'.jpg');

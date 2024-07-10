@@ -25,6 +25,7 @@ class PermissionsController extends Controller
     {
         $roles = Role::whereActive(true)
             ->where('name', '<>', CustomRole::SUPER_USER_ROLE)
+            ->where('name', '<>', CustomRole::SANCTUM_USER_ROLE)
             ->get();
 //        $perms = Permission::with('roles')->get();
         $perms = Permission::with('roles')->orderBy('id', 'asc')->get();
