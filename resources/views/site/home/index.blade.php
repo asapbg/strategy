@@ -367,6 +367,7 @@
             <div class="row">
                 @foreach($publications as $publication)
                     @php($isAdvBoardNews = $publication->type == \App\Enums\PublicationTypesEnum::TYPE_ADVISORY_BOARD->value)
+                    @php($isOgpNews = $publication->type == \App\Enums\PublicationTypesEnum::TYPE_OGP_NEWS->value)
                     <div class="col-lg-4 mb-2">
                         <div class="post-box">
                             <div class="post-img">
@@ -375,7 +376,12 @@
                                 >
                             </div>
                             <span class="post-date text-secondary">{{ displayDate($publication->published_at) }} г.</span>
-                            <h3 class="post-title">{{ $publication->translation->title }}</h3>
+                            <h3 class="post-title">
+{{--                                {{ $publication->translation->title }}--}}
+                                <a href="@if($isAdvBoardNews){{ route('advisory-boards.news.details', $publication) }}@elseif($isOgpNews){{ route('ogp.news.details', $publication) }}@else{{ route('library.details', [$publication->type, $publication->id]) }}@endif" class="text-decoration-none" title="{{ $publication->title }}">
+                                    {{ $publication->translation->title }}
+                                </a>
+                            </h3>
                             <div class="row mb-2">
                                 <div class="col-md-8">
                                     <span class="blog-category">{{ $isAdvBoardNews ? $publication->advCategory : $publication->category?->name }}</span>
