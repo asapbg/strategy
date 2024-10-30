@@ -53,7 +53,7 @@
                                                 <div class="input-group ">
                                                     <div class="mb-1 d-flex flex-column  w-100">
                                                         <label for="exampleFormControlInput1" class="form-label">{{ $field['label'] }}:</label>
-                                                        <select class="form-select select2 @if(isset($field['class'])){{$field['class'] }}@endif"
+                                                        <select class="form-select select2 @if(isset($field['class'])){{$field['class'] }}@endif @if(isset($field['skipCategoriesControl']) && $field['skipCategoriesControl']) skipCategoriesControl @endif"
                                                                 name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}" id="{{ $key }}"
                                                                 @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
                                                             {{-- select with groups--}}

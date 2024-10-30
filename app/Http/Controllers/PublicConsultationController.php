@@ -1138,7 +1138,8 @@ class PublicConsultationController extends Controller
                 'default' => '',
                 'label' => trans_choice('custom.act_type', 1),
                 'value' => $request->input('actTypes'),
-                'col' => 'col-md-4'
+                'col' => 'col-md-4',
+                'skipCategoriesControl' => true
             ),
 //            'levels' => array(
 //                'type' => 'select',

@@ -329,19 +329,21 @@ function categoriesControl(){
     }
 
     if($('#actTypes').length){
-        $('#actTypes').val(null).trigger("change");
-        if(levelVals.length == 0){
-            $('#actTypes option').each(function (){
-                $(this).attr('disabled', false);
-            });
-        } else{
-            $('#actTypes option').each(function (){
-                if(levelVals.indexOf($(this).data('level').toString()) != -1){
+        if(!$('#actTypes').hasClass('skipCategoriesControl')){
+            $('#actTypes').val(null).trigger("change");
+            if(levelVals.length == 0){
+                $('#actTypes option').each(function (){
                     $(this).attr('disabled', false);
-                } else{
-                    $(this).attr('disabled', true);
-                }
-            });
+                });
+            } else{
+                $('#actTypes option').each(function (){
+                    if(levelVals.indexOf($(this).data('level').toString()) != -1){
+                        $(this).attr('disabled', false);
+                    } else{
+                        $(this).attr('disabled', true);
+                    }
+                });
+            }
         }
     }
 }
