@@ -24,11 +24,11 @@
 
     <section id="second-links" class="home-page-section">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="mb-0">{{ __('site.self_inform') }}</h2>
-                </div>
-            </div>
+{{--            <div class="row">--}}
+{{--                <div class="col-md-12">--}}
+{{--                    <h2 class="mb-0">{{ __('site.self_inform') }}</h2>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
             <div class="row">
                 <div class="col-md-4 position-relative mt-3">
@@ -55,42 +55,6 @@
 
                 <div class="col-md-4 position-relative mt-3">
                     <div class="service-item  position-relative">
-                        <a href="{{ route('strategy-documents.index') }}" title="{{ trans_choice('custom.strategic_documents', 2) }}">
-                            <div class="icon">
-                                <i class="bi bi-files"></i>
-
-                            </div>
-                            <h3>{{ trans_choice('custom.strategic_documents', 2) }}</h3>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4 position-relative mt-3">
-                    <div class="service-item  position-relative">
-                        <a href="{{ route('impact_assessment.index') }}" title="{{ trans_choice('custom.impact_assessment', 2) }}">
-                            <div class="icon">
-                                <i class="bi bi-journal-plus"></i>
-                            </div>
-                            <h3>{{ trans_choice('custom.impact_assessment', 2) }}</h3>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="col-md-4 position-relative mt-3">
-                    <div class="service-item  position-relative">
-                        <a href="{{ route('pris.index') }}" title="{{ __('custom.pris') }}">
-                            <div class="icon">
-                                <i class="bi bi-file-earmark-medical"></i>
-                            </div>
-                            <h3>{{ __('custom.pris') }}</h3>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="col-md-4 position-relative mt-3">
-                    <div class="service-item  position-relative">
                         <a href="{{ route('legislative_initiatives.index') }}" title="{{ __('custom.ogp') }}">
                             <div class="icon">
                                 <i class="bi bi-bounding-box-circles"></i>
@@ -99,7 +63,53 @@
                         </a>
                     </div>
                 </div>
+{{--                <div class="col-md-4 position-relative mt-3">--}}
+{{--                    <div class="service-item  position-relative">--}}
+{{--                        <a href="{{ route('strategy-documents.index') }}" title="{{ trans_choice('custom.strategic_documents', 2) }}">--}}
+{{--                            <div class="icon">--}}
+{{--                                <i class="bi bi-files"></i>--}}
+
+{{--                            </div>--}}
+{{--                            <h3>{{ trans_choice('custom.strategic_documents', 2) }}</h3>--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
             </div>
+
+{{--            <div class="row">--}}
+{{--                <div class="col-md-4 position-relative mt-3">--}}
+{{--                    <div class="service-item  position-relative">--}}
+{{--                        <a href="{{ route('impact_assessment.index') }}" title="{{ trans_choice('custom.impact_assessment', 2) }}">--}}
+{{--                            <div class="icon">--}}
+{{--                                <i class="bi bi-journal-plus"></i>--}}
+{{--                            </div>--}}
+{{--                            <h3>{{ trans_choice('custom.impact_assessment', 2) }}</h3>--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+
+{{--                <div class="col-md-4 position-relative mt-3">--}}
+{{--                    <div class="service-item  position-relative">--}}
+{{--                        <a href="{{ route('pris.index') }}" title="{{ __('custom.pris') }}">--}}
+{{--                            <div class="icon">--}}
+{{--                                <i class="bi bi-file-earmark-medical"></i>--}}
+{{--                            </div>--}}
+{{--                            <h3>{{ __('custom.pris') }}</h3>--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+
+{{--                <div class="col-md-4 position-relative mt-3">--}}
+{{--                    <div class="service-item  position-relative">--}}
+{{--                        <a href="{{ route('legislative_initiatives.index') }}" title="{{ __('custom.ogp') }}">--}}
+{{--                            <div class="icon">--}}
+{{--                                <i class="bi bi-bounding-box-circles"></i>--}}
+{{--                            </div>--}}
+{{--                            <h3>{{ __('custom.ogp') }}</h3>--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
         </div>
     </section>
