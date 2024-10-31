@@ -190,12 +190,15 @@
 
             let diffDays = null;
             const date1 = $('#open_from').datepicker('getDate');
-            const date2 = $('#open_to').datepicker('getDate');
+            const date2 = $('#open_to').val() ? addSubDays($('#open_to').val(), 0, true, true) : null
+            console.log(date2, addSubDays($('#open_to').val(), 0, true, true));
+            // const date2 = $('#open_to').datepicker('getDate');
 
             if( date1 && date2 ) {
                 let diffTime = Math.abs(date2 - date1);
                 diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             }
+            console.log(date1, date2, diffDays);
             $('#period-total').text(diffDays ? diffDays : 0);
 
             let minDuration = parseInt(<?php echo \App\Models\Consultations\PublicConsultation::MIN_DURATION_DAYS; ?>);

@@ -160,6 +160,13 @@ class PublicConsultationController extends AdminController
         $pris = $item->pris;
         $laws = Law::with(['translations'])->get();
 
+//        $diffInDays = null;
+//        if($item->id){
+//            $from = $item->open_from ? Carbon::parse($item->open_from) : null;
+//            $to = $item->open_to ? Carbon::parse($item->open_to) : null;
+//            $diffInDays = $to->diffInDays($from);
+//        }
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',
             'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel',
@@ -187,9 +194,17 @@ class PublicConsultationController extends AdminController
             return back()->with('warning', __('messages.unauthorized'));
         }
 
+        $validated = $validator->validated();
+
+        $from = $validated['open_from'] ? Carbon::parse($validated['open_from']) : null;
+        $to = $validated['open_to'] ? Carbon::parse($validated['open_to']) : null;
+        if($to->diffInDays($from) < PublicConsultation::MIN_DURATION_DAYS){
+            return back()->withInput()->withErrors(['open_from' => 'Минимланият период за обществена консултация е 14 дни']);
+        }
+
         DB::beginTransaction();
         try {
-            $validated = $validator->validated();
+
             //doing this because using strange field name to prevent bad validation message
             $oldOpRow = $item->operational_program_row_id;
             $oldLpRow = $item->legislative_program_row_id;
@@ -222,8 +237,8 @@ class PublicConsultationController extends AdminController
             }
 
             //cache days
-            $from = $validated['open_from'] ? Carbon::parse($validated['open_from']) : null;
-            $to = $validated['open_to'] ? Carbon::parse($validated['open_to']) : null;
+//            $from = $validated['open_from'] ? Carbon::parse($validated['open_from']) : null;
+//            $to = $validated['open_to'] ? Carbon::parse($validated['open_to']) : null;
             $item->active_in_days = $to && $from ? $to->diffInDays($from) : null;
             $item->save();
             if( !$id ) {
