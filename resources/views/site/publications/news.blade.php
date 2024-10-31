@@ -1,5 +1,12 @@
 <div class="row mb-3">
-    <div class="col-12 text-end">
+    <div class="col-md-6 mt-2">
+        <div class="info-consul text-start">
+            <p class="fw-600">
+                {{ trans_choice('custom.total_pagination_result', $news->count(), ['number' => $news->total()]) }}
+            </p>
+        </div>
+    </div>
+    <div class="col-6 text-end">
         @if(!isset($subscribe) || $subscribe)
             @php($requestFilter['type'] = $type)
             @includeIf('site.partial.subscribe-buttons', ['subscribe_params' => $requestFilter ?? [], 'hasSubscribeEmail' => $hasSubscribeEmail ?? false, 'hasSubscribeRss' => $hasSubscribeRss ?? false, 'subscribe_list' => true])

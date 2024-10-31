@@ -1,4 +1,11 @@
 <div class="row mb-3">
+    <div class="col-md-6 mt-2">
+        <div class="info-consul text-start">
+            <p class="fw-600">
+                {{ trans_choice('custom.total_pagination_result', $publications->count(), ['number' => $publications->total()]) }}
+            </p>
+        </div>
+    </div>
     <div class="col-12 text-end">
         @if(!isset($subscribe) || $subscribe)
             @php($requestFilter['type'] = $type)
