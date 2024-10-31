@@ -26,6 +26,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const TRANSLATABLE_FIELDS = ['title', 'description'];
     const MODULE_NAME = ('custom.strategic_documents');
+    const HOME_PAGINATE = 4;
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     public $timestamps = true;

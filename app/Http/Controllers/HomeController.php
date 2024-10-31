@@ -42,6 +42,7 @@ class HomeController extends Controller
     {
         $consultations = $this->getConsultations(new Request());
         $initiatives = $this->getInitiatives(new Request());
+        $strategicDocuments = $this->getStrategicDocuments(new Request());
 
         $publications = Publication::select('publication.*')
             ->whereActive(true)
@@ -59,7 +60,7 @@ class HomeController extends Controller
         $planAreas = $this->getPlanAreas(new Request());
 
         return $this->view('site.home.index',
-            compact('consultations','initiatives', 'publications','default_img', 'polls', 'planAreas'));
+            compact('consultations','initiatives', 'publications','default_img', 'polls', 'planAreas', 'strategicDocuments'));
     }
 
     public function getPlanAreas(Request $request)
@@ -122,7 +123,7 @@ class HomeController extends Controller
             })
             ->when($title, function ($query, $title) {
                 return $query->where('field_of_action_translations.name', 'ILIKE', "%$title%")
-                    ->orWhere('public_consultation_translation.title', 'ILIKE', "%$title%");
+                    ->orWhere('public_consultation_translations.title', 'ILIKE', "%$title%");
             })
             ->orderBy('public_consultation.created_at', 'DESC')
             ->paginate($paginate);
@@ -169,6 +170,20 @@ class HomeController extends Controller
         }
 
         return $initiatives;
+    }
+
+    public function getStrategicDocuments(Request $request)
+    {
+        $paginate = StrategicDocument::HOME_PAGINATE;
+        $is_search = $request->has('search');
+        $requestFilter = $request->offsetGet('keywords') ? ['text' => $request->offsetGet('keywords')] : [];
+        $strategicDocuments = StrategicDocument::list($requestFilter, 'created_at', 'dsc', $paginate);
+
+        if ($is_search) {
+            return $this->view('site.home.strategic_documents', compact('strategicDocuments'));
+        }
+
+        return $strategicDocuments;
     }
 
     public function searchSection(Request $request)

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
         Route::get('/', 'index')->name('site.home');
         Route::get('/get-consultations', 'getConsultations')->name('get-consultations');
         Route::get('/get-initiatives', 'getInitiatives')->name('get-initiatives');
+        Route::get('/get-strategic-documents', 'getStrategicDocuments')->name('get-strategic-documents');
         Route::get('/search', 'search')->name('search');
         Route::get('/search-section', 'searchSection')->name('search.section');
         Route::get('/contacts/{section?}', 'contacts')->name('contacts');
