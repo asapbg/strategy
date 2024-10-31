@@ -614,7 +614,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                                 //always first
                                 $sortedTimeline['1'] = [
                                     'label' => $label,
-                                    'date' => displayDate($event->updated_at),
+//                                    'date' => displayDate($event->updated_at),
+                                    'date' => $event->object->month,
                                     'isActive' => true,
                                     'description' => '<p><a class="text-primary" target="_blank" href="'.route(($event->object instanceof OperationalProgramRow ? 'op.view' : 'lp.view') , ['id' => $event->object instanceof OperationalProgramRow ? $event->object->operational_program_id : $event->object->legislative_program_id ]).'">'.$event->object->value.'</a></p>'
                                 ];
