@@ -47,8 +47,11 @@
     }
 
     $sort_white = $sort_icon !== 'fa-sort' ? 'text-white' : '';
-
-    $sort_url = url()->current(). '?' . http_build_query(array_merge(request()->all(), $sort_array));
+    $requestParams = request()->all();
+    if(isset($customRequestParam) && !empty($customRequestParam)){
+        $requestParams = array_merge($requestParams, $customRequestParam);
+    }
+    $sort_url = url()->current(). '?' . http_build_query(array_merge($requestParams, $sort_array));
 @endphp
 
 <a href="{{ $sort_url }}" @if(isset($ajax) && $ajax) data-url="{{ $sort_url }}" @if(isset($ajaxContainer)) data-container="{{ $ajaxContainer }}" @endif @endif

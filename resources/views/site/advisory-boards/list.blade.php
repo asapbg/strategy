@@ -1,6 +1,6 @@
 @php($addBtn = auth()->user() && auth()->user()->can('create', \App\Models\AdvisoryBoard::class))
 @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'btn_add' => $addBtn, 'add_url' => route('admin.advisory-boards.create')])
-@include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_adv_board')])
+@include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_adv_board'), 'customRequestParam' => $customRequestParam ?? null])
 <input type="hidden" id="subscribe_model" value="App\Models\AdvisoryBoard">
 <div class="row mb-2">
     <div class="col-md-6 mt-2">
@@ -16,7 +16,7 @@
     <div class="col-md-6 mt-2">
         <div class="col-md-6 mb-2 text-start col-sm-12 d-flex align-items-center justify-content-start flex-direction-row">
             <label for="groupBy" class="form-label fw-bold mb-0 me-3 no-wrap group-by-label">Групиране по:</label>
-            @php($fRequest = $rf ?? request()->all())
+            @php($fRequest = $rf ?? ($requestFilter ?? request()->all()))
             <select class="form-select w-100" id="groupByAjax" name="groupBy" data-container="#listContainer">
                 @foreach($groupOptions as $group)
                     @php($fRequest['groupBy'] = $group['value'])

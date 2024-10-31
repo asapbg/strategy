@@ -44,6 +44,12 @@ class AdvisoryBoardController extends Controller
      */
     public function index(Request $request)
     {
+        $customRequestParam = null;
+        if( !$request->ajax() && is_null($request->input('status'))) {
+            $request->request->add(['status' => 1]);
+            $customRequestParam = ['status' => 1];
+        }
+
         $rssUrl = config('feed.feeds.adv_boards.url');
 
         $groupOptions = array(
@@ -158,7 +164,7 @@ class AdvisoryBoardController extends Controller
             return view('site.advisory-boards.list', compact('filter','sorter', 'items', 'rf', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
         }
         $this->setSeo(__('site.seo_title'),  trans_choice('custom.advisory_boards', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.advisory_boards', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
-        return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
+        return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm', 'customRequestParam'));
     }
 
     /**
