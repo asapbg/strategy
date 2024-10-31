@@ -202,6 +202,10 @@ class PublicConsultationController extends AdminController
             return back()->withInput()->withErrors(['open_from' => 'Минимланият период за обществена консултация е 14 дни']);
         }
 
+        if(!$id && Carbon::parse($from)->format('Y-m-d') < Carbon::now()->format('Y-m-d')){
+            return back()->withInput()->withErrors(['open_from' => 'Консултацията може да стартира най-скоро с днешна дата']);
+        }
+
         DB::beginTransaction();
         try {
 
