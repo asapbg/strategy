@@ -118,7 +118,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             'title' => [
                 'type' => 'text',
                 'rules' => ['required', 'string', 'max:5000'],
-                'required_all_lang' => true
+                'required_all_lang' => false
             ],
             'description' => [
                 'type' => 'summernote',
