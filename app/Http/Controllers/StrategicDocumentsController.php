@@ -110,6 +110,7 @@ class StrategicDocumentsController extends Controller
 
     public function tree(Request $request)
     {
+        $now = Carbon::now()->format('Y-m-d 00:00:00');
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
         $categories = isset($rf['level']) ? $rf['level'] : [InstitutionCategoryLevelEnum::CENTRAL->value, InstitutionCategoryLevelEnum::AREA->value, InstitutionCategoryLevelEnum::MUNICIPAL->value];
@@ -178,6 +179,8 @@ class StrategicDocumentsController extends Controller
                     strategic_document.active = true
                     and strategic_document.deleted_at is null
                     and strategic_document.strategic_document_level_id = '.$cat.'
+                    and strategic_document.document_date_accepted <= \''.$now.'\'
+                    and strategic_document.document_date_expiring >= \''.$now.'\'
                 group by strategic_document.id, field_of_actions.id, field_of_action_translations.name, children.id, children.depth, children.path
                 order by field_of_action_translations.name, strategic_document.id, children.path, children.depth asc
             ');
