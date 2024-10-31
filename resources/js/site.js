@@ -387,31 +387,71 @@ function ajaxList(domElement) {
     });
     $(document).on('click', domElement + ' .ajaxSearch', function (e){
         e.preventDefault();
-        let data = $(this).closest('form').serializeArray();
-        let dataObj = {};
-        let oldParams = $.map($(this).data('params'), function(value, index) {
-            return [[index,value]];
-        });
-
-        $(data).each(function(i, field){
-            let multiValue = field.name.split('[');
-            if(typeof multiValue[0] != "undefined") {
-                dataObj[field.name] = typeof dataObj[field.name] == 'undefined' ? field.value : dataObj[field.name] + ',' + field.value;
-            } else {
-                dataObj[field.name] = field.value;
-            }
-        });
         let url = $(this).data('url');
-        $($(this).data('container')).load(url + '?' + jQuery.param( dataObj ), function (){
-            ShowLoadingSpinner();
-            initInputs();
-            categoriesControl();
-            institutionControl();
-            ajaxList($(this).data('container'));
-        });
+        // console.log($(this), $(this).hasClass('clear'));
+        if (!$(this).hasClass('clear')) {
+            let data = $(this).closest('form').serializeArray();
+            let dataObj = {};
+            let oldParams = $.map($(this).data('params'), function(value, index) {
+                return [[index,value]];
+            });
+
+            $(data).each(function(i, field){
+                let multiValue = field.name.split('[');
+                if(typeof multiValue[0] != "undefined") {
+                    dataObj[field.name] = typeof dataObj[field.name] == 'undefined' ? field.value : dataObj[field.name] + ',' + field.value;
+                } else {
+                    dataObj[field.name] = field.value;
+                }
+            });
+            $($(this).data('container')).load(url + '?' + jQuery.param( dataObj ), function (){
+                ShowLoadingSpinner();
+                initInputs();
+                categoriesControl();
+                institutionControl();
+                ajaxList($(this).data('container'));
+            });
+        } else{
+            console.log('ok');
+            $($(this).data('container')).load(url, function (){
+                ShowLoadingSpinner();
+                initInputs();
+                categoriesControl();
+                institutionControl();
+                ajaxList($(this).data('container'));
+            });
+        }
+
+        // let data = $(this).closest('form').serializeArray();
+        // let dataObj = {};
+        // let oldParams = $.map($(this).data('params'), function(value, index) {
+        //     return [[index,value]];
+        // });
+        //
+        // $(data).each(function(i, field){
+        //     let multiValue = field.name.split('[');
+        //     if(typeof multiValue[0] != "undefined") {
+        //         dataObj[field.name] = typeof dataObj[field.name] == 'undefined' ? field.value : dataObj[field.name] + ',' + field.value;
+        //     } else {
+        //         dataObj[field.name] = field.value;
+        //     }
+        // });
+        // let url = $(this).data('url');
+        // $($(this).data('container')).load(url + '?' + jQuery.param( dataObj ), function (){
+        //     ShowLoadingSpinner();
+        //     initInputs();
+        //     categoriesControl();
+        //     institutionControl();
+        //     ajaxList($(this).data('container'));
+        // });
     });
 }
-
+// function clearSearchForms(formId) {
+//     // $("#results-per-page").prop("selectedIndex", 0);
+//     $(formId).find("input, textarea").val("");
+//     $(formId).find('select option[value=""]').not("#results-per-page").prop('selected', true);
+//     $(formId).find('.select2').val('clear').trigger('change');
+// }
 function clearSearchForm() {
     $("#results-per-page").prop("selectedIndex", 0);
     $("#search-form").find("input, textarea").not("#amount").not('#model_type').val("");

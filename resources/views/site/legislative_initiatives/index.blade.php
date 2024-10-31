@@ -92,6 +92,9 @@
                             <button class="btn rss-sub main-color" type="submit"><i
                                     class="fas fa-search main-color"></i>Търсене
                             </button>
+                            <a class="btn rss-sub main-color" href="{{ url()->current() }}">
+                                <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
+                            </a>
                         </div>
 
                         <div class="col-md-6 text-end col-md-6 px-0">

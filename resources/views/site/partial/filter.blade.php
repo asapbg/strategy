@@ -275,6 +275,9 @@
                                     <i class="fas fa-search main-color"></i>{{ __('custom.search') }}
                                 </button>
                             @endif
+                            <span class="btn rss-sub main-color search-btn clear @if(isset($ajax) && $ajax) ajaxSearch @endif" data-url="{{ url()->current() }}" data-container="{{ $ajaxContainer }}">
+                                <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
+                            </span>
 
                             @if(isset($ajax) && $ajax)
                                 @if(isset($export_excel) && $export_excel)
