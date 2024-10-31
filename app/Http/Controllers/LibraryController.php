@@ -152,6 +152,9 @@ class LibraryController extends Controller
         $published_till = $request->get('published_till');
         $keywords = $request->get('keywords');
         $categories = $request->get('categories');
+        if($categories){
+            $categories = array_filter($categories, fn($m) => $m > 0);
+        }
 
         $publications = Publication::select('publication.*')
             ->with(['translation', 'mainImg', 'category.translation'])
