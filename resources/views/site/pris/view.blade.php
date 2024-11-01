@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        <a href="{{ route('pris.index').'?legalActTypes[]='.$item->actType->id }}" target="_blank"><span class="pris-tag">{{ $item->actType->name }}</span></a>
+                        <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?legalActTypes[]='.$item->actType->id }}" target="_blank"><span class="pris-tag">{{ $item->actType->name }}</span></a>
                     </div>
                 </div>
                 <div class="row pris-row pb-2 mb-2">
@@ -135,7 +135,7 @@
                         </div>
                             <div class="col-md-9 pris-left-column">
                                 @if($item->newspaper_number || $item->newspaper_year)
-                                    <a href="{{ route('pris.index').'?newspaperNumber='.$item->newspaper_number.'&newspaperYear='.$item->newspaper_year }}" title="{{ __('validation.attributes.newspaper') }} - {{ $item->newspaper }}" target="_blank" class="text-decoration-none"> {{ $item->newspaper }}</a>
+                                    <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?newspaperNumber='.$item->newspaper_number.'&newspaperYear='.$item->newspaper_year }}" title="{{ __('validation.attributes.newspaper') }} - {{ $item->newspaper }}" target="_blank" class="text-decoration-none"> {{ $item->newspaper }}</a>
                                 @else
                                     {{ $item->newspaper }}
                                 @endif
@@ -160,7 +160,7 @@
                     <div class="col-md-9 pris-left-column">
                         @if($item->tags->count())
                             @foreach($item->tags as $tag)
-                                <a href="{{ route('pris.index').'?tag='.$tag->id }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $tag->label }}" target="_blank"><span class="pris-tag">{{ $tag->label }}</span></a>
+                                <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?tag='.$tag->id }}" title="{{ trans_choice('custom.public_consultations', 2) }} - {{ $tag->label }}" target="_blank"><span class="pris-tag">{{ $tag->label }}</span></a>
                             @endforeach
                         @endif
                     </div>
@@ -174,7 +174,7 @@
                     <div class="col-md-9 pris-left-column">
                         @if($item->changedDocs->count() || $item->changedByDocs->count())
                             @foreach($item->changedDocs as $doc)
-                                <a href="{{ route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
+                                <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
                                    class="text-decoration-none main-color d-block">
 {{--                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} --}}
 {{--                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}--}}
