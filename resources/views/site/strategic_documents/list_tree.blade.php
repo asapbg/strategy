@@ -28,7 +28,7 @@
                                             @php($policy = '')
                                             @php($sdId = 0)
                                             @foreach($cat['items'] as $i)
-                                                @if(($policy != $i->sd_policy_title && !$loop->first) || $loop->last)
+                                                @if(($policy != $i->sd_policy_title && !$loop->first))
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -80,6 +80,14 @@
                                                     </div>
                                                 @endif
 {{--                                                @include('site.strategic_documents.list_tree_element', ['item' => $i])--}}
+                                                @if($loop->last)
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             @endforeach
                                         </div>
                                     </div>
