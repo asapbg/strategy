@@ -1034,6 +1034,11 @@ return [
                      Summarize the most important public consultation questions. Specify an indicative schedule for their implementation and the types of consultation procedures.
                  </i>
              </p>',
+    'forms1.step4.has_consultations_description' => '<p class="mt-2">
+                <i>
+                    Indicate the main stakeholders consulted. Indicate the results of consultations, including at EU level: controversial issues, repeated questions, etc.
+                </i>
+            </p>',
     'forms1.act' => 'Does the adoption of the normative act derive from the law of the European Union?',
     'forms1.act_description' => '<p class="mt-2">
                  <i>

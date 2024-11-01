@@ -3,9 +3,13 @@
         <h4>7. {{ __('custom.forms1.consultations') }}:</h4>
         @include('form_partials.radio', ['name' => 'conducted_consultations', 'value' => 1, 'label' => 'forms.conducted_consultations', 'clickSubmit' => true])
         <br>
+        @if(Arr::has($state, 'conducted_consultations') && data_get($state, 'conducted_consultations') == 1)
+            {!! __('custom.forms1.step4.has_consultations_description') !!}
+            @include('form_partials.textarea', ['name' => 'conducted_consultations_text', 'label' => ''])
+        @endif
         @include('form_partials.radio', ['name' => 'conducted_consultations', 'value' => 0, 'label' => 'forms.not_conducted_consultations', 'clickSubmit' => true])
         @if((Arr::has($state, 'conducted_consultations') && data_get($state, 'conducted_consultations') == 0) || old('conducted_consultations', 1) == 0)
-        {!! __('custom.forms1.consultations_description') !!}
+            {!! __('custom.forms1.consultations_description') !!}
             @include('form_partials.textarea', ['name' => 'not_conducted_consultations_text', 'label' => ''])
         @endif
     </div>

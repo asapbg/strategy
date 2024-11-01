@@ -146,6 +146,7 @@ class ImpactAssessmentController extends Controller
         if ($currentStep <= $step || $submit) {
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
+
                 return redirect()
                     ->route('impact_assessment.form', ['form' => $formName, 'step' => $currentStep, 'inputId' => $inputId])
                     ->withInput()->withErrors($validator->errors());
@@ -154,7 +155,12 @@ class ImpactAssessmentController extends Controller
 
         if ($submit) {
             session(["forms.$formName" => []]);
-            return view('impact_assessment.submitted', compact('formName', 'inputId'));
+            if($userId){
+                return redirect()->route('profile', ['tab' => 'form_inputs']);
+            } else{
+                return view('impact_assessment.submitted', compact('formName', 'inputId'));
+            }
+
         }
         return redirect()->route('impact_assessment.form', ['form' => $formName, 'step' => $step, 'inputId' => $inputId]);
     }

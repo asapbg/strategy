@@ -23,9 +23,20 @@
                     </i>
                 @endif
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-4">
                 {{--                {{ (int)$parsedData['step'] < (int)$steps ? __('custom.draft') : __('custom.completed') }}--}}
-                {{ !$isDraft ? __('custom.completed_f') : __('custom.draft') }}
+                <span>{{ !$isDraft ? __('custom.completed_f') : __('custom.draft') }}</span>
+                <div class="">
+                    <a href="{{ route('impact_assessment.pdf', ['form' => $fi->form, 'inputId' => $fi]) }}">
+                        {{ __('forms.print_pdf') }}
+                    </a><br>
+                    <a href="{{ route('impact_assessment.show', ['form' => $fi->form, 'inputId' => $fi]) }}">
+                        {{ __('forms.show_form_input') }}
+                    </a>
+{{--                    <a href="{{ route('impact_assessment.form', ['form' => $fi->form]) }}" class="btn btn-primary">--}}
+{{--                        {{ __('forms.fill_again') }}--}}
+{{--                    </a>--}}
+                </div>
             </div>
         </div>
     @endforeach
