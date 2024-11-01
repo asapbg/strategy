@@ -37,7 +37,7 @@ class ForgotPasswordController extends Controller
         }
 
         $validated = $validator->validated();
-        $user = User::where('email', '=', $validated['email'])->first();
+        $user = User::where('email', '=', strtolower($validated['email']))->first();
 
         if( $user ) {
             $user->password = Hash::make($validated['password']);

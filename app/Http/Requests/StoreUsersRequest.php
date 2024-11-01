@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Rules\UniqueEmail;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -57,9 +58,9 @@ class StoreUsersRequest extends FormRequest
                 $rules['notification_email'] = ['required', 'email'];
             }
 
-            $rules['email'][] = Rule::unique('users', 'email')->ignore((int)request()->input('id'));
+            $rules['email'][] = new UniqueEmail((int)request()->input('id'));
         } else {
-            $rules['email'][] = 'unique:users,email';
+            $rules['email'][] = new UniqueEmail();
         }
 
         $roles = request()->input('roles');

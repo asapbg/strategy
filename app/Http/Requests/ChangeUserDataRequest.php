@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueEmail;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -36,7 +37,7 @@ class ChangeUserDataRequest extends FormRequest
                 'first_name' => ['required', 'string', 'max:255'],
                 'middle_name' => ['nullable', 'string'],
                 'last_name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore((int)auth()->user()->id)],
+                'email' => ['required', 'string', 'email', 'max:255', new UniqueEmail((int)auth()->user()->id)],
             ];
         }
     }

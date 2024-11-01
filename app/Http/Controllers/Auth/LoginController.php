@@ -84,14 +84,14 @@ class LoginController extends Controller
 
         $this->validateLogin($request);
 
-        $username = $request->offsetGet('username');
+        $username = strtolower($request->offsetGet('username'));
         $fieldType = filter_var($username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         // First check if the user is active or
         // has entered a password after the account was created
         $user = $model::with('subscriptions')
             ->where('username', $username)
-            ->orWhere('email', $username)
+            ->orWhere('email', strtolower($username))
             ->first();
         if (!$user) {
             throw ValidationException::withMessages([

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Rules\UniqueEmail;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -64,7 +65,7 @@ class RegisterController extends Controller
     {
         $rules = [
             'is_org' => ['required', 'boolean'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', new UniqueEmail()],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
         if (!$data['is_org']) {
@@ -89,7 +90,7 @@ class RegisterController extends Controller
             'org_name' => $data['org_name'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
-            'email' => $data['email'],
+            'email' => strtolower($data['email']),
             'notification_email' => $data['email'],
             'username' => $data['email'],
             'activity_status' => User::STATUS_REG_IN_PROCESS,

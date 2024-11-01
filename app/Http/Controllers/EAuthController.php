@@ -7,6 +7,7 @@ use App\Library\EAuthentication;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserCertificate;
+use App\Rules\UniqueEmail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -91,7 +92,7 @@ class EAuthController extends Controller
             $userInfo['org_name'] = null;
 
             //Check if user with this email exist
-            $userInfo['email'] = $certInfo['subject']['emailAddress'] ?? '';
+            $userInfo['email'] = $certInfo['subject']['emailAddress'] ? strtolower($certInfo['subject']['emailAddress']) : '';
 
             $existUser = User::where('person_identity', '=', $userInfo['person_identity'])->first();
             if ($existUser) {
@@ -190,7 +191,7 @@ class EAuthController extends Controller
     public function createUserSubmit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'email', 'unique:users', 'max:255'],
+            'email' => ['required', 'email', new UniqueEmail(), 'max:255'],
             'first_name' => ['required', 'string', 'min:3', 'max:255'],
             'middle_name' => ['required', 'string', 'min:3', 'max:255'],
             'last_name' => ['required', 'string', 'min:3', 'max:255'],
@@ -207,7 +208,7 @@ class EAuthController extends Controller
         }
 
         $validated = $validator->validated();
-
+        $validated['email'] = !empty($validated['email']) ? strtolower($validated['email']) : $validated['email'];
         return $this->saveNewUser($validated);
     }
 

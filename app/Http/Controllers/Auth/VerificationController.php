@@ -70,7 +70,7 @@ class VerificationController extends Controller
      */
     public function resend(Request $request)
     {
-        $email = $request->input('email');
+        $email = strtolower($request->input('email'));
         $user = User::isActive()->isInProcess()->where('email', $email)->first();
 
         if (!$user) {
