@@ -40,7 +40,7 @@
                             <li class="list-group-item">
                                 <a href="{{ route('advisory-boards.index').($item->policyArea ? '?fieldOfActions[]='.$item->policyArea->id : '') }}"
                                    class="main-color text-decoration-none fs-5">
-                                    <i class="fa-solid fa-hospital me-1 main-color"
+                                    <i class="{{ $item->policyArea ? $item->policyArea->icon_class : 'fas fa-certificate' }} me-1 main-color"
                                        title="{{ $item->policyArea?->name }}"></i>
                                     {{ $item->policyArea?->name }}
                                 </a>
