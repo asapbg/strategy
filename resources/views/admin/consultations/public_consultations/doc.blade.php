@@ -1,4 +1,7 @@
 <form class="row" action="{{ route('admin.consultations.public_consultations.store.documents') }}" method="post" enctype="multipart/form-data">
+    <div class="col-md-12 mb-2">
+        <h4>Основни документи</h4>
+    </div>
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
     <input type="hidden" name="act_type" value="{{ $item->act_type_id }}">
@@ -24,6 +27,30 @@
                                         <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">{{ __('custom.preview') }}</button>
                                     </div>
                                 @endif
+                                @if($item->documentsAtt->count())
+                                    @php($f = 0)
+                                    @foreach($item->documentsAtt as $att)
+                                        @if($att->doc_type == $docType.'00' && $att->locale == $lang['code'])
+                                            @if(!$f)
+                                                    <div>
+                                                        <p><strong>Приложения:</strong></p>
+                                            @endif
+                                            @php($f = 1)
+                                            <div class="mb-2">
+                                                <a class="mr-3 ml-3" href="{{ route('admin.download.file', $att) }}" target="_blank" title="{{ __('custom.download') }}">
+                                                    {!! fileIcon($att->content_type) !!} {{ $att->{'description_'.$att->locale} }} | {{ displayDate($att->created_at) }} | {{ $att->user ? $att->user->fullName() : '' }}
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">{{ __('custom.preview') }}</button>
+                                                <a class="ml-2" type="button" href="{{ route('admin.delete.file', ['file' => $att]) }}">
+                                                    <i class="fas fa-trash me-1 text-danger" role="button" data-toggle="tooltip" title="" data-original-title="Изтрий"></i>
+                                                </a>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                    @if($f)
+                                        </div>
+                                    @endif
+                                @endif
                             @endforeach
                         @endif
                     @endif
@@ -36,6 +63,63 @@
         <button id="doc_save_fake" data-btn="#doc_save" type="button" class="btn btn-success">{{ __('custom.save') }}</button>
         <button id="doc_stay" type="submit" name="stay" value="1" class="btn btn-success d-none">{{ __('custom.save_and_stay') }}</button>
         <button id="doc_stay_fake" data-btn="#doc_stay" type="button" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
+        <a href="{{ route($listRouteName) }}"
+           class="btn btn-primary">{{ __('custom.cancel') }}</a>
+    </div>
+</form>
+<hr class="custom-hr mt-4">
+<form class="row" action="{{ route('admin.consultations.public_consultations.store.sub_documents') }}" method="post" enctype="multipart/form-data">
+    <div class="col-md-12 mb-2">
+        <h4>Допълнителни документи (приложения)</h4>
+    </div>
+    @csrf
+    <input type="hidden" name="id" value="{{ $item->id }}">
+{{--    <input type="hidden" name="act_type" value="{{ $item->act_type_id }}">--}}
+    <div class="col-md-4">
+        <div class="form-group">
+            <label class="col-sm-12 control-label" for="parent_type">Приложи към:<span class="required">*</span></label>
+            <div class="col-12">
+                <select id="parent_type" name="parent_type" class="form-control form-control-sm select2 select2-no-clear @error('parent_type'){{ 'is-invalid' }}@enderror">
+                    <option value="" @if(old('parent_type', 0) == 0) selected @endif>---</option>
+                    @foreach(\App\Enums\DocTypesEnum::docsByActType($item->act_type_id) as $docType)
+                        @if(!in_array($docType, [\App\Enums\DocTypesEnum::PC_COMMENTS_REPORT->value, \App\Enums\DocTypesEnum::PC_OTHER_DOCUMENTS->value]))
+                            @php($docParentName = 'file_'.$docType.'_'.$lang['code'])
+                            <option value="{{ $docType.'00' }}"
+                                    @if(substr(old('parent_type', 0), 0, -2) == $docType) selected @endif
+                            >{{ __('validation.attributes.'.$docParentName) }}</option>
+                        @endif
+                    @endforeach
+                </select>
+                @error('parent_type')
+                <div class="text-danger mt-1">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+    </div>
+    <div class="col-12"></div>
+    @foreach(config('available_languages') as $lang)
+        <div class="col-md-6 mb-3">
+            <label for="description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }}<span class="required">*</span> </label>
+            <input value="{{ old('description_'.$lang['code'], '') }}" class="form-control form-control-sm @error('description_'.$lang['code']) is-invalid @enderror" id="description_{{ $lang['code'] }}" type="text" name="description_{{ $lang['code'] }}">
+            @error('description_'.$lang['code'])
+            <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+    @endforeach
+    @foreach(config('available_languages') as $lang)
+        <div class="col-md-6 mb-3">
+            <label for="file_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.file_'.$lang['code']) }}<span class="required">*</span> </label>
+            <input class="form-control form-control-sm @error('file_'.$lang['code']) is-invalid @enderror" id="file_{{ $lang['code'] }}" type="file" name="file_{{ $lang['code'] }}">
+            @error('file_'.$lang['code'])
+            <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+    @endforeach
+    <div class="col-12">
+        <button id="doc_save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+{{--        <button id="doc_save_fake" data-btn="#doc_save" type="button" class="btn btn-success">{{ __('custom.save') }}</button>--}}
+        <button id="doc_stay" type="submit" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
+{{--        <button id="doc_stay_fake" data-btn="#doc_stay" type="button" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>--}}
         <a href="{{ route($listRouteName) }}"
            class="btn btn-primary">{{ __('custom.cancel') }}</a>
     </div>

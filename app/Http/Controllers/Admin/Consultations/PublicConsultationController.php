@@ -7,10 +7,12 @@ use App\Enums\DynamicStructureTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\PublicConsultationTimelineEnum;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\PublicConsultationContactStoreRequest;
 use App\Http\Requests\PublicConsultationContactsUpdateRequest;
 use App\Http\Requests\PublicConsultationDocStoreRequest;
 use App\Http\Requests\PublicConsultationKdStoreRequest;
+use App\Http\Requests\PublicConsultationSubDocUploadRequest;
 use App\Http\Requests\StorePublicConsultationProposalReport;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Jobs\SendSubscribedUserEmailJob;
@@ -433,6 +435,71 @@ class PublicConsultationController extends AdminController
         }
 
     }
+    public function storeSubDocs(Request $request)
+    {
+        $storeRequest = new PublicConsultationSubDocUploadRequest();
+        $validator = Validator::make($request->all(), $storeRequest->rules());
+        if( $validator->fails() ) {
+            return redirect(url()->previous().'#ct-doc')->withInput($request->all())->withErrors($validator->errors());
+        }
+        DB::beginTransaction();
+        try {
+            $typeObjectToSave = File::CODE_OBJ_PUBLIC_CONSULTATION;
+            $validated = $request->all();
+            // Upload File
+            $pDir = File::PUBLIC_CONSULTATIONS_UPLOAD_DIR;
+
+            foreach ($this->languages as $lang) {
+                $code = $lang['code'];
+
+                if (!isset($validated['file_'.$code])) {
+                    continue;
+                }
+
+                if (!isset($validated['file_'.$code])) {
+                    $file = $validated['file_bg'];
+                    $desc = $validated['description_bg'] ?? null;
+                } else {
+                    $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
+                    $desc = isset($validated['description_'.$code]) && !empty($validated['description_'.$code]) ? $validated['description_'.$code] : ($validated['description_'.config('app.default_lang')] ?? null);
+                }
+                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
+                $newFile = new File([
+                    'id_object' => $validated['id'],
+                    'code_object' => $typeObjectToSave,
+                    'doc_type' => $validated['parent_type'],
+                    'filename' => $fileNameToStore,
+                    'content_type' => $file->getClientMimeType(),
+                    'path' => $pDir.$fileNameToStore,
+                    'description_'.$code => $desc,
+                    'sys_user' => $request->user()->id,
+                    'locale' => $code,
+                    'version' => '1.0',
+                    'is_visible' => 1,
+                ]);
+                $newFile->save();
+                try {
+                    $ocr = new FileOcr($newFile->refresh());
+                    $ocr->extractText();
+                } catch (\Exception $e){
+                    Log::error('Error extract file text form file ID ('.$newFile->id.')');
+                }
+
+            }
+            DB::commit();
+            if( isset($validated['stay']) ) {
+                return redirect(route('admin.consultations.public_consultations.edit', ['item' => $validated['id']]) . '#ct-doc')
+                    ->with('success', trans_choice('custom.documents', 2)." ".__('messages.updated_successfully_pl'));
+            }
+            return redirect(route('admin.consultations.public_consultations.index', ['item' => $validated['id']]) . '#ct-doc')->with('success', 'Файлът/файловте са качени успешно');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logError('Upload file', $e->getMessage());
+            return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
+        }
+    }
+
 
     public function storeKd(Request $request)
     {

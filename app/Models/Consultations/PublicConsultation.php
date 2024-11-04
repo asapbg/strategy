@@ -377,6 +377,26 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->orderBy('locale');
     }
 
+    public function documentsAtt(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->whereIn('doc_type',  DocTypesEnum::pcDocAttTypes())
+            ->whereNotNull('doc_type')
+            ->orderBy('created_at', 'desc')
+            ->orderBy('locale');
+    }
+
+    public function documentsAttByLocale(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+            ->whereIn('doc_type',  DocTypesEnum::pcDocAttTypes())
+            ->whereNotNull('doc_type')
+            ->where('locale', '=', app()->getLocale())
+            ->orderBy('created_at', 'desc');
+    }
+
     public function proposalReport(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(File::class, 'id_object', 'id')

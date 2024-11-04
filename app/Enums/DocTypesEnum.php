@@ -13,19 +13,28 @@ enum DocTypesEnum: int
 
     //Public consultation
     case PC_IMPACT_EVALUATION = 1; //Оценка на въздействие
+    case PC_IMPACT_EVALUATION_ATT = 100; //Оценка на въздействие приложение
     case PC_IMPACT_EVALUATION_OPINION = 2; //Становище на администарцията на Министерски съвет по тази оценка
+    case PC_IMPACT_EVALUATION_OPINION_ATT = 200; //Становище на администарцията на Министерски съвет по тази оценка  (приложение)
     case PC_REPORT = 3; //Доклад
+    case PC_REPORT_ATT = 300; //Доклад приложение
     case PC_DRAFT_ACT = 4; //Проект на акт
+    case PC_DRAFT_ACT_ATT = 400; //Проект на акт (приложение)
     case PC_MOTIVES = 5; //Мотиви
+    case PC_MOTIVES_ATT = 500; //Мотиви  приложение
     case PC_CONSOLIDATED_ACT_VERSION = 6; //консолидирана версия на акта
+    case PC_CONSOLIDATED_ACT_VERSION_ATT = 600; //консолидирана версия на акта приложение
     case PC_OTHER_DOCUMENTS = 7; //Други документи
+    case PC_OTHER_DOCUMENTS_ATT = 700; //Други документи приложение
     case PC_COMMENTS_REPORT = 8; //Справка за получените предложения/съобщение за неполучени предложения (публикува се по късно, както е обяснено по-долу) - след приключване на консултацията
+    case PC_COMMENTS_REPORT_ATT = 800; //Справка за получените предложения/съобщение за неполучени предложения (публикува се по късно, както е обяснено по-долу) - след приключване на консултацията приложение
 
     case PC_COMMENTS_CSV = 9; //Списък с коментари
     case PC_COMMENTS_PDF = 10; //Списък с коментари
 
     case PC_POLLS_PDF = 21; //Списък с Анкети
     case PC_KD_PDF = 11; //Консултационен документ
+    case PC_KD_PDF_ATT = 1100; //Консултационен документ приложение
 
     // Advisory board - Консултативен съвет
     case AB_FUNCTION = 12; // Файл към функции на консултативен съвет
@@ -68,6 +77,21 @@ enum DocTypesEnum: int
             self::PC_CONSOLIDATED_ACT_VERSION->value,
             self::PC_COMMENTS_REPORT->value,
             self::PC_KD_PDF->value
+        ];
+    }
+
+    public static function pcDocAttTypes()
+    {
+        return [
+            self::PC_DRAFT_ACT_ATT->value,
+            self::PC_REPORT_ATT->value,
+            self::PC_MOTIVES_ATT->value,
+            self::PC_OTHER_DOCUMENTS_ATT->value,
+            self::PC_IMPACT_EVALUATION_ATT->value,
+            self::PC_IMPACT_EVALUATION_OPINION_ATT->value,
+            self::PC_CONSOLIDATED_ACT_VERSION_ATT->value,
+            self::PC_COMMENTS_REPORT_ATT->value,
+            self::PC_KD_PDF_ATT->value
         ];
     }
 

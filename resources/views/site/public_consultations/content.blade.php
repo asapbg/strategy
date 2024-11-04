@@ -156,7 +156,7 @@
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ trans_choice('custom.documents', 2) }}</h3>
             <div class="row table-light">
-                @if(!$item->old_id)
+{{--                @if(!$item->old_id)--}}
                     <div class="col-12 mb-2">
                         <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
                         <ul class="list-group list-group-flush">
@@ -171,7 +171,38 @@
                                         </li>
                                         @php($foundBaseDoc = true)
                                     @endif
+                                    @if($item->documentsAttByLocale->count())
+                                        @php($foundBaseDocSub = 0)
+                                        @foreach($item->documentsAtt as $att)
+                                            @if($att->doc_type == $doc->doc_type.'00' && $att->locale == app()->getLocale())
+                                                @php($foundBaseDoc = true)
+                                                <li class="ms-5 list-unstyled @if(!$foundBaseDocSub) mt-2 @endif">
+                                                    <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                                        {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
+                                                    </a>
+                                                </li>
+                                                @php($foundBaseDocSub = 1)
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 @endforeach
+                            @endif
+                            @if($documentsImport->count())
+                                @if(!$foundBaseDoc)
+                                    <div class="col-12">
+                                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
+                                        <ul class="list-group list-group-flush">
+                                @endif
+                                        @foreach($documentsImport as $doc)
+                                            <li class="list-group-item">
+                                                @include('site.partial.file_preview_or_download', ['f' => $doc])
+                                            </li>
+                                        @endforeach
+                                @if(!$foundBaseDoc)
+                                        </ul>
+                                    </div>
+                                @endif
+                                @php($foundBaseDoc)
                             @endif
                             @if(!$foundBaseDoc)
                                 <p>---</p>
@@ -192,6 +223,21 @@
                                             </a>
                                         </li>
                                         @php($foundKdDoc = true)
+
+                                        @if($item->documentsAttByLocale->count())
+                                            @php($foundKdDocSub = 0)
+                                            @foreach($item->documentsAtt as $att)
+                                                @if($att->doc_type == $doc->doc_type.'00')
+                                                    @php($foundKdDoc = true)
+                                                    <li class="ms-5 list-unstyled @if(!$foundKdDocSub) mt-2 @endif">
+                                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                                            {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
+                                                        </a>
+                                                    </li>
+                                                    @php($foundKdDocSub = 1)
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     @endif
                                 @endforeach
                             @endif
@@ -214,6 +260,21 @@
                                             </a>
                                         </li>
                                         @php($foundReportDoc = true)
+
+                                        @if($item->documentsAttByLocale->count())
+                                            @php($foundReportDocSub = 0)
+                                            @foreach($item->documentsAtt as $att)
+                                                @if($att->doc_type == $doc->doc_type.'00')
+                                                    @php($foundReportDoc = true)
+                                                    <li class="ms-5 list-unstyled @if(!$foundReportDocSub) mt-2 @endif">
+                                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                                            {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
+                                                        </a>
+                                                    </li>
+                                                    @php($foundReportDocSub = 1)
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     @endif
                                 @endforeach
                             @endif
@@ -222,19 +283,7 @@
                             @endif
                         </ul>
                     </div>
-                @endif
-                @if($documentsImport->count())
-                    <div class="col-12">
-                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
-                        <ul class="list-group list-group-flush">
-                            @foreach($documentsImport as $doc)
-                                <li class="list-group-item">
-                                    @include('site.partial.file_preview_or_download', ['f' => $doc])
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+{{--                @endif--}}
             </div>
         </div>
 
