@@ -36,9 +36,56 @@
                             <h5>{{ $key + 1 }}.1.{{ $keyA + 1 }} {{ $arrangement->name }}</h5>
                             <p><strong>{{ __('custom.period') }}:</strong> {{ $arrangement->from_date }} - {{ $arrangement->to_date }}</p>
                             <p><strong>{{ __('ogp.responsible_administration') }}:</strong> {!! $arrangement->responsible_administration !!}</p>
-                            <p><strong>{{ __('ogp.npo_partner') }}:</strong> {!! $arrangement->npo_partner !!}</p>
-                            {!! $arrangement->content !!}
-{{--                            {{ htmlToText($arrangement->content) }}--}}
+                            @if($arrangement->problem)
+                                <p>
+                                    <strong>{{ __('ogp.problem') }}:</strong> {!! $arrangement->problem !!}
+                                </p>
+                            @endif
+                            @if($arrangement->content)
+                                <p>
+                                    <strong>{{ __('ogp.action_content') }}:</strong> {!! $arrangement->content !!}
+                                </p>
+                            @endif
+                            @if($arrangement->solving_problem)
+                                <p>
+                                    <strong>{{ __('ogp.solving_problem') }}:</strong> {!! $arrangement->solving_problem !!}
+                                </p>
+                            @endif
+                            @if($arrangement->values_initiative)
+                                <p>
+                                    <strong>{{ __('ogp.values_initiative') }}:</strong> {!! $arrangement->values_initiative !!}
+                                </p>
+                            @endif
+                            @if($arrangement->extra_info)
+                                <p>
+                                    <strong>{{ __('ogp.extra_info') }}:</strong> {!! $arrangement->extra_info !!}
+                                </p>
+                            @endif
+                            @if($arrangement->npo_partner)
+                                <p>
+                                    <strong>{{ __('ogp.npo_partner') }}:</strong> {!! $arrangement->npo_partner !!}
+                                </p>
+                            @endif
+                            @if($arrangement->interested_org)
+                                <p>
+                                    <strong>{{ __('ogp.interested_org') }}:</strong> {!! $arrangement->interested_org !!}
+                                </p>
+                            @endif
+
+                            @if($arrangement->actions->count())
+                                <h5> <strong>{{ __('ogp.ogp_plan_actions') }} </strong></h5>
+                                @foreach($arrangement->actions as $action)
+                                    <p>
+                                        <strong>{{ $action->name }}</strong> {{ $action->from_date }} - {{ $action->to_date }}
+                                    </p>
+                                @endforeach
+                                <div class="margin-bottom:10px;"></div>                                               <hr class="custom-hr mb-2 mt-5">
+                            @endif
+                            @if($arrangement->contact_names)
+                                <p> <strong>{{ __('ogp.ogp_plan_contacts') }}</strong> </p>
+                                {!! $arrangement->contact_names !!}
+                                <div class="margin-bottom:10px;"></div>
+                            @endif
                         @endforeach
                     @endif
                 @endforeach
