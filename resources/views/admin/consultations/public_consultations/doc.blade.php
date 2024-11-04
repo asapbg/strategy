@@ -83,7 +83,7 @@
                     <option value="" @if(old('parent_type', 0) == 0) selected @endif>---</option>
                     @foreach(\App\Enums\DocTypesEnum::docsByActType($item->act_type_id) as $docType)
                         @if(!in_array($docType, [\App\Enums\DocTypesEnum::PC_COMMENTS_REPORT->value, \App\Enums\DocTypesEnum::PC_OTHER_DOCUMENTS->value]))
-                            @php($docParentName = 'file_'.$docType.'_'.$lang['code'])
+                            @php($docParentName = 'file_'.$docType)
                             <option value="{{ $docType.'00' }}"
                                     @if(substr(old('parent_type', 0), 0, -2) == $docType) selected @endif
                             >{{ __('validation.attributes.'.$docParentName) }}</option>
