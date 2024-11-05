@@ -577,7 +577,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return $q->get();
     }
 
-    public function orderTimeline($rss = false)
+    public function orderTimeline($rss = false, $pdf = false)
     {
         $events = $this->timeline;
         $sortedTimeline = [];
@@ -610,7 +610,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             $prisEventDescription = '<p><a class="text-primary" href="'.($pris->in_archive ? route('pris.archive.view', ['category' => $pris->actType->name, 'id' => $pris->id]) : route('pris.view', ['category' => $pris->actType->name, 'id' => $pris->id])).'" target="_blank">'.$pris->mcDisplayName.'</a></p>';
         } else {
             $prisEventLabel = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
-            $prisEventDescription = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value).'.description');
+            $prisEventDescription = $pdf ? '---' : __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value).'.description');
         }
         $sortedTimeline['6'] = [
             'label' => $prisEventLabel,
@@ -649,7 +649,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                                         'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($event->event_id)),
                                         'date' => displayDate($event->created_at),
                                         'isActive' => true,
-                                        'description' => '<p><span class="d-inline-block">
+                                        'description' => $pdf ? '<a href="'.route('download.file', $event->object->id).'">'.$event->object->{'description_' . app()->getLocale()}.'</a>'
+                                            : '<p><span class="d-inline-block">
                                                 <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="'.$event->object->id.'" data-url="'.route('admin.preview.file.modal', ['id' => $event->object->id]).'" title="'.__('custom.preview').'">'.fileIcon($event->object->content_type).' '.($event->object->{'description_' . app()->getLocale()}).' '.__('custom.version_short').' '.$event->object->version.'</button>
                                             </span></p>'
                                     ];

@@ -5,8 +5,9 @@
                 <h2 class="mb-3">{{ __('custom.information') }}</h2>
             </div>
             <div class="col-md-12 text-start">
-                <button class="btn btn-primary  main-color">
-                    <i class="fa-solid fa-download main-color me-2"></i>{{ __('custom.export') }}</button>
+                <a href="{{ route('public_consultation.export', $item->id) }}" class="btn btn-primary  main-color">
+                    <i class="fa-solid fa-download main-color me-2"></i>{{ __('custom.export') }}
+                </a>
                 <input type="hidden" id="subscribe_model" value="App\Models\Consultations\PublicConsultation">
                 <input type="hidden" id="subscribe_model_id" value="{{ $item->id }}">
                 @includeIf('site.partial.subscribe-buttons')

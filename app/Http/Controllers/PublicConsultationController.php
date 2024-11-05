@@ -113,6 +113,26 @@ class PublicConsultationController extends Controller
         return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
+    public function export(Request $request, $id)
+    {
+        $item = PublicConsultation::ActivePublic()->with(['translation', 'actType', 'actType.translation', 'contactPersons',
+            'pollsInPeriod', 'pollsInPeriod.questions', 'pollsInPeriod.questions.answers', 'importerInstitution', 'importerInstitution.links',
+            'importerInstitution.links.translations', 'fieldOfAction', 'fieldOfAction.translation'])->find($id);
+
+        if(!$item){
+            return back()->with('warning', __('messages.record_not_found'));
+        }
+
+        $documents = $item->lastDocumentsByLocaleAndSection(true);
+        $documentsImport = $item->lastDocumentsByLocaleImport();
+        $timeline = $item->orderTimeline(false, true);
+
+        $fileName = 'pc_'.date('d_m_Y_H_i_s').'.pdf';
+
+        $pdf = PDF::loadView('exports.pc', ['item' => $item, 'isPdf' => true, 'documents' => $documents, 'documentsImport' => $documentsImport, 'timeline' => $timeline]);
+        return $pdf->download($fileName);
+    }
+
     public function addComment(StoreCommentRequest $request)
     {
         $validated = $request->validated();

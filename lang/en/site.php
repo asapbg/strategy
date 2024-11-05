@@ -227,7 +227,7 @@ return [
     'li_open_list' => 'List of open legislative initiatives',
     'strategic_documents_home_boc_title' => 'List of strategic documents',
     'home.li_description' => 'This section is intended for citizens who wish to join the public debate and share their opinions.',
-    'home.sd_description' => 'Някакъв тескт тук??????????????????????',
+    'home.sd_description' => 'This section provides citizens with easy access to strategic documents adopted by state and local institutions such as the Council of Ministers, the National Assembly and municipal councils.',
     'all_li' => 'All Initiatives',
     'participate_in_poll' => 'Participate in a poll',
     'all_open_poll' => 'List of open polls',

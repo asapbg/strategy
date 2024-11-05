@@ -103,6 +103,7 @@ use Illuminate\Support\Facades\Storage;
         Route::get('/public-consultations/reports/field-of-actions', 'fieldОfАctionsReport')->name('public_consultation.report.field_of_actions');
         Route::get('/public-consultations/reports/field-of-actions-institution', 'fieldОfАctionsInstitutionReport')->name('public_consultation.report.field_of_actions.institution');
         Route::get('/public-consultations/reports/institutions', 'institutionsReport')->name('public_consultation.report.institutions');
+        Route::get('/public-consultations/{id}/export', 'export')->name('public_consultation.export')->whereNumber('id');
     });
 
     Route::controller(\App\Http\Controllers\PrisController::class)->group(function () {
