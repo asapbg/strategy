@@ -24,6 +24,7 @@
                                         <a href="javascript:;"
                                            class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden text-decoration-none"
                                            data-target="#modal-delete-resource"
+                                           data-title_singular="{{ trans_choice('custom.strategic_documents', 1) }}"
                                            data-resource-id="{{ $sd->id }}"
                                            data-resource-name="{{ $sd->title }}"
                                            data-resource-delete-url="{{ route('admin.strategic_documents.delete', $sd) }}"

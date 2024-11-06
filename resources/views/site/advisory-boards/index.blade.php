@@ -10,7 +10,6 @@
         @include('site.advisory-boards.list')
     </div>
 
-    @includeIf('modals.delete-resource', ['resource' => $title_singular])
 </div>
 @endsection
 

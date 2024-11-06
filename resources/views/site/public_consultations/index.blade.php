@@ -7,10 +7,10 @@
         <div class="col-lg-10 right-side-content pb-5 pt-1 " id="listContainer">
             @include('site.public_consultations.list')
         </div>
+        @includeIf('modals.delete-resource', ['resource' => $title_singular])
         @endsection
 @section('content')
-
-@includeIf('modals.delete-resource', ['resource' => $title_singular])
+    
 @endsection
 
 @push('scripts')

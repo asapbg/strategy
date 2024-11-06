@@ -70,21 +70,30 @@
                                 </div>
 
                                 @if($item->active && auth()->user())
-                                    @can('update', $item)
+                                    @canany(['update', 'delete'], $item)
                                         <div class="consult-item-header-edit">
-                                            <a href="{{ route('admin.advisory-boards.index') . '?keywords=' . $item->id . '&status=1' }}">
-                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2"
-                                                   role="button" title="{{ __('custom.delete') }}"></i>
-                                            </a>
-                                            <a href="{{ route('admin.advisory-boards.edit', ['item' => $item]) }}" target="_blank"
-                                               class="me-2">
-                                                <i class="fas fa-pen-to-square float-end main-color fs-4"
-                                                   role="button"
-                                                   title="{{ __('custom.edit') }}">
-                                                </i>
-                                            </a>
+                                            @can(['delete'], $item)
+                                                <a href="javascript:;"
+                                                   class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden text-decoration-none"
+                                                   data-target="#modal-delete-resource"
+                                                   data-resource-id="{{ $item->id }}"
+                                                   data-resource-name="{{ $item->name }}"
+                                                   data-resource-delete-url="{{ route('admin.advisory-boards.delete', $item) }}"
+                                                   data-toggle="tooltip"
+                                                   title="{{ __('custom.delete') }}"><span class="d-none"></span>
+                                                </a>
+                                            @endcan
+                                            @can(['update'], $item)
+                                                <a href="{{ route('admin.advisory-boards.edit', ['item' => $item]) }}" target="_blank"
+                                                   class="me-2">
+                                                    <i class="fas fa-pen-to-square float-end main-color fs-4"
+                                                       role="button"
+                                                       title="{{ __('custom.edit') }}">
+                                                    </i>
+                                                </a>
+                                            @endcan
                                         </div>
-                                    @endcan
+                                    @endcanany
                                 @endif
                             </div>
                             @if($item->policyArea)
@@ -111,7 +120,7 @@
         </div>
     @endforeach
 @endif
-
+@includeIf('modals.delete-resource', ['resource' => $title_singular])
 <div class="row">
     @if(isset($items) && $items->count() > 0)
         {{ $items->onEachSide(0)->appends(request()->query())->links() }}

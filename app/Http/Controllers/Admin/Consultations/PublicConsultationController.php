@@ -982,8 +982,13 @@ class PublicConsultationController extends AdminController
         }
         try {
             $item->delete();
-            return redirect(url()->previous())
-                ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.deleted_successfully_f'));
+            if(url()->previous() == route('site.home')){
+                return redirect(route('site.home'))
+                    ->with('success', __('custom.the_record')." ".__('messages.deleted_successfully_m'));
+            } else{
+                return redirect(url()->previous())
+                    ->with('success', trans_choice('custom.public_consultations', 1)." ".__('messages.deleted_successfully_f'));
+            }
         }
         catch (\Exception $e) {
             Log::error($e);

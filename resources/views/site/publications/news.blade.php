@@ -39,13 +39,14 @@
                     <div class="consult-item-header-edit">
                         @can('delete', $news_row)
                             <a href="javascript:;"
+                               class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden text-decoration-none"
                                data-target="#modal-delete-resource"
                                data-resource-id="{{ $news_row->id }}"
                                data-resource-name="{{ $news_row->title }}"
                                data-resource-delete-url="{{ route('admin.publications.delete', $news_row) }}"
                                data-toggle="tooltip"
-                               title="{{ __('custom.delete') }}">
-                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>
+                               title="{{ __('custom.delete') }}"><span class="d-none"></span>
+{{--                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="Изтриване"></i>--}}
                             </a>
                         @endcan
                         @can('update', $news_row)

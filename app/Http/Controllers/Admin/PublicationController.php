@@ -234,15 +234,25 @@ class PublicationController extends AdminController
         if($request->user()->cannot('delete', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
+        $isNews = $item->type == PublicationTypesEnum::TYPE_NEWS->value;
         try {
             $item->delete();
-            return redirect(url()->previous())
-                ->with('success', __('custom.the_record')." ".__('messages.deleted_successfully_m'));
+            if(str_contains(url()->previous(), 'admin')){
+                return redirect($isNews ? route('admin.publications.index').'?type='.PublicationTypesEnum::TYPE_NEWS->value : route('admin.publications.index').'?type='.PublicationTypesEnum::TYPE_LIBRARY->value)
+                    ->with('success', __('custom.the_record')." ".__('messages.deleted_successfully_m'));
+            } else{
+                if(url()->previous() == route('site.home')){
+                    return redirect(route('site.home'))
+                        ->with('success', __('custom.the_record')." ".__('messages.deleted_successfully_m'));
+                } else{
+                    return redirect($isNews ? route('library.news') : route('library.publications'))
+                        ->with('success', __('custom.the_record')." ".__('messages.deleted_successfully_m'));
+                }
+            }
         }
         catch (\Exception $e) {
             Log::error($e);
             return redirect(url()->previous())->with('danger', __('messages.system_error'));
-
         }
     }
 

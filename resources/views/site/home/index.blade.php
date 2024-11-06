@@ -473,13 +473,15 @@
                                     <div class="consult-item-header-edit">
                                         @can(($isAdvBoardNews ? 'deleteAdvBoard' : 'delete'), $publication)
                                             <a href="javascript:;"
+                                               class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden text-decoration-none"
                                                data-target="#modal-delete-resource"
+                                               data-title_singular="{{ trans_choice('custom.publications', 1) }}"
                                                data-resource-id="{{ $publication->id }}"
                                                data-resource-name="{{ $publication->title }}"
                                                data-resource-delete-url="{{ route('admin.publications.delete', $publication) }}"
                                                data-toggle="tooltip"
-                                               title="{{ __('custom.delete') }}">
-                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"></i>
+                                               title="{{ __('custom.delete') }}"><span class="d-none"></span>
+{{--                                                <i class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2" role="button" title="{{ __('custom.delete') }}"></i>--}}
                                             </a>
                                         @endcan
                                         @can(($isAdvBoardNews ? 'updateAdvBoard' : 'update'), $publication)
@@ -518,5 +520,5 @@
             </div>
         </div>
     </section>
-
+    @includeIf('modals.delete-resource', ['resource' => $title_singular])
 @endsection

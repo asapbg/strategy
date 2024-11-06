@@ -156,7 +156,7 @@
                     @includeIf('site.publications.news')
                 </div>
             @endif
-
+            @includeIf('modals.delete-resource', ['resource' => isset($news) ? trans_choice('custom.news', 1) : (isset($publications) ? trans_choice('custom.publications', 1) : $title_singular)])
         </div>
 
     </div>

@@ -815,6 +815,11 @@ $(document).ready(function (e) {
                 $( $(this).data('target')).find('form').attr('action', $(this).data('resource-delete-url'));
             }
 
+            if($(this).data('title_singular')) {
+                $('#modal_title_singular').html($(this).data('title_singular'));
+                $('#modal_btn_title_singular').html($(this).data('title_singular'));
+            }
+
             $($(this).data('target')).find('span.resource-name').html($(this).data('resource-name'));
             $($(this).data('target')).find('#resource_id').attr('value', $(this).data('resource-id'));
 

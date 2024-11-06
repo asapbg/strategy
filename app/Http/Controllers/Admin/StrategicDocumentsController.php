@@ -370,7 +370,12 @@ class StrategicDocumentsController extends AdminController
             $item->delete();
             DB::commit();
 
-            return redirect()->back()->with('success', __('custom.strategic_document_deleted'));
+            if(url()->previous() == route('site.home')){
+                return redirect(route('site.home'))
+                    ->with('success', __('custom.the_record')." ".__('messages.deleted_successfully_m'));
+            } else{
+                return redirect()->back()->with('success', __('custom.strategic_document_deleted'));
+            }
         } catch (\Throwable $throwable) {
             DB::rollBack();
             Log::error('Delete strategic document ID('.$id.'): '.$throwable);

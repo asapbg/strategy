@@ -38,7 +38,7 @@
                 @endcan
                 @can('delete', $publication)
                     <a href="javascript:;"
-                       class="btn btn-sm btn-danger"
+                       class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
                        data-target="#modal-delete-resource"
                        data-resource-id="{{ $publication->id }}"
                        data-resource-name="{{ $publication->title }}"
@@ -102,5 +102,6 @@
     </div>
 
 </div>
+@includeIf('modals.delete-resource', ['resource' => $current_type == 'news' ? trans_choice('custom.news', 1) : trans_choice('custom.publications', 1)])
 
 @endsection

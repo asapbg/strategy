@@ -24,6 +24,7 @@
                                         <a href="javascript:;"
                                            class="fas fa-regular fa-trash-can float-end text-danger fs-4  ms-2 js-toggle-delete-resource-modal hidden text-decoration-none"
                                            data-target="#modal-delete-resource"
+                                           data-title_singular="{{ trans_choice('custom.public_consultations', 1) }}"
                                            data-resource-id="{{ $consultation->id }}"
                                            data-resource-name="{{ $consultation->title }}"
                                            data-resource-delete-url="{{ route('admin.consultations.public_consultations.delete', $consultation) }}"
