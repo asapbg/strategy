@@ -169,10 +169,12 @@ class PublicConsultationController extends AdminController
 //            $diffInDays = $to->diffInDays($from);
 //        }
 
+        $subDocumentsTypes = $item->documents()->whereIn('doc_type', \App\Enums\DocTypesEnum::docsByActType($item->act_type_id))->get()->pluck('doc_type')->unique()->toArray();
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',
             'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel',
-            'fieldsOfActions', 'institutionLevels', 'isAdmin', 'institutions', 'pris', 'laws'));
+            'fieldsOfActions', 'institutionLevels', 'isAdmin', 'institutions', 'pris', 'laws', 'subDocumentsTypes'));
     }
 
     public function store(Request $request, PublicConsultation $item)

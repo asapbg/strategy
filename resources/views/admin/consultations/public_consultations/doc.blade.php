@@ -67,6 +67,8 @@
            class="btn btn-primary">{{ __('custom.cancel') }}</a>
     </div>
 </form>
+
+@if(isset($subDocumentsTypes) && sizeof($subDocumentsTypes))
 <hr class="custom-hr mt-4">
 <form class="row" action="{{ route('admin.consultations.public_consultations.store.sub_documents') }}" method="post" enctype="multipart/form-data">
     <div class="col-md-12 mb-2">
@@ -81,7 +83,7 @@
             <div class="col-12">
                 <select id="parent_type" name="parent_type" class="form-control form-control-sm select2 select2-no-clear @error('parent_type'){{ 'is-invalid' }}@enderror">
                     <option value="" @if(old('parent_type', 0) == 0) selected @endif>---</option>
-                    @foreach(\App\Enums\DocTypesEnum::docsByActType($item->act_type_id) as $docType)
+                    @foreach($subDocumentsTypes as $docType)
                         @if(!in_array($docType, [\App\Enums\DocTypesEnum::PC_COMMENTS_REPORT->value, \App\Enums\DocTypesEnum::PC_OTHER_DOCUMENTS->value]))
                             @php($docParentName = 'file_'.$docType)
                             <option value="{{ $docType.'00' }}"
@@ -124,6 +126,7 @@
            class="btn btn-primary">{{ __('custom.cancel') }}</a>
     </div>
 </form>
+@endif
 
 @if($item->oldFiles->count())
     <div class="row">
