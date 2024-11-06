@@ -56,9 +56,10 @@
                 <div class="col-md-4 position-relative mt-3">
                     <div class="service-item  position-relative">
                         <a href="{{ route('legislative_initiatives.index') }}" title="{{ __('custom.ogp') }}">
-                            <div class="icon">
-                                <i class="bi bi-bounding-box-circles"></i>
-                            </div>
+                            <img height="68" class="rounded-5" style="margin-bottom: 20px;" src="{{ asset('images/ogp_s_logo_2.png') }}" alt="{{ __('custom.ogp') }}">
+{{--                            <div class="icon">--}}
+{{--                                <i class="bi bi-bounding-box-circles"></i>--}}
+{{--                            </div>--}}
                             <h3>{{ __('custom.ogp') }}</h3>
                         </a>
                     </div>
@@ -166,13 +167,13 @@
                                 </div>
 
                                 <div class="row mb-5">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <button class="btn rss-sub main-color search-btn" data-id="consultations">
                                             <i class="fas fa-search main-color"></i>{{ __('custom.searching') }}
                                         </button>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <div class="info-consul">
                                             <h4>
                                                 {{ __('custom.total') }} <span id="consultations_total">{{ $consultations->total() }}</span> {{ mb_strtolower(trans_choice('custom.results', 2)) }}
@@ -353,13 +354,13 @@
                                 </div>
 
                                 <div class="row mb-5">
-                                    <div class="col-md-8">
+                                    <div class="col-md-4">
                                         <button class="btn rss-sub main-color search-btn" data-id="sd">
                                             <i class="fas fa-search main-color"></i>{{ __('custom.searching') }}
                                         </button>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-8">
                                         <div class="info-consul">
                                             <h4>
                                                 {{ __('custom.total') }} <span id="sd_total">{{ $strategicDocuments->total() }}</span> {{ mb_strtolower(trans_choice('custom.results', 2)) }}
