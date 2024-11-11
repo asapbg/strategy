@@ -139,8 +139,12 @@ Log::error('Observer pris event:'.$event.' | filterSubscribtions cnt: '.$filterS
                     foreach ($filterSubscribtions as $fSubscribe){
                         $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
                         $modelIds = Pris::list($filterArray)->pluck('id')->toArray();
-                        if(in_array($pris->id, $modelIds)){
-                            $subscribedUsers->add($fSubscribe);
+                        if(sizeof($modelIds)){
+Log::error('Observer pris event:'.$event.' | modelIds cnt: '.sizeof($modelIds));
+                            if(in_array($pris->id, $modelIds)){
+Log::error('Observer pris event:'.$event.' | add subscribedUsers');
+                                $subscribedUsers->add($fSubscribe);
+                            }
                         }
                     }
                 }
