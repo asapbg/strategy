@@ -140,6 +140,7 @@ Log::error('Observer pris event:'.$event.' | check for filter Subscribtions user
                     foreach ($filterSubscribtions as $fSubscribe){
 Log::error('Observer pris event:'.$event.' | loop filter');
                         $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
+Log::error('Observer pris event:'.$event.' | next is select pris list');
                         $modelIds = Pris::list($filterArray)->pluck('id')->toArray();
                         if(sizeof($modelIds)){
 Log::error('Observer pris event:'.$event.' | modelIds cnt: '.sizeof($modelIds));
