@@ -372,7 +372,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         return self::select('pris.id')
             ->LastVersion()
             ->Published()
-            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
+//            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
             ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
             ->leftJoin('pris_translations', function ($j){
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
