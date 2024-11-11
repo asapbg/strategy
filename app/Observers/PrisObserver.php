@@ -143,7 +143,7 @@ Log::error('Observer pris event:'.$event.' | loop filter');
 Log::error('Observer pris event:'.$event.' | next is select pris list: '.json_encode($filterArray,JSON_UNESCAPED_UNICODE ));
 //Log::error(Pris::listIds([])->count());
 //                        $modelIds = [];
-                        $modelIds = Pris::listIds($filterArray)->limit(10)->pluck('id')->toArray();
+                        $modelIds = Pris::listIds($filterArray)->pluck('id')->toArray();
                         if(sizeof($modelIds)){
 Log::error('Observer pris event:'.$event.' | modelIds cnt: '.sizeof($modelIds));
                             if(in_array($pris->id, $modelIds)){
