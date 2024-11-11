@@ -397,7 +397,6 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER)
             ->whereIn('pris.legal_act_type_id', LegalActType::IN_PRIS)
             ->FilterBy($filter)
-            ->limit(10)
             ->get();
     }
 }
