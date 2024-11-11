@@ -110,10 +110,9 @@ class PrisController extends AdminController
 
             return to_route(self::EDIT_ROUTE, $item->id)
                 ->with('success', trans_choice('custom.pris_documents', 1)." ".($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
-            Log::error('Save pris document error: '.$e->getMessage().' line:'.$e->getLine());
+            Log::error('Save pris document error: '.$e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }

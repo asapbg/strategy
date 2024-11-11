@@ -21,18 +21,18 @@ class PrisTranslationObserver
      */
     public function created(PrisTranslation $prisTranslation)
     {
-        $pris = $prisTranslation->parent;
-        if(!env('DISABLE_OBSERVERS', false) && $prisTranslation->locale == config('app.default_lang')) {
-            if (!empty($pris->published_at)) {
-                $this->sendEmails($prisTranslation, 'created');
-                Log::info('Send subscribe email on creation');
-                if ($pris->public_consultation_id) {
-                    //send if pris pc
-                    $this->sendEmails($prisTranslation, 'created_with_pc');
-                    Log::info('Send subscribe email on creation');
-                }
-            }
-        }
+//        $pris = $prisTranslation->parent;
+//        if(!env('DISABLE_OBSERVERS', false) && $prisTranslation->locale == config('app.default_lang')) {
+//            if (!empty($pris->published_at)) {
+//                $this->sendEmails($prisTranslation, 'created');
+//                Log::info('Send subscribe email on creation');
+//                if ($pris->public_consultation_id) {
+//                    //send if pris pc
+//                    $this->sendEmails($prisTranslation, 'created_with_pc');
+//                    Log::info('Send subscribe email on creation');
+//                }
+//            }
+//        }
     }
 
     /**
@@ -43,20 +43,20 @@ class PrisTranslationObserver
      */
     public function updated(PrisTranslation $prisTranslation)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
-            $old_published_at = $prisTranslation->parent->getOriginal('published_at');
-            //Check for real changes
-            $dirty = $prisTranslation->getDirty(); //return all changed fields
-            //skip some fields in specific cases
-            unset($dirty['updated_at']);
-
-            if (sizeof($dirty)) {
-//            if (sizeof($dirty) && !empty($pris->published_at)) {
-                $event = !$old_published_at && !empty($prisTranslation->parent->published_at) ? 'created' : 'updated';
-                $this->sendEmails($prisTranslation, $event);
-                Log::info('Send subscribe email on update');
-            }
-        }
+//        if(!env('DISABLE_OBSERVERS', false)) {
+//            $old_published_at = $prisTranslation->parent->getOriginal('published_at');
+//            //Check for real changes
+//            $dirty = $prisTranslation->getDirty(); //return all changed fields
+//            //skip some fields in specific cases
+//            unset($dirty['updated_at']);
+//
+//            if (sizeof($dirty)) {
+////            if (sizeof($dirty) && !empty($pris->published_at)) {
+//                $event = !$old_published_at && !empty($prisTranslation->parent->published_at) ? 'created' : 'updated';
+//                $this->sendEmails($prisTranslation, $event);
+//                Log::info('Send subscribe email on update');
+//            }
+//        }
     }
 
     /**
