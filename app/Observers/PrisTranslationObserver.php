@@ -153,7 +153,7 @@ class PrisTranslationObserver
             $data['markdown'] = 'pris';
 
 
-//            SendSubscribedUserEmailJob::dispatch($data);
+            SendSubscribedUserEmailJob::dispatch($data);
 
         } else if($event == 'created_with_pc' || $event == 'updated_with_pc'){
             if($pris->public_consultation_id){
@@ -206,7 +206,7 @@ class PrisTranslationObserver
                 $data['markdown'] = 'public-consultation';
 
 
-//                SendSubscribedUserEmailJob::dispatch($data);
+                SendSubscribedUserEmailJob::dispatch($data);
             }
         }
     }

@@ -170,7 +170,7 @@ Log::error('Observer pris event:'.$event.' | merged subscribedUsers cnt: '.$subs
 
 Log::error('Observer pris event:'.$event.' | next is send emails');
 
-//            SendSubscribedUserEmailJob::dispatch($data);
+            SendSubscribedUserEmailJob::dispatch($data);
 
         } else if($event == 'created_with_pc' || $event == 'updated_with_pc'){
             if($pris->public_consultation_id){
@@ -223,7 +223,7 @@ Log::error('Observer pris event:'.$event.' | next is send emails');
                 $data['markdown'] = 'public-consultation';
 
 
-//                SendSubscribedUserEmailJob::dispatch($data);
+                SendSubscribedUserEmailJob::dispatch($data);
             }
         }
     }
