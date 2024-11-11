@@ -42,27 +42,27 @@ class PrisObserver
      */
     public function updated(Pris $pris)
     {
-//        if(!env('DISABLE_OBSERVERS', false)) {
-//            $old_published_at = $pris->getOriginal('published_at');
-//            $old_public_consultation_id = (int)$pris->getOriginal('public_consultation_id');
-//
-//            //Check for real changes
-//            $dirty = $pris->getDirty(); //return all changed fields
-//            //skip some fields in specific cases
-//            unset($dirty['updated_at']);
-//
-//            if (sizeof($dirty)) {
-////            if (sizeof($dirty) && !empty($pris->published_at)) {
-//                $event = !$old_published_at && !empty($pris->published_at) ? 'created' : 'updated';
-//                $this->sendEmails($pris, $event);
-//                Log::info('Send subscribe email on update');
-//            }
-//            if (!$old_public_consultation_id && $pris->public_consultation_id) {
-//                //send if pris pc
-//                $this->sendEmails($pris, 'updated_with_pc');
-//                Log::info('Send subscribe email on creation');
-//            }
-//        }
+        if(!env('DISABLE_OBSERVERS', false)) {
+            $old_published_at = $pris->getOriginal('published_at');
+            $old_public_consultation_id = (int)$pris->getOriginal('public_consultation_id');
+
+            //Check for real changes
+            $dirty = $pris->getDirty(); //return all changed fields
+            //skip some fields in specific cases
+            unset($dirty['updated_at']);
+
+            if (sizeof($dirty)) {
+//            if (sizeof($dirty) && !empty($pris->published_at)) {
+                $event = !$old_published_at && !empty($pris->published_at) ? 'created' : 'updated';
+                $this->sendEmails($pris, $event);
+                Log::info('Send subscribe email on update');
+            }
+            if (!$old_public_consultation_id && $pris->public_consultation_id) {
+                //send if pris pc
+                $this->sendEmails($pris, 'updated_with_pc');
+                Log::info('Send subscribe email on creation');
+            }
+        }
     }
 
     /**
@@ -154,8 +154,8 @@ class PrisObserver
             $data['modelInstance'] = $pris;
             $data['modelName'] = $pris->mcDisplayName;
             $data['markdown'] = 'pris';
-
-            SendSubscribedUserEmailJob::dispatch($data);
+//TODO fix me
+//            SendSubscribedUserEmailJob::dispatch($data);
 
         } else if($event == 'created_with_pc' || $event == 'updated_with_pc'){
             if($pris->public_consultation_id){
@@ -206,8 +206,9 @@ class PrisObserver
                 $data['modelInstance'] = $pris->consultation;
                 $data['modelName'] = $pris->consultation->title;
                 $data['markdown'] = 'public-consultation';
+//TODO fix me
 
-                SendSubscribedUserEmailJob::dispatch($data);
+//                SendSubscribedUserEmailJob::dispatch($data);
             }
         }
     }
