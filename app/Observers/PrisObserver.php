@@ -136,7 +136,9 @@ Log::error('Observer pris event:'.$event.' | subscribedUsers cnt: '.$subscribedU
                     ->get();
 Log::error('Observer pris event:'.$event.' | filterSubscribtions cnt: '.$filterSubscribtions->count());
                 if($filterSubscribtions->count()){
+Log::error('Observer pris event:'.$event.' | check for filter Subscribtions users');
                     foreach ($filterSubscribtions as $fSubscribe){
+Log::error('Observer pris event:'.$event.' | loop filter');
                         $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
                         $modelIds = Pris::list($filterArray)->pluck('id')->toArray();
                         if(sizeof($modelIds)){
