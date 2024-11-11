@@ -124,7 +124,9 @@ class PrisObserver
                 $administrators = User::whereActive(true)
                     ->hasRole(CustomRole::ADMIN_USER_ROLE)
                     ->get();
+Log::error('Observer pris event:'.$event.' | administrators cnt: '.$administrators->count());
                 $subscribedUsers = UserSubscribe::where('id', 0)->get();
+Log::error('Observer pris event:'.$event.' | subscribedUsers cnt: '.$subscribedUsers->count());
                 //get users by model filter
                 $filterSubscribtions = UserSubscribe::where('subscribable_type', Pris::class)
                     ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
@@ -132,7 +134,7 @@ class PrisObserver
                     ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
                     ->whereNull('subscribable_id')
                     ->get();
-
+Log::error('Observer pris event:'.$event.' | filterSubscribtions cnt: '.$filterSubscribtions->count());
                 if($filterSubscribtions->count()){
                     foreach ($filterSubscribtions as $fSubscribe){
                         $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
@@ -142,6 +144,7 @@ class PrisObserver
                         }
                     }
                 }
+Log::error('Observer pris event:'.$event.' | merged subscribedUsers cnt: '.$subscribedUsers->count());
             }
 
             if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
@@ -155,6 +158,8 @@ class PrisObserver
             $data['modelInstance'] = $pris;
             $data['modelName'] = $pris->mcDisplayName;
             $data['markdown'] = 'pris';
+
+Log::error('Observer pris event:'.$event.' | next is send emails');
 
 //            SendSubscribedUserEmailJob::dispatch($data);
 
