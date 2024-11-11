@@ -150,7 +150,7 @@ class PrisTranslationObserver
             $data['modelInstance'] = $pris;
             $data['modelName'] = $pris->mcDisplayName;
             $data['markdown'] = 'pris';
-//TODO fix me
+
 
 //            SendSubscribedUserEmailJob::dispatch($data);
 
@@ -203,7 +203,7 @@ class PrisTranslationObserver
                 $data['modelInstance'] = $pris->consultation;
                 $data['modelName'] = $pris->consultation->title;
                 $data['markdown'] = 'public-consultation';
-//TODO fix me
+
 
 //                SendSubscribedUserEmailJob::dispatch($data);
             }
