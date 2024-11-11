@@ -107,6 +107,7 @@ class PrisObserver
      */
     private function sendEmails(Pris $pris, $event): void
     {
+        Log::error('Observer pris event:'.$event);
         if($event == 'created' || $event == 'updated'){
             $administrators = null;
             $moderators = null;

@@ -101,6 +101,7 @@ class PrisTranslationObserver
      */
     private function sendEmails(PrisTranslation  $prisTranslation, $event): void
     {
+        Log::error('Observer pris translation event:'.$event);
         $pris = $prisTranslation->parent;
         if($event == 'created' || $event == 'updated'){
             $moderators = null;
