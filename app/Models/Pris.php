@@ -367,4 +367,36 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             ->FilterBy($filter)
             ->get();
     }
+
+    public static function listIds(array $filter){
+        return self::select('pris.id')
+            ->LastVersion()
+            ->Published()
+            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
+            ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+            ->leftJoin('pris_translations', function ($j){
+                $j->on('pris_translations.pris_id', '=', 'pris.id')
+                    ->where('pris_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
+            ->leftJoin('institution_translations', function ($j){
+                $j->on('institution_translations.institution_id', '=', 'institution.id')
+                    ->where('institution_translations.locale', '=', app()->getLocale());
+            })
+            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
+            ->join('legal_act_type_translations', function ($j){
+                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
+            ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
+            ->leftJoin('tag_translations', function ($j){
+                $j->on('tag_translations.tag_id', '=', 'tag.id')
+                    ->where('tag_translations.locale', '=', app()->getLocale());
+            })
+            ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER)
+            ->whereIn('pris.legal_act_type_id', LegalActType::IN_PRIS)
+            ->FilterBy($filter)
+            ->get();
+    }
 }
