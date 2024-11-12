@@ -107,7 +107,6 @@ class PrisObserver
      */
     private function sendEmails(Pris $pris, $event): void
     {
-        Log::error('Observer pris event:'.$event);
         if($event == 'created' || $event == 'updated'){
             $administrators = null;
             $moderators = null;
@@ -124,9 +123,7 @@ class PrisObserver
                 $administrators = User::whereActive(true)
                     ->hasRole(CustomRole::ADMIN_USER_ROLE)
                     ->get();
-Log::error('Observer pris event:'.$event.' | administrators cnt: '.$administrators->count());
                 $subscribedUsers = UserSubscribe::where('id', 0)->get();
-Log::error('Observer pris event:'.$event.' | subscribedUsers cnt: '.$subscribedUsers->count());
                 //get users by model filter
                 $filterSubscribtions = UserSubscribe::where('subscribable_type', Pris::class)
                     ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
@@ -134,26 +131,17 @@ Log::error('Observer pris event:'.$event.' | subscribedUsers cnt: '.$subscribedU
                     ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
                     ->whereNull('subscribable_id')
                     ->get();
-Log::error('Observer pris event:'.$event.' | filterSubscribtions cnt: '.$filterSubscribtions->count());
                 if($filterSubscribtions->count()){
-Log::error('Observer pris event:'.$event.' | check for filter Subscribtions users');
                     foreach ($filterSubscribtions as $fSubscribe){
-Log::error('Observer pris event:'.$event.' | loop filter');
                         $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-Log::error('Observer pris event:'.$event.' | next is select pris list: '.json_encode($filterArray,JSON_UNESCAPED_UNICODE ));
-//Log::error(Pris::listIds([])->count());
-//                        $modelIds = [];
                         $modelIds = Pris::listIds($filterArray)->pluck('id')->toArray();
                         if(sizeof($modelIds)){
-Log::error('Observer pris event:'.$event.' | modelIds cnt: '.sizeof($modelIds));
                             if(in_array($pris->id, $modelIds)){
-Log::error('Observer pris event:'.$event.' | add subscribedUsers');
                                 $subscribedUsers->add($fSubscribe);
                             }
                         }
                     }
                 }
-Log::error('Observer pris event:'.$event.' | merged subscribedUsers cnt: '.$subscribedUsers->count());
             }
 
             if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
@@ -168,7 +156,6 @@ Log::error('Observer pris event:'.$event.' | merged subscribedUsers cnt: '.$subs
             $data['modelName'] = $pris->mcDisplayName;
             $data['markdown'] = 'pris';
 
-Log::error('Observer pris event:'.$event.' | next is send emails');
 
             SendSubscribedUserEmailJob::dispatch($data);
 
@@ -203,8 +190,10 @@ Log::error('Observer pris event:'.$event.' | next is send emails');
                         foreach ($filterSubscribtions as $fSubscribe){
                             $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
                             $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
-                            if(in_array($pris->public_consultation_id, $modelIds)){
-                                $subscribedUsers->add($fSubscribe);
+                            if(sizeof($modelIds)){
+                                if(in_array($pris->public_consultation_id, $modelIds)){
+                                    $subscribedUsers->add($fSubscribe);
+                                }
                             }
                         }
                     }
