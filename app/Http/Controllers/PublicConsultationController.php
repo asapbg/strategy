@@ -1090,6 +1090,22 @@ class PublicConsultationController extends Controller
 //            ->whereLocale(app()->getLocale())
 //            ->orderBy('field_of_action_translations.name', 'asc')
 //            ->get();
+
+        $importers = [];
+        $importersR = $request->input('importers');
+        if( is_array($importersR) && sizeof($importersR) ){
+            if(str_contains($importersR[0], ',')) {
+                $explode = explode(',', $importersR[0]);
+                foreach ($explode as $v){
+                    if(is_numeric($v) && (int)$v){
+                        $importers[] = (int)$v;
+                    }
+                }
+            } else{
+                $importers = $importersR;
+            }
+        }
+
         return array(
             'level' => array(
                 'type' => 'select',
@@ -1175,7 +1191,7 @@ class PublicConsultationController extends Controller
                 'label' => __('site.public_consultation.importer_pc'),
                 'multiple' => true,
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
-                'value' => request()->input('importers'),
+                'value' => $importers,
                 'default' => '',
                 'col' => 'col-md-4'
             ),

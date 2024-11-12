@@ -102,7 +102,6 @@
                                                 </div>
                                                 @break('select')
                                             @case('subjects')
-
                                                 <div class="input-group input-group-sm d-flex">
                                                     <label for="exampleFormControlInput1" class="form-label">{{ $field['label'] }}:<button type="button" class="btn btn-sm btn-primary ms-1 pick-institution" style="height: 30px;"
                                                                                                                                            data-title="{{ trans_choice('custom.institutions',2) }}"
