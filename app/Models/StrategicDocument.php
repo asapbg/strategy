@@ -75,6 +75,10 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'document_date_accepted';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
         return static::with(['translations'])
+            ->leftJoin('strategic_document_translations', function ($j){
+                $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
+                    ->where('strategic_document_translations.locale', '=', app()->getLocale());
+            })
             ->Active()
             ->whereNull('parent_document_id')
             ->orderByRaw("created_at desc")
