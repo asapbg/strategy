@@ -120,7 +120,7 @@
         </div>
     @endforeach
 @endif
-@includeIf('modals.delete-resource', ['resource' => $title_singular])
+@includeIf('modals.delete-resource', ['resource' => trans_choice('custom.advisory_boards', 1)])
 <div class="row">
     @if(isset($items) && $items->count() > 0)
         {{ $items->onEachSide(0)->appends(request()->query())->links() }}
