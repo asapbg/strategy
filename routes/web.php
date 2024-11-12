@@ -26,7 +26,7 @@ Route::get('/locale', function (Request $request) {
     return back();
 })->name('change-locale');
 
-Route::get('/download/{file}', [\App\Http\Controllers\CommonController::class, 'downloadFile'])->name('download.file');
+Route::get('/download/{file}', [\App\Http\Controllers\CommonController::class, 'downloadFile'])->whereNumber('file')->name('download.file');
 Route::get('/strategy-document/download-file/{id}', [\App\Http\Controllers\StrategicDocumentsController::class, 'downloadDocFile'])->name('strategy-document.download-file');
 
 Route::prefix(app()->getLocale())->group(function (){
