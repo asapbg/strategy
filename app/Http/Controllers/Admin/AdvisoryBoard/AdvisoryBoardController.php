@@ -58,10 +58,10 @@ class AdvisoryBoardController extends AdminController
         }
         $items = $items->with(['policyArea', 'translations'])
             ->where(function ($query) use ($keywords) {
-                $query->when(!empty($keywords) && is_numeric($keywords), function ($query) use ($keywords) {
-                    $query->where('id', $keywords);
-                })
-                    ->when(!empty($keywords) && !is_numeric($keywords), function ($query) use ($keywords) {
+//                $query->when(!empty($keywords) && is_numeric($keywords), function ($query) use ($keywords) {
+//                    $query->where('id', $keywords);
+//                })
+                    $query->when(!empty($keywords) && !is_numeric($keywords), function ($query) use ($keywords) {
                         $query->whereHas('translations', function ($query) use ($keywords) {
                             $query->where('name', 'like', '%' . $keywords . '%');
                         });
