@@ -79,9 +79,14 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
                 $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
                     ->where('strategic_document_translations.locale', '=', app()->getLocale());
             })
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+            ->leftJoin('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
             ->Active()
-            ->whereNull('parent_document_id')
-            ->orderByRaw("created_at desc")
+            ->whereNull('strategic_document.parent_document_id')
+            ->orderByRaw("strategic_document.created_at desc")
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
 //            ->limit(config('feed.items_per_page'), 20)
