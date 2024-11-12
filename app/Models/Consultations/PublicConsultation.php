@@ -93,11 +93,20 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         $request = request();
         $requestFilter = $request->all();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'date';
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'public_consultation.date';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
         return static::with(['translations'])
+            ->join('public_consultation_translations', function ($j){
+                $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
+                    ->where('public_consultation_translations.locale', '=', app()->getLocale());
+            })
+            ->join('field_of_actions', 'field_of_actions.id', '=', 'public_consultation.field_of_actions_id')
+            ->join('field_of_action_translations', function ($j){
+                $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
+                    ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
             ->ActivePublic()
-            ->orderByRaw("created_at desc")
+            ->orderByRaw("public_consultation.created_at desc")
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
             ->limit(config('feed.items_per_page'), 20)
