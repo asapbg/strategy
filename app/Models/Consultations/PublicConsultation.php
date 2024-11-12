@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use App\Models\ModelActivityExtend;
+use Illuminate\Support\Facades\Log;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 
@@ -95,7 +96,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $requestFilter = $request->all();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'public_consultation.date';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
-        return static::with(['translations'])
+        return static::select('public_consultation.*')->with(['translations'])
             ->join('public_consultation_translations', function ($j){
                 $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
                     ->where('public_consultation_translations.locale', '=', app()->getLocale());
@@ -104,6 +105,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->join('field_of_action_translations', function ($j){
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
+            })
+            ->leftjoin('act_type', 'act_type.id', '=', 'public_consultation.act_type_id')
+            ->leftjoin('act_type_translations', function ($j){
+                $j->on('act_type_translations.act_type_id', '=', 'act_type.id')
+                    ->where('act_type_translations.locale', '=', app()->getLocale());
             })
             ->ActivePublic()
             ->orderByRaw("public_consultation.created_at desc")
