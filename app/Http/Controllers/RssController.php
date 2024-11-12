@@ -35,23 +35,35 @@ class RssController extends Controller
     function pcItem(Request $request, $id = 0)
     {
         $item = PublicConsultation::with(['responsibleInstitution', 'actType', 'fieldOfAction', 'pris', 'comments'])->find($id);
-        return response(view('feed::pc_single',  compact('item')), 200, [
-            'Content-Type' => 'application/xml'
-        ]);
+        if($item){
+            return response(view('feed::pc_single',  compact('item')), 200, [
+                'Content-Type' => 'application/xml'
+            ]);
+        } else{
+            abort(404);
+        }
     }
     function advItem (Request $request, $id = 0)
     {
         $item = AdvisoryBoard::with(['policyArea', 'authority', 'chairmen', 'establishment', 'meetings'])->find($id);
-        return response(view('feed::adv_single',  compact('item')), 200, [
-            'Content-Type' => 'application/xml'
-        ]);
+        if($item){
+            return response(view('feed::adv_single',  compact('item')), 200, [
+                'Content-Type' => 'application/xml'
+            ]);
+        } else{
+            abort(404);
+        }
     }
 
     function liItem (Request $request, $id = 0)
     {
         $item = LegislativeInitiative::with(['institutions', 'comments'])->find($id);
-        return response(view('feed::li_single',  compact('item')), 200, [
-            'Content-Type' => 'application/xml'
-        ]);
+        if($item){
+            return response(view('feed::li_single',  compact('item')), 200, [
+                'Content-Type' => 'application/xml'
+            ]);
+        } else{
+            abort(404);
+        }
     }
 }
