@@ -28,7 +28,7 @@
     <div class="navbar-nav mx-auto">
         <h4>
             @if ($user)
-                {{ $user->roles()->first()->display_name }}
+                {{ $user->roles()->first()?->display_name }}
             @endif
         </h4>
     </div>
