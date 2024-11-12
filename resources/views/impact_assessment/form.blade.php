@@ -13,7 +13,9 @@
     </ul>
     @endif
 
-    @include("form_partials.$formName.steps.step$step")
+    @if(\View::exists("form_partials.$formName.steps.step$step"))
+        @include("form_partials.$formName.steps.step$step")
+    @endif
 
     <div class="row">
         <div class="col-sm-6">
