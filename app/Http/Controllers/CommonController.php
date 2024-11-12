@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use League\Flysystem\FilesystemException;
@@ -205,7 +206,12 @@ class CommonController extends Controller
                 $extraName.= '.'.$explodeName[(sizeof($explodeName) - 1)];
             }
             //            $extraName = (!empty($file->description_bg) ? \Str::slug($file->description_bg, '_').'_' : (!empty($file->description_en) ? \Str::slug($file->description_en, '_').'_' : (!empty($file->custom_name) ? \Str::slug($file->custom_name, '_').'_' : ''))).($file->id_object ? $file->id_object.'_' : '');
-            return Storage::disk('public_uploads')->download($path, $extraName);
+            try {
+                return Storage::disk('public_uploads')->download($path, $extraName);
+            } catch (\Exception $e){
+                Log::error('Error download file (download.file): '.$e->getMessage().PHP_EOL.'file : '.$file->id);
+                return back()->with('warning', __('custom.record_not_found'));
+            }
         } else {
             return back()->with('warning', __('custom.record_not_found'));
         }
