@@ -8,7 +8,7 @@ class FieldOfAction extends QuerySorter implements SorterContract{
     public function handle($value): void
     {
         $direction = $value ?? 'asc';
-        $this->query->orderBy('field_of_action_translations.name', $direction);
+        $this->query->orderByRaw('max(field_of_action_translations.name) '.$direction);
     }
 }
 
