@@ -12,7 +12,7 @@ class Tag extends QueryFilter implements FilterContract{
     {
         if( !empty($value) ){
             $this->query->whereHas('tags', function ($query) use ($value) {
-                return $query->where('tag.id', $value);
+                return $query->where('tag.id', (int)$value);
             });
         }
     }

@@ -11,7 +11,7 @@ class Institution extends QueryFilter implements FilterContract{
     public function handle($value, $filter = null): void
     {
         if( !empty($value) ){
-            $this->query->where('pris.institution_id', $value);
+            $this->query->where('pris.institution_id', (int)$value);
         }
     }
 }

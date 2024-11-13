@@ -15,7 +15,7 @@ class LegalActTypes extends QueryFilter implements FilterContract{
                 $explode = explode(',', $value[0]);
                 $this->query->whereIn('pris.legal_act_type_id', $explode);
             } else{
-                $this->query->whereIn('pris.legal_act_type_id', $value);
+                $this->query->whereIn('pris.legal_act_type_id', (int)$value);
             }
         }
     }
