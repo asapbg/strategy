@@ -209,7 +209,7 @@ class CommonController extends Controller
             try {
                 return Storage::disk('public_uploads')->download($path, $extraName);
             } catch (\Exception $e){
-                Log::error('Error download file (download.file): '.$e->getMessage().PHP_EOL.'file : '.$file->id);
+                Log::error('Error download file (download.file): '.$e->getMessage().PHP_EOL.'file : '.$file->id.' | path: '.$path.' | extraName: '.($extraName ?? ''));
                 return back()->with('warning', __('custom.record_not_found'));
             }
         } else {
