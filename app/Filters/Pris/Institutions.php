@@ -15,7 +15,7 @@ class Institutions extends QueryFilter implements FilterContract{
                 $explode = explode(',', $value[0]);
                 $this->query->whereIn('institution.id', $explode);
             } else{
-                $this->query->whereIn('institution.id', (int)$value);
+                $this->query->whereIn('institution.id', $value);
             }
         }
     }
