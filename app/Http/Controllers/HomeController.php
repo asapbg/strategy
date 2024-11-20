@@ -912,7 +912,8 @@ class HomeController extends Controller
                             page.slug as slug,
                             page.id,
                             coalesce(page.updated_at, page.created_at) as lastmod,
-                            \'bg\' as locale
+                            \'bg\' as locale,
+                            0 as in_archive
                         from page
                         join page_translations on page_translations.page_id = page.id and page_translations.locale = \'bg\'
                         where
@@ -926,7 +927,8 @@ class HomeController extends Controller
                                 page.slug as slug,
                                 page.id,
                                 coalesce(page.updated_at, page.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from page
                             join page_translations on page_translations.page_id = page.id and page_translations.locale = \'en\'
                             where
@@ -940,7 +942,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 public_consultation.id,
                                 coalesce(public_consultation.updated_at, public_consultation.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from public_consultation
                             join public_consultation_translations on public_consultation_translations.public_consultation_id = public_consultation.id and public_consultation_translations.locale = \'bg\'
                             where
@@ -953,7 +956,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 public_consultation.id,
                                 coalesce(public_consultation.updated_at, public_consultation.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from public_consultation
                             join public_consultation_translations on public_consultation_translations.public_consultation_id = public_consultation.id and public_consultation_translations.locale = \'en\'
                             where
@@ -966,7 +970,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 legislative_initiative.id,
                                 coalesce(legislative_initiative.updated_at, legislative_initiative.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from legislative_initiative
                             where
                                 legislative_initiative.deleted_at is null
@@ -976,7 +981,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 legislative_initiative.id,
                                 coalesce(legislative_initiative.updated_at, legislative_initiative.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from legislative_initiative
                             where
                                 legislative_initiative.deleted_at is null
@@ -986,7 +992,8 @@ class HomeController extends Controller
                                 legal_act_type_translations.name as slug,
                                 pris.id,
                                 coalesce(pris.updated_at, pris.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                pris.in_archive
                             from pris
                             join pris_translations on pris_translations.pris_id = pris.id and pris_translations.locale = \'bg\'
                             join legal_act_type on legal_act_type.id = pris.legal_act_type_id
@@ -1001,7 +1008,8 @@ class HomeController extends Controller
                                 legal_act_type_translations.name as slug,
                                 pris.id,
                                 coalesce(pris.updated_at, pris.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                pris.in_archive
                             from pris
                             join pris_translations on pris_translations.pris_id = pris.id and pris_translations.locale = \'en\'
                             join legal_act_type on legal_act_type.id = pris.legal_act_type_id
@@ -1016,7 +1024,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 legislative_program.id,
                                 coalesce(legislative_program.updated_at, legislative_program.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from legislative_program
                             where
                                 legislative_program.public = 1
@@ -1027,7 +1036,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 legislative_program.id,
                                 coalesce(legislative_program.updated_at, legislative_program.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from legislative_program
                             where
                                 legislative_program.public = 1
@@ -1038,7 +1048,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 operational_program.id,
                                 coalesce(operational_program.updated_at, operational_program.created_at) as lastmod,
-                                 \'bg\' as locale
+                                 \'bg\' as locale,
+                                 0 as in_archive
                             from operational_program
                             where
                                 operational_program.public = 1
@@ -1049,7 +1060,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 operational_program.id,
                                 coalesce(operational_program.updated_at, operational_program.created_at) as lastmod,
-                                 \'en\' as locale
+                                 \'en\' as locale,
+                                 0 as in_archive
                             from operational_program
                             where
                                 operational_program.public = 1
@@ -1060,7 +1072,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 strategic_document.id,
                                 coalesce(strategic_document.updated_at, strategic_document.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from strategic_document
                             join strategic_document_translations on strategic_document_translations.strategic_document_id = strategic_document.id and strategic_document_translations.locale = \'bg\'
                             where
@@ -1073,7 +1086,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 strategic_document.id,
                                 coalesce(strategic_document.updated_at, strategic_document.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from strategic_document
                             join strategic_document_translations on strategic_document_translations.strategic_document_id = strategic_document.id and strategic_document_translations.locale = \'en\'
                             where
@@ -1086,7 +1100,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 advisory_boards.id,
                                 coalesce(advisory_boards.updated_at, advisory_boards.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from advisory_boards
                             join advisory_board_translations on advisory_board_translations.advisory_board_id = advisory_boards.id and advisory_board_translations.locale = \'bg\'
                             where
@@ -1099,7 +1114,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 advisory_boards.id,
                                 coalesce(advisory_boards.updated_at, advisory_boards.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from advisory_boards
                             join advisory_board_translations on advisory_board_translations.advisory_board_id = advisory_boards.id and advisory_board_translations.locale = \'en\'
                             where
@@ -1112,7 +1128,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 publication.id,
                                 coalesce(publication.updated_at, publication.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from publication
                             join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'bg\'
                             where
@@ -1126,7 +1143,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 publication.id,
                                 coalesce(publication.updated_at, publication.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from publication
                             join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'en\'
                             where
@@ -1140,7 +1158,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 publication.id,
                                 coalesce(publication.updated_at, publication.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from publication
                             join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'bg\'
                             where
@@ -1154,7 +1173,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 publication.id,
                                 coalesce(publication.updated_at, publication.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from publication
                             join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'en\'
                             where
@@ -1168,7 +1188,8 @@ class HomeController extends Controller
                                 page.slug as slug,
                                 page.id,
                                 coalesce(page.updated_at, page.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from page
                             join page_translations on page_translations.page_id = page.id and page_translations.locale = \'bg\'
                             where
@@ -1182,7 +1203,8 @@ class HomeController extends Controller
                                 page.slug as slug,
                                 page.id,
                                 coalesce(page.updated_at, page.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from page
                             join page_translations on page_translations.page_id = page.id and page_translations.locale = \'en\'
                             where
@@ -1196,7 +1218,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 publication.id,
                                 coalesce(publication.updated_at, publication.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from publication
                             join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'bg\'
                             where
@@ -1210,7 +1233,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 publication.id,
                                 coalesce(publication.updated_at, publication.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from publication
                             join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'en\'
                             where
@@ -1224,7 +1248,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 publication.id,
                                 coalesce(publication.updated_at, publication.created_at) as lastmod,
-                                \'bg\' as locale
+                                \'bg\' as locale,
+                                0 as in_archive
                             from publication
                             join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'bg\'
                             where
@@ -1238,7 +1263,8 @@ class HomeController extends Controller
                                 \'\' as slug,
                                 publication.id,
                                 coalesce(publication.updated_at, publication.created_at) as lastmod,
-                                \'en\' as locale
+                                \'en\' as locale,
+                                0 as in_archive
                             from publication
                             join publication_translations on publication_translations.publication_id = publication.id and publication_translations.locale = \'en\'
                             where
