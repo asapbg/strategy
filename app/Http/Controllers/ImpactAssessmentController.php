@@ -214,6 +214,9 @@ class ImpactAssessmentController extends Controller
 
     public static function getSteps($formName)
     {
+        if ($formName == "library") {
+            return 0;
+        }
         return count(\File::allFiles(resource_path("views/form_partials/$formName/steps")));
     }
 
