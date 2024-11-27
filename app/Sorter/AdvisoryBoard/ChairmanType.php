@@ -8,7 +8,7 @@ class ChairmanType extends QuerySorter implements SorterContract{
     public function handle($value): void
     {
         $direction = $value ?? 'asc';
-        $this->query->orderByRaw('max(advisory_chairman_type_translations.name) '.$direction);
+        $this->query->orderByRaw('advisory_chairman_type_translations.name '.$direction);
     }
 }
 

@@ -8,7 +8,7 @@ class ActOfCreation extends QuerySorter implements SorterContract{
     public function handle($value): void
     {
         $direction = $value ?? 'asc';
-        $this->query->orderByRaw('max(advisory_act_type_translations.name) '.$direction);
+        $this->query->orderByRaw('advisory_act_type_translations.name '.$direction);
     }
 }
 

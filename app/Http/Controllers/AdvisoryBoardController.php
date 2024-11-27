@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AdvisoryBoardController extends Controller
 {
     private $pageTitle;
+
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -45,7 +46,7 @@ class AdvisoryBoardController extends Controller
     public function index(Request $request)
     {
         $customRequestParam = null;
-        if( !$request->ajax() && is_null($request->input('status'))) {
+        if (!$request->ajax() && is_null($request->input('status'))) {
             $request->request->add(['status' => 1]);
             $customRequestParam = ['status' => 1];
         }
@@ -67,7 +68,7 @@ class AdvisoryBoardController extends Controller
         $requestFilter = $request->all();
         //Filter
         $filter = $this->boardFilters($request);
-        if( !$request->ajax() && is_null($request->input('status'))) {
+        if (!$request->ajax() && is_null($request->input('status'))) {
             $filter['status']['value'] = 1;
             $requestFilter['status'] = 1;
         }
@@ -87,83 +88,83 @@ class AdvisoryBoardController extends Controller
 //dd($requestGroupBy, $sort);
         $groupByColumn = ['advisory_boards.id', 'advisory_board_translations.name'];
 //        if($requestGroupBy){
-            if($requestGroupBy == 'fieldOfAction' || $sort == 'fieldOfAction') {
-                $groupByColumn[] = 'field_of_action_translations.name';
-            }
-            if($requestGroupBy == 'authority' || $sort == 'authority') {
-                $groupByColumn[] = 'authority_advisory_board_translations.name';
-            }
-            if($requestGroupBy == 'chairmanType' || $sort == 'chairmanType') {
-                $groupByColumn[] = 'advisory_chairman_type_translations.name';
-            }
-            if($requestGroupBy == 'npo' || $sort == 'npo') {
-                $groupByColumn[] = 'advisory_boards.has_npo_presence';
-            }
-            if($requestGroupBy == 'actOfCreation' || $sort == 'actOfCreation') {
-                $groupByColumn[] = 'advisory_act_type_translations.name';
-            }
+        if ($requestGroupBy == 'fieldOfAction' || $sort == 'fieldOfAction') {
+            $groupByColumn[] = 'field_of_action_translations.name';
+        }
+        if ($requestGroupBy == 'authority' || $sort == 'authority') {
+            $groupByColumn[] = 'authority_advisory_board_translations.name';
+        }
+        if ($requestGroupBy == 'chairmanType' || $sort == 'chairmanType') {
+            $groupByColumn[] = 'advisory_chairman_type_translations.name';
+        }
+        if ($requestGroupBy == 'npo' || $sort == 'npo') {
+            $groupByColumn[] = 'advisory_boards.has_npo_presence';
+        }
+        if ($requestGroupBy == 'actOfCreation' || $sort == 'actOfCreation') {
+            $groupByColumn[] = 'advisory_act_type_translations.name';
+        }
 //        }
 
         $items = AdvisoryBoard::select('advisory_boards.*')
             ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
                 'authority', 'authority.translations', 'advisoryChairmanType', 'advisoryChairmanType.translations',
                 'advisoryActType', 'advisoryActType.translations'])
-            ->leftJoin('advisory_board_translations', function ($j){
+            ->leftJoin('advisory_board_translations', function ($j) {
                 $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
                     ->where('advisory_board_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'advisory_boards.policy_area_id')
-            ->leftJoin('field_of_action_translations', function ($j){
+            ->leftJoin('field_of_action_translations', function ($j) {
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('authority_advisory_board', 'authority_advisory_board.id', '=', 'advisory_boards.authority_id')
-            ->leftJoin('authority_advisory_board_translations', function ($j){
+            ->leftJoin('authority_advisory_board_translations', function ($j) {
                 $j->on('authority_advisory_board_translations.authority_advisory_board_id', '=', 'authority_advisory_board.id')
                     ->where('authority_advisory_board_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('advisory_act_type', 'advisory_act_type.id', '=', 'advisory_boards.advisory_act_type_id')
-            ->leftJoin('advisory_act_type_translations', function ($j){
+            ->leftJoin('advisory_act_type_translations', function ($j) {
                 $j->on('advisory_act_type_translations.advisory_act_type_id', '=', 'advisory_act_type.id')
                     ->where('advisory_act_type_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('advisory_chairman_type', 'advisory_chairman_type.id', '=', 'advisory_boards.advisory_chairman_type_id')
-            ->leftJoin('advisory_chairman_type_translations', function ($j){
+            ->leftJoin('advisory_chairman_type_translations', function ($j) {
                 $j->on('advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
                     ->where('advisory_chairman_type_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('advisory_board_members', 'advisory_board_members.advisory_board_id', '=', 'advisory_boards.id')
-            ->leftJoin('advisory_board_member_translations', function ($j){
+            ->leftJoin('advisory_board_member_translations', function ($j) {
                 $j->on('advisory_board_member_translations.advisory_board_member_id', '=', 'advisory_board_members.id')
                     ->where('advisory_board_member_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('advisory_board_npos', 'advisory_board_npos.advisory_board_id', '=', 'advisory_boards.id')
-            ->leftJoin('advisory_board_npo_translations', function ($j){
+            ->leftJoin('advisory_board_npo_translations', function ($j) {
                 $j->on('advisory_board_npo_translations.advisory_board_npo_id', '=', 'advisory_board_npos.id')
                     ->where('advisory_board_npo_translations.locale', '=', app()->getLocale());
             })
             ->where('advisory_boards.public', true)
             ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)
-            ->when($queryDefaultSort, function ($query){
+            ->SortedBy($sort, $sortOrd)
+            ->when($queryDefaultSort, function ($query) {
                 $query->orderBy('advisory_boards.active', 'desc')
                     ->orderBy('advisory_board_translations.name');
             })
             ->groupBy($groupByColumn)
             ->paginate($paginate);
         $subscribeFilter = $requestFilter;
-        if(isset($subscribeFilter['status'])){
+        if (isset($subscribeFilter['status'])) {
             $subscribeFilter['status'] = str($subscribeFilter['status']);
         }
         $hasSubscribeEmail = $this->hasSubscription(null, AdvisoryBoard::class, $subscribeFilter);
         $hasSubscribeRss = false;
 
         $closeSearchForm = true;
-        if( $request->ajax() ) {
+        if ($request->ajax()) {
             $closeSearchForm = false;
-            return view('site.advisory-boards.list', compact('filter','sorter', 'items', 'rf', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
+            return view('site.advisory-boards.list', compact('filter', 'sorter', 'items', 'rf', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
         }
-        $this->setSeo(__('site.seo_title'),  trans_choice('custom.advisory_boards', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.advisory_boards', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
+        $this->setSeo(__('site.seo_title'), trans_choice('custom.advisory_boards', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.advisory_boards', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm', 'customRequestParam'));
     }
 
@@ -204,26 +205,26 @@ class AdvisoryBoardController extends Controller
                 $query->with(['files', 'translations']);
             }, 'npos' => function ($query) {
                 $query->with('translations');
-            }, 'members' => function($query) {
+            }, 'members' => function ($query) {
                 $query->with(['translations', 'institution']);
-            }, 'meetings' => function($query) {
+            }, 'meetings' => function ($query) {
                 $query->where('next_meeting', '>=', Carbon::now()->startOfYear())
                     ->with(['translations', 'siteFiles'])->orderBy('next_meeting', 'desc');
-            }, 'secretariat' => function($query) {
+            }, 'secretariat' => function ($query) {
                 $query->with(['translations', 'siteFiles']);
-            }, 'workingProgram' => function($query) {
+            }, 'workingProgram' => function ($query) {
                 $query->with(['translations', 'siteFiles']);
-        }, 'policyArea'])->first();
+            }, 'policyArea'])->first();
 
         $nextMeeting = AdvisoryBoardMeeting::where('advisory_board_id', $item->id)
-            ->where('next_meeting' ,'>', Carbon::now())
+            ->where('next_meeting', '>', Carbon::now())
             ->orderBy('next_meeting', 'asc')
             ->get()->first();
 
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $pageTitle = $item->name;
         $this->title_singular = $item->name;
-        if($item->file_id > 0){
+        if ($item->file_id > 0) {
             $this->setSlider($item->name, $item->headerImg);
         }
 
@@ -232,7 +233,7 @@ class AdvisoryBoardController extends Controller
 
         $this->composeBreadcrumbs($item, array(['name' => __('custom.main_information'), 'url' => '']));
 
-        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
+        $this->setSeo($item->name, $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.view', compact('item', 'customSections', 'pageTitle', 'nextMeeting', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
@@ -241,16 +242,16 @@ class AdvisoryBoardController extends Controller
     {
         $section = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->where('id', $sectionId)->first();
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
-        if(!$section) {
+        if (!$section) {
             abort(Response::HTTP_NOT_FOUND);
         }
 
         $this->title_singular = $pageTitle = $item->name;
-        if($item->file_id > 0){
+        if ($item->file_id > 0) {
             $this->setSlider($item->name, $item->headerImg);
         }
         $this->composeBreadcrumbs($item, array(['name' => $section->title, 'url' => '']));
-        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
+        $this->setSeo($item->name, $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.view_section', compact('item', 'section', 'customSections', 'pageTitle'));
     }
 
@@ -261,7 +262,7 @@ class AdvisoryBoardController extends Controller
 
         $itemsCalendar = array();
         $itemsCalendarDB = AdvisoryBoardMeeting::with(['translations'])->where('advisory_board_id', $item->id)->get();
-        if($itemsCalendarDB->count()) {
+        if ($itemsCalendarDB->count()) {
             foreach ($itemsCalendarDB as $event) {
                 $itemsCalendar[] = array(
                     "id" => $event->id,
@@ -274,13 +275,13 @@ class AdvisoryBoardController extends Controller
                 );
             }
         }
-        if(!isset($requestFilter['to'])) {
+        if (!isset($requestFilter['to'])) {
             $requestFilter['to'] = Carbon::now()->startOfYear();
         }
         $filter = $this->archiveFilters($request);
         $pageTitle = $item->name;
 
-        if($item->file_id > 0){
+        if ($item->file_id > 0) {
             $this->setSlider($item->name, $item->headerImg);
         }
 
@@ -293,13 +294,13 @@ class AdvisoryBoardController extends Controller
 //            ->paginate($paginate);
 
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
-        if( $request->ajax() ) {
-            return view('site.advisory-boards.archive_meeting_list', compact('filter','items', 'item', 'itemsCalendar'));
+        if ($request->ajax()) {
+            return view('site.advisory-boards.archive_meeting_list', compact('filter', 'items', 'item', 'itemsCalendar'));
         }
 
-        $this->composeBreadcrumbs($item, array(['name' => __('custom.archive').' '.__('custom.meetings_and_decisions'), 'url' => '']));
-        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
-        return $this->view('site.advisory-boards.archive_meeting', compact('filter','items', 'pageTitle', 'item', 'customSections', 'itemsCalendar'));
+        $this->composeBreadcrumbs($item, array(['name' => __('custom.archive') . ' ' . __('custom.meetings_and_decisions'), 'url' => '']));
+        $this->setSeo($item->name, $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
+        return $this->view('site.advisory-boards.archive_meeting', compact('filter', 'items', 'pageTitle', 'item', 'customSections', 'itemsCalendar'));
     }
 
     public function archiveWorkPrograms(Request $request, AdvisoryBoard $item)
@@ -307,13 +308,13 @@ class AdvisoryBoardController extends Controller
         $requestFilter = $request->all();
         $paginate = $request->filled('paginate') ? $request->get('paginate') : AdvisoryBoard::PAGINATE;
 
-        if(!isset($requestFilter['to'])) {
+        if (!isset($requestFilter['to'])) {
             $requestFilter['to'] = Carbon::now()->startOfYear();
         }
         $filter = $this->archiveFilters($request);
         $pageTitle = $item->name;
 
-        if($item->file_id > 0){
+        if ($item->file_id > 0) {
             $this->setSlider($item->name, $item->headerImg);
         }
 
@@ -326,13 +327,13 @@ class AdvisoryBoardController extends Controller
             ->paginate($paginate);
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
 
-        if( $request->ajax() ) {
-            return view('site.advisory-boards.archive_wotk_programs_list', compact('filter','items', 'item'));
+        if ($request->ajax()) {
+            return view('site.advisory-boards.archive_wotk_programs_list', compact('filter', 'items', 'item'));
         }
-        $this->composeBreadcrumbs($item, array(['name' => __('custom.archive').' '.__('custom.work_programs'), 'url' => '']));
-        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
+        $this->composeBreadcrumbs($item, array(['name' => __('custom.archive') . ' ' . __('custom.work_programs'), 'url' => '']));
+        $this->setSeo($item->name, $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
 
-        return $this->view('site.advisory-boards.archive_work_programs', compact('filter','items', 'pageTitle', 'item', 'customSections'));
+        return $this->view('site.advisory-boards.archive_work_programs', compact('filter', 'items', 'pageTitle', 'item', 'customSections'));
     }
 
     public function itemNews(Request $request, AdvisoryBoard $item)
@@ -340,16 +341,16 @@ class AdvisoryBoardController extends Controller
         $news = Publication::select('publication.*')
             ->ActivePublic()
             ->with(['translations', 'category', 'category.translations', 'mainImg'])
-            ->leftJoin('publication_translations', function ($j){
+            ->leftJoin('publication_translations', function ($j) {
                 $j->on('publication_translations.publication_id', '=', 'publication.id')
                     ->where('publication_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'publication.publication_category_id')
-            ->leftJoin('field_of_action_translations', function ($j){
+            ->leftJoin('field_of_action_translations', function ($j) {
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
-            ->where(function ($q) use ($item){
+            ->where(function ($q) use ($item) {
                 $q->where('publication.advisory_boards_id', $item->id)
                     ->orWhereIn('is_adv_board_user', ($item->moderators->count() ? $item->moderators->pluck('id')->toArray() : []));
             })
@@ -359,25 +360,26 @@ class AdvisoryBoardController extends Controller
 
         $pageTitle = $item->name;
 
-        if($item->file_id > 0){
+        if ($item->file_id > 0) {
             $this->setSlider($item->name, $item->headerImg);
         }
 
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
         $this->composeBreadcrumbs($item, array(['name' => trans_choice('custom.news', 2), 'url' => '']));
-        $this->setSeo($item->name,  $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
+        $this->setSeo($item->name, $item->ogDescription, '', array('title' => $item->name, 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
 
         return $this->view('site.advisory-boards.view_news', compact('item', 'news', 'pageTitle', 'customSections'));
     }
 
-    public function itemNewsDetails(Request $request, AdvisoryBoard $item, Publication $news){
+    public function itemNewsDetails(Request $request, AdvisoryBoard $item, Publication $news)
+    {
         $pageTitle = $item->name;
         $publication = $news;
-        if($item->file_id > 0){
+        if ($item->file_id > 0) {
             $this->setSlider($item->name, $item->headerImg);
         }
         $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
-        $this->composeBreadcrumbs($item,array(
+        $this->composeBreadcrumbs($item, array(
             ['name' => trans_choice('custom.news', 2), 'url' => route('advisory-boards.view.news', $item)],
             ['name' => $news->title, 'url' => '']
         ));
@@ -404,7 +406,7 @@ class AdvisoryBoardController extends Controller
      *
      *
      * @param \Illuminate\Http\Request $request
-     * @param AdvisoryBoard            $advisoryBoard
+     * @param AdvisoryBoard $advisoryBoard
      *
      * @return \Illuminate\Http\Response
      */
@@ -428,27 +430,27 @@ class AdvisoryBoardController extends Controller
 
     public function contacts(Request $request, $itemId = null)
     {
-        if($itemId) {
+        if ($itemId) {
             $item = AdvisoryBoard::with(['translations', 'moderators'])->find($itemId);
 //            $item = AdvisoryBoard::with(['translations', 'moderators', 'moderators.user', 'moderatorInformation', 'moderatorInformation.translations', 'moderatorInformation.files'])->find($itemId);
-            if(!$item){
+            if (!$item) {
                 abort(404);
             }
             $pageTitle = $item->name;
 
-            if($item->file_id > 0){
+            if ($item->file_id > 0) {
                 $this->setSlider($item->name, $item->headerImg);
             }
 
             $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
             $this->composeBreadcrumbs($item, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
-            $this->setSeo($item->name.' | '.trans_choice('custom.contacts', 2),  $item->ogDescription, '', array('title' => $item->name.' | '.trans_choice('custom.contacts', 2), 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
+            $this->setSeo($item->name . ' | ' . trans_choice('custom.contacts', 2), $item->ogDescription, '', array('title' => $item->name . ' | ' . trans_choice('custom.contacts', 2), 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
             return $this->view('site.advisory-boards.contacts_inner', compact('pageTitle', 'item', 'customSections'));
-        } else{
+        } else {
             $pageTitle = $this->pageTitle;
             $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])
                 ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)->get();
-            $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2),  trans_choice('custom.contacts', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.contacts', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
+            $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), trans_choice('custom.contacts', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.contacts', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
             return $this->view('site.advisory-boards.contacts', compact('moderators', 'pageTitle'));
         }
     }
@@ -470,12 +472,12 @@ class AdvisoryBoardController extends Controller
         $items = Publication::select('publication.*')
             ->ActivePublic()
             ->with(['translations', 'category', 'category.translations'])
-            ->leftJoin('publication_translations', function ($j){
+            ->leftJoin('publication_translations', function ($j) {
                 $j->on('publication_translations.publication_id', '=', 'publication.id')
                     ->where('publication_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'publication.publication_category_id')
-            ->leftJoin('field_of_action_translations', function ($j){
+            ->leftJoin('field_of_action_translations', function ($j) {
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
@@ -485,19 +487,20 @@ class AdvisoryBoardController extends Controller
 //                $q->whereNotNull('publication.advisory_boards_id')
 //                    ->orWhere('is_adv_board_user', 1);
 //            })
-            ->SortedBy($sort,$sortOrd)
+            ->SortedBy($sort, $sortOrd)
             ->GroupBy('publication.id', 'publication_translations.id', 'field_of_action_translations.id')
             ->paginate($paginate);
 
-        if( $request->ajax() ) {
-            return view('site.advisory-boards.main_news_list', compact('filter','sorter', 'items', 'requestFilter'));
+        if ($request->ajax()) {
+            return view('site.advisory-boards.main_news_list', compact('filter', 'sorter', 'items', 'requestFilter'));
         }
 
-        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2),  trans_choice('custom.news', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.news', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
-        return $this->view('site.advisory-boards.main_news', compact('filter','sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle', 'requestFilter'));
+        $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), trans_choice('custom.news', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.news', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
+        return $this->view('site.advisory-boards.main_news', compact('filter', 'sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle', 'requestFilter'));
     }
 
-    public function newsDetails(Request $request, Publication $item){
+    public function newsDetails(Request $request, Publication $item)
+    {
         $pageTitle = trans_choice('custom.advisory_boards', 2);
 //        $this->setSeo($item->meta_title, $item->meta_description, $item->meta_keyword);
         $this->setSeo($item->meta_title ?? $item->title, $item->meta_description ?? $item->short_content, $item->meta_keyword, array('title' => $item->meta_title ?? $item->title, 'img' => Page::DEFAULT_IMG));
@@ -510,12 +513,12 @@ class AdvisoryBoardController extends Controller
 
     public function documents()
     {
-        $page = Page::with(['files' => function($q) {
-                $q->where('locale', '=', app()->getLocale());
-            }])
+        $page = Page::with(['files' => function ($q) {
+            $q->where('locale', '=', app()->getLocale());
+        }])
             ->where('system_name', '=', Page::ADV_BOARD_DOCUMENTS)
             ->first();
-        if(!$page){
+        if (!$page) {
             abort(404);
         }
         $pageTitle = $page->name;
@@ -527,12 +530,12 @@ class AdvisoryBoardController extends Controller
 
     public function info()
     {
-        $page = Page::with(['files' => function($q) {
+        $page = Page::with(['files' => function ($q) {
             $q->where('locale', '=', app()->getLocale());
         }])
             ->where('system_name', '=', Page::ADV_BOARD_INFO)
             ->first();
-        if(!$page){
+        if (!$page) {
             abort(404);
         }
         $pageTitle = $page->name;
@@ -549,7 +552,7 @@ class AdvisoryBoardController extends Controller
 //        $requestGroupBy = $rf['groupBy'] ?? null;
         //Filter
         $requestFilter = $request->all();
-        if(empty($rf)){
+        if (empty($rf)) {
             $requestFilter['status'] = 'active';
         }
         $filter = $this->filtersReport($request, $rf);
@@ -567,46 +570,46 @@ class AdvisoryBoardController extends Controller
 
         $selectColumns = ['advisory_boards.*'];
         $searchMeetings = (isset($requestFilter['meetingFrom']) && !empty($requestFilter['meetingFrom'])) || (isset($requestFilter['meetingTo']) && !empty($requestFilter['meetingTo']));
-        if($searchMeetings){
+        if ($searchMeetings) {
             $selectColumns[] = DB::raw('count(advisory_board_meetings.id) as meetings');
         }
         $q = AdvisoryBoard::select($selectColumns)
             ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
                 'authority', 'authority.translations', 'advisoryChairmanType', 'advisoryChairmanType.translations',
                 'advisoryActType', 'advisoryActType.translations'])
-            ->leftJoin('advisory_board_translations', function ($j){
+            ->leftJoin('advisory_board_translations', function ($j) {
                 $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
                     ->where('advisory_board_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'advisory_boards.policy_area_id')
-            ->leftJoin('field_of_action_translations', function ($j){
+            ->leftJoin('field_of_action_translations', function ($j) {
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('authority_advisory_board', 'authority_advisory_board.id', '=', 'advisory_boards.authority_id')
-            ->leftJoin('authority_advisory_board_translations', function ($j){
+            ->leftJoin('authority_advisory_board_translations', function ($j) {
                 $j->on('authority_advisory_board_translations.authority_advisory_board_id', '=', 'authority_advisory_board.id')
                     ->where('authority_advisory_board_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('advisory_act_type', 'advisory_act_type.id', '=', 'advisory_boards.advisory_act_type_id')
-            ->leftJoin('advisory_act_type_translations', function ($j){
+            ->leftJoin('advisory_act_type_translations', function ($j) {
                 $j->on('advisory_act_type_translations.advisory_act_type_id', '=', 'advisory_act_type.id')
                     ->where('advisory_act_type_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('advisory_chairman_type', 'advisory_chairman_type.id', '=', 'advisory_boards.advisory_chairman_type_id')
-            ->leftJoin('advisory_chairman_type_translations', function ($j){
+            ->leftJoin('advisory_chairman_type_translations', function ($j) {
                 $j->on('advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
                     ->where('advisory_chairman_type_translations.locale', '=', app()->getLocale());
             });
 
-            if($searchMeetings){
-                $q->leftJoin('advisory_board_meetings', function ($j){
-                    $j->on('advisory_board_meetings.advisory_board_id', '=', 'advisory_boards.id')
-                        ->whereNull('advisory_board_meetings.deleted_at');
-                });
-            }
+        if ($searchMeetings) {
+            $q->leftJoin('advisory_board_meetings', function ($j) {
+                $j->on('advisory_board_meetings.advisory_board_id', '=', 'advisory_boards.id')
+                    ->whereNull('advisory_board_meetings.deleted_at');
+            });
+        }
 
-            $q->where('public', true)
+        $q->where('public', true)
             ->FilterBy($requestFilter)
 //            ->when($requestGroupBy, function ($query) use($requestGroupBy){
 //                if($requestGroupBy == 'fieldOfAction') {
@@ -621,17 +624,17 @@ class AdvisoryBoardController extends Controller
 //                    return $query->orderBy('advisory_act_type_translations.name');
 //                }
 //            })
-            ->SortedBy($sort,$sortOrd)
-                ->when($queryDefaultSort, function ($query){
-                    $query->orderBy('advisory_boards.active', 'desc')
-                        ->orderBy('advisory_board_translations.name', 'asc');
-                });
+            ->SortedBy($sort, $sortOrd)
+            ->when($queryDefaultSort, function ($query) {
+                $query->orderBy('advisory_boards.active', 'desc')
+                    ->orderBy('advisory_board_translations.name', 'asc');
+            });
 
-        if($searchMeetings){
+        if ($searchMeetings) {
             $q->groupBy('advisory_boards.id', 'advisory_board_translations.name');
         }
 
-        if($request->input('export_excel') || $request->input('export_as_excel') || $request->input('export_pdf') || $request->input('export_as_pdf')){
+        if ($request->input('export_excel') || $request->input('export_as_excel') || $request->input('export_pdf') || $request->input('export_as_pdf')) {
             $items = $q->get();
             $exportData = [
                 'title' => __('custom.adv_board_report_title'),
@@ -639,29 +642,29 @@ class AdvisoryBoardController extends Controller
                 'searchMeetings' => $searchMeetings
             ];
 
-            $fileName = 'adv_report_'.Carbon::now()->format('Y_m_d_H_i_s');
-            if($request->input('export_pdf') || $request->input('export_as_pdf')){
+            $fileName = 'adv_report_' . Carbon::now()->format('Y_m_d_H_i_s');
+            if ($request->input('export_pdf') || $request->input('export_as_pdf')) {
                 ini_set('max_execution_time', 60);
                 $pdf = PDF::loadView('exports.adv_report', ['data' => $exportData, 'isPdf' => true])->setPaper('a4', 'landscape');
-                return $pdf->download($fileName.'.pdf');
-            } else{
-                return Excel::download(new AdvBoardReportExport($exportData), $fileName.'.xlsx');
+                return $pdf->download($fileName . '.pdf');
+            } else {
+                return Excel::download(new AdvBoardReportExport($exportData), $fileName . '.xlsx');
             }
-        } else{
+        } else {
             $items = $q->paginate($paginate);
         }
 
         $closeSearchForm = false;
-        if( $request->ajax() ) {
+        if ($request->ajax()) {
             $closeSearchForm = false;
-            return view('site.advisory-boards.list_report', compact('filter','sorter', 'items', 'rf', 'searchMeetings', 'closeSearchForm'));
+            return view('site.advisory-boards.list_report', compact('filter', 'sorter', 'items', 'rf', 'searchMeetings', 'closeSearchForm'));
         }
 
         $pageTitle = trans('custom.adv_board_report_title');
         $this->composeBreadcrumbs(null, array(['name' => __('custom.adv_board_report_title'), 'url' => '']));
-        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2),  trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.reports', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
+        $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.reports', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
 
-        return $this->view('site.advisory-boards.report', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'searchMeetings', 'closeSearchForm'));
+        return $this->view('site.advisory-boards.report', compact('filter', 'sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'searchMeetings', 'closeSearchForm'));
     }
 
     private function sorters()
@@ -699,6 +702,7 @@ class AdvisoryBoardController extends Controller
 //            ),
         );
     }
+
     private function newsFilters($request)
     {
         return array(
@@ -837,7 +841,8 @@ class AdvisoryBoardController extends Controller
         );
     }
 
-    private function filtersReport($request, $currentRequest){
+    private function filtersReport($request, $currentRequest)
+    {
         return array(
             'fieldOfActions' => array(
                 'type' => 'select',
@@ -909,7 +914,7 @@ class AdvisoryBoardController extends Controller
                     ['name' => trans_choice('custom.inactive_m', 1), 'value' => 'inactive'],
                 ),
                 'value' => request()->input('status'),
-                'default' => empty($currentRequest) ? 'active' :'',
+                'default' => empty($currentRequest) ? 'active' : '',
                 'col' => 'col-md-6'
             ),
             'paginate' => array(
@@ -930,18 +935,19 @@ class AdvisoryBoardController extends Controller
      * @param $extraItems
      * @return void
      */
-    private function composeBreadcrumbs($item, $extraItems = []){
+    private function composeBreadcrumbs($item, $extraItems = [])
+    {
         $customBreadcrumbs = array(
             ['name' => trans_choice('custom.advisory_boards', 2), 'url' => route('advisory-boards.index')]
         );
-        if($item && $item->policyArea){
-            $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('advisory-boards.index').'?fieldOfActions[]='.$item->policyArea->id];
+        if ($item && $item->policyArea) {
+            $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('advisory-boards.index') . '?fieldOfActions[]=' . $item->policyArea->id];
         }
-        if($item){
+        if ($item) {
             $customBreadcrumbs[] = ['name' => $item->name, 'url' => !empty($extraItems) ? route('advisory-boards.view', $item) : null];
         }
-        if(!empty($extraItems)){
-            foreach ($extraItems as $eItem){
+        if (!empty($extraItems)) {
+            foreach ($extraItems as $eItem) {
                 $customBreadcrumbs[] = $eItem;
             }
         }

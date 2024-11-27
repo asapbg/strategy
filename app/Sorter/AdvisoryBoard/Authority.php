@@ -9,7 +9,7 @@ class Authority extends QuerySorter implements SorterContract{
     {
         $direction = $value ?? 'asc';
 //        $this->query->orderBy('authority_advisory_board_translations.name', $direction);
-        $this->query->orderByRaw('max(authority_advisory_board_translations.name) '.$direction);
+        $this->query->orderByRaw('authority_advisory_board_translations.name '.$direction);
 
     }
 }
