@@ -313,7 +313,7 @@ class HomeController extends Controller
         $page = $request->input('page', 1);
         $offset = ($page * $perPage) - $perPage;
         $search = $request->input('search') ?? '';
-        $search = mb_strtolower($search);
+        $search = mb_strtolower(strip_tags(str_replace("'", "", $search)));
         $nowDate = Carbon::now()->format('Y-m-d');
         $nowDateTimeStamp = Carbon::now()->format('Y-m-d H:i:s');
         $locale = app()->getLocale();
