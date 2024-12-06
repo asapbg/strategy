@@ -144,7 +144,7 @@ class AdvisoryBoardController extends Controller
                     ->where('advisory_board_npo_translations.locale', '=', app()->getLocale());
             })
             ->where('advisory_boards.public', true)
-            ->FilterBy($requestFilter)
+//            ->FilterBy($requestFilter)
             ->SortedBy($sort, $sortOrd)
             ->when($queryDefaultSort, function ($query) {
                 $query->orderBy('advisory_boards.active', 'desc')
