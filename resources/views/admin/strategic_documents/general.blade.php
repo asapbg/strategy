@@ -384,7 +384,7 @@
         <div class="row">
             <div class="form-group row">
                 <div class="col-md-6 col-md-offset-3">
-                    <button id="save" type="submit" name="active" value="0" class="btn btn-success">{{ __('custom.save') }}</button>
+                    <button id="save" type="submit" name="active" value="{{ $item->active }}" class="btn btn-success">{{ __('custom.save') }}</button>
                     <button id="stayButton" type="submit" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
 
                     @if($item->id)
@@ -392,8 +392,7 @@
                             <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => false]) }}"
                                class="btn btn-danger">{{ __('custom.unpublish_make') }}</a>
                         @else
-                            <a href="{{ route('admin.strategic_documents.publish', ['id' => $item->id, 'stay' => false]) }}"
-                               class="btn btn-success">{{ __('custom.publish') }}</a>
+                            <button id="save" type="submit" name="active" value="1" class="btn btn-success">{{ __('custom.save_and_publish') }}</button>
                         @endif
                     @else
                         <button id="save" type="submit" name="active" value="1" class="btn btn-success">{{ __('custom.save_and_publish') }}</button>

@@ -39,7 +39,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             //'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
 //            'public_consultation_id' => ['required', 'numeric'],
-            'active' => ['required', 'numeric', 'in:0,1'],
+            'active' => ['nullable', 'numeric', 'in:0,1'],
             //'valid_at_main' => ['required', 'date'],
             'valid_at_main' => ['required_if:date_valid_indefinite_main,0', 'date', 'nullable'],
             'pris_act_id' => ['nullable'],
