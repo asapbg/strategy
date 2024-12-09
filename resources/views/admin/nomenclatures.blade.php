@@ -104,7 +104,7 @@
                             </a>
                         </div>
                         <div class="col-sm-3">
-                            <a class="btn btn-info btn-block nomenclature-btn" href="{{ route('admin.nomenclature.advisory_act_type') }}">
+                            <a class="btn btn-info btn-block nomenclature-btn" href="{{ route('admin.advisory-boards.nomenclature.advisory-act-type') }}">
                                 <i class="fas fa-file"></i>
                                 {{ trans_choice('custom.nomenclature.advisory_act_type', 2) }}
                             </a>

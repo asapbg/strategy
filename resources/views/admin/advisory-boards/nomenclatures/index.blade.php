@@ -40,9 +40,17 @@
 
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn align-content-center"
-                               href="{{ route('admin.advisory-boards.nomenclature.authority_advisory_board') }}">
+                               href="{{ route('admin.advisory-boards.nomenclature.authority-advisory-board') }}">
                                 <i class="fas fa-file"></i>
                                 {{ trans_choice('custom.nomenclature.authority_advisory_board', 2) }}
+                            </a>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <a class="btn btn-info btn-block nomenclature-btn align-content-center"
+                               href="{{ route('admin.advisory-boards.nomenclature.advisory-act-type') }}">
+                                <i class="fas fa-file"></i>
+                                {{ trans_choice('custom.advisory_act_type', 2) }}
                             </a>
                         </div>
                     </div>

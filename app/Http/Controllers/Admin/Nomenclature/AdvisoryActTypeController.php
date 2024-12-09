@@ -12,11 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdvisoryActTypeController extends AdminController
 {
-    const LIST_ROUTE = 'admin.nomenclature.advisory_act_type';
-    const EDIT_ROUTE = 'admin.nomenclature.advisory_act_type.edit';
-    const STORE_ROUTE = 'admin.nomenclature.advisory_act_type.store';
-    const LIST_VIEW = 'admin.nomenclatures.advisory_act_type.index';
-    const EDIT_VIEW = 'admin.nomenclatures.advisory_act_type.edit';
 
     public function index(Request $request)
     {
@@ -28,10 +23,10 @@ class AdvisoryActTypeController extends AdminController
             ->FilterBy($requestFilter)
             ->paginate($paginate);
         $toggleBooleanModel = 'AdvisoryActType';
-        $editRouteName = self::EDIT_ROUTE;
-        $listRouteName = self::LIST_ROUTE;
+        $editRouteName = 'admin.advisory-boards.nomenclature.advisory-act-type.edit';
+        $listRouteName = 'admin.advisory-boards.nomenclature.advisory-act-type';
 
-        return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
+        return $this->view('admin.advisory-boards.nomenclatures.advisory-act-type.index', compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
     }
 
     /**
@@ -44,11 +39,11 @@ class AdvisoryActTypeController extends AdminController
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', AdvisoryActType::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-        $storeRouteName = self::STORE_ROUTE;
-        $listRouteName = self::LIST_ROUTE;
+        $storeRouteName = 'admin.advisory-boards.nomenclature.advisory-act-type.store';
+        $listRouteName = 'admin.advisory-boards.nomenclature.advisory-act-type';
         $translatableFields = AdvisoryActType::translationFieldsProperties();
         $consultationLevels = ConsultationLevel::all();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels'));
+        return $this->view('admin.advisory-boards.nomenclatures.advisory-act-type.edit', compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels'));
     }
 
     public function store(StoreAdvisoryActTypeRequest $request, AdvisoryActType $item)
@@ -67,11 +62,11 @@ class AdvisoryActTypeController extends AdminController
             $this->storeTranslateOrNew(AdvisoryActType::TRANSLATABLE_FIELDS, $item, $validated);
 
             if( $id ) {
-                return redirect(route(self::EDIT_ROUTE, $item) )
+                return redirect(route('admin.advisory-boards.nomenclature.advisory-act-type.edit', $item) )
                     ->with('success', trans_choice('custom.nomenclature.advisory_act_type', 1)." ".__('messages.updated_successfully_m'));
             }
 
-            return to_route(self::LIST_ROUTE)
+            return to_route('admin.advisory-boards.nomenclature.advisory-act-type')
                 ->with('success', trans_choice('custom.nomenclature.advisory_act_type', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);

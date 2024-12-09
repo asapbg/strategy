@@ -419,12 +419,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/authority-accepting-strategic/store/{item?}', 'store')->name('nomenclature.authority_accepting_strategic.store');
     });
 
-    Route::controller(AdvisoryActTypeController::class)->group(function () {
-        Route::get('/nomenclature/advisory-act-type', 'index')->name('nomenclature.advisory_act_type')->middleware('can:viewAny,App\Models\AdvisoryActType');
-        Route::get('/nomenclature/advisory-act-type/edit/{item?}', 'edit')->name('nomenclature.advisory_act_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/advisory-act-type/store/{item?}', 'store')->name('nomenclature.advisory_act_type.store');
-    });
-
     Route::controller(StrategicActTypeController::class)->group(function () {
         Route::get('/nomenclature/strategic-act-type', 'index')->name('nomenclature.strategic_act_type')->middleware('can:viewAny,App\Models\StrategicActType');
         Route::get('/nomenclature/strategic-act-type/edit/{item?}', 'edit')->name('nomenclature.strategic_act_type.edit');
@@ -562,6 +556,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
                 Route::get('/authority-advisory-board', 'index')->name('authority-advisory-board')->middleware('can:viewAny,App\Models\AuthorityAdvisoryBoard');
                 Route::get('/authority-advisory-board/edit/{item?}', 'edit')->name('authority-advisory-board.edit');
                 Route::match(['post', 'put'], '/authority-advisory-board/store/{item?}', 'store')->name('authority-advisory-board.store');
+            });
+
+            Route::controller(AdvisoryActTypeController::class)->group(function () {
+                Route::get('/advisory-act-type', 'index')->name('advisory-act-type')->middleware('can:viewAny,App\Models\AdvisoryActType');
+                Route::get('/advisory-act-type/edit/{item?}', 'edit')->name('advisory-act-type.edit');
+                Route::match(['post', 'put'], '/advisory-act-type/store/{item?}', 'store')->name('advisory-act-type.store');
             });
 
             /* End of Advisory Board Nomenclatures */
