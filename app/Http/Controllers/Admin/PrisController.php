@@ -38,7 +38,7 @@ class PrisController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        if( !$request->filled('search') && !$request->filled('active') ) {
+        if (!$request->filled('search') && !$request->filled('active')) {
             $requestFilter['active'] = 1;
         }
 
@@ -55,7 +55,9 @@ class PrisController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $previewRouteName = self::PREVIEW_ROUTE;
 
-        return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'storeRouteName', 'previewRouteName'));
+        return $this->view(self::LIST_VIEW,
+            compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName', 'storeRouteName', 'previewRouteName')
+        );
     }
 
     /**
@@ -67,7 +69,7 @@ class PrisController extends AdminController
     {
         $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType']) : new Pris();
 
-        if( ($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Pris::class) ) {
+        if (($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Pris::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
@@ -77,7 +79,9 @@ class PrisController extends AdminController
         $publicConsultations = PublicConsultation::optionsList();
         $translatableFields = Pris::translationFieldsProperties();
         //$tags = Tag::optionsList();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'legalActTypes', 'institutions', 'publicConsultations', 'translatableFields'));
+        return $this->view(self::EDIT_VIEW,
+            compact('item', 'storeRouteName', 'listRouteName', 'legalActTypes', 'institutions', 'publicConsultations', 'translatableFields')
+        );
     }
 
     public function store(PrisStoreRequest $request)
@@ -86,15 +90,15 @@ class PrisController extends AdminController
         $id = $validated['id'];
         $item = $id ? $this->getRecord($id) : new Pris();
 
-        if( ($id && $request->user()->cannot('update', $item))
-            || (!$id && $request->user()->cannot('create', $item)) ) {
+        if (($id && $request->user()->cannot('update', $item))
+            || (!$id && $request->user()->cannot('create', $item))) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
         DB::beginTransaction();
         try {
             $fillable = $this->getFillableValidated($validated, $item);
-            if(isset($validated['publish']) && $validated['publish']) {
+            if (isset($validated['publish']) && $validated['publish']) {
                 $fillable['published_at'] = Carbon::now()->format('Y-m-d H:i:s');
             }
             $fillable['in_archive'] = Carbon::parse($validated['doc_date'])->format('Y-m-d') > '1989-12-31' ? 0 : 1;
@@ -109,10 +113,10 @@ class PrisController extends AdminController
             DB::commit();
 
             return to_route(self::EDIT_ROUTE, $item->id)
-                ->with('success', trans_choice('custom.pris_documents', 1)." ".($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
+                ->with('success', trans_choice('custom.pris_documents', 1) . " " . ($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Save pris document error: '.$e);
+            Log::error('Save pris document error: ' . $e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
@@ -121,17 +125,17 @@ class PrisController extends AdminController
     {
         $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:pris,id'],
-            'connect_type' => ['required', 'numeric', 'in:'.join(',', PrisDocChangeTypeEnum::values())],
+            'connect_type' => ['required', 'numeric', 'in:' . join(',', PrisDocChangeTypeEnum::values())],
             'connectIds' => ['required', 'array'],
             'connectIds.*' => ['required', 'exists:pris,id'],
         ]);
-        if( $validator->fails() ) {
+        if ($validator->fails()) {
             return response()->json(['error' => 1, 'message' => $validator->errors()->first()], 200);
         }
 
         $validated = $validator->validated();
         $item = Pris::find((int)$validated['id']);
-        if( $request->user()->cannot('update', $item) ) {
+        if ($request->user()->cannot('update', $item)) {
             return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], 200);
         }
 
@@ -147,13 +151,13 @@ class PrisController extends AdminController
             'id' => ['required', 'exists:pris,id'],
             'disconnect' => ['required', 'exists:pris,id']
         ]);
-        if( $validator->fails() ) {
+        if ($validator->fails()) {
             return response()->json(['error' => 1, 'message' => $validator->errors()->first()], 200);
         }
 
         $validated = $validator->validated();
         $item = Pris::find((int)$validated['id']);
-        if( $request->user()->cannot('update', $item) ) {
+        if ($request->user()->cannot('update', $item)) {
             return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], 200);
         }
 
@@ -170,15 +174,14 @@ class PrisController extends AdminController
      */
     public function destroy(Request $request, Pris $item)
     {
-        if($request->user()->cannot('delete', $item)) {
+        if ($request->user()->cannot('delete', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
         try {
             $item->delete();
             return redirect(url()->previous())
-                ->with('success', trans_choice('custom.pris_documents', 1)." ".__('messages.deleted_successfully_m'));
-        }
-        catch (\Exception $e) {
+                ->with('success', trans_choice('custom.pris_documents', 1) . " " . __('messages.deleted_successfully_m'));
+        } catch (\Exception $e) {
             Log::error($e);
             return redirect(url()->previous())->with('danger', __('messages.system_error'));
 
@@ -190,19 +193,20 @@ class PrisController extends AdminController
         return view('admin.pris.new_tag_modal', compact('item'));
     }
 
-    public function ajaxStore(Request $request, Pris $item){
-        if($item){
-            if(!auth()->user()->can('update', $item)) {
+    public function ajaxStore(Request $request, Pris $item)
+    {
+        if ($item) {
+            if (!auth()->user()->can('update', $item)) {
                 return redirect(route('admin.pris.edit', $item))->with('error', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
             }
 
-            $exist = Tag::whereHas('translation', function ($q) use($request){
+            $exist = Tag::whereHas('translation', function ($q) use ($request) {
                 $q->where('label', '=', $request->input('label_bg'))->where('locale', '=', 'bg');
-            })->orWhereHas('translation', function ($q) use($request){
+            })->orWhereHas('translation', function ($q) use ($request) {
                 $q->where('label', '=', $request->input('label_en'))->where('locale', '=', 'en');
             })->first();
-            if($exist) {
-                return redirect(route('admin.pris.edit', $item))->with('warning', 'Вече съществува Термин с това име: '.$exist->translate('bg')->label.'|'.$exist->translate('en')->label);
+            if ($exist) {
+                return redirect(route('admin.pris.edit', $item))->with('warning', 'Вече съществува Термин с това име: ' . $exist->translate('bg')->label . '|' . $exist->translate('en')->label);
             }
 
             try {
@@ -211,8 +215,8 @@ class PrisController extends AdminController
                 $this->storeTranslateOrNew(Tag::TRANSLATABLE_FIELDS, $tag, $request->all());
                 $item->tags()->attach([$tag->id]);
                 return redirect(route('admin.pris.edit', $item))
-                    ->with('success',  trans_choice('custom.nomenclature.tags', 1)." ".__('messages.created_successfully_m'));
-            } catch (\Exception $e){
+                    ->with('success', trans_choice('custom.nomenclature.tags', 1) . " " . __('messages.created_successfully_m'));
+            } catch (\Exception $e) {
                 Log::error($e);
                 return redirect(route('admin.pris.edit', $item))->with('danger', __('messages.system_error'));
             }
@@ -314,17 +318,18 @@ class PrisController extends AdminController
     /**
      * @param $id
      * @param array $with
+     * @return Pris|null
      */
-    private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
+    private function getRecord($id, array $with = [])
     {
-        $qItem = Pris::withTrashed()->LastVersion();
-        if( sizeof($with) ) {
-            $qItem->with($with);
+        $query = Pris::withTrashed()->LastVersion();
+        if (sizeof($with)) {
+            $query->with($with);
         }
-        $item = $qItem->find((int)$id);
-        if( !$item ) {
+        $pris = $query->find((int)$id);
+        if (!$pris) {
             abort(Response::HTTP_NOT_FOUND);
         }
-        return $item;
+        return $pris;
     }
 }

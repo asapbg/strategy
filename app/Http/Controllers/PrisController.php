@@ -41,7 +41,6 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        $tagSearch = isset($requestFilter['fullSearch']) && !empty($requestFilter['fullSearch']) ? $requestFilter['fullSearch'] : null;
         $items = Pris::select('pris.*')
             ->NotInArchive()
             ->LastVersion()
@@ -82,7 +81,9 @@ class PrisController extends Controller
         $closeSearchForm = true;
         if( $request->ajax() ) {
             $closeSearchForm = false;
-            return view('site.pris.list', compact('filter','sorter', 'items', 'rf','hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
+            return view('site.pris.list',
+                compact('filter','sorter', 'items', 'rf','hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm')
+            );
         }
 
         $menuCategories = [];
@@ -143,7 +144,6 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        $tagSearch = isset($requestFilter['fullSearch']) && !empty($requestFilter['fullSearch']) ? $requestFilter['fullSearch'] : null;
         $items = Pris::select('pris.*')
             ->InArchive()
             ->LastVersion()
@@ -371,6 +371,12 @@ class PrisController extends Controller
                 'value' => request()->input('institutions'),
                 'default' => '',
                 'col' => 'col-md-3'
+            ),
+            'importer' => array(
+                'type' => 'text',
+                'label' => trans_choice('custom.importers', 1),
+                'value' => $request->input('importer'),
+                'col' => 'col-md-4'
             ),
             'fromDate' => array(
                 'type' => 'datepicker',

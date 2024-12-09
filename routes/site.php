@@ -107,13 +107,13 @@ use Illuminate\Support\Facades\Storage;
     });
 
     Route::controller(\App\Http\Controllers\PrisController::class)->group(function () {
-        Route::get('/pris/archive', 'archive')->name('pris.archive');
-        Route::get('/pris/archive/{category}', 'archive')->name('pris.archive.category');
+        Route::get('/pris/archive',                             'archive')->name('pris.archive');
+        Route::get('/pris/archive/{category}',                  'archive')->name('pris.archive.category');
         Route::get('/pris/archive/legal-information/{category}/{id}', 'show')->where('id', '[0-9]+')->name('pris.archive.view');
-        Route::get('/pris', 'index')->name('pris.index');
-        Route::get('/pris/{category}', 'index')->name('pris.category');
-        Route::get('/pris/legal-information/{category}/{id}', 'show')->where('id', '[0-9]+')->name('pris.view');
-        Route::get('/pris/legal-information/{category}', 'index')->name('pris.category_slug');
+        Route::get('/pris',                                     'index')->name('pris.index');
+        Route::get('/pris/{category}',                          'index')->name('pris.category');
+        Route::get('/pris/legal-information/{category}/{id}',   'show')->where('id', '[0-9]+')->name('pris.view');
+        Route::get('/pris/legal-information/{category}',        'index')->name('pris.category_slug');
     });
 
     Route::controller(\App\Http\Controllers\OperationalProgramController::class)->group(function () {
