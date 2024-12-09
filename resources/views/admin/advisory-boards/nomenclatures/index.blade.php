@@ -37,6 +37,14 @@
                                 {{ trans_choice('validation.attributes.field_of_action', 2) }}
                             </a>
                         </div>
+
+                        <div class="col-sm-3">
+                            <a class="btn btn-info btn-block nomenclature-btn align-content-center"
+                               href="{{ route('admin.advisory-boards.nomenclature.authority_advisory_board') }}">
+                                <i class="fas fa-file"></i>
+                                {{ trans_choice('custom.nomenclature.authority_advisory_board', 2) }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

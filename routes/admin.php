@@ -419,12 +419,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/authority-accepting-strategic/store/{item?}', 'store')->name('nomenclature.authority_accepting_strategic.store');
     });
 
-    Route::controller(AuthorityAdvisoryBoardController::class)->group(function () {
-        Route::get('/nomenclature/authority-advisory-board', 'index')->name('nomenclature.authority_advisory_board')->middleware('can:viewAny,App\Models\AuthorityAdvisoryBoard');
-        Route::get('/nomenclature/authority-advisory-board/edit/{item?}', 'edit')->name('nomenclature.authority_advisory_board.edit');
-        Route::match(['post', 'put'], '/nomenclature/authority-advisory-board/store/{item?}', 'store')->name('nomenclature.authority_advisory_board.store');
-    });
-
     Route::controller(AdvisoryActTypeController::class)->group(function () {
         Route::get('/nomenclature/advisory-act-type', 'index')->name('nomenclature.advisory_act_type')->middleware('can:viewAny,App\Models\AdvisoryActType');
         Route::get('/nomenclature/advisory-act-type/edit/{item?}', 'edit')->name('nomenclature.advisory_act_type.edit');
@@ -563,6 +557,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
                     Route::post('/field-of-actions/{action}/delete', 'destroy')->name('field-of-actions.delete');
                     Route::post('/field-of-actions/{action}/restore', 'restore')->name('field-of-actions.restore')->withTrashed();
                 });
+
+            Route::controller(AuthorityAdvisoryBoardController::class)->group(function () {
+                Route::get('/authority-advisory-board', 'index')->name('authority-advisory-board')->middleware('can:viewAny,App\Models\AuthorityAdvisoryBoard');
+                Route::get('/authority-advisory-board/edit/{item?}', 'edit')->name('authority-advisory-board.edit');
+                Route::match(['post', 'put'], '/authority-advisory-board/store/{item?}', 'store')->name('authority-advisory-board.store');
+            });
 
             /* End of Advisory Board Nomenclatures */
         });

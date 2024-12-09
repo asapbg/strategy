@@ -11,11 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthorityAdvisoryBoardController extends AdminController
 {
-    const LIST_ROUTE = 'admin.nomenclature.authority_advisory_board';
-    const EDIT_ROUTE = 'admin.nomenclature.authority_advisory_board.edit';
-    const STORE_ROUTE = 'admin.nomenclature.authority_advisory_board.store';
-    const LIST_VIEW = 'admin.nomenclatures.authority_advisory_board.index';
-    const EDIT_VIEW = 'admin.nomenclatures.authority_advisory_board.edit';
 
     public function index(Request $request)
     {
@@ -27,10 +22,10 @@ class AuthorityAdvisoryBoardController extends AdminController
             ->FilterBy($requestFilter)
             ->paginate($paginate);
         $toggleBooleanModel = 'AuthorityAdvisoryBoard';
-        $editRouteName = self::EDIT_ROUTE;
-        $listRouteName = self::LIST_ROUTE;
+        $editRouteName = 'admin.advisory-boards.nomenclature.authority-advisory-board.edit';
+        $listRouteName = 'admin.advisory-boards.nomenclature.authority-advisory-board';
 
-        return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
+        return $this->view('admin.advisory-boards.nomenclatures.authority-advisory-board.index', compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName'));
     }
 
     /**
@@ -43,10 +38,10 @@ class AuthorityAdvisoryBoardController extends AdminController
         if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', AuthorityAdvisoryBoard::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-        $storeRouteName = self::STORE_ROUTE;
-        $listRouteName = self::LIST_ROUTE;
+        $storeRouteName = 'admin.advisory-boards.nomenclature.authority-advisory-board.store';
+        $listRouteName = 'admin.advisory-boards.nomenclature.authority-advisory-board';
         $translatableFields = AuthorityAdvisoryBoard::translationFieldsProperties();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields'));
+        return $this->view('admin.advisory-boards.nomenclatures.authority-advisory-board.edit', compact('item', 'storeRouteName', 'listRouteName', 'translatableFields'));
     }
 
     public function store(StoreAuthorityAdvisoryBoardRequest $request, AuthorityAdvisoryBoard $item)
@@ -65,11 +60,11 @@ class AuthorityAdvisoryBoardController extends AdminController
             $this->storeTranslateOrNew(AuthorityAdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated);
 
             if( $id ) {
-                return redirect(route(self::EDIT_ROUTE, $item) )
+                return redirect(route('admin.advisory-boards.nomenclature.authority-advisory-board.edit', $item) )
                     ->with('success', trans_choice('custom.nomenclature.authority_advisory_board', 1)." ".__('messages.updated_successfully_m'));
             }
 
-            return to_route(self::LIST_ROUTE)
+            return to_route('admin.advisory-boards.nomenclature.authority-advisory-board')
                 ->with('success', trans_choice('custom.nomenclature.authority_advisory_board', 1)." ".__('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);

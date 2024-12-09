@@ -126,7 +126,7 @@
                         </div>
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
-                               href="{{ route('admin.nomenclature.authority_advisory_board') }}">
+                               href="{{ route('admin.advisory-boards.nomenclature.authority-advisory-board') }}">
                                 <i class="fas fa-university"></i>
                                 {{ trans_choice('custom.nomenclature.authority_advisory_board', 2) }}
                             </a>
