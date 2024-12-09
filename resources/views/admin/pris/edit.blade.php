@@ -231,7 +231,7 @@
                                             </div>
 
                                             @include('admin.partial.edit_field_translate', ['field' => 'about', 'required' => true])
-                                            @include('admin.partial.edit_field_translate', ['field' => 'legal_reason', 'required' => true])
+                                            @include('admin.partial.edit_field_translate', ['field' => 'legal_reason', 'required' => false])
                                             @if($item->id)
                                                 <div class="col-12 mt-4 ml-1">
                                                     <label class="col-sm-12 control-label">

@@ -199,7 +199,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             ],
             'legal_reason' => [
                 'type' => 'summernote',
-                'rules' => ['required', 'string'],
+                'rules' => ['nullable', 'string'],
                 'required_all_lang' => false
             ],
             'importer' => [
