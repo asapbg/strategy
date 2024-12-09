@@ -42,6 +42,11 @@ class seedOldStrategicDocuments extends Command
     public function __construct()
     {
         parent::__construct();
+
+        if (!Schema::hasTable((new FieldOfAction())->getTable())) {
+            return;
+        }
+
 //        DB::statement('delete from field_of_action_translations where field_of_action_id > 983');
 //        DB::statement('delete from field_of_actions where id > 983');
 //        DB::statement('update strategic_document set policy_area_id = null where policy_area_id > 983');
