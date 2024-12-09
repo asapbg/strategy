@@ -534,7 +534,7 @@ return [
     'search_pc_record_js_placeholder'                         => 'Въведете Номер/Наименование',
     'bg'                                => 'Български',
     'en'                                => 'Английски',
-    'nomenclature_level.CENTRAL'        => 'Централно',
+    'nomenclature_level.CENTRAL'        => 'Национално',
     'nomenclature_level.CENTRAL_OTHER'        => 'Централно друго',
     'nomenclature_level.AREA'        => 'Областно',
     'nomenclature_level.MUNICIPAL'        => 'Общинско',
