@@ -387,12 +387,14 @@
                     <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
                     <button id="stayButton" type="submit" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
 
-                    @if($item->active)
-                        <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => false]) }}"
-                           class="btn btn-danger">{{ __('custom.unpublish_make') }}</a>
-                    @else
-                        <a href="{{ route('admin.strategic_documents.publish', ['id' => $item->id, 'stay' => false]) }}"
-                           class="btn btn-success">{{ __('custom.publish') }}</a>
+                    @if($item->id)
+                        @if($item->active)
+                            <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => false]) }}"
+                               class="btn btn-danger">{{ __('custom.unpublish_make') }}</a>
+                        @else
+                            <a href="{{ route('admin.strategic_documents.publish', ['id' => $item->id, 'stay' => false]) }}"
+                               class="btn btn-success">{{ __('custom.publish') }}</a>
+                        @endif
                     @endif
 
                     <a href="{{ route('admin.strategic_documents.index') }}"
