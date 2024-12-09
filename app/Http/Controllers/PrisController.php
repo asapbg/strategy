@@ -41,21 +41,28 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
+        $institutions = $requestFilter['institutions'] ?? null;
+        unset($requestFilter['institutions']);
+
         $items = Pris::select('pris.*')
             ->NotInArchive()
             ->LastVersion()
             ->InPris()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
-            ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+            ->when($institutions, function ($query) use ($institutions) {
+                $query->join(
+                        'pris_institution as pi',
+                        'pi.pris_id',
+                        '=',
+                        DB::raw("pris.id AND pi.institution_id IN(".implode(',', $institutions).")")
+                    )
+                    ->join('institution', 'institution.id', '=', DB::raw("pi.institution_id AND institution.active = '1' AND institution.deleted_at IS NULL"))
+                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
+            })
             ->leftJoin('pris_translations', function ($j){
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
-            })
-            ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
-            ->leftJoin('institution_translations', function ($j){
-                $j->on('institution_translations.institution_id', '=', 'institution.id')
-                    ->where('institution_translations.locale', '=', app()->getLocale());
             })
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
             ->join('legal_act_type_translations', function ($j){
