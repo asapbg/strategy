@@ -104,10 +104,17 @@ class StrategicDocumentsController extends AdminController
         $user = auth()->user();
         $item = $this->getRecord($id, ['documents', 'documents.translations', 'pris.actType','documentType.translations','translation']);
 
-
         if( ($item && $item->id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
+
+        $heading = __('custom.creation_of') . ' ' . l_trans('custom.strategic_documents', 1);
+
+        if (($item && $item->id)) {
+            $heading = __('custom.edit_of') . ' ' . l_trans('custom.strategic_documents', 1);
+        }
+
+        $this->setBreadcrumbsTitle($heading);
 
         if($section == self::SECTION_GENERAL){
             $storeRouteName = self::STORE_ROUTE;

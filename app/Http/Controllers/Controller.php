@@ -190,6 +190,7 @@ class Controller extends BaseController
 
             if (
                 $segment == 'view'
+                || $segment == 'create-edit'
                 || $segment == 'bg'
                 || $segment == 'en'
                 || ($segment == "profile" && in_array("users", $segments))

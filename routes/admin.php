@@ -138,7 +138,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     // Strategic Documents
     Route::controller(StrategicDocumentsController::class)->group(function () {
         Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
-        Route::get('/strategic-documents/edit/{id?}/{section?}', 'edit')->name('strategic_documents.edit');
+        Route::get('/strategic-documents/create-edit/{id?}/{section?}', 'edit')->name('strategic_documents.edit');
         Route::post('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
         Route::post('/strategic-documents/{object_id}/{object_type}', 'uploadFileLanguagesSd')->name('strategic_documents.upload.file.languages');
         Route::match(['post', 'put'], '/strategic-documents/store', 'store')->name('strategic_documents.store');
