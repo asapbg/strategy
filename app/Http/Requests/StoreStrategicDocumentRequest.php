@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\StrategicDocumentFileEnum;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
@@ -32,7 +33,7 @@ class StoreStrategicDocumentRequest extends FormRequest
         $rules = [
             'id' => ['required', 'numeric'],
             'stay' => ['nullable', 'numeric'],
-            'strategic_document_level_id' => ['required', 'numeric', 'exists:strategic_document_level,id'],
+            'strategic_document_level_id' => ['required', 'numeric', 'in:' . implode(',', array_column(InstitutionCategoryLevelEnum::cases(), 'value'))],
             'policy_area_id' => ['nullable', 'numeric', 'exists:field_of_actions,id'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
 //            'strategic_document_type_file_main_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
