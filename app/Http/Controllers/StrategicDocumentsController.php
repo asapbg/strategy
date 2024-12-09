@@ -110,11 +110,13 @@ class StrategicDocumentsController extends Controller
 
     public function tree(Request $request)
     {
+        $rf = $request->all();
         $now = Carbon::now()->format('Y-m-d 00:00:00');
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
         $categories = isset($rf['level']) ? $rf['level'] : [InstitutionCategoryLevelEnum::CENTRAL->value, InstitutionCategoryLevelEnum::AREA->value, InstitutionCategoryLevelEnum::MUNICIPAL->value];
         $items = [];
+        $filter = $this->filtersTree($request, $rf);
         foreach ($categories as $cat){
             if(!isset($items[$cat])){
                 $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($cat))];
@@ -138,6 +140,7 @@ class StrategicDocumentsController extends Controller
                 join strategic_document_translations on strategic_document_translations.strategic_document_id = strategic_document.id and strategic_document_translations.locale = \''.app()->getLocale().'\'
                 join field_of_actions on field_of_actions.id = strategic_document.policy_area_id
                 join field_of_action_translations on field_of_action_translations.field_of_action_id = field_of_actions.id and field_of_action_translations.locale = \''.app()->getLocale().'\'
+                left join public_consultation on strategic_document.public_consultation_id = public_consultation.id
                 left join (
                     select * from (
                         with recursive sd_child as (
@@ -178,9 +181,15 @@ class StrategicDocumentsController extends Controller
                 where
                     strategic_document.active = true
                     and strategic_document.deleted_at is null
-                    and strategic_document.strategic_document_level_id = '.$cat.'
-                    and strategic_document.document_date_accepted <= \''.$now.'\'
-                    and strategic_document.document_date_expiring >= \''.$now.'\'
+                    and strategic_document.strategic_document_level_id = '.$cat
+                    . (match($request->get('status', 'active')) {
+                        'active' => 'and strategic_document.document_date_accepted <= \''.$now.'\'
+                                    and strategic_document.document_date_expiring >= \''.$now.'\'',
+
+                        'expired' => 'and strategic_document.document_date_expiring <= \''.$now.'\'',
+
+                        'public_consultation' => 'and public_consultation.open_to <= \''.$now.'\' and public_consultation.active = 1'
+                    }) . ($request->filled('title') ? ('and strategic_document_translations.title ILIKE \'%'. $request->get('title') .'%\'') : '') . '
                 group by strategic_document.id, field_of_actions.id, field_of_action_translations.name, children.id, children.depth, children.path
                 order by field_of_action_translations.name, strategic_document.id, children.path, children.depth asc
             ');
@@ -201,14 +210,14 @@ class StrategicDocumentsController extends Controller
         }
 
         if( $request->ajax() ) {
-            return view('site.strategic_documents.list_tree', compact( 'items', 'editRouteName', 'deleteRouteName'));
+            return view('site.strategic_documents.list_tree', compact( 'items', 'editRouteName', 'deleteRouteName', 'filter'));
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.tree_view', 1), 'url' => '']));
         $this->setSeo(__('site.seo_title'),  trans_choice('custom.strategic_documents', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.strategic_documents', 2), 'img' => StrategicDocument::DEFAULT_IMG));
 
-        return $this->view('site.strategic_documents.tree', compact('items', 'pageTitle', 'editRouteName', 'deleteRouteName'));
+        return $this->view('site.strategic_documents.tree', compact('items', 'pageTitle', 'editRouteName', 'deleteRouteName', 'filter'));
     }
 
     /**
