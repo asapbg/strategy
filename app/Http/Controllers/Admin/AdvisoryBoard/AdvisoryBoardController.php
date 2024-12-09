@@ -62,7 +62,7 @@ class AdvisoryBoardController extends AdminController
 //                })
                     $query->when(!empty($keywords) && !is_numeric($keywords), function ($query) use ($keywords) {
                         $query->whereHas('translations', function ($query) use ($keywords) {
-                            $query->where('name', 'like', '%' . $keywords . '%');
+                            $query->where('name', 'ilike', '%' . $keywords . '%');
                         });
                     });
             })
