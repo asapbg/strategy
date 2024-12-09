@@ -119,7 +119,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
-                                href="{{ route('admin.nomenclature.advisory_chairman_type') }}">
+                                href="{{ route('admin.advisory-boards.nomenclature.advisory-chairman-type') }}">
                                 <i class="fas fa-users"></i>
                                 {{ trans_choice('custom.nomenclature.advisory_chairman_type', 2) }}
                             </a>

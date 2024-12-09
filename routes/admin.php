@@ -425,12 +425,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/strategic-act-type/store/{item?}', 'store')->name('nomenclature.strategic_act_type.store');
     });
 
-    Route::controller(AdvisoryChairmanTypeController::class)->group(function () {
-        Route::get('/nomenclature/advisory-chairman-type', 'index')->name('nomenclature.advisory_chairman_type')->middleware('can:viewAny,App\Models\AdvisoryChairmanType');
-        Route::get('/nomenclature/advisory-chairman-type/edit/{item?}', 'edit')->name('nomenclature.advisory_chairman_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/advisory-chairman-type/store/{item?}', 'store')->name('nomenclature.advisory_chairman_type.store');
-    });
-
     Route::controller(ConsultationDocumentTypeController::class)->group(function () {
         Route::get('/nomenclature/consultation-document-type', 'index')->name('nomenclature.consultation_document_type')->middleware('can:viewAny,App\Models\ConsultationDocumentType');
         Route::get('/nomenclature/consultation-document-type/edit/{item?}', 'edit')->name('nomenclature.consultation_document_type.edit');
@@ -562,6 +556,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
                 Route::get('/advisory-act-type', 'index')->name('advisory-act-type')->middleware('can:viewAny,App\Models\AdvisoryActType');
                 Route::get('/advisory-act-type/edit/{item?}', 'edit')->name('advisory-act-type.edit');
                 Route::match(['post', 'put'], '/advisory-act-type/store/{item?}', 'store')->name('advisory-act-type.store');
+            });
+
+            Route::controller(AdvisoryChairmanTypeController::class)->group(function () {
+                Route::get('/advisory-chairman-type', 'index')->name('advisory-chairman-type')->middleware('can:viewAny,App\Models\AdvisoryChairmanType');
+                Route::get('/advisory-chairman-type/edit/{item?}', 'edit')->name('advisory-chairman-type.edit');
+                Route::match(['post', 'put'], '/advisory-chairman-type/store/{item?}', 'store')->name('advisory-chairman-type.store');
             });
 
             /* End of Advisory Board Nomenclatures */
