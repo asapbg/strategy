@@ -544,6 +544,29 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::put( '/settings/store', 'store')->name('advisory-boards.settings.store');
     });
 
+    // Advisory Board Nomenclatures
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardNomenclatureController::class)
+        ->prefix('/advisory-boards/nomenclature')
+        ->name('advisory-boards.nomenclature.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+
+            /* Start of Advisory Board Nomenclatures */
+
+            Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\Nomenclature\AdvisoryBoardNomenclatureFieldOfActionController::class)
+                ->group(function () {
+                    Route::get('/field-of-actions', 'index')->name('field-of-actions.index');
+                    Route::get('/field-of-actions/create', 'create')->name('field-of-actions.create');
+                    Route::post('/field-of-actions/store', 'store')->name('field-of-actions.store');
+                    Route::get('/field-of-actions/{item}/edit', 'edit')->name('field-of-actions.edit');
+                    Route::post('/field-of-actions/{action}/update', 'update')->name('field-of-actions.update');
+                    Route::post('/field-of-actions/{action}/delete', 'destroy')->name('field-of-actions.delete');
+                    Route::post('/field-of-actions/{action}/restore', 'restore')->name('field-of-actions.restore')->withTrashed();
+                });
+
+            /* End of Advisory Board Nomenclatures */
+        });
+
     // Messages
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMessagesController::class)->prefix('/advisory-boards')->group(function () {
         Route::get( '/messages', 'index')->name('advisory-boards.messages');

@@ -1361,4 +1361,5 @@ return [
     'comments_report' => 'Справка за коментари/съобщение',
     'poll_need_al_least_one_question' => 'Анкетат трябва да съдържа поне 2 въпроса.',
     'save_and_publish' => 'Запази и публикувай',
+    'advisory_board_nomenclature_field_of_actions' => 'Област на политика на консултативен съвет|Области на политика на консултативен съвет',
 ];

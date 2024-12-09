@@ -1332,4 +1332,5 @@ return [
     'comments_report' => 'Comment/message reference',
     'poll_need_al_least_one_question' => 'Poll needs at least two questions',
     'save_and_publish' => 'Save and publish',
+    'advisory_board_nomenclature_field_of_actions' => 'Advisory board field of action|Advisory board fields of action',
 ];

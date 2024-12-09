@@ -383,6 +383,15 @@
                                     </a>
                                 </li>
                             @endcanany
+                            @canany(['manage.*', 'manage.advisory-board.nomenclatures'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.advisory-boards.nomenclature.index') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'advisory-boards/nomenclature')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice('custom.nomenclatures', 2) }}</p>
+                                    </a>
+                                </li>
+                            @endcanany
                         </ul>
                     </li>
                 @endcan
@@ -519,7 +528,7 @@
                     <li class="nav-header">{{ trans_choice('custom.nomenclatures', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.nomenclature')}}"
-                           class="nav-link @if(str_contains(url()->current(), 'nomenclature')) active @endif">
+                           class="nav-link @if(str_contains(url()->current(), 'nomenclature') && !str_contains(url()->current(), 'advisory-boards')) active @endif">
                             <i class="fas fa-file"></i>
                             <p>{{ trans_choice('custom.nomenclatures', 2) }}</p>
                         </a>

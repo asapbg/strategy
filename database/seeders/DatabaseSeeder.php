@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
             LawSeeder::class,
             OgpStatusSeeder::class,
             PageSeeder::class,
+            AdvisoryBoardNomenclatureFieldOfActionSeeder::class,
         ]);
     }
 }
