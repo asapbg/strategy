@@ -13266,7 +13266,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 
 .main-header {
     border-bottom: 1px solid #dee2e6;
-    z-index: 1034;
+    z-index: 994;
 }
 
 .main-header .nav-link {
@@ -13562,7 +13562,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 .main-sidebar {
     height: 100vh;
     overflow-y: hidden;
-    z-index: 1038;
+    z-index: 998;
 }
 
 .main-sidebar a:-moz-focusring {
