@@ -291,23 +291,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
-                                    <div class="col-12">
-                                        <select id="active" name="active"
-                                                class="form-control form-control-sm select2 @error('active'){{ 'is-invalid' }}@enderror">
-                                            <option value="0"
-                                                    @if(!old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.inactive_m') }}</option>
-                                            <option value="1"
-                                                    @if(old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.active_m') }}</option>
-                                        </select>
-                                        @error('active')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
+{{--                            <div class="col-md-6">--}}
+{{--                                <div class="form-group">--}}
+{{--                                    <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>--}}
+{{--                                    <div class="col-12">--}}
+{{--                                        <select id="active" name="active"--}}
+{{--                                                class="form-control form-control-sm select2 @error('active'){{ 'is-invalid' }}@enderror">--}}
+{{--                                            <option value="0"--}}
+{{--                                                    @if(!old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.inactive_m') }}</option>--}}
+{{--                                            <option value="1"--}}
+{{--                                                    @if(old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.active_m') }}</option>--}}
+{{--                                        </select>--}}
+{{--                                        @error('active')--}}
+{{--                                        <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                                        @enderror--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
@@ -384,15 +384,18 @@
         <div class="row">
             <div class="form-group row">
                 <div class="col-md-6 col-md-offset-3">
-                    <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                    <button id="save" type="submit" name="active" value="{{ $item->active }}" class="btn btn-success">{{ __('custom.save') }}</button>
                     <button id="stayButton" type="submit" name="stay" value="1" class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
 
-                    @if($item->active)
-                        <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => false]) }}"
-                           class="btn btn-danger">{{ __('custom.unpublish_make') }}</a>
+                    @if($item->id)
+                        @if($item->active)
+                            <a href="{{ route('admin.strategic_documents.unpublish', ['id' => $item->id, 'stay' => false]) }}"
+                               class="btn btn-danger">{{ __('custom.unpublish_make') }}</a>
+                        @else
+                            <button id="save" type="submit" name="active" value="1" class="btn btn-success">{{ __('custom.save_and_publish') }}</button>
+                        @endif
                     @else
-                        <a href="{{ route('admin.strategic_documents.publish', ['id' => $item->id, 'stay' => false]) }}"
-                           class="btn btn-success">{{ __('custom.publish') }}</a>
+                        <button id="save" type="submit" name="active" value="1" class="btn btn-success">{{ __('custom.save_and_publish') }}</button>
                     @endif
 
                     <a href="{{ route('admin.strategic_documents.index') }}"

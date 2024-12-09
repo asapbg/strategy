@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\StrategicDocumentFileEnum;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentFile;
@@ -32,14 +33,14 @@ class StoreStrategicDocumentRequest extends FormRequest
         $rules = [
             'id' => ['required', 'numeric'],
             'stay' => ['nullable', 'numeric'],
-            'strategic_document_level_id' => ['required', 'numeric', 'exists:strategic_document_level,id'],
+            'strategic_document_level_id' => ['required', 'numeric', 'in:' . implode(',', array_column(InstitutionCategoryLevelEnum::cases(), 'value'))],
             'policy_area_id' => ['nullable', 'numeric', 'exists:field_of_actions,id'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
 //            'strategic_document_type_file_main_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             //'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
 //            'public_consultation_id' => ['required', 'numeric'],
-            'active' => ['required', 'numeric', 'in:0,1'],
+            'active' => ['nullable', 'numeric', 'in:0,1'],
             //'valid_at_main' => ['required', 'date'],
             'valid_at_main' => ['required_if:date_valid_indefinite_main,0', 'date', 'nullable'],
             'pris_act_id' => ['nullable'],

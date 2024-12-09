@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\InstitutionCategoryLevelEnum;
 use App\Models\StrategicDocument;
 use App\Traits\TranslatableFieldsRules;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,7 +28,7 @@ class StoreStrategicDocumentApiRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'strategic_document_level_id' => ['required', 'numeric', 'exists:strategic_document_level,id'],
+            'strategic_document_level_id' => ['required', 'numeric', 'in:' . implode(',', array_column(InstitutionCategoryLevelEnum::cases(), 'value'))],
             'policy_area_id' => ['nullable', 'numeric', 'exists:field_of_actions,id'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],

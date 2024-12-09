@@ -534,7 +534,7 @@ return [
     'search_pc_record_js_placeholder'                         => 'Въведете Номер/Наименование',
     'bg'                                => 'Български',
     'en'                                => 'Английски',
-    'nomenclature_level.CENTRAL'        => 'Централно',
+    'nomenclature_level.CENTRAL'        => 'Национално',
     'nomenclature_level.CENTRAL_OTHER'        => 'Централно друго',
     'nomenclature_level.AREA'        => 'Областно',
     'nomenclature_level.MUNICIPAL'        => 'Общинско',
@@ -1359,5 +1359,7 @@ return [
     'li_support_info_general' => 'Важно: законодателните инициативи трябва да съберат подкрепа от :cap на брой гласове от потребители на портала за срок от :days дни, за да бъдат изпратени до релевантните институции.',
     'advisory_board_id' => 'Консултативен съвет',
     'comments_report' => 'Справка за коментари/съобщение',
-    'poll_need_al_least_one_question' => 'Анкетат трябва да съдържа поне 2 въпроса.'
+    'poll_need_al_least_one_question' => 'Анкетат трябва да съдържа поне 2 въпроса.',
+    'save_and_publish' => 'Запази и публикувай',
+    'advisory_board_nomenclature_field_of_actions' => 'Област на политика на консултативен съвет|Области на политика на консултативен съвет',
 ];

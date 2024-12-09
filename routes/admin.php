@@ -138,7 +138,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     // Strategic Documents
     Route::controller(StrategicDocumentsController::class)->group(function () {
         Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
-        Route::get('/strategic-documents/edit/{id?}/{section?}', 'edit')->name('strategic_documents.edit');
+        Route::get('/strategic-documents/create-edit/{id?}/{section?}', 'edit')->name('strategic_documents.edit');
         Route::post('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
         Route::post('/strategic-documents/{object_id}/{object_type}', 'uploadFileLanguagesSd')->name('strategic_documents.upload.file.languages');
         Route::match(['post', 'put'], '/strategic-documents/store', 'store')->name('strategic_documents.store');
@@ -419,28 +419,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['post', 'put'], '/nomenclature/authority-accepting-strategic/store/{item?}', 'store')->name('nomenclature.authority_accepting_strategic.store');
     });
 
-    Route::controller(AuthorityAdvisoryBoardController::class)->group(function () {
-        Route::get('/nomenclature/authority-advisory-board', 'index')->name('nomenclature.authority_advisory_board')->middleware('can:viewAny,App\Models\AuthorityAdvisoryBoard');
-        Route::get('/nomenclature/authority-advisory-board/edit/{item?}', 'edit')->name('nomenclature.authority_advisory_board.edit');
-        Route::match(['post', 'put'], '/nomenclature/authority-advisory-board/store/{item?}', 'store')->name('nomenclature.authority_advisory_board.store');
-    });
-
-    Route::controller(AdvisoryActTypeController::class)->group(function () {
-        Route::get('/nomenclature/advisory-act-type', 'index')->name('nomenclature.advisory_act_type')->middleware('can:viewAny,App\Models\AdvisoryActType');
-        Route::get('/nomenclature/advisory-act-type/edit/{item?}', 'edit')->name('nomenclature.advisory_act_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/advisory-act-type/store/{item?}', 'store')->name('nomenclature.advisory_act_type.store');
-    });
-
     Route::controller(StrategicActTypeController::class)->group(function () {
         Route::get('/nomenclature/strategic-act-type', 'index')->name('nomenclature.strategic_act_type')->middleware('can:viewAny,App\Models\StrategicActType');
         Route::get('/nomenclature/strategic-act-type/edit/{item?}', 'edit')->name('nomenclature.strategic_act_type.edit');
         Route::match(['post', 'put'], '/nomenclature/strategic-act-type/store/{item?}', 'store')->name('nomenclature.strategic_act_type.store');
-    });
-
-    Route::controller(AdvisoryChairmanTypeController::class)->group(function () {
-        Route::get('/nomenclature/advisory-chairman-type', 'index')->name('nomenclature.advisory_chairman_type')->middleware('can:viewAny,App\Models\AdvisoryChairmanType');
-        Route::get('/nomenclature/advisory-chairman-type/edit/{item?}', 'edit')->name('nomenclature.advisory_chairman_type.edit');
-        Route::match(['post', 'put'], '/nomenclature/advisory-chairman-type/store/{item?}', 'store')->name('nomenclature.advisory_chairman_type.store');
     });
 
     Route::controller(ConsultationDocumentTypeController::class)->group(function () {
@@ -543,6 +525,47 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get( '/settings/{section?}', 'edit')->name('advisory-boards.settings');
         Route::put( '/settings/store', 'store')->name('advisory-boards.settings.store');
     });
+
+    // Advisory Board Nomenclatures
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardNomenclatureController::class)
+        ->prefix('/advisory-boards/nomenclature')
+        ->name('advisory-boards.nomenclature.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+
+            /* Start of Advisory Board Nomenclatures */
+
+            Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\Nomenclature\AdvisoryBoardNomenclatureFieldOfActionController::class)
+                ->group(function () {
+                    Route::get('/field-of-actions', 'index')->name('field-of-actions.index');
+                    Route::get('/field-of-actions/create', 'create')->name('field-of-actions.create');
+                    Route::post('/field-of-actions/store', 'store')->name('field-of-actions.store');
+                    Route::get('/field-of-actions/{item}/edit', 'edit')->name('field-of-actions.edit');
+                    Route::post('/field-of-actions/{action}/update', 'update')->name('field-of-actions.update');
+                    Route::post('/field-of-actions/{action}/delete', 'destroy')->name('field-of-actions.delete');
+                    Route::post('/field-of-actions/{action}/restore', 'restore')->name('field-of-actions.restore')->withTrashed();
+                });
+
+            Route::controller(AuthorityAdvisoryBoardController::class)->group(function () {
+                Route::get('/authority-advisory-board', 'index')->name('authority-advisory-board')->middleware('can:viewAny,App\Models\AuthorityAdvisoryBoard');
+                Route::get('/authority-advisory-board/edit/{item?}', 'edit')->name('authority-advisory-board.edit');
+                Route::match(['post', 'put'], '/authority-advisory-board/store/{item?}', 'store')->name('authority-advisory-board.store');
+            });
+
+            Route::controller(AdvisoryActTypeController::class)->group(function () {
+                Route::get('/advisory-act-type', 'index')->name('advisory-act-type')->middleware('can:viewAny,App\Models\AdvisoryActType');
+                Route::get('/advisory-act-type/edit/{item?}', 'edit')->name('advisory-act-type.edit');
+                Route::match(['post', 'put'], '/advisory-act-type/store/{item?}', 'store')->name('advisory-act-type.store');
+            });
+
+            Route::controller(AdvisoryChairmanTypeController::class)->group(function () {
+                Route::get('/advisory-chairman-type', 'index')->name('advisory-chairman-type')->middleware('can:viewAny,App\Models\AdvisoryChairmanType');
+                Route::get('/advisory-chairman-type/edit/{item?}', 'edit')->name('advisory-chairman-type.edit');
+                Route::match(['post', 'put'], '/advisory-chairman-type/store/{item?}', 'store')->name('advisory-chairman-type.store');
+            });
+
+            /* End of Advisory Board Nomenclatures */
+        });
 
     // Messages
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMessagesController::class)->prefix('/advisory-boards')->group(function () {

@@ -1330,5 +1330,7 @@ return [
     'li_support_info_general' => 'Important: legislative initiatives must gather support from :cap number of votes from users of the portal for a period of :days to be sent to the relevant institutions.',
     'advisory_board_id' => 'Advisory board',
     'comments_report' => 'Comment/message reference',
-    'poll_need_al_least_one_question' => 'Poll needs at least two questions'
+    'poll_need_al_least_one_question' => 'Poll needs at least two questions',
+    'save_and_publish' => 'Save and publish',
+    'advisory_board_nomenclature_field_of_actions' => 'Advisory board field of action|Advisory board fields of action',
 ];

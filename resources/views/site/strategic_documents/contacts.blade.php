@@ -28,6 +28,20 @@
                                         @endif
                                     @endforeach
                                 </p>
+                                @if($m->institution)
+                                    <p class="text-secondary mb-0">
+                                        {{ $m->institution->name }}
+                                    </p>
+                                    <p class="text-secondary">
+                                        {{ $m->institution->address }}
+                                    </p>
+                                    @if($m->institution->fieldsOfAction->count())
+                                        <p class="text-secondary small">
+                                            {{ trans_choice('custom.field_of_actions', $m->institution->fieldsOfAction->count()) }}:
+                                            {{ implode(', ', $m->institution->fieldsOfAction->pluck('name')->toArray()) }}
+                                        </p>
+                                    @endif
+                                @endif
                                 @if(!empty($m->email) || !empty($m->phone))
                                     <div class="team-member-contact d-flex flex-row">
                                         @if(!empty($m->phone))

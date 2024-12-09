@@ -39,19 +39,27 @@ class PermissionsSeeder extends Seeder
         $role->givePermissionTo('manage.*');
 
         $moderators = [
-            'advisory',
-            'strategic',
-            'legal',
-            'advisory-boards',
-            'advisory-board',
-            'partnership'
+            'advisory'          => [],
+            'strategic'         => [],
+            'legal'             => [],
+            'advisory-boards'   => ['manage.advisory-boards.nomenclatures'],
+            'advisory-board'    => [],
+            'partnership'       => [],
         ];
-        foreach ($moderators as $section) {
+        foreach ($moderators as $section => $additional_permissions) {
             $role = Role::whereName('moderator-' . $section)->first();
+
             if( $section == 'legal' ) {
                 $section = 'pris';
             }
+
             $role->givePermissionTo('manage.' . $section);
+
+            if (!empty($additional_permissions)) {
+                foreach ($additional_permissions as $permission) {
+                    $role->givePermissionTo($permission);
+                }
+            }
         }
     }
 }
