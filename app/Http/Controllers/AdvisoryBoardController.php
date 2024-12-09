@@ -148,8 +148,28 @@ class AdvisoryBoardController extends Controller
                 $query->orderBy('advisory_boards.active', 'desc')
                     ->orderBy('advisory_board_translations.name');
             })
-            ->groupBy($groupByColumn)
-            ->paginate($paginate);
+            ->groupBy($groupByColumn);
+
+        if ($request->input('export_excel') || $request->input('export_as_excel') || $request->input('export_pdf') || $request->input('export_as_pdf')) {
+            $items = $items->get();
+            $exportData = [
+                'title' => __('custom.adv_board_report_title'),
+                'rows' => $items,
+                'searchMeetings' => $groupByColumn
+            ];
+
+            $fileName = 'adv_report_' . Carbon::now()->format('Y_m_d_H_i_s');
+            if ($request->input('export_pdf') || $request->input('export_as_pdf')) {
+                ini_set('max_execution_time', 60);
+                $pdf = PDF::loadView('exports.adv_report', ['data' => $exportData, 'isPdf' => true])->setPaper('a4', 'landscape');
+                return $pdf->download($fileName . '.pdf');
+            } else {
+                return Excel::download(new AdvBoardReportExport($exportData), $fileName . '.xlsx');
+            }
+        } else {
+            $items = $items->paginate($paginate);
+        }
+
         $subscribeFilter = $requestFilter;
         if (isset($subscribeFilter['status'])) {
             $subscribeFilter['status'] = str($subscribeFilter['status']);
