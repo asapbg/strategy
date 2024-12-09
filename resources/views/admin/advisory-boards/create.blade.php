@@ -296,6 +296,24 @@
                             </div>
                         </div>
 
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="control-label" for="moderator_id">
+                                    {{ trans_choice('custom.moderators', 1) }}
+                                </label>
+
+                                <select name="moderator_id" class="select2 form-control form-control-sm" id="moderator_id">
+                                    <option value="">{{ __('custom.username') }}</option>
+
+                                    @if(isset($all_users) && $all_users->count() > 0)
+                                        @foreach($all_users as $user)
+                                            <option value="{{ $user->id }}">{{ implode(' ', [$user->first_name, $user->middle_name, $user->last_name]) }} ({{ $user->email }})</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+
                         <!-- Препратка към Интегрираната информационна система на държавната администрация (ИИСДА) -->
                         <div class="row mb-4">
                             <div class="col-md-6 col-12">

@@ -46,7 +46,7 @@
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)
                         <tr>
-                            <td>{{ $row->name }}</td>
+                            <td><a href="{{ route('advisory-boards.view', ['item' => $row->id]) }}">{{ $row->name }}</a></td>
                             <td>{{ $row->policyArea?->name }}</td>
                             <td>{{ $row->authority?->name }}</td>
                             <td>{{ $row->advisoryActType?->name }}</td>

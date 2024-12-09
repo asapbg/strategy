@@ -3,9 +3,8 @@
 namespace App\Http\Requests\Admin\AdvisoryBoard;
 
 use App\Models\AdvisoryBoard;
-use App\Models\AdvisoryBoardMember;
-use App\Models\AdvisoryBoardNpo;
 use App\Models\File;
+use App\Models\User;
 use App\Traits\FailedAuthorization;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -40,7 +39,8 @@ class StoreAdvisoryBoardRequest extends FormRequest
             'has_npo_presence'          => 'nullable',
             'integration_link'          => 'nullable|string',
             'public'                    => 'nullable|integer',
-            'file'                    => ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size_img'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)],
+            'file'                      => ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size_img'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)],
+            'moderator_id'              => 'nullable|integer|exists:' . (new User())->getTable() . ',id',
         ];
 
         $defaultLang = config('app.default_lang');
@@ -65,6 +65,7 @@ class StoreAdvisoryBoardRequest extends FormRequest
                 }
             }
         }
+
         return $rules;
     }
 }

@@ -15,6 +15,7 @@ use App\Models\AdvisoryBoard\AdvisoryBoardNomenclatureFieldOfAction;
 use App\Models\AdvisoryBoardCustom;
 use App\Models\AdvisoryBoardFunction;
 use App\Models\AdvisoryBoardMeeting;
+use App\Models\AdvisoryBoardModerator;
 use App\Models\AdvisoryBoardNpo;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
@@ -97,9 +98,15 @@ class AdvisoryBoardController extends AdminController
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $translatableFields = AdvisoryBoard::translationFieldsProperties();
-        return $this->view(
-            'admin.advisory-boards.create',
-            compact('item', 'field_of_actions', 'authorities', 'advisory_act_types', 'advisory_chairman_types', 'institutions', 'translatableFields')
+        $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email'])
+            ->orderBy('username')
+            ->where('user_type', '=', 1)
+            ->get();
+
+        return $this->view('admin.advisory-boards.create', compact(
+            'item', 'field_of_actions', 'authorities', 'advisory_act_types',
+            'advisory_chairman_types', 'institutions', 'translatableFields', 'all_users',
+            )
         );
     }
 
@@ -160,6 +167,16 @@ class AdvisoryBoardController extends AdminController
 
             $service = app(AdvisoryBoardService::class, ['board' => $item]);
             $service->createDependencyTables();
+
+            // store moderator
+            if (!empty($validated['moderator_id'])) {
+                $moderator = AdvisoryBoardModerator::create([
+                    'advisory_board_id' => $item->id,
+                    'user_id'           => $validated['moderator_id'],
+                ]);
+
+                $moderator->user->assignRole(CustomRole::MODERATOR_ADVISORY_BOARD);
+            }
 
             DB::commit();
             return redirect()->route('admin.advisory-boards.index')
