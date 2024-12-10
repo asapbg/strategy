@@ -567,6 +567,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
             /* End of Advisory Board Nomenclatures */
         });
 
+    // Settings
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardContactsController::class)
+        ->prefix('/advisory-boards/contacts')
+        ->name('advisory-boards.contacts.')
+        ->group(function () {
+            Route::get( '/', 'index')->name('index');
+        });
+
     // Messages
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMessagesController::class)->prefix('/advisory-boards')->group(function () {
         Route::get( '/messages', 'index')->name('advisory-boards.messages');

@@ -392,6 +392,15 @@
                                     </a>
                                 </li>
                             @endcanany
+                            @can(['manage.*', 'manage.advisory-boards'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.advisory-boards.contacts.index') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'advisory-boards/contacts')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice('custom.contacts', 2) }}</p>
+                                    </a>
+                                </li>
+                            @endcan
                         </ul>
                     </li>
                 @endcan
