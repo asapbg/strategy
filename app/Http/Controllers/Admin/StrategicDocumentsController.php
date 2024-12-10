@@ -289,6 +289,7 @@ class StrategicDocumentsController extends AdminController
             //END Ugly fix for wrong fields and connections
             if( $validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS ) {
                 $validated['strategic_act_number'] = null;
+                $validated['strategic_act_type_id'] = null;
                 $validated['strategic_act_link'] = null;
                 $validated['document_date'] = null;
 

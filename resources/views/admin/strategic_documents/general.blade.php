@@ -233,8 +233,22 @@
                     </div>
 
                     <div class="row">
+                        <div class="col-md-3 act-custom-fields d-none">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label"
+                                       for="strategic_act_number">{{ __('validation.attributes.strategic_act_number') }}</label>
+                                <div class="col-12">
+                                    <input type="text" id="strategic_act_number" name="strategic_act_number"
+                                           class="form-control form-control-sm @error('strategic_act_number'){{ 'is-invalid' }}@enderror"
+                                           value="{{ old('strategic_act_number', $item->id ? $item->strategic_act_number : '') }}">
+                                    @error('strategic_act_number')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
 
-                        <div class="col-md-6 act-custom-fields d-none">
+                        <div class="col-md-3 act-custom-fields d-none">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
                                        for="strategic_act_link">{{ __('validation.attributes.strategic_act_link') }}</label>
@@ -248,8 +262,37 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-3 act-custom-fields d-none">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label"
+                                       for="strategic_act_type_id">{{ __('validation.attributes.strategic_act_type_id') }}</label>
+                                <div class="col-12">
+                                    <select id="strategic_act_type_id" name="strategic_act_type_id"
+                                            class="form-control form-control-sm select2 @error('strategic_act_type_id'){{ 'is-invalid' }}@enderror">
+                                        @if(!$item->id)
+                                            <option value=""
+                                                    @if(old('strategic_act_type_id', '') == '') selected @endif>
+                                                ---
+                                            </option>
+                                        @endif
+                                        @if(isset($strategicActTypes) && $strategicActTypes->count())
+                                            @foreach($strategicActTypes as $row)
+                                                <option value="{{ $row->id }}"
+                                                        @if(old('strategic_act_type_id', ($item->id ? $item->strategic_act_type_id : 0)) == $row->id) selected
+                                                        @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @error('strategic_act_type_id')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
                             <!-- Document date -->
-                        <div class="col-md-6 act-custom-fields d-none">
+                        <div class="col-md-3 act-custom-fields d-none">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label"
                                        for="document_date">{{ __('custom.document_act') }}</label>
@@ -311,7 +354,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label"
-                                           for="strategic_act_link">{{ __('validation.attributes.link_to_monitorstat') }}</label>
+                                           for="link_to_monitorstat">{{ __('validation.attributes.link_to_monitorstat') }}</label>
                                     <div class="col-12">
                                         <input type="text" name="link_to_monitorstat"
                                                class="form-control form-control-sm @error('link_to_monitorstat'){{ 'is-invalid' }}@enderror"
@@ -501,6 +544,7 @@
                 let selectedValue = $(this).val();
                 if (selectedValue == parseInt('<?php echo \App\Models\AuthorityAcceptingStrategic::COUNCIL_MINISTERS; ?>')) {
                     $('#strategic_act_link').val('');
+                    $('#strategic_act_number').val('');
                     $('#document_date').val('');
                 } else {
                     $('#document_date_pris').val('');

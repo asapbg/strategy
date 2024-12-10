@@ -37,7 +37,7 @@ class StoreStrategicDocumentRequest extends FormRequest
             'policy_area_id' => ['nullable', 'numeric', 'exists:field_of_actions,id'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
 //            'strategic_document_type_file_main_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
-            //'strategic_act_type_id' => ['required', 'numeric', 'exists:strategic_act_type,id'],
+            'strategic_act_type_id' => ['nullable', 'numeric', 'exists:strategic_act_type,id'],
             'accept_act_institution_type_id' => ['required', 'numeric', 'exists:authority_accepting_strategic,id'],
 //            'public_consultation_id' => ['required', 'numeric'],
             'active' => ['nullable', 'numeric', 'in:0,1'],
