@@ -383,7 +383,7 @@
                                     </a>
                                 </li>
                             @endcanany
-                            @canany(['manage.*', 'manage.advisory-board.nomenclatures'])
+                            @canany(['manage.*', 'manage.advisory-boards.nomenclatures'])
                                 <li class="nav-item">
                                     <a href="{{ route('admin.advisory-boards.nomenclature.index') }}"
                                        class="nav-link @if(str_contains(url()->current(), 'advisory-boards/nomenclature')) active @endif">
