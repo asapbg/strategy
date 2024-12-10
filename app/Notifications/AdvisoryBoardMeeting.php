@@ -3,11 +3,13 @@
 namespace App\Notifications;
 
 use App\Models\AdvisoryBoard;
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 
 class AdvisoryBoardMeeting extends Notification
 {
@@ -21,6 +23,8 @@ class AdvisoryBoardMeeting extends Notification
 
     protected $include_files = true;
 
+    protected $template;
+
     /**
      * Create a new notification instance.
      *
@@ -32,6 +36,8 @@ class AdvisoryBoardMeeting extends Notification
         $this->advisoryBoardMeeting = $meeting;
         $this->link = $link;
         $this->include_files = $include_files;
+
+        $this->template = Setting::where('name', 'advisory_board_new_decision_email_template')->first();
     }
 
     /**
@@ -56,10 +62,26 @@ class AdvisoryBoardMeeting extends Notification
     public function toMail($notifiable)
     {
         $message = (new MailMessage)
-            ->subject('Покана за заседание на ' . $this->advisoryBoard->name)
-            ->line('Уважаеми членове на ' . $this->advisoryBoard->name .
+            ->subject('Покана за заседание на ' . $this->advisoryBoard->name);
+
+        if ($this->template) {
+            $template = $this->template->value;
+
+            // Define replacement values
+            $replacements = [
+                '${name}' => $this->advisoryBoard->name,
+                '${date}' => Carbon::parse($this->advisoryBoardMeeting->next_meeting)->format('d.m.Yг.'),
+            ];
+
+            // Replace placeholders
+            $parsed_template = str_replace(array_keys($replacements), array_values($replacements), $template);
+
+            $message->line(new HtmlString($parsed_template));
+        } else {
+            $message->line('Уважаеми членове на ' . $this->advisoryBoard->name .
                 ', Във връзка със задълженията на ' . $this->advisoryBoard->name . ', ви уведомяваме за предстоящо заседание:')
-            ->line('Дата на заседанието: ' . Carbon::parse($this->advisoryBoardMeeting->next_meeting)->format('d.m.Yг.'));
+                ->line('Дата на заседанието: ' . Carbon::parse($this->advisoryBoardMeeting->next_meeting)->format('d.m.Yг.'));
+        }
 
         if (!empty($this->link)) {
             $message->action('Повече информация може да намерите тук', $this->link);
