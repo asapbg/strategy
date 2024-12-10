@@ -17,6 +17,15 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
 {
     use FilterSort, Translatable, Searchable;
 
+    /*
+     * I don't know why, but at some point it was decided to not use the translations from the vendor, but instead use the description and file_info columns.
+     * In relation to
+     */
+    protected function saveTranslations(): bool
+    {
+        return false;
+    }
+
     const TRANSLATABLE_FIELDS = ['display_name', 'file_info'];
     const MODULE_NAME = ('custom.strategic_document_files');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
@@ -72,7 +81,7 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
     public static function translationFieldsProperties(): array
     {
         return array(
-            'display_name' => [
+            'description' => [
                 'type' => 'text',
                 'rules' => ['required', 'string', 'max:500']
             ],
