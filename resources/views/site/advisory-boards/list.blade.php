@@ -136,7 +136,9 @@
                                 <br/>
                                 <span class="me-1"><strong>{{ __('validation.attributes.act_of_creation') }}:</strong></span>
 
-                                {{ $item->advisoryActType?->translation->name }}
+                                <a href="{{ route('advisory-boards.index').('?actOfCreations[]=' . $item->advisoryActType->id) }}" class="main-color text-decoration-none me-3">
+                                    {{ $item->advisoryActType?->translation->name }}
+                                </a>
                             @endif
                             <div class="meta-consul mt-2">
                                 <span>{{ __('custom.status') }}:
