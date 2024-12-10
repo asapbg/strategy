@@ -406,6 +406,8 @@ return [
     'system_li' => 'Настройки - Законодателни инициативи',
     'system_strategy_doc' => 'Настройки - Стратегически документи',
     'system_advisory_boards' => 'Настройки - Консултативни съвети',
+    'settings.sections.advisory_board' => 'Консултативни съвети',
+    'settings.advisory_board_new_decision_email_template' => 'Шаблон на електронно писмо за ново заседание',
     'settings.session_time_limit' => 'Потребителска сесия без активност (в минути)',
     'settings.sections.system_notifications'    => 'Основни',
     'settings.sections.system_op'                        => 'Оперативни програми',
@@ -1362,4 +1364,9 @@ return [
     'poll_need_al_least_one_question' => 'Анкетат трябва да съдържа поне 2 въпроса.',
     'save_and_publish' => 'Запази и публикувай',
     'advisory_board_nomenclature_field_of_actions' => 'Област на политика на консултативен съвет|Области на политика на консултативен съвет',
+    'send_notify' => 'Изпрати уведомление',
+    'prepare_notify' => 'Подготовка за изпращане на уведомление',
+    'include_files' => 'Включи приложените файлове',
+    'lang' => 'Език',
+    'additional_information_link' => 'Линк към допълнителна информация',
 ];

@@ -640,11 +640,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {
-        Route::post('/ajax-store',          'ajaxStore')    ->name('advisory-boards.meetings.store');
-        Route::get('{meeting}/edit',        'ajaxEdit')     ->name('advisory-boards.meetings.edit');
-        Route::post('/ajax-update',         'ajaxUpdate')   ->name('advisory-boards.meetings.update');
-        Route::post('{meeting}/delete',     'destroy')      ->name('advisory-boards.meetings.delete');
-        Route::post('{meeting}/restore',    'restore')      ->name('advisory-boards.meetings.restore')->withTrashed();
+        Route::post('/ajax-store',          'ajaxStore')        ->name('advisory-boards.meetings.store');
+        Route::get('{meeting}/edit',        'ajaxEdit')         ->name('advisory-boards.meetings.edit');
+        Route::post('/ajax-update',         'ajaxUpdate')       ->name('advisory-boards.meetings.update');
+        Route::post('/ajax-send-notify',    'ajaxSendNotify')   ->name('advisory-boards.meetings.send-notify');
+        Route::post('{meeting}/delete',     'destroy')          ->name('advisory-boards.meetings.delete');
+        Route::post('{meeting}/restore',    'restore')          ->name('advisory-boards.meetings.restore')->withTrashed();
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingDecisionController::class)->prefix('/advisory-boards/{item}/meeting/decisions')->group(function() {

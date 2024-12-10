@@ -406,6 +406,8 @@ return [
     'system_li' => 'Settings - Legislative Initiatives',
     'system_strategy_doc' => 'Settings - Strategy docs',
     'system_advisory_boards' => 'Settings - Advisory Boards',
+    'settings.sections.advisory_board' => 'Advisory Boards',
+    'settings.advisory_board_new_decision_email_template' => 'Email template for new advisory board meetings',
     'settings.session_time_limit' => 'User session with no activity (in minutes)',
     'settings.sections.system_notifications' => 'Basic',
     'settings.sections.system_op' => 'Operating Programs',
@@ -1333,4 +1335,9 @@ return [
     'poll_need_al_least_one_question' => 'Poll needs at least two questions',
     'save_and_publish' => 'Save and publish',
     'advisory_board_nomenclature_field_of_actions' => 'Advisory board field of action|Advisory board fields of action',
+    'send_notify' => 'Send notification',
+    'prepare_notify' => 'Prepare notification',
+    'include_files' => 'Include files',
+    'lang' => 'Language',
+    'additional_information_link' => 'Link to additional information',
 ];
