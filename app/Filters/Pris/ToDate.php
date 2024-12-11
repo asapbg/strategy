@@ -12,7 +12,7 @@ class ToDate extends QueryFilter implements FilterContract{
     public function handle($value, $filter = null): void
     {
         if( !empty($value) ){
-            $this->query->where('pris.doc_date', '<=', Carbon::parse($value)->endOfDay());
+            $this->query->where('pris.doc_date', '<=', databaseDate($value));
         }
     }
 }

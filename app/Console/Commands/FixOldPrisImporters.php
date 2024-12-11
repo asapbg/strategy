@@ -36,19 +36,20 @@ class FixOldPrisImporters extends Command
     public function handle()
     {
         file_put_contents('institutions_for_mapping_last_pris.txt', '');
+        activity()->disableLogging();
         $institutionForMapping = [];
         //Create default institution
         $diEmail = 'magdalena.mitkova+egov@asap.bg';
         $dInstitution = Institution::where('email', '=', $diEmail)->withTrashed()->first();
         $locales = config('available_languages');
-        if(!$dInstitution) {
+        if (!$dInstitution) {
             $insLevel = InstitutionLevel::create([
                 'system_name' => 'default'
             ]);
-            if(!$insLevel) {
+            if (!$insLevel) {
                 $this->error('Cant create default institution');
             }
-            if($insLevel) {
+            if ($insLevel) {
                 foreach ($locales as $locale) {
                     $insLevel->translateOrNew($locale['code'])->name = 'Default Level';
                 }
@@ -60,7 +61,7 @@ class FixOldPrisImporters extends Command
                 'institution_level_id' => $insLevel->id
             ]);
 
-            if(!$dInstitution) {
+            if (!$dInstitution) {
                 $this->error('Cant create default institution');
             }
             foreach ($locales as $locale) {
@@ -68,7 +69,7 @@ class FixOldPrisImporters extends Command
             }
             $dInstitution->save();
         }
-        $ourPris = Pris::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
+        //$ourPris = Pris::whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
 
         $importers = [
             'МВнР, МРР' => [
@@ -411,6 +412,10 @@ class FixOldPrisImporters extends Command
                 'importer' => 'Министерство на земеделието',
                 'institution_id' => 133,
             ],
+            'МЗем.' => [
+                'importer' => 'Министерство на земеделието',
+                'institution_id' => 133,
+            ],
             'МЗГ' => [
                 'importer' => 'Министерство на земеделието и горите',
                 'institution_id' => null,
@@ -556,6 +561,10 @@ class FixOldPrisImporters extends Command
                 'institution_id' => null,
             ],
             'МТС' => [
+                'importer' => 'Министерство на транспорта и съобщенията',
+                'institution_id' => 143,
+            ],
+            'МTС' => [
                 'importer' => 'Министерство на транспорта и съобщенията',
                 'institution_id' => 143,
             ],
@@ -1039,6 +1048,10 @@ class FixOldPrisImporters extends Command
                 'importer' => 'Заместник министър-председател по вътрешен ред и сигурност и министър на отбраната',
                 'institution_id' => 127,
             ],
+            'заместник министър-председател по вътрешен ред и сигурност и министър на отбраната' => [
+                'importer' => 'Заместник министър-председател по вътрешен ред и сигурност и министър на отбраната',
+                'institution_id' => 127,
+            ],
             'министър-председателят и министър на външните работи' => [
                 'importer' => 'Министър-председателят и министър на външните работи',
                 'institution_id' => 127,
@@ -1156,6 +1169,10 @@ class FixOldPrisImporters extends Command
                 'institution_id' => 127,
             ],
             'заместник министър-председател по правосъдната реформа и министър на външните работи' => [
+                'importer' => 'Заместник министър-председател по правосъдната реформа и сигурност и министър на външните работи',
+                'institution_id' => 127,
+            ],
+            'заместник министър-председател по правосъдната реформа и министър на външните' => [
                 'importer' => 'Заместник министър-председател по правосъдната реформа и сигурност и министър на външните работи',
                 'institution_id' => 127,
             ],
@@ -1418,19 +1435,21 @@ class FixOldPrisImporters extends Command
         ];
 
         //records per query
-        $step = 50;
+        $step = 150;
         //max id in old db
         $maxOldId = DB::connection('pris')->select('select max(archimed.e_items.id) from archimed.e_items');
+
         //start from this id in old database
         $currentStep = 0;
 
-        if( (int)$maxOldId[0]->max ) {
+        if ((int)$maxOldId[0]->max) {
             $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
 
-            while ($currentStep <= $maxOldId  && !$stop) {
-                echo "FromId: ".$currentStep.PHP_EOL;
-                $oldDbResult = DB::connection('pris')->select('select
+            while ($currentStep <= $maxOldId && !$stop) {
+                echo "FromId: " . $currentStep . PHP_EOL;
+                $oldDbResult = DB::connection('pris')->select('
+                    select
                         pris.id as old_id,
                         pris."number" as doc_num,
                         pris.parentid as parentdocumentid,
@@ -1452,138 +1471,160 @@ class FixOldPrisImporters extends Command
                         and pris.id >= ' . $currentStep . '
                         and pris.id < ' . ($currentStep + $step) . '
                         and pris.itemtypeid <> 5017 -- skip law records
+                        --and pris.id = 101460
                         -- and documents.lastrevision = \'Y\' -- get final versions
                     group by pris.id
                     order by pris.id asc');
 
-                if (sizeof($oldDbResult)) {
-                    foreach ($oldDbResult as $item) {
-                        //Update existing
-                        if(isset($ourPris) && sizeof($ourPris) && isset($ourPris[(int)$item->old_id])) {
-                            $existPris = Pris::find($ourPris[(int)$item->old_id]);
+                if (!sizeof($oldDbResult)) {
+                    if ($currentStep == $maxOldId) {
+                        $stop = true;
+                    } else {
+                        $currentStep += $step;
+                        if ($currentStep > $maxOldId) {
+                            $currentStep = $maxOldId;
+                        }
+                    }
+                    continue;
+                }
 
-                            if ($existPris) {
-                                $this->comment('Start update importers for Pris with old id ' . $item->old_id);
-//                                DB::beginTransaction();
-                                //Update importers
-                                try {
-                                    $importerInstitutions = [];
-                                    $xml = simplexml_load_string($item->to_parse_xml_details);
-                                    $json = json_encode($xml, JSON_UNESCAPED_UNICODE);
-                                    $data = json_decode($json, true);
-                                    if (isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
-                                        $attributes = $data['DocumentContent']['Attribute'];
-                                        foreach ($attributes as $att) {
-                                            //importer
-                                            //institution_id
-                                            if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
-                                                $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
-                                                if ($val) {
-                                                    //echo "Importer: ".$att['Value']['Value'].PHP_EOL;
-                                                    $importerStr = [];
-                                                    $importerInstitutions = [];
-                                                    $explode = explode(',', $val);
-                                                    foreach ($explode as $e) {
-                                                        if (isset($importers[trim($e)])) {
-                                                            if(
-                                                                (!is_array($importers[trim($e)]['institution_id']) && !is_null($importers[trim($e)]['institution_id']))
-                                                                || (is_array($importers[trim($e)]['institution_id']) && sizeof($importers[trim($e)]['institution_id']) && array_sum($importers[trim($e)]['institution_id']) > 0)
-                                                            ) {
-                                                                if(is_array($importers[trim($e)]['institution_id'])){
-                                                                    foreach ($importers[trim($e)]['institution_id'] as $i){
-                                                                        if($i > 0){
-                                                                            $importerInstitutions[] = $i;
-                                                                        }
-                                                                    }
-                                                                } else{
-                                                                    $importerInstitutions[] = $importers[trim($e)]['institution_id'];
-                                                                }
-                                                                $importerStr[] = $importers[trim($e)]['importer'];
-                                                            } else{
-                                                                $importerStr[] = $importers[trim($e)]['importer'];
-                                                                if(!isset($institutionForMapping[trim($e)])) {
-                                                                    //TODO for mapping
-                                                                    file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $e . PHP_EOL, FILE_APPEND);
-                                                                    $institutionForMapping[trim($e)] = trim($e);
-                                                                }
-                                                            }
-                                                        } else{
-//                                                            $valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
-                                                            $valNoNeLine = preg_replace("/[\r\n]+/", ";", $val);
-                                                            $explodeByRow = explode(';', $valNoNeLine);
-                                                            if(sizeof($explodeByRow)){
-                                                                foreach ($explodeByRow as $eByRow){
-                                                                    if (isset($importers[trim($eByRow)])) {
-                                                                        $importerStr[] = $importers[trim($eByRow)]['importer'];
-                                                                        if (
-                                                                            (!is_array($importers[trim($eByRow)]['institution_id']) && !is_null($importers[trim($eByRow)]['institution_id']))
-                                                                            || (is_array($importers[trim($eByRow)]['institution_id']) && sizeof($importers[trim($eByRow)]['institution_id']) && array_sum($importers[trim($eByRow)]['institution_id']) > 0)
-                                                                        ) {
-                                                                            if(is_array($importers[trim($eByRow)]['institution_id'])){
-                                                                                foreach ($importers[trim($eByRow)]['institution_id'] as $i){
-                                                                                    if($i > 0){
-                                                                                        $importerInstitutions[] = $i;
-                                                                                    }
-                                                                                }
-                                                                            } else{
-                                                                                $importerInstitutions[] = $importers[trim($eByRow)]['institution_id'];
-                                                                            }
-                                                                        } else{
-                                                                            if(!isset($institutionForMapping[trim($eByRow)])) {
-                                                                                //TODO for mapping
-                                                                                file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $eByRow . PHP_EOL, FILE_APPEND);
-                                                                                $institutionForMapping[trim($eByRow)] = trim($eByRow);
-                                                                            }
-                                                                        }
-                                                                    } else{
-                                                                        //TODO for mapping
-                                                                        if(!isset($institutionForMapping[trim($eByRow)])){
-                                                                            file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: '.$eByRow.PHP_EOL, FILE_APPEND);
-                                                                            $institutionForMapping[trim($eByRow)] = trim($eByRow);
-                                                                        }
-                                                                    }
-                                                                }
-                                                            } else{
-                                                                //TODO for mapping
-                                                                if(!isset($institutionForMapping[trim($e)])){
-                                                                    file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: '.$e.PHP_EOL, FILE_APPEND);
-                                                                    $institutionForMapping[trim($e)] = trim($e);
+                foreach ($oldDbResult as $item) {
+                    //Update existing
+//                    if (!isset($ourPris[(int)$item->old_id])) {
+//                        continue;
+//                    }
+//                    $existPris = Pris::find($ourPris[(int)$item->old_id]);
+
+                    $existPris = Pris::where('old_id', (int)$item->old_id)->first();
+
+                    if (!$existPris) {
+                        continue;
+                    }
+                    $this->comment('Start update importers for Pris with old id ' . $item->old_id);
+
+                    $xml = simplexml_load_string($item->to_parse_xml_details);
+                    $json = json_encode($xml, JSON_UNESCAPED_UNICODE);
+                    $data = json_decode($json, true);
+                    if (!isset($data['DocumentContent']) && !isset($data['DocumentContent']['Attribute']) && !sizeof($data['DocumentContent']['Attribute'])) {
+                        continue;
+                    }
+                    $attributes = $data['DocumentContent']['Attribute'];
+
+                    //DB::beginTransaction();
+                    //Update importers
+                    try {
+
+                        foreach ($attributes as $att) {
+                            //importer
+                            //institution_id
+                            if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
+                                $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])
+                                    ? $att['Value']['Value']
+                                    : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
+                                if (!$val) {
+                                    continue;
+                                }
+                                //echo "Importer: ".$att['Value']['Value'].PHP_EOL;
+                                $importerStr = [];
+                                $importerInstitutions = [];
+                                $explode = explode(',', $val);
+                                foreach ($explode as $e) {
+
+                                    if (isset($importers[trim($e)])) {
+                                        if (
+                                            (!is_array($importers[trim($e)]['institution_id']) && !is_null($importers[trim($e)]['institution_id']))
+                                            || (is_array($importers[trim($e)]['institution_id']) && sizeof($importers[trim($e)]['institution_id']) && array_sum($importers[trim($e)]['institution_id']) > 0)
+                                        ) {
+                                            if (is_array($importers[trim($e)]['institution_id'])) {
+                                                foreach ($importers[trim($e)]['institution_id'] as $i) {
+                                                    if ($i > 0) {
+                                                        $importerInstitutions[] = $i;
+                                                    }
+                                                }
+                                            } else {
+                                                $importerInstitutions[] = $importers[trim($e)]['institution_id'];
+                                            }
+                                            $importerStr[] = $importers[trim($e)]['importer'];
+                                        } else {
+                                            $importerStr[] = $importers[trim($e)]['importer'];
+                                            if (!isset($institutionForMapping[trim($e)])) {
+                                                //TODO for mapping
+                                                file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $e . PHP_EOL, FILE_APPEND);
+                                                $institutionForMapping[trim($e)] = trim($e);
+                                            }
+                                        }
+                                    } else {
+                                        //$valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
+                                        $valNoNeLine = preg_replace("/[\r\n]+/", ";", $val);
+                                        $explodeByRow = explode(';', $valNoNeLine);
+                                        if (sizeof($explodeByRow)) {
+                                            foreach ($explodeByRow as $eByRow) {
+                                                if (isset($importers[trim($eByRow)])) {
+                                                    $importerStr[] = $importers[trim($eByRow)]['importer'];
+                                                    if (
+                                                        (!is_array($importers[trim($eByRow)]['institution_id']) && !is_null($importers[trim($eByRow)]['institution_id']))
+                                                        || (is_array($importers[trim($eByRow)]['institution_id']) && sizeof($importers[trim($eByRow)]['institution_id']) && array_sum($importers[trim($eByRow)]['institution_id']) > 0)
+                                                    ) {
+                                                        if (is_array($importers[trim($eByRow)]['institution_id'])) {
+                                                            foreach ($importers[trim($eByRow)]['institution_id'] as $i) {
+                                                                if ($i > 0) {
+                                                                    $importerInstitutions[] = $i;
                                                                 }
                                                             }
+                                                        } else {
+                                                            $importerInstitutions[] = $importers[trim($eByRow)]['institution_id'];
+                                                        }
+                                                    } else {
+                                                        if (!isset($institutionForMapping[trim($eByRow)])) {
+                                                            //TODO for mapping
+                                                            file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $eByRow . PHP_EOL, FILE_APPEND);
+                                                            $institutionForMapping[trim($eByRow)] = trim($eByRow);
                                                         }
                                                     }
-
-                                                    $existPris->old_importers = $val;
-                                                    $existPris->translateOrNew('bg')->importer = sizeof($importerStr) ? implode(', ', $importerStr) : '';
-                                                    $existPris->translateOrNew('en')->importer = sizeof($importerStr) ? implode(', ', $importerStr) : '';
-                                                    $existPris->save();
-
-//                                                    $existPris->importer = sizeof($importerStr) ? implode(', ', $importerStr) : '';
-                                                    if (isset($importerInstitutions) && sizeof($importerInstitutions)) {
-                                                        $existPris->institutions()->sync($importerInstitutions);
-                                                    } else {
-                                                        $existPris->institutions()->sync([$dInstitution->id]);
-                                                        $existPris->institutions()->sync([]);
+                                                } else {
+                                                    //TODO for mapping
+                                                    if (!isset($institutionForMapping[trim($eByRow)])) {
+                                                        file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: ' . $eByRow . PHP_EOL, FILE_APPEND);
+                                                        $institutionForMapping[trim($eByRow)] = trim($eByRow);
                                                     }
                                                 }
                                             }
+                                        } else {
+                                            //TODO for mapping
+                                            if (!isset($institutionForMapping[trim($e)])) {
+                                                file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: ' . $e . PHP_EOL, FILE_APPEND);
+                                                $institutionForMapping[trim($e)] = trim($e);
+                                            }
                                         }
                                     }
-//                                    DB::commit();
-                                } catch (\Exception $e) {
-                                    Log::error('Migration update old pris importers error: ' . $e);
-//                                    DB::rollBack();
+                                }
+
+                                $existPris->old_importers = $val;
+                                $existPris->translateOrNew('bg')->importer = sizeof($importerStr) ? implode(', ', $importerStr) : '';
+                                $existPris->translateOrNew('en')->importer = sizeof($importerStr) ? implode(', ', $importerStr) : '';
+                                $existPris->save();
+
+                                if (isset($importerInstitutions) && sizeof($importerInstitutions)) {
+                                    $existPris->institutions()->sync($importerInstitutions);
+                                } else {
+                                    $existPris->institutions()->sync([$dInstitution->id]);
+                                    $existPris->institutions()->sync([]);
                                 }
                             }
                         }
+
+                        //DB::commit();
+                    } catch (\Exception $e) {
+                        Log::error('Migration update old pris importers error: ' . $e);
+                        //DB::rollBack();
                     }
                 }
 
-                if($currentStep == $maxOldId){
+                if ($currentStep == $maxOldId) {
                     $stop = true;
-                } else{
+                } else {
                     $currentStep += $step;
-                    if($currentStep > $maxOldId){
+                    if ($currentStep > $maxOldId) {
                         $currentStep = $maxOldId;
                     }
                 }

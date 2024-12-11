@@ -8,6 +8,7 @@ use App\Models\EkatteArea;
 use App\Models\EkatteMunicipality;
 use App\Models\EkatteSettlement;
 use App\Models\FieldOfAction;
+use App\Models\InstitutionHistoryName;
 use App\Models\InstitutionLevel;
 use App\Models\InstitutionLink;
 use App\Models\Law;
@@ -18,6 +19,7 @@ use App\Models\User;
 use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 
@@ -68,6 +70,16 @@ class Institution extends ModelActivityExtend implements TranslatableContract
         return $this->hasMany(InstitutionLink::class, 'institution_id', 'id');
     }
 
+    /**
+     * Get institution name changes through time
+     *
+     * @return HasMany
+     */
+    public function historyNames()
+    {
+        return $this->hasMany(InstitutionHistoryName::class)->orderBy('valid_from');
+    }
+
     public function settlement()
     {
         return $this->hasOne(EkatteSettlement::class, 'id', 'town');
@@ -98,7 +110,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
         return $this->belongsToMany(FieldOfAction::class, 'institution_field_of_action', 'institution_id', 'field_of_action_id')->orderBy('parentid')->orderByTranslation('name');
     }
 
-    public function publicConsultation(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function publicConsultation(): HasMany
     {
         return $this->hasMany(PublicConsultation::class, 'importer_institution_id', 'id')->ActivePublic();
     }

@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Admin\StrategicDocuments;
 
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\StoreInstitutionHistoryNameRequest;
 use App\Http\Requests\StoreInstitutionLink;
 use App\Http\Requests\StoreInstitutionRequest;
 use App\Models\FieldOfAction;
+use App\Models\InstitutionHistoryName;
 use App\Models\InstitutionLink;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\ConsultationLevel;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +45,7 @@ class InstitutionController extends AdminController
     /**
      * @param Request $request
      * @param Institution $item
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @return View|RedirectResponse
      */
     public function edit(Request $request, Institution $item)
     {
@@ -55,7 +59,10 @@ class InstitutionController extends AdminController
         $fieldOfActions = FieldOfAction::with(['translations'])
             ->where('parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory($item->level->nomenclature_level))
             ->orderByTranslation('name')->get();
-        return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels', 'fieldOfActions'));
+
+        return $this->view(self::EDIT_VIEW,
+            compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels', 'fieldOfActions')
+        );
     }
 
     public function store(StoreInstitutionRequest $request, $item = null)
@@ -85,6 +92,74 @@ class InstitutionController extends AdminController
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
 
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\View\View
+     */
+    public function createHistoryName($id)
+    {
+        $institution = Institution::findOrfail($id);
+
+        return $this->view('admin.strategic_documents.institutions.history-names.create', compact('institution'));
+    }
+
+    /**
+     * @param StoreInstitutionHistoryNameRequest $request
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function storeHistoryName(StoreInstitutionHistoryNameRequest $request, $id)
+    {
+
+        $institution = Institution::findOrfail($id);
+        $validated = $request->validated();
+
+        try {
+
+            $validated['current'] = false;
+            $institution->historyNames()->create($validated);
+
+            return to_route('admin.strategic_documents.institutions.edit', $id)->with('success', 'Записът беше добавен успешно');
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->backWithError('danger', __('messages.system_error'));
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\View\View
+     */
+    public function editHistoryName($id)
+    {
+        $institutionHistoryName = InstitutionHistoryName::findOrfail($id);
+
+        return $this->view('admin.strategic_documents.institutions.history-names.edit', compact('institutionHistoryName'));
+    }
+
+    /**
+     * @param StoreInstitutionHistoryNameRequest $request
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function updateHistoryName(StoreInstitutionHistoryNameRequest $request, $id)
+    {
+        $institutionHistoryName = InstitutionHistoryName::findOrfail($id);
+        $validated = $request->validated();
+
+        try {
+
+            $institutionHistoryName->fill($validated);
+            $institutionHistoryName->save();
+
+            return to_route('admin.strategic_documents.institutions.edit', $institutionHistoryName->institution_id)
+                ->with('success', 'Записът беше обновен успешно');
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->backWithError('danger', __('messages.system_error'));
+        }
     }
 
     public function addLink(StoreInstitutionLink $request){

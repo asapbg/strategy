@@ -299,21 +299,24 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/polls/result/{item}', 'preview')->name('polls.preview');
         Route::match(['post', 'put'], '/polls/store', 'store')->name('polls.store');
         Route::post('/polls/{item}/delete', 'destroy')->name('polls.delete');
-
         Route::post('/poll/question', 'createQuestion')->name('polls.question.create');
         Route::post('/poll/question/edit', 'editQuestion')->name('polls.question.edit');
         Route::get('/poll/question/delete/{id}', 'questionDelete')->where('id', '([1-9]+[0-9]*)')->name('polls.question.delete');
         Route::post('/poll/question/delete', 'questionConfirmDelete')->name('polls.question.delete.confirm');
     });
 
-    Route::controller(InstitutionController::class)->group(function () {
-        Route::get('/nomenclature/institutions', 'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
-        Route::get('/nomenclature/institutions/edit/{item?}', 'edit')->name('strategic_documents.institutions.edit');
-        Route::post('/nomenclature/institutions/add/link', 'addLink')->name('strategic_documents.institutions.link.add');
-        Route::post('/nomenclature/institutions/policy', 'storePolicy')->name('strategic_documents.institutions.policy.store');
-        Route::get('/nomenclature/institutions/policy/{item}/delete/{policy}', 'deletePolicy')->name('strategic_documents.institutions.policy.delete');
-        Route::get('/nomenclature/institutions/remove/link', 'removeLink')->name('strategic_documents.institutions.link.remove');
-        Route::match(['post', 'put'], '/nomenclature/institutions/store/{item?}', 'store')->name('strategic_documents.institutions.store');
+    Route::controller(InstitutionController::class)->prefix('nomenclature')->group(function () {
+        Route::get('/institutions',                             'index')->name('strategic_documents.institutions.index')->middleware('can:viewAny,App\Models\Institution');
+        Route::get('/institutions/edit/{item?}',                'edit')->name('strategic_documents.institutions.edit');
+        Route::post('/institutions/add/link',                   'addLink')->name('strategic_documents.institutions.link.add');
+        Route::get('/institutions/history-name/{id}/create',    'createHistoryName')->name('strategic_documents.institutions.history-name.create');
+        Route::post('/institutions/history-name/{id}/store',    'storeHistoryName')->name('strategic_documents.institutions.history-name.store');
+        Route::get('/institutions/history-name/{id}/edit',      'editHistoryName')->name('strategic_documents.institutions.history-name.edit');
+        Route::post('/institutions/history-name/{id}/update',   'updateHistoryName')->name('strategic_documents.institutions.history-name.update');
+        Route::post('/institutions/policy',                     'storePolicy')->name('strategic_documents.institutions.policy.store');
+        Route::get('/institutions/policy/{item}/delete/{policy}','deletePolicy')->name('strategic_documents.institutions.policy.delete');
+        Route::get('/institutions/remove/link',                 'removeLink')->name('strategic_documents.institutions.link.remove');
+        Route::match(['post', 'put'], '/institutions/store/{item?}','store')->name('strategic_documents.institutions.store');
     });
 
     // Links

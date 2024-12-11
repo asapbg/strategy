@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ActType;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\InstitutionLevel;
 use App\Models\LegalActType;
 use App\Models\Pris;
 use App\Models\Setting;
@@ -234,13 +235,15 @@ class PrisController extends Controller
 
     public function show(Request $request, $category, int $id = 0)
     {
-        $item = Pris::LastVersion()->InPris()->Published()->with(['translation', 'actType', 'actType.translation', 'institution', 'institution.translation',
+        $item = Pris::LastVersion()->InPris()->Published()->with(['translation', 'actType', 'actType.translation',
             'tags', 'tags.translation', 'changedDocs',
             'changedDocs.actType', 'changedDocs.actType.translation',
             'changedDocs.institution', 'changedDocs.institution.translation', 'files'])->find($id);
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }
+
+        //dump($item->institutions->first()->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first());
 
 //        $pageTitle = $item->mcDisplayName;
 //        $this->setBreadcrumbsTitle($pageTitle);
@@ -287,7 +290,9 @@ class PrisController extends Controller
         $this->composeBreadcrumbs($extraBreadCrumbs, $item);
         $this->setSeo($item->mcDisplayName, '', '', array('title' => $item->mcDisplayName, 'img' => Pris::DEFAULT_IMG));
 
-        return $this->view('site.pris.view', compact('item', 'pageTitle', 'pageTopContent', 'menuCategories', 'menuCategoriesArchive', 'hasSubscribeEmail', 'hasSubscribeRss'));
+        return $this->view('site.pris.view',
+            compact('item', 'pageTitle', 'pageTopContent', 'menuCategories', 'menuCategoriesArchive', 'hasSubscribeEmail', 'hasSubscribeRss')
+        );
     }
 
     private function sorters()

@@ -41,7 +41,7 @@ class InstitutionPolicy
      */
     public function create(User $user)
     {
-        return false;
+        return $user->canAny(['manage.*','manage.nomenclatures']);
     }
 
     /**
@@ -65,7 +65,7 @@ class InstitutionPolicy
      */
     public function delete(User $user, Institution $institution)
     {
-        return false;
+        return $user->canAny(['manage.*','manage.nomenclatures']);
     }
 
     /**

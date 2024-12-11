@@ -93,26 +93,33 @@
                         <div class="col-md-9 pris-left-column">
                             @foreach($item->institutions as $i)
                                 @if($i->id != config('app.default_institution_id'))
+                                    @php
+                                        $name = $i->name;
+                                        if ($i->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first()) {
+                                            $name = $i->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first()->name;
+                                        }
+                                    @endphp
 {{--                                    <a href="{{ route('admin.strategic_documents.institutions.edit', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">{{ $i->name }} </a>--}}
-                                    <a href="{{ route('institution.profile', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">{{ $i->name }} </a>
+                                    <a href="{{ route('institution.profile', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">
+                                        {{ $name }}
+                                    </a>
                                 @endif
                             @endforeach
                         </div>
                     </div>
                 @endif
 
-                @if($item->importer)
-                    <div class="row pris-row pb-2 mb-2">
-                        <div class="col-md-3 pris-left-column">
-                            <i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('site.public_consultation.importer') }}
-                        </div>
-
-                        <div class="col-md-9 pris-left-column">
-                            {{ $item->importer }}
-{{--                            <a href="{{ route('pris.index').'?importer='.$item->importer }}" class="text-decoration-none">{{ $item->importer }} </a>--}}
-                        </div>
+                <div class="row pris-row pb-2 mb-2">
+                    <div class="col-md-3 pris-left-column">
+                        <i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('site.public_consultation.importer') }}
                     </div>
-                @endif
+
+                    <div class="col-md-9 pris-left-column">
+                        {{ !empty($item->old_importers) ? $item->old_importers : $item->importer }}
+{{--                            <a href="{{ route('pris.index').'?importer='.$item->importer }}" class="text-decoration-none">{{ $item->importer }} </a>--}}
+                    </div>
+                </div>
+
 
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">

@@ -4,6 +4,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="card">
+
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="custom-tabs" role="tablist">
                         <li class="nav-item">
@@ -11,20 +12,28 @@
                         </li>
                         @if($item->id)
                             <li class="nav-item">
-                                <a class="nav-link" id="ct-links-tab" data-toggle="pill" href="#ct-links" role="tab" aria-controls="ct-links" aria-selected="false">{{ __('custom.useful_links') }}</a>
+                                <a class="nav-link" id="ct-history-tab" data-toggle="pill" href="#ct-history" role="tab" aria-controls="ct-links" aria-selected="false">
+                                    История на промените
+                                </a>
                             </li>
-                        @endif
-                        @if($item->id)
                             <li class="nav-item">
-                                <a class="nav-link" id="ct-policy-tab" data-toggle="pill" href="#ct-policy" role="tab" aria-controls="ct-policy" aria-selected="false">{{ trans_choice('custom.field_of_actions', 2) }}</a>
+                                <a class="nav-link" id="ct-links-tab" data-toggle="pill" href="#ct-links" role="tab" aria-controls="ct-links" aria-selected="false">
+                                    {{ __('custom.useful_links') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="ct-policy-tab" data-toggle="pill" href="#ct-policy" role="tab" aria-controls="ct-policy" aria-selected="false">
+                                    {{ trans_choice('custom.field_of_actions', 2) }}
+                                </a>
                             </li>
                         @endif
                     </ul>
                 </div>
+
                 <div class="card-body">
                     <div class="tab-content" id="custom-tabsContent">
+
                         <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
-{{--                                <p><b>{{ __('custom.content_in_language') }}</b></p>--}}
                             @php($storeRoute = route($storeRouteName, ['item' => $item->id]))
                             <form action="{{ $storeRoute }}" method="post" name="form" id="form">
                                 @csrf
@@ -41,7 +50,7 @@
                                 <div class="row">
                                     @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
                                 </div>
-                                <div class="row">
+                                <div class="row mt-3">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
@@ -52,6 +61,58 @@
                                 </div>
                             </form>
                         </div>
+
+                        <div class="tab-pane fade" id="ct-history" role="tabpanel" aria-labelledby="ct-history-tab">
+                            @php($storeRoute = route($storeRouteName, ['item' => $item->id]))
+                            @if ($item->historyNames->count() > 0)
+                                <h5 class="mt-2">История на промените</h5>
+                                <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ __('validation.attributes.name') }}</th>
+                                        <th>{{ __('custom.valid_from') }}</th>
+                                        <th>{{ __('custom.valid_to') }}</th>
+                                        <th>{{ __('custom.actions') }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($item->historyNames as $historyName)
+                                        <tr>
+                                            <td>{{ $historyName->name }}</td>
+                                            <td>{{ displayDate($historyName->valid_from) }}</td>
+                                            <td>{{ displayDate($historyName->valid_till) }}</td>
+                                            <td>
+                                                @can('update', $item)
+                                                    <a href="{{ route('admin.strategic_documents.institutions.history-name.edit', $historyName->id) }}"
+                                                       class="btn btn-sm btn-info"
+                                                       data-toggle="tooltip"
+                                                       title="{{ __('custom.edit') }}"
+                                                    >
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                @endcan
+{{--                                                @can('delete', $item)--}}
+{{--                                                    <a href="{{ route( $editRouteName , $historyName->id) }}"--}}
+{{--                                                       class="btn btn-sm btn-info"--}}
+{{--                                                       data-toggle="tooltip"--}}
+{{--                                                       title="{{ __('custom.edit') }}"--}}
+{{--                                                    >--}}
+{{--                                                        <i class="fa fa-edit"></i>--}}
+{{--                                                    </a>--}}
+{{--                                                @endcan--}}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="col-md-2">
+                                    <a href="{{ route('admin.strategic_documents.institutions.history-name.create', $item->id) }}" class="btn btn-success">
+                                        {{ __('custom.add') }}
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+
                         @if($item->id)
                             <div class="tab-pane fade" id="ct-links" role="tabpanel" aria-labelledby="ct-links-tab">
                                 <form class="row" action="{{ route('admin.strategic_documents.institutions.link.add') }}" method="post" name="form-link" id="form-link">
@@ -119,6 +180,7 @@
                                 </div>
                             </div>
                         @endif
+
                         @if($item->id)
                             <div class="tab-pane fade" id="ct-policy" role="tabpanel" aria-labelledby="ct-policy-tab">
                                 <form class="row" action="{{ route('admin.strategic_documents.institutions.policy.store') }}" method="post" name="form-policy" id="form-policy">
@@ -181,6 +243,7 @@
                                 </div>
                             </div>
                         @endif
+
                     </div>
                 </div>
             </div>
