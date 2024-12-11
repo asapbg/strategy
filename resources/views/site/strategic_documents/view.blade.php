@@ -178,7 +178,7 @@
                                class="main-color text-decoration-none fs-18">
                                 <span class="obj-icon-info me-2">
                                     <i class="fas fa-link me-2 main-color fs-18"
-                                       title="Тип консултация"></i>{{ $strategicDocument->publicConsultation?->title }}</span>
+                                       title="Тип консултация"></i>{{ $strategicDocument->publicConsultation?->reg_num }}</span>
                             </a>
                         </div>
                     @endif
