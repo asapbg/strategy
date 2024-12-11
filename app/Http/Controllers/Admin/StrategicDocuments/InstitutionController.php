@@ -119,6 +119,8 @@ class InstitutionController extends AdminController
         try {
 
             $validated['current'] = false;
+            $validated['valid_from'] = databaseDate($validated['valid_from']);
+            $validated['valid_till'] = databaseDate($validated['valid_till']);
             $institution->historyNames()->create($validated);
 
             return to_route('admin.strategic_documents.institutions.edit', $id)->with('success', 'Записът беше добавен успешно');
@@ -151,6 +153,8 @@ class InstitutionController extends AdminController
 
         try {
 
+            $validated['valid_from'] = databaseDate($validated['valid_from']);
+            $validated['valid_till'] = databaseDate($validated['valid_till']);
             $institutionHistoryName->fill($validated);
             $institutionHistoryName->save();
 
