@@ -43,7 +43,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
         $institutions = Institution::where('institution_level_id', InstitutionLevel::where('system_name', '=', 'Ministry')->first()->id)
             //->where('eik', '=', '000695388')
             //->take(2)
-            ->whereIn('id', [130,131,143])
+            ->whereNotIn('id', [130,131,143])
             ->get();
         //dd($institutions->toArray());
 
