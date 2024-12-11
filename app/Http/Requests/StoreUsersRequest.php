@@ -31,12 +31,15 @@ class StoreUsersRequest extends FormRequest
         $rules = [
 //            'is_org'                => ['required', 'boolean'],
             //'username'              => ['required', 'unique:users', 'string', 'max:255'],
-            'first_name'            => ['required', 'string', 'max:255'],
-            'last_name'             => ['required_if:is_org,0', 'string', 'max:255'],
-            'middle_name'             => ['nullable', 'string', 'max:255'],
-            'email'                 => ['nullable', 'string', 'email', 'max:255'],
-            'user_type'             => ['required' ,'numeric'],
-            'active'             => ['required' ,'numeric'],
+            'first_name'    => ['required', 'string', 'max:255'],
+            'last_name'     => ['required_if:is_org,0', 'string', 'max:255'],
+            'middle_name'   => ['nullable', 'string', 'max:255'],
+            'email'         => ['nullable', 'string', 'email', 'max:255'],
+            'user_type'     => ['required' ,'numeric'],
+            'active'        => ['required' ,'numeric'],
+            'job'           => ['nullable', 'string', 'max:255'],
+            'unit'          => ['nullable', 'string', 'max:255'],
+            'phone'         => ['nullable', 'string', 'max:255'],
         ];
 
         if(request()->input('sd', 0)){

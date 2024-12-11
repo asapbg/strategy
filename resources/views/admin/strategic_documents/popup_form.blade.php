@@ -252,6 +252,12 @@
             $('.select2').select2(select2Options);
         }
 
+        if($('.select2-autocomplete-ajax').length) {
+            $('.select2-autocomplete-ajax').each(function (){
+                MyS2Ajax($(this), $(this).data('placeholders2'), $(this).data('urls2'));
+            });
+        }
+
         function controlDateExpirationNew(){
             if($('#date_expiring_indefinite_new').is(':checked')){
                 $('#document_date_expiring_new').val('');

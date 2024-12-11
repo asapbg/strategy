@@ -80,6 +80,15 @@
                                                         <div class="col-auto">
                                                             @can('update', $item)
                                                                 <button type="button"
+                                                                        class="btn btn-sm btn-warning mr-2"
+                                                                        data-toggle="modal"
+                                                                        data-target="#modal-notify-meeting"
+                                                                        title="{{ __('custom.edit') }}"
+                                                                        onclick="NOTIFY_MEETING.querySelector('input[name=meeting_id]').value = '{{ $meeting->id }}';">
+                                                                    {{ __('custom.send_notify') }}
+                                                                </button>
+
+                                                                <button type="button"
                                                                         class="btn btn-sm btn-info mr-2"
                                                                         data-toggle="modal"
                                                                         data-target="#modal-edit-meeting"

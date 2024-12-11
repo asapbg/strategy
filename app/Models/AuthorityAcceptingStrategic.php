@@ -28,6 +28,8 @@ class AuthorityAcceptingStrategic extends ModelActivityExtend implements Transla
 
     const COUNCIL_MINISTERS = 1;
 
+    const NATIONAL_ASSEMBLY = 2;
+
     /**
      * Get the model name
      */

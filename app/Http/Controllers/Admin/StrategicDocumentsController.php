@@ -116,12 +116,13 @@ class StrategicDocumentsController extends AdminController
 
         $this->setBreadcrumbsTitle($heading);
 
+        $strategicDocumentTypes = StrategicDocumentType::with('translations')->orderByTranslation('name')->get();
+
         if($section == self::SECTION_GENERAL){
             $storeRouteName = self::STORE_ROUTE;
             $listRouteName = self::LIST_ROUTE;
             $translatableFields = StrategicDocument::translationFieldsProperties();
 
-            $strategicDocumentTypes = StrategicDocumentType::with('translations')->orderByTranslation('name')->get();
             $strategicActTypes = StrategicActType::with('translations')->orderByTranslation('name')->get();
             $legalActTypes = LegalActType::StrategyCategories()->with('translations')->get();
             $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->whereNotNull('nomenclature_level_id')->get();
@@ -161,7 +162,7 @@ class StrategicDocumentsController extends AdminController
                 'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
                 'policyAreas', 'legalActTypes', 'ekateAreas', 'ekateMunicipalities', 'adminUser'));
         } else if($section == self::SECTION_FILES){
-            return $this->view(self::EDIT_VIEW, compact('section', 'item'));
+            return $this->view(self::EDIT_VIEW, compact('section', 'item', 'strategicDocumentTypes'));
         } else{
             return redirect(route('admin.strategic_documents.edit', [$item->id ?? 0, self::SECTION_GENERAL]));
         }
@@ -188,13 +189,13 @@ class StrategicDocumentsController extends AdminController
     }
 
     /**
-     * @param LanguageFileUploadRequest $request
+     * @param StrategicDocumentFileUploadRequest $request
      * @param $objectId
      * @param $typeObject
      * @param bool $redirect
      * @return Application|RedirectResponse|Redirector|void
      */
-    public function uploadFileLanguagesSd(LanguageFileUploadRequest $request, $objectId, $typeObject, $redirect = true) {
+    public function uploadFileLanguagesSd(StrategicDocumentFileUploadRequest $request, $objectId, $typeObject, $redirect = true) {
         try {
             $validated = $request->validated();
             // Upload File
@@ -227,6 +228,7 @@ class StrategicDocumentsController extends AdminController
                     'sys_user' => $request->user()->id,
                     'locale' => $code,
                     'description' => $validated['description_'.$code],
+                    'file_info' => $validated['file_info_'.$code] ?? NULL,
                     'version' => '1.0',
                     'visible_in_report' => isset($validated['is_visible_in_report'])
                 ]);
@@ -252,6 +254,7 @@ class StrategicDocumentsController extends AdminController
                 return redirect($route)->with('success', 'Файлът е качен успешно');
             }
         } catch (\Exception $e) {
+            throw $e;
             logError('Upload file strategic document', $e->getMessage());
             return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
         }
@@ -289,6 +292,7 @@ class StrategicDocumentsController extends AdminController
             //END Ugly fix for wrong fields and connections
             if( $validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS ) {
                 $validated['strategic_act_number'] = null;
+                $validated['strategic_act_type_id'] = null;
                 $validated['strategic_act_link'] = null;
                 $validated['document_date'] = null;
 

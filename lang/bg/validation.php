@@ -572,7 +572,7 @@ return [
         'member_name_en'                => 'Име (EN) на член',
         'in_footer_menu'                => 'Включено в меню (footer)',
         'strategic_act_number'                => 'Номер на акта',
-        'strategic_act_link'                => 'Връзка към акта',
+        'strategic_act_link'                => 'Връзка към акта (линк)',
         'link_to_monitorstat'                => 'Връзка към Мониторстат',
         'display_name_bg'                => 'Публично име (BG)',
         'display_name_en'                => 'Публично име (EN)',
@@ -662,7 +662,7 @@ return [
         'strategic_document_level_id' => 'Ниво на стратегически документ',
         'policy_area_id' => 'Област на политика',
         'strategic_document_type_id' => 'Вид стратегически документ',
-        'strategic_act_type_id' => 'Вид акт, с който се одобряват стратегически документи',
+        'strategic_act_type_id' => 'Вид на акт',
         'accept_act_institution_type_id' => 'Орган, приел стратегически документ',
         'document_date_accepted'  => 'Дата на приемане',
         'document_date_expiring'  => 'Дата на валидност',
@@ -779,6 +779,6 @@ return [
         'protocol_point'           => 'Точка от протокол',
         'motivation' => 'Мотивация на промените',
         'parent_type' => 'Приложи към',
-
+        'unit' => 'Звено',
     ],
 ];

@@ -18,7 +18,7 @@ class AdvisoryChairmanTypePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*', 'manage.nomenclatures', 'manage.advisory-boards.nomenclatures']);
     }
 
     /**
@@ -30,7 +30,7 @@ class AdvisoryChairmanTypePolicy
      */
     public function view(User $user, AdvisoryChairmanType $advisoryChairmanType)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*', 'manage.nomenclatures', 'manage.advisory-boards.nomenclatures']);
     }
 
     /**
@@ -41,7 +41,7 @@ class AdvisoryChairmanTypePolicy
      */
     public function create(User $user)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*', 'manage.nomenclatures', 'manage.advisory-boards.nomenclatures']);
     }
 
     /**
@@ -53,7 +53,7 @@ class AdvisoryChairmanTypePolicy
      */
     public function update(User $user, AdvisoryChairmanType $advisoryChairmanType)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*', 'manage.nomenclatures', 'manage.advisory-boards.nomenclatures']);
     }
 
     /**

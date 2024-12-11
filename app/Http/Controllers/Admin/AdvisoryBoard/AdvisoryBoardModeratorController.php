@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\AdvisoryBoard\StoreUserModeratorRequest;
+use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardModeratorRequest;
 use App\Http\Requests\StoreAdvisoryBoardModeratorInformationRequest;
 use App\Http\Requests\StoreAdvisoryBoardModeratorRequest;
 use App\Models\AdvisoryBoard;
@@ -161,6 +162,58 @@ class AdvisoryBoardModeratorController extends AdminController
             DB::commit();
 
             $changes['moderator'] = ['old' => null, 'new' => $user->fullName()];
+            //alert adb board modeRATOR
+            if(sizeof($changes)){
+                $notifyService = new Notifications();
+                $notifyService->advChanges($item, request()->user(), trans_choice('custom.moderators', 2), $changes);
+            }
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return response()->json(['status' => 'error'], 500);
+        }
+    }
+
+    /**
+     * Update user.
+     *
+     * @param UpdateAdvisoryBoardModeratorRequest $request
+     * @param AdvisoryBoard                       $item
+     * @param User                                $user
+     *
+     * @return JsonResponse
+     */
+    public function ajaxUpdate(UpdateAdvisoryBoardModeratorRequest $request, AdvisoryBoard $item, User $user)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+            unset($validated['password_confirmation']);
+
+            $user->first_name           = $validated['first_name'];
+            $user->middle_name          = $validated['middle_name']      ?? null;
+            $user->last_name            = $validated['last_name'];
+            $user->email                = $validated['email'];
+            $user->institution_id       = $validated['institution_id']   ?? null;
+            $user->job                  = $validated['job']              ?? null;
+            $user->unit                 = $validated['unit']             ?? null;
+            $user->phone                = $validated['phone']            ?? null;
+
+            if (!is_null($validated['password'])) {
+                $user->password = bcrypt($validated['password']);
+                $user->password_changed_at = Carbon::now();
+            }
+
+            $user->save();
+
+            DB::commit();
+
+            $changes['moderator'] = ['old' => null, 'new' => $user->fullName()];
+
             //alert adb board modeRATOR
             if(sizeof($changes)){
                 $notifyService = new Notifications();

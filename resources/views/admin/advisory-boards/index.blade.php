@@ -85,21 +85,25 @@
                                     <td>{{ $item->created_at }}</td>
                                     <td class="text-center">
                                         @can('view', $item)
-                                            <a href="{{ route('advisory-boards.view', $item) }}"
-                                               class="btn btn-sm btn-primary mr-2"
-                                               data-toggle="tooltip"
-                                               title="{{ __('custom.preview') }}">
-                                                <i class="fa fa-search"></i>
-                                            </a>
+                                            @if(!$item->deleted_at)
+                                                <a href="{{ route('advisory-boards.view', $item) }}"
+                                                   class="btn btn-sm btn-primary mr-2"
+                                                   data-toggle="tooltip"
+                                                   title="{{ __('custom.preview') }}">
+                                                    <i class="fa fa-search"></i>
+                                                </a>
+                                            @endif
                                         @endcan
 
                                         @can('update', $item)
-                                            <a href="{{ route('admin.advisory-boards.edit', $item) }}"
-                                               class="btn btn-sm btn-info mr-2"
-                                               data-toggle="tooltip"
-                                               title="{{ __('custom.preview') }}">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
+                                            @if(!$item->deleted_at)
+                                                <a href="{{ route('admin.advisory-boards.edit', $item) }}"
+                                                   class="btn btn-sm btn-info mr-2"
+                                                   data-toggle="tooltip"
+                                                   title="{{ __('custom.preview') }}">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            @endif
 
                                             @if(!$item->public)
                                                 <a href="#"

@@ -319,9 +319,10 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             $q->where('pris.asap_last_version', '=', 1);
 
             $q->orderBy('legal_act_type_translations.name', 'asc')
-            ->orderBy('pris.doc_num', 'asc');
+                ->orderBy('pris.doc_num', 'asc')
+                ->orderBy('pris.doc_date');
 
-        return $q->get();
+        return $q->paginate(20)->items();
     }
 
     /**

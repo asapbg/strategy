@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdvisoryBoard\StoreUserModeratorRequest;
+use App\Http\Requests\AjaxUpdateUsersRequest;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateAdminProfileRequest;
 use App\Http\Requests\UpdateUsersRequest;
@@ -12,6 +14,7 @@ use App\Models\StrategicDocuments\Institution;
 use App\Models\UserSubscribe;
 use Exception;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -224,17 +227,19 @@ class  UsersController extends Controller
         DB::beginTransaction();
 
         try {
-
 //            $user->username = mb_strtoupper($data['username']);
-            $user->user_type = $data['user_type'] ?? 2;
-            $user->first_name = $data['first_name'];
-            $user->middle_name = $data['middle_name'];
-            $user->last_name = $data['last_name'];
-            $user->email = $data['email'];
-            $user->notification_email = $data['user_type'] == User::USER_TYPE_INTERNAL ? null : $data['notification_email'];
-            $user->active = $data['active'];
-            $user->activity_status = $data['activity_status'];
-            $user->institution_id = count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0 ? null : $data['institution_id'];
+            $user->user_type            = $data['user_type'] ?? 2;
+            $user->first_name           = $data['first_name'];
+            $user->middle_name          = $data['middle_name'];
+            $user->last_name            = $data['last_name'];
+            $user->email                = $data['email'];
+            $user->notification_email   = $data['user_type'] == User::USER_TYPE_INTERNAL ? null : $data['notification_email'];
+            $user->active               = $data['active'];
+            $user->activity_status      = $data['activity_status'];
+            $user->institution_id       = count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0 ? null : $data['institution_id'];
+            $user->job                  = $data['job'] ?? null;
+            $user->unit                 = $data['unit'] ?? null;
+            $user->phone                = $data['phone'] ?? null;
 
             $user->syncRoles($data['roles']);
 
@@ -432,5 +437,56 @@ class  UsersController extends Controller
 
             return response()->json(['success' => false, 'message' => __('messages.system_error')]);
         }
+    }
+
+    /**
+     * Register new user and assign him as an advisory board moderator.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function ajaxRegister(Request $request): JsonResponse
+    {
+        $req = new StoreUserModeratorRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+
+        $validated = $validator->validated();
+
+        DB::beginTransaction();
+        try {
+            unset($validated['password_confirmation']);
+
+            $validated['user_type'] = User::USER_TYPE_INTERNAL;
+
+            $user = User::make($validated);
+            $user->password = bcrypt($validated['password']);
+            $user->email_verified_at = Carbon::now();
+            $user->password_changed_at = Carbon::now();
+            $user->save();
+
+            $user->name = $user->fullName() . ' (' . $user->email . ')';
+
+            DB::commit();
+
+            return response()->json(['status' => 'success', 'user' => $user]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return response()->json(['status' => 'error'], 500);
+        }
+    }
+
+    public function ajaxGetUser(Request $request)
+    {
+        $user_id = $request->get('user_id');
+
+        $user = User::find($user_id);
+
+        return response()->json(['status' => 'success', 'user' => $user]);
     }
 }

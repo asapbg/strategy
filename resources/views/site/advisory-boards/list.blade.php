@@ -98,9 +98,46 @@
                             </div>
                             @if($item->policyArea)
                                 <a href="{{ route('advisory-boards.index').'?fieldOfActions[]='.$item->policyArea->id }}"
-                                   title="{{ $item->policyArea->name }}" class="text-decoration-none mb-2">
+                                   title="{{ $item->policyArea->name }}" class="text-decoration-none mb-2 me-3">
                                     <i class="text-primary {{ $item->policyArea->icon_class }} me-1" title="{{ $item->policyArea->name }}"></i>
                                     {{ $item->policyArea->name }}
+                                </a>
+                            @endif
+                            @if($item->authority)
+                                <br/>
+                                <span class="me-1"><strong>{{ trans_choice('custom.authority_advisory_board', 1) }}:</strong></span>
+
+                                <a href="{{ route('advisory-boards.index').('?authoritys[]='.$item->authority->id) }}" class="main-color text-decoration-none me-3">
+                                    <i class="fa-solid fa-right-to-bracket me-1 main-color"
+                                       title="{{ $item->authority->name }}"></i>
+                                    {{ $item->authority->name }}
+                                </a>
+                            @endif
+                            @if(isset($item->chairmen) && $item->chairmen->count() > 0)
+                                <br/>
+                                <span class="me-1"><strong>{{ __('custom.chairman_site') }}:</strong></span>
+
+                                @foreach($item->chairmen as $chairmen)
+                                    @php($dataChairmen = [])
+                                    @foreach(['member_name', 'member_job', 'institution'] as $n)
+                                        @if(!empty($chairmen->{$n}))
+                                            @php($dataChairmen[] = $n != 'institution' ? $chairmen->{$n} : $chairmen->institution->name)
+                                        @endif
+                                    @endforeach
+                                        @if(sizeof($dataChairmen))
+                                            <span class="mb-2">{{ Str::ucfirst(implode(', ', $dataChairmen)) }}</span>
+                                        @endif
+                                        @if(!empty($chairmen->member_notes))
+                                            {!! $chairmen->member_notes !!}
+                                        @endif
+                                @endforeach
+                            @endif
+                            @if($item->advisoryActType)
+                                <br/>
+                                <span class="me-1"><strong>{{ __('validation.attributes.act_of_creation') }}:</strong></span>
+
+                                <a href="{{ route('advisory-boards.index').('?actOfCreations[]=' . $item->advisoryActType->id) }}" class="main-color text-decoration-none me-3">
+                                    {{ $item->advisoryActType?->translation->name }}
                                 </a>
                             @endif
                             <div class="meta-consul mt-2">

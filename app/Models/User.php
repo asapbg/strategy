@@ -25,7 +25,9 @@ use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
- * @property int $id
+ * @property int    $id
+ * @property string $job
+ * @property string $unit
  */
 class User extends Authenticatable implements MustVerifyEmailContract, JWTSubject
 {
@@ -57,7 +59,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
         'moderator-strategic',
 //        'moderator-legal',
 //        'moderator-advisory-boards',
-//        'moderator-advisory-board',
+        'moderator-advisory-board',
         'moderator-partnership',
     ];
 

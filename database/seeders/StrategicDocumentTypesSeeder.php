@@ -22,6 +22,10 @@ class StrategicDocumentTypesSeeder extends Seeder
             'Концепция',
             'Рамков документ',
             'Други',
+            'Национална стратегия',
+            'План за действие',
+            'Национална програма',
+            'Други документи',
         ];
 
         foreach ($types as $name) {

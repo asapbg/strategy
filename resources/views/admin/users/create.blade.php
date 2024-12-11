@@ -81,6 +81,52 @@
                                         @enderror
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="job">
+                                        {{ __('validation.attributes.job') }}
+                                    </label>
+
+                                    <div class="col-12">
+                                        <input type="text" id="job" name="job" class="form-control"
+                                               value="{{ old('job', '') }}"/>
+
+                                        @error('job')
+                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="unit">
+                                        {{ __('validation.attributes.unit') }}
+                                    </label>
+
+                                    <div class="col-12">
+                                        <input type="text" id="unit" name="unit" class="form-control"
+                                               value="{{ old('unit', '') }}"/>
+
+                                        @error('unit')
+                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="phone">
+                                        {{ __('validation.attributes.phone') }}
+                                    </label>
+
+                                    <div class="col-12">
+                                        <input type="text" id="phone" name="phone" class="form-control"
+                                               value="{{ old('phone', '') }}"/>
+
+                                        @error('phone')
+                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 <div class="form-group @if(count(array_intersect(old('roles') ? rolesNames(old('roles')) : [], $rolesRequiredInstitutions)) === 0) d-none @endif" id="institution_select">
                                     <label class="col-sm-12 control-label" for="email">
                                         {{ __('validation.attributes.institution_id') }}

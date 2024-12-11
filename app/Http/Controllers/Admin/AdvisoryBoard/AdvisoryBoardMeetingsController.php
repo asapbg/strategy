@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\AdvisoryBoard;
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\Admin\AdvisoryBoard\NotifyAdvisoryBoardMeetingRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\StoreAdvisoryBoardMeetingsRequest;
 use App\Http\Requests\Admin\AdvisoryBoard\UpdateAdvisoryBoardMeetingsRequest;
 use App\Models\AdvisoryBoard;
@@ -13,6 +14,8 @@ use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Log;
 
@@ -109,6 +112,41 @@ class AdvisoryBoardMeetingsController extends AdminController
             if(sizeof($changes)){
                 $notifyService = new Notifications();
                 $notifyService->advChanges($item, request()->user(), 'Заседания', $changes);
+            }
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return response()->json(['status' => 'error'], 500);
+        }
+    }
+
+    /**
+     * Send notification to all members.
+     *
+     * @param NotifyAdvisoryBoardMeetingRequest $request
+     * @param AdvisoryBoard                     $item
+     *
+     * @return JsonResponse
+     */
+    public function ajaxSendNotify(NotifyAdvisoryBoardMeetingRequest $request, AdvisoryBoard $item)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+            $meeting = AdvisoryBoardMeeting::find($validated['meeting_id']);
+
+            $members_to_notify = $item->members()->where('email', '!=', null)->get();
+
+            $link = $validated['additional_information_link'] ?? '';
+
+            $include_files = $validated['include_files'] ?? false;
+
+            foreach ($members_to_notify as $member) {
+                Notification::route('email', $member->email)->notify(new \App\Notifications\AdvisoryBoardMeeting($item, $meeting, $link, $include_files));
             }
 
             return response()->json(['status' => 'success']);

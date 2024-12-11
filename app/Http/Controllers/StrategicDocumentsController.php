@@ -73,7 +73,7 @@ class StrategicDocumentsController extends Controller
         $filter = $this->filters($request, $rf);
         //Sorter
         $sorter = $this->sorters();
-        $sort = $request->filled('order_by') ? $request->input('order_by') : 'document_date_accepted';
+        $sort = $request->filled('order_by') ? $request->input('order_by') : 'created_at';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
 
         $paginate = $requestFilter['paginate'] ?? Pris::PAGINATE;
@@ -472,6 +472,7 @@ class StrategicDocumentsController extends Controller
             'acceptActInstitution' => array(
                 'type' => 'select',
                 'options' => optionsFromModel(AuthorityAcceptingStrategic::optionsList(true), false),
+                'skipCategoriesControl' => true,
                 'multiple' => true,
                 'default' => '',
                 'label' => __('validation.attributes.accept_act_institution_type_id'),

@@ -178,7 +178,7 @@
                                class="main-color text-decoration-none fs-18">
                                 <span class="obj-icon-info me-2">
                                     <i class="fas fa-link me-2 main-color fs-18"
-                                       title="Тип консултация"></i>{{ $strategicDocument->publicConsultation?->title }}</span>
+                                       title="Тип консултация"></i>{{ $strategicDocument->publicConsultation?->reg_num }}</span>
                             </a>
                         </div>
                     @endif
@@ -206,14 +206,14 @@
                 </div>
 
 
-                @if($strategicDocument->files->count())
+                @if($strategicDocument->filesByLocale->count())
                     <div class="row mb-4 mt-4">
                         {{--                        <h3 class="mb-3">{{ trans_choice('custom.files', 2) }}</h3>--}}
                         <div class="row table-light">
                             <div class="col-12 mb-2">
                                 <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ trans_choice('custom.files', 2) }}</p>
                                 <ul class="list-group list-group-flush">
-                                    @foreach ($strategicDocument->files as $f)
+                                    @foreach ($strategicDocument->filesByLocale as $f)
                                         <li class="list-group-item">
                                             <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $f->id]) }}">
                                                 {!! fileIcon($f->content_type) !!} {{ $f->description }} - {{ displayDate($f->created_at) }}

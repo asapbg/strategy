@@ -24,6 +24,7 @@
                         <th style="max-width: 30px;">{{ __('custom.order') }}</th>
                         <th>ID</th>
                         <th>{{ __('custom.first_name') }}</th>
+                        <th>{{ __('validation.attributes.email') }}</th>
                         <th>{{ __('custom.type') }}</th>
                         <th>{{ __('forms.job') }}</th>
                         <th>{{ __('custom.actions') }}</th>
@@ -48,6 +49,7 @@
                                     </td>
                                     <td>{{ $member->id }}</td>
                                     <td>{{ $member->member_name }}</td>
+                                    <td><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></td>
                                     <td>{{ trans_choice('custom.' . Str::lower(\App\Enums\AdvisoryTypeEnum::tryFrom($member->advisory_type_id)->name), 1) }}</td>
                                     <td>{{ $member->member_job }}</td>
                                     <td class="text-center">
@@ -97,7 +99,7 @@
                     </tbody>
                     @if(isset($item->members) && $item->members->count() > 0)
                         <tfoot>
-                            <th colspan="6">
+                            <th colspan="7">
                                 <button class="btn btn-success" type="submit"><i class="fas fa-sort-amount-up-alt mr-3"></i>Запази поредността</button>
                             </th>
                         </tfoot>

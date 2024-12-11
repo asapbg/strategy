@@ -312,19 +312,21 @@ function categoriesControl(){
     }
 
     if($('#acceptActInstitution').length){
-        $('#acceptActInstitution').val(null).trigger("change");
-        if(levelVals.length == 0){
-            $('#acceptActInstitution option').each(function (){
-                $(this).attr('disabled', false);
-            });
-        } else{
-            $('#acceptActInstitution option').each(function (){
-                if(levelVals.indexOf($(this).data('level').toString()) != -1){
+        if(!$('#acceptActInstitution').hasClass('skipCategoriesControl')) {
+            $('#acceptActInstitution').val(null).trigger("change");
+            if (levelVals.length == 0) {
+                $('#acceptActInstitution option').each(function () {
                     $(this).attr('disabled', false);
-                } else{
-                    $(this).attr('disabled', true);
-                }
-            });
+                });
+            } else {
+                $('#acceptActInstitution option').each(function () {
+                    if (levelVals.indexOf($(this).data('level').toString()) != -1) {
+                        $(this).attr('disabled', false);
+                    } else {
+                        $(this).attr('disabled', true);
+                    }
+                });
+            }
         }
     }
 

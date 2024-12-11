@@ -296,18 +296,33 @@
                             </div>
                         </div>
 
+                        <!-- Модератор -->
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="control-label" for="moderator_id">
-                                    {{ trans_choice('custom.moderators', 1) }}
-                                </label>
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-auto">
+                                        <label class="control-label m-0" for="moderator_id">
+                                            {{ __('custom.moderator_advisory_board') }}
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-auto">
+                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                                data-target="#modal-register-user">
+                                            <i class="fa fa-plus mr-3"></i>
+                                            {{ __('custom.register') . ' ' . __('custom.of') . ' ' . trans_choice('custom.users', 1) }}
+                                        </button>
+                                    </div>
+                                </div>
 
                                 <select name="moderator_id" class="select2 form-control form-control-sm" id="moderator_id">
                                     <option value="">{{ __('custom.username') }}</option>
 
                                     @if(isset($all_users) && $all_users->count() > 0)
                                         @foreach($all_users as $user)
-                                            <option value="{{ $user->id }}">{{ implode(' ', [$user->first_name, $user->middle_name, $user->last_name]) }} ({{ $user->email }})</option>
+                                            @php $selected = old('moderator_id', '') == $user->id ? 'selected' : ''; @endphp
+
+                                            <option value="{{ $user->id }}" {{ $selected }}>{{ implode(' ', [$user->first_name, $user->middle_name, $user->last_name]) }} ({{ $user->email }})</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -373,6 +388,8 @@
             </div>
         </div>
     </section>
+
+    @includeIf('admin.advisory-boards.modals.register-user-form')
 
     @push('scripts')
         <script type="application/javascript">
@@ -452,6 +469,106 @@
                 column.appendChild(input);
 
                 return column;
+            }
+
+            /**
+             * Submit basic ajax form.
+             * You can pass the submit button and the url for storing data.
+             *
+             * @param element
+             * @param url
+             */
+            function submitAjax(element, url) {
+                // change button state
+                changeButtonState(element);
+                clearErrorMessages();
+
+                // Get the form element
+                const form = element.closest('.modal-content').querySelector('form');
+                const formData = new FormData(form);
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': form.querySelector('input[name=_token]').value
+                    },
+                    url: url,
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        if (typeof result.errors != 'undefined') {
+                            let errors = Object.entries(result.errors);
+                            for (let i = 0; i < errors.length; i++) {
+                                const search_class = '.error_' + errors[i][0];
+                                form.querySelector(search_class).textContent = errors[i][1][0];
+                            }
+                            changeButtonState(element, 'finished');
+                        } else {
+                            if (!result.user) {
+                                return;
+                            }
+
+                            const select2 = $('#moderator_id');
+
+                            // Add new option dynamically
+                            select2.append(new Option(result.user.name, result.user.id, false, true));
+
+                            // Trigger the change event to refresh Select2
+                            select2.trigger('change');
+
+                            // close modal
+                            $('#modal-register-user').modal('hide');
+                        }
+                    },
+                    error: function (xhr) {
+                        changeButtonState(element, 'finished');
+                        // Handle error response
+                        if (xhr.status === 422) {
+                            const errors = xhr.responseJSON.errors;
+
+                            for (let i in errors) {
+                                const search_class = '.error_' + i;
+                                form.querySelector(search_class).textContent = errors[i][0];
+                            }
+                        }
+                    }
+                });
+            }
+
+            /**
+             * Change button state for ajax forms.
+             * State can be either 'loading' or 'finished'.
+             *
+             * @param element
+             * @param state
+             */
+            function changeButtonState(element, state = 'loading') {
+                const button_text_translation = state === 'loading' ? @json(__('custom.loading')) : @json(__('custom.add'));
+                const loader = element.querySelector('.spinner-grow');
+
+                element.querySelector('.text').innerHTML = button_text_translation;
+                element.disabled = state === 'loading';
+
+                if (state === 'loading') {
+                    loader.classList.remove('d-none');
+                    return;
+                }
+
+                loader.classList.add('d-none');
+            }
+
+            /**
+             * Clear all errors from previous ajax.
+             * By default it will clear all elements with class ajax-error
+             *
+             * @param className
+             */
+            function clearErrorMessages(className = 'ajax-error') {
+                document.querySelectorAll('.' + className).forEach(function(el) {
+                    el.innerHTML = '';
+                });
             }
         </script>
     @endpush

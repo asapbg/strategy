@@ -11,6 +11,9 @@
 
     <link href="{{ asset('css/admin.css?v='.date('d')) }}" rel="stylesheet">
 
+    <!-- Font-awesome -->
+    <link href="{{ asset('/vendor/fontawesome-free-6.4.0-web/css/all.css') }}" rel="stylesheet">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

@@ -30,23 +30,25 @@ class StrategicDocumentFileUploadRequest extends FormRequest
     {
         session(['hasErrorsFromFileTab' => false]);
         $rules = [
-            'id' => ['required', 'numeric', 'exists:strategic_document,id'],
+            'description_bg' => ['required', 'max:500'],
+            'description_en' => ['nullable', 'max:500'],
             'valid_at' => ['required_if:date_valid_indefinite_files,0', 'date', 'nullable'],
-            'strategic_document_type_file_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
+            'strategic_document_type_id' => ['nullable', 'numeric', 'exists:strategic_document_type,id'],
             'parent_id' => ['sometimes', 'nullable','numeric', 'exists:strategic_document_file,id'],
-            'visible_in_report' => ['nullable', 'numeric'],
+            'is_visible_in_report' => ['nullable', 'numeric'],
             //'file' => ['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)],
             //'ord' => ['required', 'numeric']
         ];
 
         foreach (config('available_languages') as $lang) {
-            $rules['file_strategic_documents_' .$lang['code']] = StrategicDocumentFileEnum::validationRules($lang['code']);//['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
+            $rules['file_' .$lang['code']] = StrategicDocumentFileEnum::validationRules($lang['code']);//['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_EXTENSIONS)];
         }
-        foreach (config('available_languages') as $lang) {
-            foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
-                $rules[$field .'_'. $lang['code']] = $properties['rules'];
-            }
-        }
+
+//        foreach (config('available_languages') as $lang) {
+//            foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
+//                $rules[$field .'_'. $lang['code']] = $properties['rules'];
+//            }
+//        }
 
         foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
             $rules[$field .'_'. app()->getLocale()] = $properties['rules'];

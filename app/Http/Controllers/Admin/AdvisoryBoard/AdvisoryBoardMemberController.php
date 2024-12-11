@@ -128,7 +128,6 @@ class AdvisoryBoardMemberController extends AdminController
 
             //alert adb board modeRATOR
             $advBoard = AdvisoryBoard::find($validated['advisory_board_id']);
-            $advBoard = AdvisoryBoard::find($validated['advisory_board_id']);
             if(sizeof($changes)){
                 $notifyService = new Notifications();
                 $notifyService->advChanges($advBoard, request()->user(), trans_choice('custom.member', 2).' - '.$item->member_name, $changes);

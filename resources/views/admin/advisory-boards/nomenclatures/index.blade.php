@@ -30,15 +30,15 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                        <div class="col-sm-3">
-                            <a class="btn btn-info btn-block nomenclature-btn align-content-center"
-                               href="{{ route('admin.advisory-boards.nomenclature.field-of-actions.index') }}">
-                                <i class="fas fa-file"></i>
-                                {{ trans_choice('validation.attributes.field_of_action', 2) }}
-                            </a>
-                        </div>
+{{--                        <div class="col-sm-3">--}}
+{{--                            <a class="btn btn-info btn-block nomenclature-btn align-content-center"--}}
+{{--                               href="{{ route('admin.advisory-boards.nomenclature.field-of-actions.index') }}">--}}
+{{--                                <i class="fas fa-file"></i>--}}
+{{--                                {{ trans_choice('validation.attributes.field_of_action', 2) }}--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <a class="btn btn-info btn-block nomenclature-btn align-content-center"
                                href="{{ route('admin.advisory-boards.nomenclature.authority-advisory-board') }}">
                                 <i class="fas fa-file"></i>
@@ -46,7 +46,7 @@
                             </a>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <a class="btn btn-info btn-block nomenclature-btn align-content-center"
                                href="{{ route('admin.advisory-boards.nomenclature.advisory-act-type') }}">
                                 <i class="fas fa-file"></i>
@@ -54,7 +54,7 @@
                             </a>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <a class="btn btn-info btn-block nomenclature-btn align-content-center"
                                href="{{ route('admin.advisory-boards.nomenclature.advisory-chairman-type') }}">
                                 <i class="fas fa-file"></i>
