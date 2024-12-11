@@ -103,7 +103,7 @@
                                    onclick="editAdvisoryModerator('{{ $moderator->user?->id }}');"
                                    data-toggle="modal"
                                    data-target="#modal-edit-advisory-moderator"
-                                   title="{{__('custom.delete')}}">
+                                   title="{{__('custom.edit')}}">
                                     <i class="fa fa-user-edit"></i>
                                 </a>
 

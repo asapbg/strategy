@@ -47,18 +47,18 @@
                                 @if($archive_category == 2)
                                     <div class="col-auto">
                                         <div class="row">
-                                            <div class="col-auto">
-                                                @can('update', $item)
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-info mr-2"
-                                                            data-toggle="modal"
-                                                            data-target="#modal-edit-function"
-                                                            title="{{ __('custom.edit') }}"
-                                                            onclick="loadFunctionData('{{ route('admin.advisory-boards.function.edit', ['item' => $item, 'working_program' => $archiveItem]) }}');">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                @endcan
-                                            </div>
+{{--                                            <div class="col-auto">--}}
+{{--                                                @can('update', $item)--}}
+{{--                                                    <button type="button"--}}
+{{--                                                            class="btn btn-sm btn-info mr-2"--}}
+{{--                                                            data-toggle="modal"--}}
+{{--                                                            data-target="#modal-edit-function"--}}
+{{--                                                            title="{{ __('custom.edit') }}"--}}
+{{--                                                            onclick="loadFunctionData('{{ route('admin.advisory-boards.function.edit', ['item' => $item, 'working_program' => $archiveItem]) }}');">--}}
+{{--                                                        <i class="fa fa-edit"></i>--}}
+{{--                                                    </button>--}}
+{{--                                                @endcan--}}
+{{--                                            </div>--}}
 
                                             <div class="col-auto">
                                                 @can('delete', $item)
@@ -109,18 +109,18 @@
 {{--                                                @endcan--}}
 {{--                                            </div>--}}
 
-                                            <div class="col-auto">
-                                                @can('update', $item)
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-info mr-2"
-                                                            data-toggle="modal"
-                                                            data-target="#modal-edit-meeting"
-                                                            title="{{ __('custom.edit') }}"
-                                                            onclick="loadMeetingData('{{ route('admin.advisory-boards.meetings.edit', ['item' => $item, 'meeting' => $archiveItem]) }}');">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                @endcan
-                                            </div>
+{{--                                            <div class="col-auto">--}}
+{{--                                                @can('update', $item)--}}
+{{--                                                    <button type="button"--}}
+{{--                                                            class="btn btn-sm btn-info mr-2"--}}
+{{--                                                            data-toggle="modal"--}}
+{{--                                                            data-target="#modal-edit-meeting"--}}
+{{--                                                            title="{{ __('custom.edit') }}"--}}
+{{--                                                            onclick="loadMeetingData('{{ route('admin.advisory-boards.meetings.edit', ['item' => $item, 'meeting' => $archiveItem]) }}');">--}}
+{{--                                                        <i class="fa fa-edit"></i>--}}
+{{--                                                    </button>--}}
+{{--                                                @endcan--}}
+{{--                                            </div>--}}
 
                                             <div class="col-auto">
                                                 @can('delete', $item)
