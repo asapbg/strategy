@@ -1340,4 +1340,5 @@ return [
     'include_files' => 'Include files',
     'lang' => 'Language',
     'additional_information_link' => 'Link to additional information',
+    'moderator_advisory_board' => 'Moderator of the Advisory Board',
 ];

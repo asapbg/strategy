@@ -1369,4 +1369,5 @@ return [
     'include_files' => 'Включи приложените файлове',
     'lang' => 'Език',
     'additional_information_link' => 'Линк към допълнителна информация',
+    'moderator_advisory_board' => 'Модератор на "Консултативен съвет"',
 ];

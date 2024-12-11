@@ -520,6 +520,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('{item}/draft',      'draft')    ->name('advisory-boards.draft');
     });
 
+    // Ajax create user
+    Route::post('/ajax-register-user', [UsersController::class, 'ajaxRegister'])
+        ->middleware('can:create,App\Models\AdvisoryBoard')
+        ->name('ajax-register-user');
+
     // Settings
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSettingsController::class)->prefix('/advisory-boards')->group(function () {
         Route::get( '/settings/{section?}', 'edit')->name('advisory-boards.settings');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdvisoryBoard\StoreUserModeratorRequest;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateAdminProfileRequest;
 use App\Http\Requests\UpdateUsersRequest;
@@ -12,6 +13,7 @@ use App\Models\StrategicDocuments\Institution;
 use App\Models\UserSubscribe;
 use Exception;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -431,6 +433,48 @@ class  UsersController extends Controller
             Log::error($e);
 
             return response()->json(['success' => false, 'message' => __('messages.system_error')]);
+        }
+    }
+
+    /**
+     * Register new user and assign him as an advisory board moderator.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function ajaxRegister(Request $request): JsonResponse
+    {
+        $req = new StoreUserModeratorRequest();
+        $validator = Validator::make($request->all(), $req->rules());
+
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
+        }
+
+        $validated = $validator->validated();
+
+        DB::beginTransaction();
+        try {
+            unset($validated['password_confirmation']);
+
+            $validated['user_type'] = User::USER_TYPE_INTERNAL;
+
+            $user = User::make($validated);
+            $user->password = bcrypt($validated['password']);
+            $user->email_verified_at = Carbon::now();
+            $user->password_changed_at = Carbon::now();
+            $user->save();
+
+            $user->name = $user->fullName() . ' (' . $user->email . ')';
+
+            DB::commit();
+
+            return response()->json(['status' => 'success', 'user' => $user]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return response()->json(['status' => 'error'], 500);
         }
     }
 }
