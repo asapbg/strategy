@@ -322,7 +322,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
                 ->orderBy('pris.doc_num', 'asc')
                 ->orderBy('pris.doc_date');
 
-        return $q->get();
+        return $q->paginate(20)->items();
     }
 
     /**
