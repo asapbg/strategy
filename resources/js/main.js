@@ -778,6 +778,19 @@ $(document).ready(function (e) {
             ],
             dialogsInBody: true,
             lang: typeof GlobalLang != 'undefined' ? GlobalLang + '-' + GlobalLang.toUpperCase() : 'en-US',
+            callbacks: {
+                onPaste: (e) => {
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+
+                    e.preventDefault();
+
+                    // Firefox fix
+                    setTimeout(function () {
+                        document.execCommand('insertText', false, bufferText);
+                    }, 10);
+
+                }
+            }
         });
     }
 
