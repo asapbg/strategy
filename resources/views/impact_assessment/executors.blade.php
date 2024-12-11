@@ -83,9 +83,9 @@
                                 <label for="contract_date_from" class="form-label">{{ __('custom.begin_date') }}:</label>
                                 <div class="input-group">
                                     <input type="text" name="contract_date_from" autocomplete="off"
-                                           id="contract_date_from" class="form-control datepicker"
+                                           id="contract_date_from" class="form-control datepicker-btn"
                                            value="{{ request()->offsetGet('contract_date_from') }}">
-                                    <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                                    <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                                 </div>
                             </div>
 
@@ -93,9 +93,9 @@
                                 <label for="contract_date_till" class="form-label">{{ __('custom.end_date') }}:</label>
                                 <div class="input-group">
                                     <input type="text" name="contract_date_till" autocomplete="off"
-                                           id="contract_date_till" class="form-control datepicker"
+                                           id="contract_date_till" class="form-control datepicker-btn"
                                            value="{{ request()->offsetGet('contract_date_till') }}">
-                                    <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
+                                    <span class="input-group-text datepicker-addon" id="basic-addon2"><i class="fa-solid fa-calendar"></i></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
