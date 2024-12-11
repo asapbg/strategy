@@ -783,5 +783,6 @@ return [
         'protocol_point'           => 'Protocol point',
         'motivation' => 'Motivation of changes',
         'parent_type' => 'Attach to',
+        'unit' => 'Unit',
     ],
 ];

@@ -57,7 +57,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
         'moderator-strategic',
 //        'moderator-legal',
 //        'moderator-advisory-boards',
-//        'moderator-advisory-board',
+        'moderator-advisory-board',
         'moderator-partnership',
     ];
 

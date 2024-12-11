@@ -111,6 +111,51 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="job">
+                                        {{ __('validation.attributes.job') }}
+                                    </label>
+
+                                    <div class="col-12">
+                                        <input type="text" id="job" name="job" class="form-control"
+                                               value="{{ old('job', $user->job) }}"/>
+
+                                        @error('job')
+                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="unit">
+                                        {{ __('validation.attributes.unit') }}
+                                    </label>
+
+                                    <div class="col-12">
+                                        <input type="text" id="unit" name="unit" class="form-control"
+                                               value="{{ old('unit', $user->unit) }}"/>
+
+                                        @error('unit')
+                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-12 control-label" for="phone">
+                                        {{ __('validation.attributes.phone') }}
+                                    </label>
+
+                                    <div class="col-12">
+                                        <input type="text" id="phone" name="phone" class="form-control"
+                                               value="{{ old('phone', $user->phone) }}"/>
+
+                                        @error('phone')
+                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 <div class="form-group d-none" id="notification_email">
                                     <label class="col-sm-12 control-label" for="notification_email">{{ __('custom.notification_email') }} <span class="required">*</span></label>
                                     <div class="col-12">

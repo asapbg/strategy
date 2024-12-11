@@ -226,17 +226,19 @@ class  UsersController extends Controller
         DB::beginTransaction();
 
         try {
-
 //            $user->username = mb_strtoupper($data['username']);
-            $user->user_type = $data['user_type'] ?? 2;
-            $user->first_name = $data['first_name'];
-            $user->middle_name = $data['middle_name'];
-            $user->last_name = $data['last_name'];
-            $user->email = $data['email'];
-            $user->notification_email = $data['user_type'] == User::USER_TYPE_INTERNAL ? null : $data['notification_email'];
-            $user->active = $data['active'];
-            $user->activity_status = $data['activity_status'];
-            $user->institution_id = count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0 ? null : $data['institution_id'];
+            $user->user_type            = $data['user_type'] ?? 2;
+            $user->first_name           = $data['first_name'];
+            $user->middle_name          = $data['middle_name'];
+            $user->last_name            = $data['last_name'];
+            $user->email                = $data['email'];
+            $user->notification_email   = $data['user_type'] == User::USER_TYPE_INTERNAL ? null : $data['notification_email'];
+            $user->active               = $data['active'];
+            $user->activity_status      = $data['activity_status'];
+            $user->institution_id       = count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0 ? null : $data['institution_id'];
+            $user->job                  = $data['job'] ?? null;
+            $user->unit                 = $data['unit'] ?? null;
+            $user->phone                = $data['phone'] ?? null;
 
             $user->syncRoles($data['roles']);
 

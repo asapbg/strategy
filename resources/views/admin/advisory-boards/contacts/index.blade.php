@@ -33,8 +33,20 @@
                                                     @endforeach
                                                 </p>
 
+                                                @if($m->job)
+                                                    {{ __('custom.with') . ' ' . Str::lower(__('validation.attributes.job')) . ' ' . $m->job }}
+                                                @endif
+
+                                                @if($m->institution)
+                                                    {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.institution')) . ' ' . $m->institution->name }}
+                                                @endif
+
+                                                @if($m->unit)
+                                                    {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.unit')) . ' ' . $m->unit }}
+                                                @endif
+
                                                 @if(!empty($m->email) || !empty($m->phone))
-                                                    <div class="team-member-contact d-flex flex-row">
+                                                    <div class="team-member-contact d-flex flex-row mt-3">
                                                         @if(!empty($m->phone))
                                                             <a href="#" class="text-decoration-none me-4">
                                                                 <i class="fa-solid fa-phone me-1"></i>

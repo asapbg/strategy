@@ -41,12 +41,24 @@
                                         @endif
                                     @endforeach
                                 </p>
+
+                                @if($m->user?->job)
+                                    {{ __('custom.with') . ' ' . Str::lower(__('validation.attributes.job')) . ' ' . $m->user->job }}
+                                @endif
+
+                                @if($m->user?->institution)
+                                    {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.institution')) . ' ' . $m->user->institution->name }}
+                                @endif
+
+                                @if($m->user?->unit)
+                                    {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.unit')) . ' ' . $m->user->unit }}
+                                @endif
 {{--                                <p class="team-member-info dark-text mb-2">--}}
 {{--                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.Duis aute--}}
 {{--                                    irure dolor in reprehenderit in.--}}
 {{--                                </p>--}}
                                 @if($m->user && !empty($m->user->email) || !empty($m->user->phone))
-                                    <div class="team-member-contact d-flex flex-row">
+                                    <div class="team-member-contact d-flex flex-row mt-3">
                                         @if(!empty($m->user->phone))
                                             <a href="#" class="text-decoration-none me-4">
                                                 <i class="fa-solid fa-phone me-1"></i>
