@@ -536,7 +536,6 @@
 
                     if (selectedValue == '{{ \App\Models\AuthorityAcceptingStrategic::NATIONAL_ASSEMBLY }}') {
                         $('#strategic_act_type_id').val('{{ \App\Models\StrategicActType::DECISION }}').trigger('change');
-                        console.log(selectedValue, $('#strategic_act_type_id').val());
                     } else {
                         $('#strategic_act_type_id').val('').trigger('change');
                     }
