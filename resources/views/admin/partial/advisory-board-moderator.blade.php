@@ -34,7 +34,9 @@
 
                 <div class="col-md-4">
                     <button type="button" class="btn btn-success" data-toggle="modal"
-                            data-target="#modal-register-advisory-moderator">
+                            onclick="editAdvisoryModerator();"
+                            data-toggle="modal"
+                            data-target="#modal-edit-advisory-moderator">
                         <i class="fa fa-plus mr-3"></i>
                         {{ __('custom.register') . ' ' . __('custom.of') . ' ' . trans_choice('custom.users', 1) }}
                     </button>
@@ -97,6 +99,15 @@
                         <td>
                             @can('update', $item)
                                 <a href="javascript:;"
+                                   class="btn btn-sm btn-primary"
+                                   onclick="editAdvisoryModerator('{{ $moderator->user?->id }}');"
+                                   data-toggle="modal"
+                                   data-target="#modal-edit-advisory-moderator"
+                                   title="{{__('custom.delete')}}">
+                                    <i class="fa fa-user-edit"></i>
+                                </a>
+
+                                <a href="javascript:;"
                                    class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
                                    data-target="#modal-remove-moderator"
                                    data-resource-id="{{ $moderator->id }}"
@@ -118,6 +129,8 @@
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function (){
+            $('#institution_id').select2();
+
             $('#submit_moderator').submit(function (e){
                 if(!(parseInt($('#user_id').val()) > 0)){
                     new MyModal({
@@ -129,5 +142,44 @@
                 }
             });
         });
+
+        function editAdvisoryModerator(user_id = null) {
+            const modal = $('#modal-edit-advisory-moderator');
+            const create_route = @json(route('admin.advisory-boards.moderator.register', ['item' => $item]));
+            const update_route = @json(route('admin.advisory-boards.moderator.update', ['item' => $item, 'user' => '_user']));
+
+            if (!user_id) {
+                // replace :user with user.id in form action
+                modal.find('form').attr('action', create_route);
+
+                return;
+            }
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': form.querySelector('input[name=_token]').value
+                },
+                url: @json(route('admin.ajax-get-user')) + '?user_id=' + user_id,
+                type: 'GET',
+                dataType: 'json',
+                success: function (result) {
+                    if (!result.user) {
+                        return;
+                    }
+
+                    modal.find('#first_name').val(result.user.first_name);
+                    modal.find('#middle_name').val(result.user.middle_name);
+                    modal.find('#last_name').val(result.user.last_name);
+                    modal.find('#email').val(result.user.email);
+                    modal.find('#phone').val(result.user.phone);
+                    modal.find('#job').val(result.user.job);
+                    modal.find('#institution_id').val(result.user.institution_id).trigger('change');
+                    modal.find('#unit').val(result.user.unit);
+
+                    // replace :user with user.id in form action
+                    modal.find('form').attr('action', update_route.replace('_user', result.user.id));
+                },
+            });
+        }
     </script>
 @endpush

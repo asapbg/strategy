@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdvisoryBoard\StoreUserModeratorRequest;
+use App\Http\Requests\AjaxUpdateUsersRequest;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateAdminProfileRequest;
 use App\Http\Requests\UpdateUsersRequest;
@@ -450,7 +451,7 @@ class  UsersController extends Controller
         $req = new StoreUserModeratorRequest();
         $validator = Validator::make($request->all(), $req->rules());
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
         }
 
@@ -478,5 +479,14 @@ class  UsersController extends Controller
             Log::error($e);
             return response()->json(['status' => 'error'], 500);
         }
+    }
+
+    public function ajaxGetUser(Request $request)
+    {
+        $user_id = $request->get('user_id');
+
+        $user = User::find($user_id);
+
+        return response()->json(['status' => 'success', 'user' => $user]);
     }
 }

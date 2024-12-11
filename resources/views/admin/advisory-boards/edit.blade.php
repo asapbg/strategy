@@ -149,6 +149,7 @@
     @includeIf('admin.advisory-boards.modals.edit-working-program')
     @includeIf('admin.advisory-boards.modals.create-working-program-form')
     @includeIf('admin.advisory-boards.modals.register-advisory-moderator-form')
+    @includeIf('admin.advisory-boards.modals.edit-advisory-moderator-form')
     @includeIf('admin.advisory-boards.modals.create-section-form')
     @includeIf('admin.advisory-boards.modals.edit-section')
     @includeIf('admin.advisory-boards.modals.create-meeting-form')

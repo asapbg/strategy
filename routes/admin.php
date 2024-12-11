@@ -520,10 +520,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('{item}/draft',      'draft')    ->name('advisory-boards.draft');
     });
 
-    // Ajax create user
+    // ajax User routes, currently they are needed because of advisory boards
     Route::post('/ajax-register-user', [UsersController::class, 'ajaxRegister'])
         ->middleware('can:create,App\Models\AdvisoryBoard')
         ->name('ajax-register-user');
+    Route::get('/ajax-get-user', [UsersController::class, 'ajaxGetUser'])
+        ->middleware('can:create,App\Models\AdvisoryBoard')
+        ->name('ajax-get-user');
 
     // Settings
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardSettingsController::class)->prefix('/advisory-boards')->group(function () {
@@ -642,6 +645,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/store', 'store')->name('advisory-boards.moderator.store');
         Route::post('{moderator}/delete', 'destroy')->name('advisory-boards.moderator.delete');
         Route::post('/register', 'ajaxRegister')->name('advisory-boards.moderator.register');
+        Route::post('{user}/update/', 'ajaxUpdate')->name('advisory-boards.moderator.update');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {
