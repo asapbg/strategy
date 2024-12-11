@@ -472,6 +472,7 @@ class StrategicDocumentsController extends Controller
             'acceptActInstitution' => array(
                 'type' => 'select',
                 'options' => optionsFromModel(AuthorityAcceptingStrategic::optionsList(true), false),
+                'skipCategoriesControl' => true,
                 'multiple' => true,
                 'default' => '',
                 'label' => __('validation.attributes.accept_act_institution_type_id'),
