@@ -178,7 +178,7 @@
                                         @if($item->publicConsultation)
                                             <option value="{{ $item->publicConsultation->id }}"
                                                     {{ old('public_consultation_id', ($item->publicConsultation? $item->publicConsultation->id : null)) == $item->id ? 'selected' : '' }}
-                                                    data-id="{{ $item->publicConsultation->id }}"> {{ $item->publicConsultation->reg_num }} </option>
+                                                    data-id="{{ $item->publicConsultation->id }}"> {{ $item->publicConsultation->reg_num }} / {{ $item->publicConsultation->title }} </option>
                                         @endif
                                     </select>
                                     @error('public_consultation_id')
