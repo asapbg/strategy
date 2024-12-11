@@ -4,7 +4,9 @@
             {!! $pageTopContent->value !!}
         </div>
     @endif
-    @php($addBtn = auth()->user() && auth()->user()->can('create', \App\Models\Pris::class))
+    @php
+        $addBtn = auth()->user() && auth()->user()->can('create', \App\Models\Pris::class)
+    @endphp
     @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'btn_add' => $addBtn, 'add_url' => route('admin.pris.edit', ['item' => 0])])
     @include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer'])
     <input type="hidden" id="subscribe_model" value="App\Models\Pris">
@@ -63,9 +65,17 @@
                                         @if($item->institutions->count())
                                             @foreach($item->institutions as $i)
                                                 @if($i->id != config('app.default_institution_id'))
-                                                    <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?institutions[]='.$i->id }}" title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-2 me-2" target="_blank">
-                                                        <i class="fas fa-university fa-link main-color" title="{{ $i->name }}"></i>
-                                                        {{ $i->name }}
+                                                    @php
+                                                        $name = $i->name;
+                                                        if ($i->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first()) {
+                                                            $name = $i->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first()->name;
+                                                        }
+                                                    @endphp
+                                                    <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?institutions[]='.$i->id }}"
+                                                       title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-2 me-2" target="_blank"
+                                                    >
+                                                        <i class="fas fa-university fa-link main-color" title="{{ $name }}"></i>
+                                                        {{ $name }}
                                                     </a>
                                                 @endif
                                             @endforeach

@@ -50,7 +50,7 @@ class PrisController extends Controller
             ->LastVersion()
             ->InPris()
             ->Published()
-            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
+            ->with(['translations', 'actType', 'actType.translations', 'institutions.historyNames', 'institutions.translation'])
             ->when($institutions, function ($query) use ($institutions) {
                 $query->join(
                         'pris_institution as pi',
