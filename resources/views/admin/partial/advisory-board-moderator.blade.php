@@ -60,7 +60,39 @@
                 @foreach($moderators as $moderator)
                     <tr>
                         <td>{{ $moderator->id }}</td>
-                        <td>{{ $moderator->user->fullName() }}</td>
+                        <td>
+                            {{ $moderator->user->fullName() }}
+
+                            @if($moderator->user?->job)
+                                {{ __('custom.with') . ' ' . Str::lower(__('validation.attributes.job')) . ' ' . $moderator->user?->job }}
+                            @endif
+
+                            @if($moderator->user?->institution)
+                                {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.institution')) . ' ' . $moderator->user->institution->name }}
+                            @endif
+
+                            @if($moderator->user?->unit)
+                                {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.unit')) . ' ' . $moderator->user->unit }}
+                            @endif
+
+                            @if(!empty($moderator->user?->email) || !empty($moderator->user?->phone))
+                                | {{ __('custom.for') . ' ' . Str::lower(trans_choice('custom.contacts', 2)) }}:
+
+                                @if(!empty($moderator->user?->email))
+                                    <a href="mailto:{{ $moderator->user?->email }}" class="text-decoration-none">
+                                        <i class="fa-solid fa-envelope ms-1"></i>
+                                        {{ $moderator->user?->email }}
+                                    </a>
+                                @endif
+
+                                @if(!empty($moderator->user?->phone))
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fa-solid fa-phone ms-1"></i>
+                                        {{ $moderator->user?->phone }}
+                                    </a>
+                                @endif
+                            @endif
+                        </td>
                         <td>{{ $moderator->created_at }}</td>
                         <td>
                             @can('update', $item)
