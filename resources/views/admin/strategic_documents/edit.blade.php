@@ -67,6 +67,12 @@
                 } else if( acceptActInstitutionTypeVal > 0 && [1].indexOf(acceptActInstitutionTypeVal)  == -1 ) {
                     prisActContainer.addClass('d-none');
                     $('.act-custom-fields').removeClass('d-none');
+
+                    if (acceptActInstitutionTypeVal == '{{ \App\Models\AuthorityAcceptingStrategic::NATIONAL_ASSEMBLY }}') {
+                        $('#act_number_field').hide();
+                    } else {
+                        $('#act_number_field').show();
+                    }
                 } else{
                     $('.act-custom-fields').addClass('d-none');
                     prisActContainer.addClass('d-none');

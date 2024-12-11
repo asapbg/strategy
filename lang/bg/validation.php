@@ -572,7 +572,7 @@ return [
         'member_name_en'                => 'Име (EN) на член',
         'in_footer_menu'                => 'Включено в меню (footer)',
         'strategic_act_number'                => 'Номер на акта',
-        'strategic_act_link'                => 'Връзка към акта',
+        'strategic_act_link'                => 'Връзка към акта (линк)',
         'link_to_monitorstat'                => 'Връзка към Мониторстат',
         'display_name_bg'                => 'Публично име (BG)',
         'display_name_en'                => 'Публично име (EN)',
