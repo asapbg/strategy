@@ -528,11 +528,18 @@
                 if (selectedValue == parseInt('<?php echo \App\Models\AuthorityAcceptingStrategic::COUNCIL_MINISTERS; ?>')) {
                     $('#strategic_act_link').val('');
                     $('#strategic_act_number').val('');
-                    $('#strategic_act_type_id').val('');
+                    $('#strategic_act_type_id').val('').trigger('change');
                     $('#document_date').val('');
                 } else {
                     $('#document_date_pris').val('');
                     $('#pris_act_id').val('').trigger('change');
+
+                    if (selectedValue == '{{ \App\Models\AuthorityAcceptingStrategic::NATIONAL_ASSEMBLY }}') {
+                        $('#strategic_act_type_id').val('{{ \App\Models\StrategicActType::DECISION }}').trigger('change');
+                        console.log(selectedValue, $('#strategic_act_type_id').val());
+                    } else {
+                        $('#strategic_act_type_id').val('').trigger('change');
+                    }
                 }
             });
 

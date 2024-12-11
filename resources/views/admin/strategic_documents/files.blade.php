@@ -44,67 +44,67 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="col-sm-12 control-label"
-                       for="strategic_document_type_id">{{ trans_choice('custom.strategic_document_type', 1) }}
-                    <span class="required">*</span></label>
-                <div class="col-12">
-                    <select id="strategic_document_type_id" name="strategic_document_type_id"
-                            class="form-control form-control-sm select2 @error('strategic_document_type_id'){{ 'is-invalid' }}@enderror">
-                        @if(!$item->id)
-                            <option value=""
-                                    @if(old('strategic_document_type_id', '') == '') selected @endif>
-                                ---
-                            </option>
-                        @endif
-                        @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())
-                            @foreach($strategicDocumentTypes as $row)
-                                @if($row->active || ($item && $item->strategic_document_type_id == $row->id))
-                                    <option value="{{ $row->id }}"
-                                            @if(old('strategic_document_type_id', '') == $row->id) selected
-                                            @endif data-id="{{ $row->id }}">{{ $row->name }}</option>
-                                @endif
-                            @endforeach
-                        @endif
-                    </select>
-                    @error('strategic_document_type_id')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-        </div>
+{{--        <div class="col-md-6">--}}
+{{--            <div class="form-group">--}}
+{{--                <label class="col-sm-12 control-label"--}}
+{{--                       for="strategic_document_type_id">{{ trans_choice('custom.strategic_document_type', 1) }}--}}
+{{--                    <span class="required">*</span></label>--}}
+{{--                <div class="col-12">--}}
+{{--                    <select id="strategic_document_type_id" name="strategic_document_type_id"--}}
+{{--                            class="form-control form-control-sm select2 @error('strategic_document_type_id'){{ 'is-invalid' }}@enderror">--}}
+{{--                        @if(!$item->id)--}}
+{{--                            <option value=""--}}
+{{--                                    @if(old('strategic_document_type_id', '') == '') selected @endif>--}}
+{{--                                -----}}
+{{--                            </option>--}}
+{{--                        @endif--}}
+{{--                        @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())--}}
+{{--                            @foreach($strategicDocumentTypes as $row)--}}
+{{--                                @if($row->active || ($item && $item->strategic_document_type_id == $row->id))--}}
+{{--                                    <option value="{{ $row->id }}"--}}
+{{--                                            @if(old('strategic_document_type_id', '') == $row->id) selected--}}
+{{--                                            @endif data-id="{{ $row->id }}">{{ $row->name }}</option>--}}
+{{--                                @endif--}}
+{{--                            @endforeach--}}
+{{--                        @endif--}}
+{{--                    </select>--}}
+{{--                    @error('strategic_document_type_id')--}}
+{{--                    <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                    @enderror--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="col-sm-12 control-label"
-                       for="document_date_pris">{{ __('custom.valid_at') }}</label>
-                <div class="col-12">
-                    <input type="text" id="valid_at" name="valid_at"
-                           class="form-control form-control-sm datepicker @error('valid_at'){{ 'is-invalid' }}@enderror"
-                           value="{{ old('valid_at', '') }}">
-                    @error('valid_at')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-        </div>
+{{--        <div class="col-md-6">--}}
+{{--            <div class="form-group">--}}
+{{--                <label class="col-sm-12 control-label"--}}
+{{--                       for="document_date_pris">{{ __('custom.valid_at') }}</label>--}}
+{{--                <div class="col-12">--}}
+{{--                    <input type="text" id="valid_at" name="valid_at"--}}
+{{--                           class="form-control form-control-sm datepicker @error('valid_at'){{ 'is-invalid' }}@enderror"--}}
+{{--                           value="{{ old('valid_at', '') }}">--}}
+{{--                    @error('valid_at')--}}
+{{--                    <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                    @enderror--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
     </div>
 
     <div class="row ml-2">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="textarea"><span class="d-none">*</span>
-    {{--                <span class="required">*</span>--}}
-                </label>
-                <div class="form-check">
-                    <input type="checkbox" name="is_visible_in_report" class="form-check-input" value="1" checked="" >
-                    <label class="form-check-label" for="is_visible_in_report">
-                        Видим в репорти
-                    </label>
-                </div>
-            </div>
-        </div>
+{{--        <div class="col-md-4">--}}
+{{--            <div class="form-group">--}}
+{{--                <label for="textarea"><span class="d-none">*</span>--}}
+{{--    --}}{{--                <span class="required">*</span>--}}
+{{--                </label>--}}
+{{--                <div class="form-check">--}}
+{{--                    <input type="checkbox" name="is_visible_in_report" class="form-check-input" value="1" checked="" >--}}
+{{--                    <label class="form-check-label" for="is_visible_in_report">--}}
+{{--                        Видим в репорти--}}
+{{--                    </label>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
     </div>
     <div class="col-12"></div>
     <div class="row ml-1">

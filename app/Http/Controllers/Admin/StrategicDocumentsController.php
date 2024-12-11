@@ -221,7 +221,7 @@ class StrategicDocumentsController extends AdminController
                 $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
                 $newFile = new StrategicDocumentFile([
                     'strategic_document_id' => $objectId,
-                    'strategic_document_type_id' => $validated['is_visible_in_report'],
+                    'strategic_document_type_id' => $typeObject,
                     'filename' => $fileNameToStore,
                     'content_type' => $file->getClientMimeType(),
                     'path' => $pDir.$fileNameToStore,
@@ -230,7 +230,6 @@ class StrategicDocumentsController extends AdminController
                     'description' => $validated['description_'.$code],
                     'file_info' => $validated['file_info_'.$code] ?? NULL,
                     'version' => '1.0',
-                    'valid_at' => databaseDate($validated['valid_at']),
                     'visible_in_report' => isset($validated['is_visible_in_report'])
                 ]);
                 $newFile->save();

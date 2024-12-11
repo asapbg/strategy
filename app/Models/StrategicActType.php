@@ -24,6 +24,7 @@ class StrategicActType extends ModelActivityExtend implements TranslatableContra
     protected string $logName = "strategic_act_type";
 
     protected $fillable = ['consultation_level_id'];
+    const DECISION = 2;
 
     /**
      * Get the model name
