@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin\AdvisoryBoard;
 use App\Models\AdvisoryBoard;
 use App\Models\File;
 use App\Traits\FailedAuthorization;
+use App\Traits\RequestCreateNecessaryNomenclaturesTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -13,7 +14,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateAdvisoryBoardRequest extends FormRequest
 {
 
-    use FailedAuthorization;
+    use FailedAuthorization, RequestCreateNecessaryNomenclaturesTrait;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -32,6 +33,8 @@ class UpdateAdvisoryBoardRequest extends FormRequest
      */
     public function rules(): array
     {
+        $this->createNecessaryNomenclatures();
+
         $rules = [
             'policy_area_id'            => 'required|integer|exists:field_of_actions,id',
             'advisory_chairman_type_id' => 'required|integer|exists:advisory_chairman_type,id',

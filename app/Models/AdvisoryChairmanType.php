@@ -60,4 +60,9 @@ class AdvisoryChairmanType extends ModelActivityExtend implements TranslatableCo
             ->orderBy('advisory_chairman_type_translations.name', 'asc')
             ->get();
     }
+
+    public static function getOtherId()
+    {
+        return AdvisoryChairmanTypeTranslation::where('name', 'ilike', '%друго%')->first()?->advisory_chairman_type_id;
+    }
 }

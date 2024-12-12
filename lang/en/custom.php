@@ -1341,4 +1341,8 @@ return [
     'lang' => 'Language',
     'additional_information_link' => 'Link to additional information',
     'moderator_advisory_board' => 'Moderator of the Advisory Board',
+    'no_meetings_per_year' => 'No legislative meetings per year',
+    'other_authority' => 'Other authority',
+    'other_act_type' => 'Other act type',
+    'other_chairman_type' => 'Other chairman type',
 ];

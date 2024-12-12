@@ -57,4 +57,10 @@ class AdvisoryActType extends ModelActivityExtend implements TranslatableContrac
             ->orderBy('advisory_act_type_translations.name', 'asc')
             ->get();
     }
+
+
+    public static function getOtherId()
+    {
+        return AdvisoryActTypeTranslation::where('name', 'ilike', '%друг%')->first()?->advisory_act_type_id;
+    }
 }

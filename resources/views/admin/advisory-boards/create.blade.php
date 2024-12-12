@@ -112,9 +112,9 @@
                                         <span class="required">*</span>
                                     </label>
 
-
                                     <select id="authority_id" name="authority_id"
-                                            class="form-control form-control-sm select2-no-clear">
+                                            class="form-control form-control-sm select2-no-clear"
+                                            onchange="this.value == @json(\App\Models\AuthorityAdvisoryBoard::getOtherAuthorityId()) ? $('#other_authority_container').show() : $('#other_authority_container').hide();">
                                         <option value="">---</option>
                                         @if(isset($authorities) && $authorities->count() > 0)
                                             @foreach($authorities as $authority)
@@ -129,6 +129,23 @@
                                     @error('authority_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
+
+                                    @php $display = !empty(old('other_authority_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none'; @endphp
+                                    <!-- Друг вид орган, към който е създаден съветът -->
+                                    <div class="row mt-1" id="other_authority_container" style="display: {{ $display }};">
+                                        @foreach(config('available_languages') as $lang)
+                                            <div class="col-6">
+                                                <label for="other_authority_name_{{ $lang['code'] }}">
+                                                    {{ __('custom.other_authority') }}({{ Str::upper($lang['code']) }})
+                                                </label>
+
+                                                <input type="text" id="other_authority_name_{{ $lang['code'] }}"
+                                                       name="other_authority_name_{{ $lang['code']}}"
+                                                       class="form-control form-control-sm"
+                                                       value="{{ old('other_authority_name_' . $lang['code'], '') }}" autocomplete="off">
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -142,9 +159,9 @@
                                         <span class="required">*</span>
                                     </label>
 
-
                                     <select id="advisory_act_type_id" name="advisory_act_type_id"
-                                            class="form-control form-control-sm select2-no-clear">
+                                            class="form-control form-control-sm select2-no-clear"
+                                            onchange="this.value == @json(\App\Models\AdvisoryActType::getOtherId()) ? $('#other_act_type_container').show() : $('#other_act_type_container').hide();">
                                         <option value="">---</option>
                                         @if(isset($advisory_act_types) && $advisory_act_types->count() > 0)
                                             @foreach($advisory_act_types as $type)
@@ -159,6 +176,23 @@
                                     @error('advisory_act_type_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
+
+                                    @php $display = !empty(old('other_act_type_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none'; @endphp
+                                    <!-- Друг вид акт на създаване -->
+                                    <div class="row mt-1" id="other_act_type_container" style="display: {{ $display }};">
+                                        @foreach(config('available_languages') as $lang)
+                                            <div class="col-6">
+                                                <label for="other_act_type_name_{{ $lang['code'] }}">
+                                                    {{ __('custom.other_act_type') }}({{ Str::upper($lang['code']) }})
+                                                </label>
+
+                                                <input type="text" id="other_act_type_name_{{ $lang['code'] }}"
+                                                       name="other_act_type_name_{{ $lang['code']}}"
+                                                       class="form-control form-control-sm"
+                                                       value="{{ old('other_act_type_name_' . $lang['code'], '') }}" autocomplete="off">
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -172,9 +206,9 @@
                                         <span class="required">*</span>
                                     </label>
 
-
                                     <select id="advisory_chairman_type_id" name="advisory_chairman_type_id"
-                                            class="form-control form-control-sm select2-no-clear">
+                                            class="form-control form-control-sm select2-no-clear"
+                                            onchange="this.value == @json(\App\Models\AdvisoryChairmanType::getOtherId()) ? $('#other_chairman_type_container').show() : $('#other_chairman_type_container').hide();">
                                         <option value="">---</option>
                                         @if(isset($advisory_chairman_types) && $advisory_chairman_types->count() > 0)
                                             @foreach($advisory_chairman_types as $type)
@@ -189,6 +223,23 @@
                                     @error('advisory_chairman_type_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
+
+                                    @php $display = !empty(old('other_chairman_type_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none'; @endphp
+                                        <!-- Друг вид акт на създаване -->
+                                    <div class="row mt-1" id="other_chairman_type_container" style="display: {{ $display }};">
+                                        @foreach(config('available_languages') as $lang)
+                                            <div class="col-6">
+                                                <label for="other_chairman_type_name_{{ $lang['code'] }}">
+                                                    {{ __('custom.other_chairman_type') }}({{ Str::upper($lang['code']) }})
+                                                </label>
+
+                                                <input type="text" id="other_chairman_type_name_{{ $lang['code'] }}"
+                                                       name="other_chairman_type_name_{{ $lang['code']}}"
+                                                       class="form-control form-control-sm"
+                                                       value="{{ old('other_chairman_type_name_' . $lang['code'], '') }}" autocomplete="off">
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -296,7 +347,7 @@
                                 </div>
 
                                 <div class="form-check pl-4">
-                                    @php $checked = old('meetings_per_year', 'on') < 1 ? 'checked' : '' @endphp
+                                    @php $checked = old('meetings_per_year', '') < 1 ? 'checked' : '' @endphp
 
                                     <input type="checkbox" name="no_meetings_per_year" class="form-check-input"
                                            id="no_meetings_per_year" {{ $checked }} value="1"
