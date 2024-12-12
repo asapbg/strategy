@@ -8,7 +8,9 @@
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="custom-tabs" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="ct-general-tab" data-toggle="pill" href="#ct-general" role="tab" aria-controls="ct-general" aria-selected="true">Основна информация</a>
+                            <a class="nav-link active" id="ct-general-tab" data-toggle="pill" href="#ct-general" role="tab" aria-controls="ct-general" aria-selected="true">
+                                Основна информация
+                            </a>
                         </li>
                         @if($item->id)
                             <li class="nav-item">
@@ -27,6 +29,11 @@
                                 </a>
                             </li>
                         @endif
+                        <li class="nav-item">
+                            <a class="nav-link" id="ct-iisda-sync-tab" data-toggle="pill" href="#ct-iisda-sync" role="tab" aria-controls="ct-links" aria-selected="false">
+                                Синхронизация с ИИСДА
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
@@ -65,7 +72,6 @@
                         <div class="tab-pane fade" id="ct-history" role="tabpanel" aria-labelledby="ct-history-tab">
                             @php($storeRoute = route($storeRouteName, ['item' => $item->id]))
                             @if ($item->historyNames->count() > 0)
-                                <h5 class="mt-2">История на промените</h5>
                                 <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                                     <thead>
                                     <tr>
@@ -111,6 +117,15 @@
                                     </a>
                                 </div>
                             @endif
+                        </div>
+
+                        <div class="tab-pane fade" id="ct-iisda-sync" role="tabpanel" aria-labelledby="ct-iisda-sync-tab">
+                            <div class="col-md-6">
+                                <a href="javascript:;" class="btn btn-success" onclick="$(this).hide();$('#sync-started-text').show()">
+                                    Стартирай синхронизация ad hoc
+                                </a>
+                                <p id="sync-started-text" style="display: none">Синхронизацията е стартирана</p>
+                            </div>
                         </div>
 
                         @if($item->id)

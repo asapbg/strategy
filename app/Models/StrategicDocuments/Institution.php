@@ -80,6 +80,24 @@ class Institution extends ModelActivityExtend implements TranslatableContract
         return $this->hasMany(InstitutionHistoryName::class)->orderBy('valid_from');
     }
 
+    /**
+     * Get the name of the institution for a given date
+     *
+     * @param $date
+     * @return string
+     */
+    public function getHistorycalName($date)
+    {
+        $name = $this->name;
+        $hName = $this->historyNames->filter(function ($item) use ($date) {
+            return $item->valid_from <= $date && (is_null($item->valid_till) || $item->valid_till > $date);
+        });
+        if ($hName->count() > 0) {
+            $name = $hName->first()->name;
+        }
+        return $name;
+    }
+
     public function settlement()
     {
         return $this->hasOne(EkatteSettlement::class, 'id', 'town');

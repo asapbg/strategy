@@ -93,15 +93,11 @@
                         <div class="col-md-9 pris-left-column">
                             @foreach($item->institutions as $i)
                                 @if($i->id != config('app.default_institution_id'))
-                                    @php
-                                        $name = $i->name;
-                                        if ($i->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first()) {
-                                            $name = $i->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first()->name;
-                                        }
-                                    @endphp
 {{--                                    <a href="{{ route('admin.strategic_documents.institutions.edit', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">{{ $i->name }} </a>--}}
-                                    <a href="{{ route('institution.profile', $i) }}" class="text-decoration-none d-block" target="_blank" title="{{ $i->name }}">
-                                        {{ $name }}
+                                    <a href="{{ route('institution.profile', $i) }}" class="text-decoration-none d-block" target="_blank"
+                                       title="{{ $i->getHistorycalName(databaseDate($item->doc_date)) }}"
+                                    >
+                                        {{ $i->getHistorycalName(databaseDate($item->doc_date)) }}
                                     </a>
                                 @endif
                             @endforeach

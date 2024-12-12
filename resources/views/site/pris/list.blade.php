@@ -65,17 +65,11 @@
                                         @if($item->institutions->count())
                                             @foreach($item->institutions as $i)
                                                 @if($i->id != config('app.default_institution_id'))
-                                                    @php
-                                                        $name = $i->name;
-                                                        if ($i->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first()) {
-                                                            $name = $i->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first()->name;
-                                                        }
-                                                    @endphp
                                                     <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?institutions[]='.$i->id }}"
                                                        title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-2 me-2" target="_blank"
                                                     >
-                                                        <i class="fas fa-university fa-link main-color" title="{{ $name }}"></i>
-                                                        {{ $name }}
+                                                        <i class="fas fa-university fa-link main-color" title="{{ $i->getHistorycalName(databaseDate($item->doc_date)) }}"></i>
+                                                        {{ $i->getHistorycalName(databaseDate($item->doc_date)) }}
                                                     </a>
                                                 @endif
                                             @endforeach
