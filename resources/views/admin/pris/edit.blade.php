@@ -428,7 +428,7 @@
         function validateTagForm(){
             $('#ajax_tag_err').html('');
             let err = false;
-            if($('input[name="label_bg"]').val().length == 0 || $('input[name="label_en"]').val().length == 0){
+            if($('input[name="label_bg"]').val().length == 0){
                 $('#ajax_tag_err').html($('#ajax_tag_err').html() + '<?php echo __('validation.required', ['attribute' => __('custom.name')]) ?>');
                 err = true;
             } else{

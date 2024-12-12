@@ -195,7 +195,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             'about' => [
                 'type' => 'summernote',
                 'rules' => ['required', 'string'],
-                'required_all_lang' => true
+                'required_all_lang' => false
             ],
             'legal_reason' => [
                 'type' => 'summernote',
@@ -205,7 +205,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             'importer' => [
                 'type' => 'text',
                 'rules' => ['required', 'string', 'max:255'],
-                'required_all_lang' => true
+                'required_all_lang' => false
             ],
         );
     }

@@ -46,7 +46,8 @@ class Tag extends ModelActivityExtend implements TranslatableContract
         return array(
             'label' => [
                 'type' => 'text',
-                'rules' => ['required', 'string', 'max:255']
+                'rules' => ['required', 'string', 'max:255'],
+                'required_all_lang' => false
             ]
         );
     }

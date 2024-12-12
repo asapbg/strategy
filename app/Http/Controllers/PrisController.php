@@ -243,8 +243,6 @@ class PrisController extends Controller
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        //dump($item->institutions->first()->historyNames()->whereRaw("valid_from <= '{$item->doc_date}' AND (valid_till > '{$item->doc_date}' OR valid_till IS NULL)")->first());
-
 //        $pageTitle = $item->mcDisplayName;
 //        $this->setBreadcrumbsTitle($pageTitle);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();

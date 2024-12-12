@@ -51,8 +51,10 @@ class AdminController extends Controller
             foreach ($fields as $field) {
                 $fieldName = $field."_".$locale['code'];
                 $fieldNameDefault = $field."_".$defaultLang;
-//                dd($fields, $field, $fieldName, $validated);
                 if(array_key_exists($fieldName, $validated)) {
+                    if (!$validated[$fieldName]) {
+                        $validated[$fieldName] = $validated[$fieldNameDefault];
+                    }
                     $item->translateOrNew($locale['code'])->{$field} = $validated[$fieldName];
                 } else if(!$mainLang && array_key_exists($fieldNameDefault, $validated)){
                     if($setDefaultIfEmpty) {

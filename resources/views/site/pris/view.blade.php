@@ -116,7 +116,7 @@
                     </div>
                 </div>
 
-
+                @if($item->actType->id != App\Models\LegalActType::TYPE_PROTOCOL)
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
                         <i class="fa-regular fa-file-lines main-color me-1"></i>{{ __('validation.attributes.protocol') }}
@@ -131,6 +131,7 @@
                         @endif
                     </div>
                 </div>
+                @endif
                 @if($item->newspaper)
                     <div class="row pris-row pb-2 mb-2">
                         <div class="col-md-3 pris-left-column">
