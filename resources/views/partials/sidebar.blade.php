@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Logo -->
-    <a href="{{ route('admin.home') }}" class="brand-link">
+    <a href="{{ route('site.home') }}" target="_blank" class="brand-link">
         <span>
             <img src="{{ url('img/logo.png') }}" style="height: 40px; width: auto;">
         </span>
