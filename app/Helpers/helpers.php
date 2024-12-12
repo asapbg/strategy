@@ -1053,6 +1053,35 @@ if (!function_exists('transliterate')) {
     }
 }
 
+if (!function_exists('groupAdvisoryBoardItems')) {
+
+    /**
+     * Used to group advisory board items in site listing.
+     *
+     * @param $groups
+     * @param $item
+     * @param $type
+     * @param $id_field
+     * @param $relation
+     *
+     * @return void
+     */
+    function groupItems($groups, $item, $type, $id_field, $relation) {
+        $found_group = $groups->where('id', $item->$id_field)->first();
+
+        if (!$found_group) {
+            $groups->push([
+                'group_type' => $type,
+                'id' => $item->$id_field,
+                'name' => $item->$relation->name,
+                'items' => collect([$item]),
+            ]);
+        } else {
+            $found_group['items']->push($item);
+        }
+    }
+}
+
 if (!function_exists('generateImageThumbnail')) {
 //    function generateImageThumbnail(\App\Models\File $file, $type = 'list')
 //    {
