@@ -312,6 +312,16 @@
                                     </a>
                                 </li>
                             @endif
+
+                            @canany(['manage.*', 'manage.strategic-documents.nomenclatures'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.strategic_documents.nomenclatures') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'strategic-documents/nomenclature')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice('custom.nomenclatures', 2) }}</p>
+                                    </a>
+                                </li>
+                            @endcanany
                         </ul>
                     </li>
                 @endcan

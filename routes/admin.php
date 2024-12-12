@@ -157,6 +157,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('strategic-documents/accept-act-institution-options/{id?}', 'acceptActInstitutionOptions')->name('strategic_documents.accept-act-institution-options');
 //        Route::get('strategic-documents/load-pris-acts', 'loadPrisActs')->name('strategic_documents.load-pris-acts');
 //        Route::get('strategic-documents/load-parents', 'loadParentStrategicDocuments')->name('strategic_documents.load-parents');
+        Route::get('strategic-documents/nomenclatures', 'nomenclatures')->name('strategic_documents.nomenclatures');
     });
 
     Route::controller(\App\Http\Controllers\Admin\StrategicDocumentChildController::class)->group(function () {
