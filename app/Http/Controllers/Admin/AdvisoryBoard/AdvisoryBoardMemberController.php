@@ -43,6 +43,8 @@ class AdvisoryBoardMemberController extends AdminController
 
         DB::beginTransaction();
         try {
+            $validated['is_advisory_board_member'] = $validated['is_advisory_board_member'] ?? false;
+
             $item = new AdvisoryBoardMember();
             $changes = $this->mainChanges(AdvisoryBoardMember::CHANGEABLE_FIELDS, $item, $validated);
             $fillable = $this->getFillableValidated($validated, $item);

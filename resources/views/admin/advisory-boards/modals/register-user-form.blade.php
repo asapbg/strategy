@@ -18,6 +18,30 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
+                                <label class="col-sm-12 control-label" for="institution_id">
+                                    {{ __('validation.attributes.institution_id') }}
+                                </label>
+
+                                <div class="col-12">
+                                    <select class="form-control form-control-sm select2" id="institution_id" name="institution_id">
+                                        <option value="">---</option>
+
+                                        @if(isset($institutions) && $institutions->count())
+                                            @foreach($institutions as $inst)
+                                                <option value="{{ $inst->id }}">{{ $inst->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+
+                                    <div class="ajax-error text-danger mt-1 error_institution_id"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
                                 <label class="col-sm-12 control-label" for="first_name">
                                     {{ __('validation.attributes.first_name') }}<span class="required">*</span>
                                 </label>
@@ -66,6 +90,51 @@
                                 <div class="col-12">
                                     <input type="email" id="email" name="email" class="form-control"/>
                                     <div class="ajax-error text-danger mt-1 error_email"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" for="job">
+                                    {{ __('validation.attributes.job') }}
+                                </label>
+
+                                <div class="col-12">
+                                    <input type="text" id="job" name="job" class="form-control"/>
+                                    <div class="ajax-error text-danger mt-1 error_job"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" for="unit">
+                                    {{ __('validation.attributes.unit') }}
+                                </label>
+
+                                <div class="col-12">
+                                    <input type="text" id="unit" name="unit" class="form-control"/>
+                                    <div class="ajax-error text-danger mt-1 error_unit"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" for="phone">
+                                    {{ __('validation.attributes.phone') }}
+                                </label>
+
+                                <div class="col-12">
+                                    <input type="text" id="phone" name="phone" class="form-control"/>
+                                    <div class="ajax-error text-danger mt-1 error_phone"></div>
                                 </div>
                             </div>
                         </div>

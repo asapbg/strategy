@@ -32,9 +32,12 @@
                     </thead>
                     <tbody>
                     @if(isset($item->members) && $item->members->count() > 0)
-                        @php($inx = 0)
+                        @php $inx = 0; @endphp
+
                         @foreach($item->members as $key => $member)
-                            @if($member->advisory_type_id == ((int)$type ?? 0))
+                            @php $member_is_secretary_and_part_of_board = ($type == \App\Enums\AdvisoryTypeEnum::MEMBER->value) && ($member->advisory_type_id == \App\Enums\AdvisoryTypeEnum::SECRETARY->value) && $member->is_advisory_board_member; @endphp
+
+                            @if($member->advisory_type_id == ((int)$type ?? 0) || $member_is_secretary_and_part_of_board)
                                 <tr>
                                     <td style="width: 70px;">
                                         <input type="hidden" name="member[]" value="{{ $member->id }}">

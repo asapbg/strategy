@@ -211,6 +211,12 @@
                     $('#consultation_level_id_change').trigger('change');
                     form.querySelector('#member_institution').value = data.institution_id;
                     $('#member_institution').trigger('change');
+
+                    // get # from window location
+                    const tab = window.location.hash;
+                    if (tab === '#secretary') {
+                        form.querySelector('input[name=is_advisory_board_member]').checked = data.is_advisory_board_member;
+                    }
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);

@@ -169,4 +169,22 @@
 
     <!-- Scripts -->
     @includeIf('admin.advisory-boards.scripts')
+
+    @push('scripts')
+        <script>
+            $('#modal-edit-member').on('show.bs.modal', function(event) {
+                // get # from window location
+                const tab = window.location.hash;
+                const form = this.querySelector('form');
+
+                if (tab === '#secretary' && form.querySelector('input[name=is_advisory_board_member]') == null) {
+                    attachCheckboxToForm(form, 'is_advisory_board_member', @json(trans_choice('custom.member', 1) . ' ' . __('custom.of') . ' ' . Str::lower(__('validation.attributes.adv_board'))), false);
+                }
+
+                if (tab !== '#secretary' && form.querySelector('input[name=is_advisory_board_member]') != null) {
+                    removeCheckboxFromForm(form, 'is_advisory_board_member');
+                }
+            });
+        </script>
+    @endpush
 @endsection
