@@ -80,7 +80,7 @@ class StrategicDocumentPolicy
      */
     public function restore(User $user, StrategicDocument $strategicDocument)
     {
-        return false;
+        return $user->canAny(['manage.*', 'manage.strategic']) && $this->inUserFieldOfAction($user, $strategicDocument);
     }
 
     /**

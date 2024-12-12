@@ -65,17 +65,27 @@
                                                 </a>
                                             @endcan
                                         @endif
-                                        @can('delete', $item)
-                                            <a href="javascript:;"
-                                               class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
-                                               data-target="#modal-delete-resource"
-                                               data-resource-id="{{ $item->id }}"
-                                               data-resource-name="{{ $item->id }} ({{ $item->title }})"
-                                               data-resource-delete-url="{{ route('admin.strategic_documents.delete', $item) }}"
-                                               data-toggle="tooltip"
-                                               title="{{ __('custom.delete') }}"><i class="fas fa-trash"></i>
-                                            </a>
-                                        @endcan
+                                        @if(is_null($item->deleted_at))
+                                            @can('delete', $item)
+                                                <a href="javascript:;"
+                                                   class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
+                                                   data-target="#modal-delete-resource"
+                                                   data-resource-id="{{ $item->id }}"
+                                                   data-resource-name="{{ $item->id }} ({{ $item->title }})"
+                                                   data-resource-delete-url="{{ route('admin.strategic_documents.delete', $item) }}"
+                                                   data-toggle="tooltip"
+                                                   title="{{ __('custom.delete') }}"><i class="fas fa-trash"></i>
+                                                </a>
+                                            @endcan
+                                        @else
+                                            @can('restore', $item)
+                                                    <a href="{{ route('admin.strategic_documents.restore', $item) }}"
+                                                       class="btn btn-sm btn-success"
+                                                       data-toggle="tooltip"
+                                                       title="{{ __('custom.restore') }}"><i class="fas fa-undo"></i>
+                                                    </a>
+                                            @endcan
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
