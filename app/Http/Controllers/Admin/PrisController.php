@@ -81,7 +81,6 @@ class PrisController extends AdminController
      */
     public function edit(Request $request, int $id)
     {
-        dd(file_exists(public_path(DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.'institution_history_names.sql')));
         $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType']) : new Pris();
 
         if (($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Pris::class)) {
@@ -141,6 +140,7 @@ class PrisController extends AdminController
         $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:pris,id'],
             'connect_type' => ['required', 'numeric', 'in:' . join(',', PrisDocChangeTypeEnum::values())],
+            'connect_text' => ['nullable', 'string', 'max:255'],
             'connectIds' => ['required', 'array'],
             'connectIds.*' => ['required', 'exists:pris,id'],
         ]);
@@ -154,7 +154,7 @@ class PrisController extends AdminController
             return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], 200);
         }
 
-        $item->changedDocs()->attach($validated['connectIds'], ['connect_type' => $validated['connect_type']]);
+        $item->changedDocs()->attach($validated['connectIds'], ['connect_type' => $validated['connect_type'],'connect_text' => $validated['connect_text']]);
         Pris::whereIn('id', $validated['connectIds'])->update(['connection_status' => PrisDocChangeTypeEnum::toStatus($validated['connect_type'])]);
 
         return response()->json(['success' => 1], 200);

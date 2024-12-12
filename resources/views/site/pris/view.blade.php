@@ -182,7 +182,7 @@
                                    class="text-decoration-none main-color d-block">
 {{--                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} --}}
 {{--                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}--}}
-                                    {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }} {{ $doc->mcDisplayName }}
+                                    {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }} {{ $doc->mcDisplayName }} {{ $doc->pivot->connect_text ? "({$doc->pivot->connect_text})" : "" }}
                                 </a>
                             @endforeach
                             @foreach($item->changedByDocs as $doc)
@@ -190,7 +190,7 @@
                                    class="text-decoration-none main-color d-block">
                                     {{--                                    {{ __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) }} --}}
                                     {{--                                    {{ $doc->displayName.' от '.$doc->docYear.' '.__('site.year_short') }}--}}
-                                    {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }} {{ $doc->mcDisplayName }}
+                                    {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }} {{ $doc->mcDisplayName }} {{ $doc->pivot->connect_text ? "({$doc->pivot->connect_text})" : "" }}
                                 </a>
                             @endforeach
                         @endif
