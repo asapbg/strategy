@@ -1,4 +1,16 @@
-@php($storeRoute = route($storeRouteName))
+@php
+    $storeRoute = route($storeRouteName);
+
+    // The public consultation and pris selects are ajax, therefore in order to display old values we need to overwrite the current properties of the item with the old ones
+    if (old('public_consultation_id')) {
+        $item->publicConsultation = \App\Models\Consultations\PublicConsultation::find(old('public_consultation_id'));
+    }
+
+    if (old('pris_act_id')) {
+        $item->pris = \App\Models\Pris::find(old('pris_act_id'));
+    }
+    //
+@endphp
 {{--<div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">--}}
     <form action="{{ $storeRoute }}" method="post" name="form" id="form" enctype="multipart/form-data">
         @csrf
@@ -175,9 +187,10 @@
                                 <div class="col-12">
                                     <select id="public_consultation_id" name="public_consultation_id" data-types2ajax="pc" data-urls2="{{ route('admin.select2.ajax', 'pc') }}" data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}"
                                             class="form-control form-control-sm select2-autocomplete-ajax @error('public_consultation_id'){{ 'is-invalid' }}@enderror">
+                                        <option value="">---</option>
                                         @if($item->publicConsultation)
                                             <option value="{{ $item->publicConsultation->id }}"
-                                                    {{ old('public_consultation_id', ($item->publicConsultation? $item->publicConsultation->id : null)) == $item->id ? 'selected' : '' }}
+                                                    selected
                                                     data-id="{{ $item->publicConsultation->id }}"> {{ $item->publicConsultation->reg_num }} / {{ $item->publicConsultation->title }} </option>
                                         @endif
                                     </select>
@@ -217,9 +230,10 @@
                                            for="pris_act_id">Акт за приемане от раздел „Актове на МС“</label>
                                     <select id="pris_act_id" name="pris_act_id" data-types2ajax="pris_doc" data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}"
                                             class="form-control form-control-sm select2-autocomplete-ajax @error('pris_act_id'){{ 'is-invalid' }}@enderror">
+                                        <option value="">---</option>
                                         @if($item->pris)
                                         <option value="{{ $item->pris?->id }}"
-                                                {{ old('pris_act_id', ($item->pris ? $item->pris?->id : null)) == $item->id ? 'selected' : '' }}
+                                                selected
                                                 data-id="{{ $item->pris?->id }}"> {{ $item->pris?->displayName }} </option>
                                         @endif
 
