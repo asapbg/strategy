@@ -32,10 +32,11 @@ class PrisController extends Controller
         }
 
         $filter = $this->filters($request);
+        $filter['fullSearch']['label'] .= "/".__('custom.search_in_archive');
         $filter['formGroup']['fields']['in_archive'] = [
             'type' => 'checkbox',
             'checked' => $request->ajax() ? $request->input('in_archive') : true,
-            'label' => __('custom.archive'),
+            'label' => __('custom.search_in_archive'),
             'value' => 1,
             'col' => 'col-md-1 d-inline me-2'
         ];
@@ -170,9 +171,10 @@ class PrisController extends Controller
         }
 
         $filter = $this->filters($request);
-        $filter['formGroup']['fields']['not_in_current'] = [
+        $filter['fullSearch']['label'] .= "/".__('custom.pris_actual_acts');
+        $filter['formGroup']['fields']['in_current'] = [
             'type' => 'checkbox',
-            'checked' => $request->ajax() ? $request->input('not_in_current') : false,
+            'checked' => $request->ajax() ? $request->input('in_current') : false,
             'label' => __('custom.pris_actual_acts'),
             'value' => 1,
             'col' => 'col-md-1 d-inline me-2'
@@ -368,7 +370,7 @@ class PrisController extends Controller
             ),
             'formGroup' => array(
                 'title' => __('custom.search_in'),
-                'class' => 'mb-4',
+                'class' => '',
                 'fields' => array(
                     'fileSearch' => array(
                         'type' => 'checkbox',
