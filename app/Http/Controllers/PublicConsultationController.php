@@ -110,7 +110,9 @@ class PublicConsultationController extends Controller
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = true;
 
-        return $this->view('site.public_consultations.view', compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
+        return $this->view('site.public_consultations.view',
+            compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl')
+        );
     }
 
     public function export(Request $request, $id)

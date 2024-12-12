@@ -2,16 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\InstitutionCategoryLevelEnum;
-use App\Http\Controllers\SsevController;
-use App\Models\EkatteArea;
-use App\Models\EkatteMunicipality;
-use App\Models\EkatteSettlement;
 use App\Models\InstitutionHistoryName;
 use App\Models\InstitutionLevel;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class SyncInstitutionNameChangesWithIisda extends Command
@@ -40,12 +34,16 @@ class SyncInstitutionNameChangesWithIisda extends Command
         Log::info("Cron run sync:iisda.");
         activity()->disableLogging();
 
-        $institutions = Institution::where('institution_level_id', InstitutionLevel::where('system_name', '=', 'Ministry')->first()->id)
-            //->where('eik', '=', '000695388')
-            //->take(2)
-            ->whereNotIn('id', [130,131,143])
+        $level_ministry_id = InstitutionLevel::where('system_name', '=', 'Ministry')->first()->id;
+        $institutions = Institution::select('id', 'eik')
+            ->without('translations')
+            ->where('institution_level_id', '<>', $level_ministry_id)
+            ->where('eik', '<>', 'N/A')
+            ->orderBy('id')
+            ->skip(100)
+            ->take(100)
             ->get();
-        //dd($institutions->toArray());
+        //dd($institutions);
 
         $date_from = new \DateTime('2015-05-15');
         $end = new \DateTime(date('Y-m-d'));
@@ -54,6 +52,9 @@ class SyncInstitutionNameChangesWithIisda extends Command
 
         foreach ($institutions as $institution) {
 
+            if (InstitutionHistoryName::where('institution_id', $institution->id)->exists()) {
+                continue;
+            }
             $current_name = "";
             $currentName = null;
 
@@ -94,6 +95,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
                     $current_name = $institutionIisda['Name'];
                 }
             }
+            sleep(15);
         }
 
         return Command::SUCCESS;
