@@ -417,8 +417,27 @@
                                 </div>
                             </div>
                         </div>
+
                 </div>
             </div>
+            @if(!$item->id)
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <h3 class="ml-2">{{ __('custom.strategic_documents.sections.files') }}</h3>
+                            </div>
+                            <div class="col-9">
+                                <button class="btn btn-success" id="add-file" type="button">Добави</button>
+                            </div>
+                        </div>
+
+                        <div class="mt-2" id="files-container">
+    {{--                        @includeIf('admin.strategic_documents.partials.inline-file-upload', ['index' => 0])--}}
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
 
         <div class="row">
@@ -453,6 +472,28 @@
     </style>
 @endpush
 @push('scripts')
+    <script type="text/javascript">
+        let i = 1; // Change to old('files', []) + 1
+        let replacedTemplate = '';
+
+        $('#add-file').on('click', function () {
+            let template = `@includeIf('admin.strategic_documents.partials.inline-file-upload', [ 'index' => 'replace-this' ])`;
+
+            replacedTemplate = template.replaceAll('replace-this', i);
+
+            $('#files-container').append(replacedTemplate);
+
+            i++;
+        });
+
+        function deleteRow(index) {
+            $('#file-row-' + index).remove();
+
+            // We only need to ensure uniqueness with i, it doesn't really matter if it's not in order
+            i++;
+        }
+    </script>
+
     <script type="text/javascript">
 
         $(document).ready(function () {

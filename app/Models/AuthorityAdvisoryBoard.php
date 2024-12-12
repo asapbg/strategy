@@ -50,4 +50,9 @@ class AuthorityAdvisoryBoard extends ModelActivityExtend implements Translatable
             ->orderBy('authority_advisory_board_translations.name', 'asc')
             ->get();
     }
+
+    public static function getOtherAuthorityId(): ?int
+    {
+        return AuthorityAdvisoryBoardTranslation::where('name', 'ilike', '%друг%')->first()?->authority_advisory_board_id;
+    }
 }
