@@ -73,7 +73,8 @@ class StrategicDocumentsController extends AdminController
             ->leftJoin('strategic_document_translations', function ($j){
                 $j->on('strategic_document_translations.strategic_document_id' ,'=', 'strategic_document.id')->where('strategic_document_translations.locale', '=', app()->getLocale());
             })
-            ->FilterBy($requestFilter);
+            ->FilterBy($requestFilter)
+            ->when(isset($requestFilter['only_deleted']), fn($q) => $q->onlyTrashed());
 
         if (!$request->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])) {
             $userPolicyAreas = $request->user()->institution ?
@@ -366,7 +367,7 @@ class StrategicDocumentsController extends AdminController
         DB::beginTransaction();
         try {
             $item = $this->getRecord($id);
-            if ($item && request()->user()->cannot('update', $item)) {
+            if ($item && request()->user()->cannot('delete', $item)) {
                 return back()->with('warning', __('messages.unauthorized'));
             }
 
@@ -390,6 +391,35 @@ class StrategicDocumentsController extends AdminController
         } catch (\Throwable $throwable) {
             DB::rollBack();
             Log::error('Delete strategic document ID('.$id.'): '.$throwable);
+            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function restore($id)
+    {
+        DB::beginTransaction();
+        try {
+            $item = $this->getRecord($id);
+            if ($item && request()->user()->cannot('restore', $item)) {
+                return back()->with('warning', __('messages.unauthorized'));
+            }
+
+            if($item->documents->count()){
+                foreach ($item->documents as $d){
+                    $d->files->each->restore();
+                    $d->restore();
+                }
+            }
+
+            $item->files->each->restore();
+            $item->restore();
+            DB::commit();
+
+            return redirect(route('admin.strategic_documents.edit', $id))
+                ->with('success', __('custom.the_record')." ".__('messages.restored_successfully_m'));
+        } catch (\Throwable $throwable) {
+            DB::rollBack();
+            Log::error('Restore strategic document ID('.$id.'): '.$throwable);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
@@ -557,6 +587,14 @@ class StrategicDocumentsController extends AdminController
                 'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', false, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
                 'col' => 'col-md-4'
             ),
+            'only_deleted' => array(
+                'type' => 'checkbox',
+                'checked' => $request->input('only_deleted'),
+                'placeholder' => __('custom.all_deleted'),
+                'value' => 1,
+                'col' => 'col-md-4',
+                'class' => 'fw-normal'
+            )
         );
     }
 

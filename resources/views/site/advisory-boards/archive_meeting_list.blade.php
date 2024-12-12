@@ -1,8 +1,6 @@
 <div class="row">
     <div class="col-md-6">
-        @if($item->meetings_per_year)
-            <h3 class="text-center mb-5">{{ __('validation.attributes.meetings_per_year') . ' ' . $item->meetings_per_year }}</h3>
-        @endif
+        @includeIf('site.advisory-boards.partial.meetings_per_year')
 
         <div id="calendar"></div>
     </div>
