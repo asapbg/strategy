@@ -225,17 +225,17 @@ class PrisController extends AdminController
                 ->with('warning', 'Вече съществува Термин с това име: ' . $exist->translate('bg')->label . '|' . $exist->translate('en')?->label);
         }
 
-//        try {
+        try {
             $tag = new Tag();
             $tag->save();
             $this->storeTranslateOrNew(Tag::TRANSLATABLE_FIELDS, $tag, $request->all());
             $item->tags()->attach([$tag->id]);
             return redirect(route('admin.pris.edit', $item))
                 ->with('success', trans_choice('custom.nomenclature.tags', 1) . " " . __('messages.created_successfully_m'));
-//        } catch (\Exception $e) {
-//            Log::error($e);
-//            return redirect(route('admin.pris.edit', $item))->with('danger', __('messages.system_error'));
-//        }
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect(route('admin.pris.edit', $item))->with('danger', __('messages.system_error'));
+        }
     }
 
     private function filters($request)

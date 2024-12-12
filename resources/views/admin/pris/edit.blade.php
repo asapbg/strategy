@@ -138,7 +138,7 @@
 {{--                                                </div>--}}
 {{--                                            </div>--}}
                                             <div class="col-12"></div>
-                                            <div class="col-md-8 col-12">
+                                            <div class="col-md-8 col-12" id="decision_protocol_row">
                                                 <div class="form-group">
                                                     <label class="col-sm-12 control-label" for="decision_protocol">
                                                         {{ __('validation.attributes.protocol') }}
@@ -458,6 +458,14 @@
                         errorContainer.html('System error');
                     }
                 });
+            });
+
+            $('#legal_act_type_id').on('change', function() {
+                if ($(this).val() == {{ \App\Models\LegalActType::TYPE_PROTOCOL }}) {
+                    $("#decision_protocol_row").hide();
+                } else {
+                    $("#decision_protocol_row").show();
+                }
             });
 
             $('.disconnect-document').on('click', function(){
