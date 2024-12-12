@@ -81,6 +81,7 @@ class PrisController extends AdminController
      */
     public function edit(Request $request, int $id)
     {
+        dd(file_exists(public_path(DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.'institution_history_names.sql')));
         $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType']) : new Pris();
 
         if (($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Pris::class)) {
