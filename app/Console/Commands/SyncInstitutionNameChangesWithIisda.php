@@ -40,7 +40,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
             ->where('institution_level_id', '<>', $level_ministry_id)
             ->where('eik', '<>', 'N/A')
             ->orderBy('id')
-            ->skip(500)
+            ->skip(600)
             ->take(100)
             ->get();
         //dd($institutions);

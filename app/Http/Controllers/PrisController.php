@@ -189,12 +189,12 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        $not_in_archive = $request->offsetGet('not_in_archive');
+        $in_current = $request->offsetGet('in_current');
         $institutions = $requestFilter['institutions'] ?? null;
         unset($requestFilter['institutions']);
 
         $items = Pris::select('pris.*')
-            ->when(!$not_in_archive, function ($query) {
+            ->when(!$in_current, function ($query) {
                 $query->where('pris.in_archive', 1);
             })
             ->LastVersion()
