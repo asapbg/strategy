@@ -644,6 +644,67 @@ function myExtension(lField, allowed_file_extensions){
     return true;
 }
 
+function removeCheckboxFromForm(form, checkboxId) {
+    if (!form) {
+        console.error(`Form not found.`);
+        return;
+    }
+
+    const checkbox = form.querySelector(`input[name=${checkboxId}]`);
+    if (checkbox) {
+        checkbox.closest('.col-md-6').remove();
+    }
+}
+
+/**
+ * Attaches a checkbox to a specified form and handles its value on form submission.
+ *
+ * @param {string} form - The ID of the form to attach the checkbox to.
+ * @param {string} checkboxId - The ID to assign to the new checkbox.
+ * @param {string} checkboxLabel - The label text for the checkbox.
+ * @param {boolean} [defaultChecked=false] - Whether the checkbox should be checked by default.
+ */
+function attachCheckboxToForm(form, checkboxId, checkboxLabel, defaultChecked = false) {
+    if (!form) {
+        console.error(`Form not found.`);
+        return;
+    }
+
+    const row = document.createElement('div');
+    row.className = 'row';
+
+    const column = document.createElement('div');
+    column.className = 'col-md-6 col-12';
+
+    // Create a div wrapper for the checkbox and label
+    const wrapper = document.createElement('div');
+    wrapper.className = 'form-check pl-4';
+
+    // Create the checkbox input
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = checkboxId;
+    checkbox.name = checkboxId;
+    checkbox.className = 'form-check-input';
+    checkbox.checked = defaultChecked;
+    checkbox.value = 1;
+
+    // Create the label for the checkbox
+    const label = document.createElement('label');
+    label.htmlFor = checkboxId;
+    label.className = 'form-check-label';
+    label.textContent = checkboxLabel;
+
+    // Append the checkbox and label to the wrapper
+    wrapper.appendChild(checkbox);
+    wrapper.appendChild(label);
+    column.appendChild(wrapper);
+    row.appendChild(column);
+
+    // Append the wrapper to the form
+    form.appendChild(row);
+}
+
 function fieldRequired(lField, isRequired){
     let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
     $(fieldErrorEl).html('');

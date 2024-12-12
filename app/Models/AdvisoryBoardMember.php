@@ -28,7 +28,7 @@ class AdvisoryBoardMember extends Model
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board_members');
     const TRANSLATABLE_FIELDS = ['member_name', 'member_job', 'member_notes'];
-    const CHANGEABLE_FIELDS = ['advisory_type_id', 'email', 'institution_id'];
+    const CHANGEABLE_FIELDS = ['advisory_type_id', 'email', 'institution_id', 'is_advisory_board_member'];
 
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
     public $timestamps = true;
@@ -36,7 +36,7 @@ class AdvisoryBoardMember extends Model
     //activity
     protected string $logName = "advisory_board_members";
 
-    protected $fillable = ['advisory_board_id', 'advisory_type_id', 'email', 'institution_id'];
+    protected $fillable = ['advisory_board_id', 'advisory_type_id', 'email', 'institution_id', 'is_advisory_board_member'];
 
     public function institution(): BelongsTo
     {

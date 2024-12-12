@@ -105,6 +105,20 @@
         };
 
         $('#modal-create-member').on('show.bs.modal', function(event) {
+            $(this).find('#institution_id').select2();
+
+            // get # from window location
+            const tab = window.location.hash;
+            const form = document.querySelector('form[name=MEMBER_FORM]');
+
+            if (tab === '#secretary' && form.querySelector('input[name=is_advisory_board_member]') == null) {
+                attachCheckboxToForm(form, 'is_advisory_board_member', @json(trans_choice('custom.member', 1) . ' ' . __('custom.of') . ' ' . Str::lower(__('validation.attributes.adv_board'))), false);
+            }
+
+            if (tab !== '#secretary' && form.querySelector('input[name=is_advisory_board_member]') != null) {
+                removeCheckboxFromForm(form, 'is_advisory_board_member');
+            }
+
             $('#modal-create-member #member-title').html(memberNames[$(event.relatedTarget).data('type')]);
             $('#modal-create-member #advisory_type_id').val($(event.relatedTarget).data('type'));
         });

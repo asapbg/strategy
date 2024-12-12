@@ -32,11 +32,12 @@ class StoreAdvisoryBoardMemberRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'advisory_board_id' => 'required|integer|exists:advisory_boards,id',
-            'advisory_type_id'  => 'required|integer|in:' . rtrim(implode(',', AdvisoryTypeEnum::values()), ','),
-            'email'             => 'nullable|email',
-            'institution_id'    => 'nullable|integer|exists:institution,id',
-            'is_member' => 'nullable|numeric'
+            'advisory_board_id'         => 'required|integer|exists:advisory_boards,id',
+            'advisory_type_id'          => 'required|integer|in:' . rtrim(implode(',', AdvisoryTypeEnum::values()), ','),
+            'email'                     => 'nullable|email',
+            'institution_id'            => 'nullable|integer|exists:institution,id',
+            'is_member'                 => 'nullable|numeric',
+            'is_advisory_board_member'  => 'nullable|boolean',
         ];
 
 //        foreach (config('available_languages') as $lang) {

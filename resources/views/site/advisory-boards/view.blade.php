@@ -76,10 +76,10 @@
                             <h3 class="mb-2 fs-4">{{ __('custom.chairman_site') }}</h3>
                             <ul class="list-group list-group-flush">
                                 @foreach($item->chairmen as $chairmen)
-                                    @php($dataChairmen = [])
+                                    @php $dataChairmen = []; @endphp
                                     @foreach(['member_name', 'member_job', 'institution'] as $n)
                                         @if(!empty($chairmen->{$n}))
-                                            @php($dataChairmen[] = $n != 'institution' ? $chairmen->{$n} : $chairmen->institution->name)
+                                            @php $dataChairmen[] = $n != 'institution' ? $chairmen->{$n} : $chairmen->institution->name; @endphp
                                         @endif
                                     @endforeach
                                     <li class="list-group-item">
@@ -106,10 +106,10 @@
 
                             <ul class="list-group list-group-flush">
                                 @foreach($item->viceChairmen as $viceChairmen)
-                                    @php($dataViceChairmen = [])
+                                    @php $dataViceChairmen = []; @endphp
                                     @foreach(['member_name', 'member_job', 'institution'] as $n)
                                         @if(!empty($viceChairmen->{$n}))
-                                            @php($dataViceChairmen[] = $n != 'institution' ? $viceChairmen->{$n} : $viceChairmen->institution->name)
+                                            @php $dataViceChairmen[] = $n != 'institution' ? $viceChairmen->{$n} : $viceChairmen->institution->name; @endphp
                                         @endif
                                     @endforeach
                                     <li class="list-group-item">
@@ -135,7 +135,9 @@
                         <ul class="list-group list-group-flush">
                             @if(isset($item->members) && $item->members->count() > 0)
                                 @foreach($item->members as $member)
-                                    @if($member->advisory_type_id == \App\Enums\AdvisoryTypeEnum::MEMBER->value)
+                                    @php $member_is_secretary_and_part_of_board = ($member->advisory_type_id == \App\Enums\AdvisoryTypeEnum::SECRETARY->value) && $member->is_advisory_board_member; @endphp
+
+                                    @if($member->advisory_type_id == \App\Enums\AdvisoryTypeEnum::MEMBER->value || $member_is_secretary_and_part_of_board)
                                         <li class="list-group-item">
                                             <span class="d-block mb-2">
                                                 @if(!empty($member->member_name))
@@ -185,10 +187,10 @@
                             <ul class="list-group list-group-flush">
 
                                 @foreach($item->secretaryCouncil as $secretary)
-                                    @php($dataSecretary = [])
+                                    @php $dataSecretary = []; @endphp
                                     @foreach(['member_name', 'member_job', 'institution'] as $n)
                                         @if(!empty($secretary->{$n}))
-                                            @php($dataSecretary[] = $n != 'institution' ? $secretary->{$n} : $secretary->institution->name)
+                                            @php $dataSecretary[] = $n != 'institution' ? $secretary->{$n} : $secretary->institution->name; @endphp
                                         @endif
                                     @endforeach
                                     <li class="list-group-item">
