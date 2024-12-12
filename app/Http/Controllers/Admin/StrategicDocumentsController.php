@@ -198,7 +198,7 @@ class StrategicDocumentsController extends AdminController
      */
     public function uploadFileLanguagesSd(StrategicDocumentFileUploadRequest $request, $objectId, $typeObject, $redirect = true) {
         try {
-            $validated = $request->validated();
+            $validated = $request->all();
             // Upload File
             $pDir = match ((int)$typeObject) {
                 \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT,
@@ -226,7 +226,7 @@ class StrategicDocumentsController extends AdminController
                     'filename' => $fileNameToStore,
                     'content_type' => $file->getClientMimeType(),
                     'path' => $pDir.$fileNameToStore,
-                    'sys_user' => $request->user()->id,
+                    'sys_user' => auth()->user()->id,
                     'locale' => $code,
                     'description' => $validated['description_'.$code],
                     'file_info' => $validated['file_info_'.$code] ?? NULL,
@@ -322,27 +322,35 @@ class StrategicDocumentsController extends AdminController
             $item->save();
             $this->storeTranslateOrNew(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
 
+            if (count($request->get('files', []))) {
+                foreach ($request->get('files') as $key => $file) {
+                    $descriptionData = [];
+                    $fileData = [];
 
-//            $fileService = app(FileService::class);
-//            $validated = $fileService->prepareMainFileFields($validated);
-//            $bgFile = Arr::get($validated, 'file_strategic_documents_bg');
-//            $enFile =  Arr::get($validated, 'file_strategic_documents_en');
-//            if ($bgFile || $enFile) {
-//                $fileService->uploadFiles($validated, $item, null, true);
-//            } else {
-//                $locale = app()->getLocale();
-//                $mainFile = $item->files->where('is_main', true)->where('locale', $locale)->first();
-//                if ($mainFile) {
-//                    $validated = $fileService->prepareMainFileFields($validated);
-//                    $this->storeTranslateOrNew(StrategicDocumentFile::TRANSLATABLE_FIELDS, $mainFile, $validated);
-//                    $mainFile->strategic_document_type_id = Arr::get($validated, 'strategic_document_type_file_main_id');
-//                    $validAt = Arr::get($validated, 'valid_at_main');
-//                    $mainFile->valid_at = $validAt ? Carbon::parse($validAt) : null;
-//                    $mainFile->visible_in_report = Arr::get($validated, 'visible_in_report') ?? 0;
-//                    $mainFile->save();
-//                }
-//            }
+                    // Prepare the data for each file by going through all the languages
+                    foreach(config('available_languages') as $lang) {
+                        $descriptionKey = 'description_' . $lang['code'];
+                        $fileKey = 'file_' . $lang['code'];
 
+                        if (isset($file[$descriptionKey])) {
+                            $descriptionData[$descriptionKey] = $file[$descriptionKey];
+                        }
+
+                        if ($request->hasFile('files.' . $key . '.' . $fileKey)) {
+                            $fileData[$fileKey] = $request->file('files.' . $key . '.' . $fileKey);
+                        }
+                    }
+
+                    // Create a StrategicDocumentFileUploadRequest from a new Request
+                    $customRequest = new Request($descriptionData,
+                        $descriptionData, [], [], $fileData);
+
+                    $stratRequest = StrategicDocumentFileUploadRequest::createFrom($customRequest);
+                    $stratRequest->validate($stratRequest->rules());
+
+                    $this->uploadFileLanguagesSd($stratRequest, $item->id, \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT);
+                }
+            }
 
             DB::commit();
             if( $stay ) {
@@ -351,7 +359,12 @@ class StrategicDocumentsController extends AdminController
             }
             return to_route(self::LIST_ROUTE)
                 ->with('success', trans_choice('custom.strategic_documents', 1)." ".($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
-        } catch (\Exception $e) {
+        }
+        catch (\Illuminate\Validation\ValidationException $e) {
+            // This type of exception might get thrown from validating the files before we upload them
+            throw $e;
+        }
+        catch (\Exception $e) {
             DB::rollBack();
             Log::error('Create/Update strategic document ID('.$id.'): '.$e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
