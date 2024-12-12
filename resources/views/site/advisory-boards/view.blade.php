@@ -332,6 +332,9 @@
                     <div class="col-md-12">
                         <div class="custom-card p-3">
                             <h3 class="mb-2 fs-4">{{ __('custom.meetings_and_decisions') }}</h3>
+
+                            @includeIf('site.advisory-boards.partial.meetings_per_year')
+
                             @if((isset($nextMeeting) && $nextMeeting))
                                 <p class="fw-bold mt-3 custom-left-border" style="font-size: 20px;">{{ __('validation.attributes.next_meeting') }} {{ __('custom.of') }} {{ __('custom.date') }}: <span class="fw-normal">{{ displayDate($nextMeeting->next_meeting) }}</span></p>
                                 <p>
