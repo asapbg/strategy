@@ -32,6 +32,14 @@ class PrisController extends Controller
         }
 
         $filter = $this->filters($request);
+        $filter['formGroup']['fields']['in_archive'] = [
+            'type' => 'checkbox',
+            'checked' => $request->ajax() ? $request->input('in_archive') : true,
+            'label' => __('custom.archive'),
+            'value' => 1,
+            'col' => 'col-md-1 d-inline me-2'
+        ];
+
 
         //Sorter
         $sorter = $this->sorters();
@@ -42,11 +50,14 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
+        $in_archive = $request->offsetGet('in_archive');
         $institutions = $requestFilter['institutions'] ?? null;
         unset($requestFilter['institutions']);
 
         $items = Pris::select('pris.*')
-            ->NotInArchive()
+            ->when(!$in_archive, function ($query) {
+                $query->where('pris.in_archive', 0);
+            })
             ->LastVersion()
             ->InPris()
             ->Published()
@@ -87,7 +98,7 @@ class PrisController extends Controller
         $hasSubscribeRss = false;
 
         $closeSearchForm = true;
-        if( $request->ajax() ) {
+        if ($request->ajax()) {
             $closeSearchForm = false;
             return view('site.pris.list',
                 compact('filter','sorter', 'items', 'rf','hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm')
@@ -126,7 +137,24 @@ class PrisController extends Controller
             }
         }
         $this->composeBreadcrumbs($extraBreadCrumbs);
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories', 'menuCategoriesArchive', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
+        return $this->view('site.pris.index',
+            compact(
+                'filter',
+                'sorter',
+                'items', 'pageTitle',
+                'menuCategories',
+                'menuCategoriesArchive',
+                'pageTopContent',
+                'rf',
+                'defaultOrderBy',
+                'defaultDirection',
+                'hasSubscribeEmail',
+                'hasSubscribeRss',
+                'requestFilter',
+                'rssUrl',
+                'closeSearchForm'
+            )
+        );
     }
 
     public function archive(Request $request, $category = '')
@@ -142,6 +170,13 @@ class PrisController extends Controller
         }
 
         $filter = $this->filters($request);
+        $filter['formGroup']['fields']['not_in_current'] = [
+            'type' => 'checkbox',
+            'checked' => $request->ajax() ? $request->input('not_in_current') : false,
+            'label' => __('custom.pris_actual_acts'),
+            'value' => 1,
+            'col' => 'col-md-1 d-inline me-2'
+        ];
 
         //Sorter
         $sorter = $this->sorters();
@@ -152,21 +187,31 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
+        $not_in_archive = $request->offsetGet('not_in_archive');
+        $institutions = $requestFilter['institutions'] ?? null;
+        unset($requestFilter['institutions']);
+
         $items = Pris::select('pris.*')
-            ->InArchive()
+            ->when(!$not_in_archive, function ($query) {
+                $query->where('pris.in_archive', 1);
+            })
             ->LastVersion()
             ->InPris()
             ->Published()
-            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
-            ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
+            ->with(['translations', 'actType', 'actType.translations', 'institutions.historyNames', 'institutions.translation'])
             ->leftJoin('pris_translations', function ($j){
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
             })
-            ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
-            ->leftJoin('institution_translations', function ($j){
-                $j->on('institution_translations.institution_id', '=', 'institution.id')
-                    ->where('institution_translations.locale', '=', app()->getLocale());
+            ->when($institutions, function ($query) use ($institutions) {
+                $query->join(
+                    'pris_institution as pi',
+                    'pi.pris_id',
+                    '=',
+                    DB::raw("pris.id AND pi.institution_id IN(".implode(',', $institutions).")")
+                )
+                    ->join('institution', 'institution.id', '=', DB::raw("pi.institution_id AND institution.active = '1' AND institution.deleted_at IS NULL"))
+                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
             })
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
             ->join('legal_act_type_translations', function ($j){
@@ -352,7 +397,7 @@ class PrisController extends Controller
                         'label' => trans_choice('custom.tags', 2),
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'
-                    ),
+                    )
                 )
             ),
             'docNum' => array(

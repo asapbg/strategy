@@ -16,6 +16,7 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     const MODULE_NAME = ('custom.nomenclatures.legal_act_type');
     const TYPE_ORDER = 7;
     const TYPE_ARCHIVE = 8;
+    const TYPE_REPORT = 9;
     const TYPE_DECREES = 1;
     const TYPE_DECISION = 2;
     const TYPE_PROTOCOL_DECISION = 3;

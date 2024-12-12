@@ -717,6 +717,7 @@ return [
     'pris_program_title' => ':actType :number на Министерския съвет от :year г.',
     'add_information_for_meeting' => 'Добави информация към заседание',
     'pris_act' => 'акт',
+    'pris_actual_acts' => 'В актуалните актове',
     'name_of_advisory_board' => 'Наименование на консултативния съвет',
     'rules_internal_organization' => 'Правилник за дейността',
     'effective_at' => 'В сила от',

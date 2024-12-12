@@ -113,7 +113,15 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     }
 
     public function scopeInPris($query){
-        $query->whereIn('pris.legal_act_type_id', [LegalActType::TYPE_DECREES, LegalActType::TYPE_DECISION, LegalActType::TYPE_PROTOCOL_DECISION, LegalActType::TYPE_DISPOSITION, LegalActType::TYPE_PROTOCOL, LegalActType::TYPE_TRANSCRIPTS]);
+        $query->whereIn('pris.legal_act_type_id', [
+            LegalActType::TYPE_DECREES,
+            LegalActType::TYPE_DECISION,
+            LegalActType::TYPE_PROTOCOL_DECISION,
+            LegalActType::TYPE_DISPOSITION,
+            LegalActType::TYPE_PROTOCOL,
+            LegalActType::TYPE_TRANSCRIPTS,
+            //LegalActType::TYPE_REPORT,
+        ]);
     }
 
     public function scopeInArchive($query){
