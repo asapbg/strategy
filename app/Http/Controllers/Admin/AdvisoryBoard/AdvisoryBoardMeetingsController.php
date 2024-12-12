@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Log;
@@ -146,7 +147,9 @@ class AdvisoryBoardMeetingsController extends AdminController
             $include_files = $validated['include_files'] ?? false;
 
             foreach ($members_to_notify as $member) {
-                Notification::route('email', $member->email)->notify(new \App\Notifications\AdvisoryBoardMeeting($item, $meeting, $link, $include_files));
+                $member->notify(new \App\Notifications\AdvisoryBoardMeeting($item, $meeting, $link, $include_files));
+
+//                Notification::route('email', $member->email)->notify(new \App\Notifications\AdvisoryBoardMeeting($item, $meeting, $link, $include_files));
             }
 
             return response()->json(['status' => 'success']);

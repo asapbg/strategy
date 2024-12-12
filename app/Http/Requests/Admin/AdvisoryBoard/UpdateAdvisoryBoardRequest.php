@@ -41,7 +41,8 @@ class UpdateAdvisoryBoardRequest extends FormRequest
             'has_npo_presence'          => 'nullable',
             'integration_link'          => 'nullable|string',
             'public'                    => 'nullable|integer',
-            'file'                    => ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)],
+            'file'                      => ['nullable', 'file',  'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_IMAGES_EXTENSIONS)],
+            'no_meetings_per_year'      => 'nullable',
         ];
 
         $rules['npo_id'] = ['nullable', 'array'];

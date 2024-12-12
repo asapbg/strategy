@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Logo -->
-    <a href="{{ route('admin.home') }}" class="brand-link">
+    <a href="{{ route('site.home') }}" target="_blank" class="brand-link">
         <span>
             <img src="{{ url('img/logo.png') }}" style="height: 40px; width: auto;">
         </span>
@@ -312,6 +312,16 @@
                                     </a>
                                 </li>
                             @endif
+
+                            @canany(['manage.*', 'manage.strategic-documents.nomenclatures'])
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.strategic_documents.nomenclatures') }}"
+                                       class="nav-link @if(str_contains(url()->current(), 'strategic-documents/nomenclature')) active @endif">
+                                        <i class="fas fa-circle nav-item-sub-icon"></i>
+                                        <p>{{ trans_choice('custom.nomenclatures', 2) }}</p>
+                                    </a>
+                                </li>
+                            @endcanany
                         </ul>
                     </li>
                 @endcan

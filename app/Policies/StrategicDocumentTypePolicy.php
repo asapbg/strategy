@@ -18,7 +18,7 @@ class StrategicDocumentTypePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*','manage.nomenclatures', 'manage.strategic-documents.nomenclatures']);
     }
 
     /**
@@ -30,7 +30,7 @@ class StrategicDocumentTypePolicy
      */
     public function view(User $user, StrategicDocumentType $strategicDocumentType)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*','manage.nomenclatures', 'manage.strategic-documents.nomenclatures']);
     }
 
     /**
@@ -41,7 +41,7 @@ class StrategicDocumentTypePolicy
      */
     public function create(User $user)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*','manage.nomenclatures', 'manage.strategic-documents.nomenclatures']);
     }
 
     /**
@@ -53,7 +53,7 @@ class StrategicDocumentTypePolicy
      */
     public function update(User $user, StrategicDocumentType $strategicDocumentType)
     {
-        return $user->canAny(['manage.*','manage.nomenclatures']);
+        return $user->canAny(['manage.*','manage.nomenclatures', 'manage.strategic-documents.nomenclatures']);
     }
 
     /**

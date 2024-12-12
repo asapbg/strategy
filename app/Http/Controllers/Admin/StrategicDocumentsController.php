@@ -870,4 +870,8 @@ class StrategicDocumentsController extends AdminController
 
         return response()->json($documentOptions);
     }
+
+    public function nomenclatures() {
+        return $this->view('admin.strategic_documents.nomenclatures.index');
+    }
 }

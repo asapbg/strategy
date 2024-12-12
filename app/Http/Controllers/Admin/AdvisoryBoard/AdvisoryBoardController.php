@@ -383,6 +383,7 @@ class AdvisoryBoardController extends AdminController
 
         DB::beginTransaction();
         try {
+            $validated['meetings_per_year'] = isset($validated['no_meetings_per_year']) ? null : $validated['meetings_per_year'];
 
             $itemImg = $validated['file'] ?? null;
             unset($validated['file']);

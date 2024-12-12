@@ -8,6 +8,7 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * @property int    $id
@@ -23,7 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AdvisoryBoardMember extends Model
 {
 
-    use FilterSort, SoftDeletes, Translatable;
+    use FilterSort, SoftDeletes, Translatable, Notifiable;
 
     const PAGINATE = 20;
     const MODULE_NAME = ('custom.advisory_board_members');

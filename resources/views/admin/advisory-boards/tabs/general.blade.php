@@ -242,11 +242,23 @@
 
                         <input type="number" id="meetings_per_year" name="meetings_per_year"
                                class="form-control form-control-sm"
+                               onkeyup="this.value < 1 ? $('#no_meetings_per_year').attr('checked', true) : $('#no_meetings_per_year').attr('checked', false)"
                                value="{{ old('meetings_per_year', $item->meetings_per_year ?? '') }}"/>
 
                         @error('meetings_per_year')
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
+                    </div>
+
+                    <div class="form-check pl-4">
+                        @php $checked = old('no_meetings_per_year', !$item->meetings_per_year ? 'on' : 'off') === 'on' ? 'checked' : '' @endphp
+
+                        <input type="checkbox" name="no_meetings_per_year" class="form-check-input"
+                               id="no_meetings_per_year" {{ $checked }}/>
+
+                        <label class="form-check-label font-weight-semibold" for="no_meetings_per_year">
+                            {{ __('custom.no_meetings_per_year') }}
+                        </label>
                     </div>
                 </div>
             </div>
