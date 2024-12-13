@@ -1348,4 +1348,8 @@ return [
     'criteria' => 'Criteria',
     'current_year' => 'Current year',
     'specific_year' => 'Specific year',
+    'high_contrast' => 'High contrast',
+    'low_contrast'  => 'Low contrast',
+    'increase_text' => 'Increase text',
+    'decrease_text' => 'Reduce text',
 ];

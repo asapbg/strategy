@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CookieController;
 use App\Http\Controllers\DevelopNewActionPlan;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImpactAssessmentController;
@@ -8,6 +9,9 @@ use App\Http\Controllers\OpenGovernmentPartnership;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+
+    Route::get('/set-cookie', [CookieController::class, 'setCookie']);
+    Route::get('/reset-visual-options', [CookieController::class, 'resetVisualOptions']);
 
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'index')->name('site.home');

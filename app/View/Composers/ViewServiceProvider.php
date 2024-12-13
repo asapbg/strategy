@@ -11,6 +11,7 @@ use App\Models\Sector;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -44,6 +45,7 @@ class ViewServiceProvider extends ServiceProvider
 //            $view->with('sectors', $sectors);
 //        });
 //
+
         View::composer('layouts.site', function ($view) {
             $facebookAppIdKey = Setting::FACEBOOK_APP_ID;
             $facebookAppId = Cache::get($facebookAppIdKey);
@@ -54,7 +56,18 @@ class ViewServiceProvider extends ServiceProvider
                 Cache::put($facebookAppIdKey, $facebookAppId, 3600);
             }
 
-            $view->with('facebookAppId', $facebookAppId);
+            $vo_font_percent = (int)Session::get('vo_font_percent', 100);
+            $vo_high_contrast = (int)Session::get('vo_high_contrast', 0);
+            $vo_can_reset = $vo_font_percent != 100 || $vo_high_contrast == 1;
+
+            $view->with(
+                [
+                    'facebookAppId'     => $facebookAppId,
+                    'vo_font_percent'   => $vo_font_percent,
+                    'vo_high_contrast'  => $vo_high_contrast,
+                    'vo_can_reset'      => $vo_can_reset,
+                ]
+            );
         });
 
         View::composer('site.legislative_initiatives.side_menu', function ($view) {

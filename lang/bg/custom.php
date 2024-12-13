@@ -1379,4 +1379,8 @@ return [
     'criteria' => 'Критерии',
     'current_year' => 'Текуща година',
     'specific_year' => 'Конкретна календарна година',
+    'high_contrast'     => 'Висок контраст',
+    'low_contrast'      => 'Нисък контраст',
+    'increase_text'     => 'Увеличаване на текста',
+    'decrease_text'     => 'Намаляване на текста',
 ];
