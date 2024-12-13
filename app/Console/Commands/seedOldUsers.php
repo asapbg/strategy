@@ -46,10 +46,10 @@ class seedOldUsers extends Command
         $mappingRoles = [
             1 => 2, //Системен администратор => Супер Администратор
             2 => 9, //Регистриран потребител => Външен потребител
-            3 => 0,	//Администратор дискусии
-            4 => 0,	//Администратор файлове
+            3 => 0,    //Администратор дискусии
+            4 => 0,    //Администратор файлове
             5 => 4, //Модератор страт. документи => Модератор „Стратегически документи"
-            6 => 3,	//Модератор общ. консултации => Модератор „Обществени консултации“
+            6 => 3,    //Модератор общ. консултации => Модератор „Обществени консултации“
         ];
         $externalRoleId = CustomRole::where('name', '=', CustomRole::EXTERNAL_USER_ROLE)->first()->id;
 
@@ -301,59 +301,69 @@ class seedOldUsers extends Command
 //        $currentStep = (int)(DB::table('users')->select(DB::raw('max(old_id) as max'))->first()->max) + 1;
         $currentStep = 0;
 
-        $ourUsers = User::withTrashed()->where('email', 'not like', '%duplicated-%')->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
+        $ourUsers = User::withTrashed()
+            ->where('email', 'not like', '%duplicated-%')
+            ->whereNotNull('old_id')
+            ->get()
+            ->pluck('id', 'old_id')
+            ->toArray();
         $missingInstitution = array();
 
-        if( (int)$maxOldId[0]->max ) {
+        if ((int)$maxOldId[0]->max) {
             $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
-            while ($currentStep <= $maxOldId  && !$stop) {
-                echo "FromId: ".$currentStep.PHP_EOL;
+            while ($currentStep <= $maxOldId && !$stop) {
+                echo "FromId: " . $currentStep . PHP_EOL;
                 $oldDbResult = DB::connection('old_strategy_app')
-                    ->select('select
-                        -- usercategoryaccess table ?????
-                        -- institution_id ??????????????
-                        u.userid as old_id,
-                        u.username as username,
-                        case when profile.organization is not null then 1 else 0 end as is_org,
-                        profile.organization as org_name,
-                        case when profile.firstname is null then u.username else profile.firstname end as first_name,
-                        profile.lastname as last_name,
-                        -- user_type 1 - internal 2 - external
-                        m.email,
-                        -- 3 - STATUS_BLOCKED, 1 STATUS_ACTIVE
-                        case when m.islockedout = true then 3 else 1 end as activity_status,
-                        -- email_verified_at
-                        profile.phone,
-                        -- description
-                        m."password" as password,
-                        m.lastpasswordchangeddate as password_changed_at,
-                        u.lastactivitydate as last_login_at,
-                        1 as active,
-                        m.createdate  as created_at,
-                        -- updated_at
-                        -- person_identity
-                        -- company_identity
-                        json_agg(json_build_object(\'id\', roles.roleid , \'name\', roles.rolename, \'description\', roles.description)) as roles
-                    from dbo.users u
-                    join dbo.membership m on m.userid = u.userid
-                    join dbo.usersinroles uroles on uroles.userid = u.userid
-                    join dbo.roles roles on roles.roleid = uroles.roleid
-                    left join dbo.profile profile on profile.userid = u.userid
-                    where u.userid >= '.(int)$currentStep.'
-                    and u.userid < '. ($currentStep + $step) .'
-                    group by u.userid, m.userid, profile.userid
-                    order by u.userid asc');
+                    ->select('
+                        select
+                            -- usercategoryaccess table ?????
+                            -- institution_id ??????????????
+                            u.userid as old_id,
+                            u.username as username,
+                            case when profile.organization is not null then 1 else 0 end as is_org,
+                            profile.organization as org_name,
+                            case when profile.firstname is null then u.username else profile.firstname end as first_name,
+                            profile.lastname as last_name,
+                            -- user_type 1 - internal 2 - external
+                            m.email,
+                            -- 3 - STATUS_BLOCKED, 1 STATUS_ACTIVE
+                            case when m.islockedout = true then 3 else 1 end as activity_status,
+                            -- email_verified_at
+                            profile.phone,
+                            -- description
+                            m."password" as password,
+                            m.lastpasswordchangeddate as password_changed_at,
+                            u.lastactivitydate as last_login_at,
+                            1 as active,
+                            m.createdate  as created_at,
+                            -- updated_at
+                            -- person_identity
+                            -- company_identity
+                            json_agg(json_build_object(\'id\', roles.roleid , \'name\', roles.rolename, \'description\', roles.description)) as roles
+                        from dbo.users u
+                        join dbo.membership m on m.userid = u.userid
+                        join dbo.usersinroles uroles on uroles.userid = u.userid
+                        join dbo.roles roles on roles.roleid = uroles.roleid
+                        left join dbo.profile profile on profile.userid = u.userid
+                        where u.userid >= ' . (int)$currentStep . '
+                        and u.userid < ' . ($currentStep + $step) . '
+                        group by u.userid, m.userid, profile.userid
+                        order by u.userid asc
+                    ');
 
                 if (sizeof($oldDbResult)) {
                     foreach ($oldDbResult as $item) {
-                        if(!isset($institutions[$item->org_name]) || is_null($institutions[$item->org_name])){
+                        if (!isset($institutions[$item->org_name]) || is_null($institutions[$item->org_name])) {
                             $missingInstitution[$item->org_name] = $item->org_name;
                         }
-                        if(!isset($ourUsers[(int)$item->old_id])){
+                        if (!isset($ourUsers[(int)$item->old_id])) {
                             $duplicated = User::where('email', '=', $item->email)->first();
-                            $duplicatedOur = User::withTrashed()->where('email', '=', 'duplicated-'.$item->email)->first();
-                            if($duplicatedOur){
+                            if ($duplicated) {
+                                continue;
+                            }
+                            $duplicatedOur = User::withTrashed()->where('email', '=', 'duplicated-' . $item->email)->first();
+                            if ($duplicatedOur) {
                                 continue;
                             }
                             DB::beginTransaction();
@@ -367,7 +377,7 @@ class seedOldUsers extends Command
                                     'first_name' => $item->first_name,
                                     'last_name' => $item->last_name,
                                     'user_type' => null,
-                                    'email' => $duplicated ? 'duplicated-'.$item->email : $item->email,
+                                    'email' => $item->email,
                                     'phone' => $item->phone,
                                     'activity_status' => $item->activity_status,
                                     'email_verified_at' => null,
@@ -416,34 +426,34 @@ class seedOldUsers extends Command
                                 Log::error('Migration old startegy users: ' . $e);
                                 DB::rollBack();
                             }
-                        } else{
+                        } else {
                             //Update institutions
                             $existingUser = User::find((int)$ourUsers[(int)$item->old_id]);
-                            if($existingUser){
-                                if(is_null($existingUser->institution_id) && isset($institutions[$item->org_name])){
+                            if ($existingUser) {
+                                if (is_null($existingUser->institution_id) && isset($institutions[$item->org_name])) {
                                     $existingUser->institution_id = $institutions[$item->org_name] ?? null;
                                     $existingUser->save();
                                     $this->comment('User with old id (' . $existingUser->old_id . ') is updated');
                                 }
-                            } else{
-                                $this->comment('Cant\'t find old user OldId ('.(int)$item->old_id.') OurId (' . $ourUsers[(int)$item->old_id] . ')');
+                            } else {
+                                $this->comment('Cant\'t find old user OldId (' . (int)$item->old_id . ') OurId (' . $ourUsers[(int)$item->old_id] . ')');
                             }
                         }
                     }
                 }
 
-                if($currentStep == $maxOldId){
+                if ($currentStep == $maxOldId) {
                     $stop = true;
-                } else{
+                } else {
                     $currentStep += $step;
-                    if($currentStep > $maxOldId){
+                    if ($currentStep > $maxOldId) {
                         $currentStep = $maxOldId;
                     }
                 }
             }
         }
-        if(sizeof($missingInstitution)){
-            foreach ($missingInstitution as $mi){
+        if (sizeof($missingInstitution)) {
+            foreach ($missingInstitution as $mi) {
                 file_put_contents('institutions_for_mapping_user.txt', $mi . PHP_EOL, FILE_APPEND);
             }
         }
