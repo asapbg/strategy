@@ -264,6 +264,38 @@ class StrategicDocumentsController extends AdminController
     public function store(StoreStrategicDocumentRequest $request)
     {
         $validated = $request->validated();
+        $fileRequests = [];
+
+        // Validate before we store
+        if (count($request->get('files', []))) {
+            foreach ($request->get('files') as $key => $file) {
+                $descriptionData = [];
+                $fileData = [];
+
+                // Prepare the data for each file by going through all the languages
+                foreach(config('available_languages') as $lang) {
+                    $descriptionKey = 'description_' . $lang['code'];
+                    $fileKey = 'file_' . $lang['code'];
+
+                    if (isset($file[$descriptionKey])) {
+                        $descriptionData[$descriptionKey] = $file[$descriptionKey];
+                    }
+
+                    if ($request->hasFile('files.' . $key . '.' . $fileKey)) {
+                        $fileData[$fileKey] = $request->file('files.' . $key . '.' . $fileKey);
+                    }
+                }
+
+                // Create a StrategicDocumentFileUploadRequest from a new Request
+                $customRequest = new Request($descriptionData,
+                    $descriptionData, [], [], $fileData);
+
+                $fileRequest = StrategicDocumentFileUploadRequest::createFrom($customRequest);
+                $fileRequest->validate($fileRequest->rules());
+
+                $fileRequests[] = $fileRequest;
+            }
+        }
 
         $id = $validated['id'];
         $stay = Arr::get($validated, 'stay') || null;
@@ -325,33 +357,9 @@ class StrategicDocumentsController extends AdminController
             $item->save();
             $this->storeTranslateOrNew(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
 
-            if (count($request->get('files', []))) {
-                foreach ($request->get('files') as $key => $file) {
-                    $descriptionData = [];
-                    $fileData = [];
-
-                    // Prepare the data for each file by going through all the languages
-                    foreach(config('available_languages') as $lang) {
-                        $descriptionKey = 'description_' . $lang['code'];
-                        $fileKey = 'file_' . $lang['code'];
-
-                        if (isset($file[$descriptionKey])) {
-                            $descriptionData[$descriptionKey] = $file[$descriptionKey];
-                        }
-
-                        if ($request->hasFile('files.' . $key . '.' . $fileKey)) {
-                            $fileData[$fileKey] = $request->file('files.' . $key . '.' . $fileKey);
-                        }
-                    }
-
-                    // Create a StrategicDocumentFileUploadRequest from a new Request
-                    $customRequest = new Request($descriptionData,
-                        $descriptionData, [], [], $fileData);
-
-                    $stratRequest = StrategicDocumentFileUploadRequest::createFrom($customRequest);
-                    $stratRequest->validate($stratRequest->rules());
-
-                    $this->uploadFileLanguagesSd($stratRequest, $item->id, \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT);
+            if (count($fileRequests)) {
+                foreach ($fileRequests as $fileRequest) {
+                    $this->uploadFileLanguagesSd($fileRequest, $item->id, \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT);
                 }
             }
 
