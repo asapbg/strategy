@@ -144,9 +144,10 @@ class AdvisoryBoardController extends Controller
             ->where('advisory_boards.public', true)
             ->FilterBy($requestFilter)
             ->SortedBy($sort, $sortOrd)
-            ->when($queryDefaultSort, function ($query) {
+            ->when($queryDefaultSort, function ($query) use ($groupByColumn) {
                 $query->orderBy('advisory_boards.active', 'desc')
-                    ->orderBy('advisory_board_translations.name');
+                    ->orderBy('advisory_board_translations.name')
+                    ->when(count($groupByColumn) == 3, fn($q) => $q->orderBy($groupByColumn[2], 'asc'));
             })
             ->groupBy($groupByColumn);
 
