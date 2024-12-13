@@ -93,6 +93,21 @@
             <li class="nav-item d-flex list-unstyled text-end align-items-center social-lang">
 {{--                <a class="nav-link me-3" href="#"><i class="fa-brands fa-facebook text-light"><span--}}
 {{--                            class="d-none">Facebook</span></i></a>--}}
+                <div class="desktop-accessibility">
+                    <button id="vo-option-btn" class="btn dropdown-toggle me-1" type="button" aria-label="VO Option button"
+                            data-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="fa-solid fa-wheelchair"></i>
+                    </button>
+
+                    <ul class="dropdown-menu link-action">
+                        <li class="visual-option vo-increase-text dropdown-item" role="button"><a><i class="text-primary me-2">A+</i>{{ __('custom.increase_text') }}</a></li>
+                        <li class="visual-option vo-decrease-text dropdown-item" role="button"><a><i class="text-primary me-2">A-</i>{{ __('custom.decrease_text') }}</a></li>
+                        <li class="visual-option vo-contrast dropdown-item" role="button" id="vo-contrast"><a><i class="fa-solid fa-palette text-primary me-2"></i><span class="height @if($vo_high_contrast) d-none @endif">{{ __('custom.high_contrast') }}</span><span class="low @if(!$vo_high_contrast) d-none @endif">{{ __('custom.low_contrast') }}</span></a></li>
+                        <li class="visual-option vo-reset dropdown-item" role="button"><a><i class="fas fa-sync-alt text-primary me-2"></i>{{ __('custom.clear') }}</a></li>
+                    </ul>
+                </div>
+
                 @foreach(config('available_languages') as $locale)
                     @if($locale['code'] != app()->getLocale())
                     <a href="{{ route('change-locale', ['locale' => $locale['code']]) }}" class="nav-link d-inline-block">{{ mb_strtoupper($locale['code']) }}</a>

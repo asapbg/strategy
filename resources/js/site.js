@@ -477,6 +477,56 @@ function showModalAlert(message,title = false) {
     $("#modal-alert").modal('show');
 }
 
+function setCookie(name, value){
+    vo_ajax = true;
+    $.ajax({
+        url: "/bg/set-cookie?name="+ name +"&value="+ value,
+        type: 'GET',
+        success: function() {
+            vo_ajax = false;
+        }
+    });
+}
+
+function resetVisualOptions() {
+    vo_ajax = true;
+    $.ajax({
+        url: "/bg/reset-visual-options",
+        type: 'GET',
+        success: function() {
+            location.reload(true);
+        }
+    });
+}
+
+function changeFontSize(increase) {
+    let percentStep = 5;
+    let newSize = vo_font_percent;
+    if (increase) {
+        newSize = vo_font_percent <= 200 ? (vo_font_percent + percentStep) : vo_font_percent;
+    } else {
+        newSize = vo_font_percent >= 50 ? (vo_font_percent - percentStep) : vo_font_percent;
+    }
+
+    if (newSize != vo_font_percent) {
+        setDomElFontSize(newSize);
+    }
+}
+
+function setDomElFontSize(newSize, ignoreOriginalSize) {
+    if (!ignoreOriginalSize || (newSize != 100)) {
+        $("div, span, p, a, i, h1, h2, h3, h4, h5, button, input").css({
+            "font-size": newSize + "%"
+        });
+        $(".select2 span").css({
+            "font-size": 100 + "%"
+        });
+        $('.vo-reset').removeClass('d-none');
+        vo_font_percent = newSize;
+        setCookie('vo_font_percent', vo_font_percent);
+    }
+}
+
 //ajaxList();
 // ===================
 // !!! DO NOT CHANGE
@@ -484,6 +534,51 @@ function showModalAlert(message,title = false) {
 // ===================
 
 $(document).ready(function () {
+
+    // ===========================
+    // START Accessibility menu
+    //==========================
+
+    $('#visual-option-div').on("click", '#vo-close', function() {
+        $('#vo-option-btn').click();
+    });
+
+    $('li.visual-option').on('click', function (){
+        console.log($(this));
+        if($(this).hasClass('vo-contrast') && !vo_ajax ) {
+            console.log('high contrast')
+            $('body').toggleClass('high-contrast');
+            vo_high_contrast = $('body').hasClass('high-contrast') ? 1 : 0;
+            if( vo_high_contrast ) {
+                $('.vo-reset').removeClass('d-none');
+                $('#vo-contrast .low').removeClass('d-none');
+                $('#vo-contrast .height').addClass('d-none');
+            } else{
+                $('#vo-contrast .height').removeClass('d-none');
+                $('#vo-contrast .low').addClass('d-none');
+            }
+
+            setCookie('vo_high_contrast', vo_high_contrast);
+        }
+
+        if($(this).hasClass('vo-increase-text') && !vo_ajax ) {
+            changeFontSize(true);
+        }
+
+        if($(this).hasClass('vo-decrease-text') && !vo_ajax ) {
+            changeFontSize(false);
+        }
+
+        if($(this).hasClass('vo-reset') && !vo_ajax ) {
+            resetVisualOptions();
+        }
+    });
+
+    // ===========================
+    // END Accessibility menu
+    //==========================
+
+
     $(document).on('keypress', function (e){
         if(e.which == 13) {
             if($('.ajaxSearch').length){

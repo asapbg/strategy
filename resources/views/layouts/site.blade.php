@@ -43,7 +43,7 @@
     @endif
 </head>
 
-<body>
+<body class="@if($vo_high_contrast) high-contrast @endif">
 <header class="fixed-top" id="header-wrapper">
     @include('partials.top_bar_front')
     @include('partials.nav_bar_front')
@@ -122,6 +122,12 @@
 @endif
 
 @include('partials.footer_front')
+<script integrity="sha256-LHqnhy8caV1Cl66WO+IL8lzq1/u0wekg4zodTnm8NWo=">
+    var vo_font_percent = parseInt('<?php echo($vo_font_percent)?>');
+    var vo_high_contrast = parseInt('<?php echo($vo_high_contrast)?>');
+    var vo_ajax = false;
+    var GlobalLang = "{{ str_replace('_', '-', app()->getLocale()) }}";
+</script>
 
 <div id="ajax_loader_backgr"></div>
 <div id="ajax_loader">
@@ -143,5 +149,13 @@
 {{--<script src="{{ asset('js/app_vendor.js?v='.date('d')) }}"></script>--}}
 <script src="{{ asset('js/app_vendor.js') }}"></script>
 @stack('scripts')
+@if($vo_font_percent)
+    <script type="text/javascript"  nonce="2726c7f26c">
+        $(document).ready(function (){
+            setDomElFontSize(vo_font_percent, true);
+        });
+    </script>
+@endif
+
 </body>
 </html>

@@ -2359,6 +2359,141 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 .team-member-contact a {
     text-wrap: none !important;
 }
+
+/* Accessibility */
+body.high-contrast,
+body.high-contrast div,
+body.high-contrast span,
+body.high-contrast .top-menu-nav a.nav-link.active,
+body.high-contrast .top-menu-nav a.nav-link.active:hover,
+body.high-contrast .top-menu-nav .dropdown-item.active,
+body.high-contrast .top-menu-nav .dropdown-item:focus,
+body.high-contrast .top-menu-nav li.dropdown:hover > ul.dropdown-menu,
+body.high-contrast .dropdown-item:active,
+body.high-contrast a.page-link,
+body.high-contrast .nav.nav-tabs li.nav-item a.nav-link.active,
+body.high-contrast table td,
+body.high-contrast table th,
+body.high-contrast .navbar-nav ul.dropdown-menu,
+body.high-contrast *{
+    background-color: #000 !important;
+}
+
+body.high-contrast * :focus {
+    background: #000 !important;
+    color: #f6dd35 !important;
+}
+
+body.high-contrast .header-row img {
+    background: #fff !important;
+}
+
+body.high-contrast *, body.high-contrast .card.card-primary,body.high-contrast .card,body.high-contrast .accordion-item,body.high-contrast .modal-content {
+    border-radius: 0px !important;
+}
+
+body.high-contrast input, body.high-contrast form *:disabled,  body.high-contrast select, body.high-contrast .myModal .modal-header .modal-title {
+    color: #fff !important;
+}
+
+body.high-contrast *:hover {
+    background: #000 !important;
+}
+
+body.high-contrast .page-item.active .page-link {
+    color: #000 !important;
+    background: #f6dd35 !important;
+}
+
+body.high-contrast .accordion-item .accordion-header, body.high-contrast .card.card-primary .card-header,body.high-contrast .myModal .modal-header {
+    background: #000 !important;
+}
+
+body.high-contrast a:hover{
+    text-decoration:underline !important;
+}
+
+body.high-contrast h1,
+body.high-contrast h2,
+body.high-contrast h3,
+body.high-contrast h4,
+body.high-contrast h5,
+body.high-contrast span,
+body.high-contrast div,
+body.high-contrast p span,
+body.high-contrast ul li,
+body.high-contrast ol li,
+body.high-contrast label,
+body.high-contrast i,
+body.high-contrast p,
+body.high-contrast a.page-link,
+body.high-contrast table td,
+body.high-contrast table th,
+body.high-contrast .application-navigation-tab.disabled{
+    color: #fff !important;
+}
+
+body.high-contrast footer .footer-content{
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+}
+
+body.high-contrast a,
+body.high-contrast a i,
+body.high-contrast a span {
+    color: #F6DD35FF !important;
+}
+
+body.high-contrast ::placeholder {
+    color: #fff !important;
+    opacity: 1 !important; /* Firefox */
+}
+
+body.high-contrast ::-ms-input-placeholder { /* Edge 12 -18 */
+    color: #fff !important;
+}
+
+body.high-contrast a:hover{
+    color: #fff !important;
+}
+
+body.high-contrast .page-title {
+    border-color: #fff !important;
+}
+
+body.high-contrast button.accordion-button, body.high-contrast .accordion-button::after {
+    color: #fff !important;
+}
+
+body.high-contrast .dropdown-menu li a i {
+    background:#000 !important;
+    color:#fff !important;
+}
+
+body.high-contrast .btn.btn-primary,
+body.high-contrast .btn.btn-primary.active{
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color:#000 !important;
+}
+body.high-contrast .btn.btn-primary i,
+body.high-contrast .btn.btn-primary.active i,
+body.high-contrast .note-editor.note-frame button i{
+    color:#000 !important;
+}
+
+body.high-contrast .note-editor.note-frame{
+    border-color: #fff !important;
+}
+
+body.high-contrast .application-navigation-tab.disabled {
+    background: #696969;
+}
+
+body.high-contrast label.is_invalid{
+    color: #ffcfcf !important;
+}
+
 /*Responsive*/
 @media (min-width:992px) {
     /*Module Contact pages*/
@@ -2422,6 +2557,12 @@ button.btn.btn-sm.btn-primary.ms-1.pick-institution {
 
     .home-icon-menu .nav-link i {
         font-size: 24px;
+    }
+}
+
+@media(min-width: 768px) {
+    .desktop-accessibility .dropdown-menu {
+        margin-left: -200px;
     }
 }
 
