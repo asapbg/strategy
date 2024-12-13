@@ -16,8 +16,15 @@
     <div class="col-md-6 mt-2">
         <div class="col-md-6 mb-2 text-start col-sm-12 d-flex align-items-center justify-content-start flex-direction-row">
             <label for="groupBy" class="form-label fw-bold mb-0 me-3 no-wrap group-by-label">Групиране по:</label>
-            @php $fRequest = $rf ?? ($requestFilter ?? request()->all()) @endphp
-            <select class="form-select w-100" id="groupByAjax" name="groupBy" data-container="#listContainer">
+            @php
+                $fRequest = $rf ?? ($requestFilter ?? request()->all());
+
+                if (isset($fRequest['page'])) {
+                    unset($fRequest['page']);
+                }
+            @endphp
+
+            <select class="form-select w-100" id="groupByAjax" name="groupBy" data-container="#listContainer" onchange="removeUrlParameter('page');">
                 @foreach($groupOptions as $group)
                     @php $fRequest['groupBy'] = $group['value'] @endphp
                     <option value="{{ $group['value'] }}" data-url="{{ url()->current(). '?' . http_build_query($fRequest) }}" @if((request()->input('groupBy') ?? '') == $group['value']) selected @endif>{{ $group['name'] }}</option>
