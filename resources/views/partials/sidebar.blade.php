@@ -564,7 +564,13 @@
                     </li>
                     <li class="nav-item">
                         <a href="{{route('admin.users')}}"
-                           class="nav-link @if(str_contains(url()->current(), 'admin/users') && !request()->routeIs('admin.users.profile.edit')) active @endif">
+                           class="nav-link
+                           @if(
+                                str_contains(url()->current(), 'admin/users')
+                                && !request()->routeIs('admin.users.profile.edit')
+                                && !request()->routeIs('admin.users.change_request')
+                            ) active @endif"
+                        >
                             <i class="fas fa-user"></i>
                             <p>{{ trans_choice('custom.users', 2) }}</p>
                         </a>

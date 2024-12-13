@@ -163,7 +163,7 @@
                                     <div class="col-md-1">
                                         <p class="mb-0 cursor-pointer sort_search ">
                                             <input type="hidden" disabled class="order_by" name="order_by" value="contract_date">
-                                            <i class="fa-solid fa-sort"></i> {{ __('csutom.contract_date') }}
+                                            <i class="fa-solid fa-sort"></i> {{ __('custom.contract_date') }}
                                         </p>
                                     </div>
                                     <div class="col-md-3">
@@ -175,7 +175,7 @@
                                     <div class="col-md-2">
                                         <p class="mb-0 cursor-pointer sort_search ">
                                             <input type="hidden" disabled class="order_by" name="order_by" value="services_description">
-                                            <i class="fa-solid fa-sort"></i> {{ __('csutom.short_description_services') }}
+                                            <i class="fa-solid fa-sort"></i> {{ __('custom.short_description_services') }}
                                         </p>
                                     </div>
                                     <div class="col-md-1">

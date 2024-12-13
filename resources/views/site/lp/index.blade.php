@@ -32,7 +32,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="consul-wrapper">
-                                <div class="single-consultation d-flex">
+                                <div class="single-consultation d-flex mb-4">
                                     <div class="consult-body">
                                         <div class="consul-item">
                                             <div class="consult-item-header d-flex justify-content-between">
