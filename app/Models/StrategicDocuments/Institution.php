@@ -88,6 +88,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
      */
     public function getHistorycalName($date)
     {
+        $date = databaseDate($date);
         $name = $this->name;
         $hName = $this->historyNames->filter(function ($item) use ($date) {
             return $item->valid_from <= $date && (is_null($item->valid_till) || $item->valid_till > $date);
