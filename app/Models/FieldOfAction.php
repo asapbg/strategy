@@ -27,7 +27,7 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     protected $table = 'field_of_actions';
-    protected $fillable = ['icon_class'];
+    protected $fillable = ['icon_class','parentid'];
 
     const CATEGORY_NATIONAL = 1;
     const CATEGORY_AREA = 2;

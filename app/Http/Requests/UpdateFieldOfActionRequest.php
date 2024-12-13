@@ -26,6 +26,7 @@ class UpdateFieldOfActionRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
+            'parentid' => ['required', 'exists:field_of_actions,id'],
             'icon_class' => ['required', 'string', 'max:255']
         ];
 

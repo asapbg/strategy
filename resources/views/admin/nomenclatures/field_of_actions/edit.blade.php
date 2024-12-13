@@ -11,6 +11,22 @@
                         @csrf
                         <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
 
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label for="parentid">Ниво<span class="required">*</span></label>
+                                <select name="parentid" id="parentid"
+                                        class="form-control form-control-sm @error('parentid'){{ 'is-invalid' }}@enderror"
+                                >
+                                    <option value="">изберете ниво</option>
+                                    @foreach($parentFields as $parentField)
+                                        <option value="{{ $parentField->id }}" @if(old('parentid', $item->parentid) == $parentField->id) selected @endif>
+                                            {{ $parentField->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="row mb-4">
                             @include('admin.partial.edit_field_translate', ['field' => 'name', 'required' => true])
                         </div>

@@ -42,7 +42,9 @@ class FieldOfActionController extends AdminController
      */
     public function create(): View
     {
-        return $this->view('admin.nomenclatures.field_of_actions.create');
+        $parentFields = $this->getParentFields();
+
+        return $this->view('admin.nomenclatures.field_of_actions.create',compact('parentFields'));
     }
 
     /**
@@ -84,9 +86,10 @@ class FieldOfActionController extends AdminController
      */
     public function edit(FieldOfAction $item): View
     {
+        $parentFields = $this->getParentFields();
         $translatableFields = FieldOfAction::translationFieldsProperties();
 
-        return $this->view('admin.nomenclatures.field_of_actions.edit', compact('item', 'translatableFields'));
+        return $this->view('admin.nomenclatures.field_of_actions.edit', compact('item', 'translatableFields', 'parentFields'));
     }
 
     /**
@@ -148,5 +151,14 @@ class FieldOfActionController extends AdminController
                 'col' => 'col-md-4'
             )
         );
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getParentFields()
+    {
+        $parentFields = FieldOfAction::whereIn('id', [1, 2, 3])->get();
+        return $parentFields;
     }
 }
