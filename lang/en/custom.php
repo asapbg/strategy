@@ -1345,4 +1345,7 @@ return [
     'other_authority' => 'Other authority',
     'other_act_type' => 'Other act type',
     'other_chairman_type' => 'Other chairman type',
+    'criteria' => 'Criteria',
+    'current_year' => 'Current year',
+    'specific_year' => 'Specific year',
 ];

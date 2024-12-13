@@ -296,6 +296,8 @@ class AdvisoryBoardController extends Controller
         if (!isset($requestFilter['to'])) {
             $requestFilter['to'] = Carbon::now()->startOfYear();
         }
+        $requestFilter['criteria'] = $requestFilter['criteria'] ?? AdvisoryBoardMeeting::FILTER_ALL;
+
         $filter = $this->archiveFilters($request);
         $pageTitle = $item->name;
 
