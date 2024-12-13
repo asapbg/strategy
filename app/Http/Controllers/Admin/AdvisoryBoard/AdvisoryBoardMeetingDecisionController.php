@@ -12,11 +12,13 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Log;
 
 class AdvisoryBoardMeetingDecisionController extends AdminController
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -49,7 +51,15 @@ class AdvisoryBoardMeetingDecisionController extends AdminController
     public function ajaxStore(Request $request, AdvisoryBoard $item, AdvisoryBoardMeetingDecision $decision)
     {
         $req = new StoreAdvisoryBoardMeetingDecisionRequest();
-        $validator = Validator::make($request->all(), $req->rules());
+        $rules = $req->rules();
+
+        if ($request->has('advisory_board_meeting_decision_id')) {
+            $decision = AdvisoryBoardMeetingDecision::findOrFail($request->get('advisory_board_meeting_decision_id'));
+
+            unset($rules['advisory_board_meeting_id']);
+        }
+
+        $validator = Validator::make($request->all(), $rules);
         if($validator->fails()) {
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
         }
@@ -99,13 +109,14 @@ class AdvisoryBoardMeetingDecisionController extends AdminController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\AdvisoryBoardMeetingDecision $advisoryBoardMeetingDecision
+     * @param AdvisoryBoard                $item
+     * @param AdvisoryBoardMeetingDecision $decision
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function edit(AdvisoryBoardMeetingDecision $advisoryBoardMeetingDecision)
+    public function ajaxEdit(AdvisoryBoard $item, AdvisoryBoardMeetingDecision $decision)
     {
-        //
+        return response()->json($decision);
     }
 
     /**

@@ -23,11 +23,13 @@ class FieldOfActionController extends AdminController
     public function index(Request $request): View
     {
         $requestFilter = $request->all();
+        $active = $request->get('active', 1);
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? FieldOfAction::PAGINATE;
         $actions = FieldOfAction::orderBy('parentid')
             ->orderByTranslation('name')
             ->FilterBy($requestFilter)
+            ->whereActive($active)
             ->paginate($paginate);
         $toggleBooleanModel = 'FieldOfAction';
         return $this->view('admin.nomenclatures.field_of_actions.index', compact('actions', 'filter', 'toggleBooleanModel'));

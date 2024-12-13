@@ -76,7 +76,7 @@
                         @if($user->hasAnyRole([
                                 \App\Models\CustomRole::ADMIN_USER_ROLE,
                                 \App\Models\CustomRole::SUPER_USER_ROLE,
-                                \App\Models\CustomRole::MODERATOR_STRATEGIC_DOCUMENTS
+                                \App\Models\CustomRole::MODERATOR_STRATEGIC_DOCUMENT
                             ]))
                             <div class="col-md-4 mb-4">
                                 <a href="{{ route('admin.help.guide', ['section' => 'sd_inner']) }}" class="btn btn-info px-3 py-3 w-100 guide-btn-box" target="_blank">

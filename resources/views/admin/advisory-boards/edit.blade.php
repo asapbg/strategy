@@ -159,6 +159,7 @@
     @includeIf('admin.advisory-boards.modals.edit-member-form', ['resource' => $title_singular])
     @includeIf('admin.advisory-boards.modals.add-moderator-file')
     @includeIf('admin.advisory-boards.modals.add-meeting-decisions')
+    @includeIf('admin.advisory-boards.modals.edit-meeting-decisions')
     @includeIf('admin.advisory-boards.modals.add-custom-file')
     @includeIf('admin.advisory-boards.modals.add-establishment-file')
     @includeIf('admin.advisory-boards.modals.add-organization-rule-file')

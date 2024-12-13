@@ -38,7 +38,7 @@
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)
                         <tr>
-                            <td>{{ $row->title }}</td>
+                            <td><a href="{{ route('strategy-document.view', $row->id) }}">{{ $row->title }}</a></td>
                             <td>{{ $row->strategic_document_level_id ? __('custom.strategic_document.dropdown.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($row->strategic_document_level_id)) : '---' }}</td>
                             <td>{{ $row->policyArea ? $row->policyArea->name : '---' }}</td>
                             <td>{{ $row->acceptActInstitution ? $row->acceptActInstitution->name : '---' }}</td>

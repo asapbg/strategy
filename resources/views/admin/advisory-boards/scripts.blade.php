@@ -249,6 +249,35 @@
             });
         }
 
+        function loadMeetingDecisionData(url) {
+            const form = document.querySelector('form[name=EDIT_MEETING_DECISIONS_FORM]');
+            const translatable_fields = ['decisions', 'suggestions', 'other'];
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    form.querySelector('input[name=advisory_board_meeting_decision_id]').value = data.id;
+                    form.querySelector('#date_of_meeting').value = new Date(data.date_of_meeting).toLocaleDateString();
+                    form.querySelector('#agenda').value = data.agenda;
+                    form.querySelector('#protocol').value = data.protocol;
+                    for(let i = 0; i < data.translations.length; i++){
+                        if(data.translations[i].locale == 'bg'){
+                            $(form.querySelector('#' + translatable_fields[i] + '_bg')).summernote("code", data.translations[i][translatable_fields[i]]);
+                        }
+
+                        if(data.translations[i].locale == 'en'){
+                            $(form.querySelector('#' + translatable_fields[i] + '_en')).summernote("code", data.translations[i][translatable_fields[i]]);
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
         function loadSectionData(url) {
             const form = document.querySelector('form[name=SECTION_UPDATE]');
 

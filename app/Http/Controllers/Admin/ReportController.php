@@ -24,7 +24,7 @@ class ReportController extends Controller
      */
     public function create(): View
     {
-        $actions = FieldOfAction::orderByTranslation('name')->get();
+        $actions = FieldOfAction::Active()->orderByTranslation('name')->get();
         $types = ConsultationType::orderBy('id')->get();
 
         return $this->view('admin.reports.create', compact('actions', 'types'));
