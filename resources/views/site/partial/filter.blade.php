@@ -26,7 +26,22 @@
                                                 @case('text')
                                                     <div class="input-group ">
                                                         <div class="mb-1 d-flex flex-column  w-100">
-                                                            <label for="{{ $key }}" class="form-label">{{ $field['label'] }}:</label>
+                                                            <label for="{{ $key }}" class="form-label">
+                                                                <span style="position: relative">
+                                                                    {{ $field['label'] }}:
+                                                                    @if($key == "fullSearch")
+                                                                        <div class="text-start col-md-1">
+                                                                            <i class="fas fa-info-circle text-primary"
+                                                                               style="font-size: 20px;position:absolute;top: -10px;right:-23px;"
+                                                                               title="Разделяйте термините със запетая (,)" data-html="true"
+                                                                               data-bs-placement="top" data-bs-toggle="tooltip"
+                                                                            >
+                                                                                <span class="d-none">.</span>
+                                                                            </i>
+                                                                        </div>
+                                                                    @endif
+                                                                </span>
+                                                            </label>
                                                             <input type="text" id="{{ $key }}" class="form-control"
                                                                    autocomplete="off"
                                                                    value="{{ $field['value'] }}" name="{{ $key }}">

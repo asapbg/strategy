@@ -241,14 +241,14 @@ class  UsersController extends Controller
             $user->unit                 = $data['unit'] ?? null;
             $user->phone                = $data['phone'] ?? null;
 
-            $user->syncRoles($data['roles']);
-
             if (!is_null($data['password'])) {
                 $user->password = bcrypt($data['password']);
                 $user->password_changed_at = Carbon::now();
             }
 
             $user->save();
+
+            $user->syncRoles($data['roles']);
 
             DB::commit();
 
