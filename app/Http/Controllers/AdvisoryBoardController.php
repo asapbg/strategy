@@ -305,9 +305,12 @@ class AdvisoryBoardController extends Controller
 
         $items = AdvisoryBoardMeeting::with(['translations'])
             ->where('advisory_board_id', $item->id)
-            ->where('next_meeting', '<', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'))
+//            ->where('next_meeting', '<', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'))
             ->orderBy('next_meeting', 'desc')
-            ->FilterBy($requestFilter)
+            ->when($requestFilter['criteria'] == AdvisoryBoardMeeting::FILTER_CURRENT_YEAR, fn($q) => $q->where('next_meeting', '>=', Carbon::now()->startOfYear())->where('next_meeting', '<=', Carbon::now()->endOfYear()))
+            ->when($requestFilter['criteria'] == AdvisoryBoardMeeting::FILTER_SPECIFIC_YEAR, fn($q) => $q->where('next_meeting', '>=', Carbon::createFromFormat('Y', $requestFilter['year'])->startOfYear())->where('next_meeting', '<=', Carbon::createFromFormat('Y', $requestFilter['year'])->endOfYear()))
+            ->when($requestFilter['criteria'] == AdvisoryBoardMeeting::FILTER_PERIOD, fn($q) => $q->where('next_meeting', '>=', Carbon::parse($requestFilter['from'])->startOfDay())->where('next_meeting', '<=', Carbon::parse($requestFilter['to'])->endOfDay()))
+//            ->FilterBy($requestFilter)
             ->get();
 //            ->paginate($paginate);
 
@@ -697,6 +700,24 @@ class AdvisoryBoardController extends Controller
     private function archiveFilters($request)
     {
         return array(
+            'criteria' => array(
+                'type' => 'select',
+                'options' => AdvisoryBoardMeeting::getCriterias(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.criteria'),
+                'value' => $request->input('criteria') ?? 'all',
+                'col' => 'col-md-12'
+            ),
+            'year' => array(
+                'type' => 'select',
+                'options' => AdvisoryBoardMeeting::getYearsRange(),
+                'multiple' => false,
+                'default' => '',
+                'label' => __('custom.year'),
+                'value' => $request->input('year') ?? date('Y'),
+                'col' => 'col-md-12'
+            ),
             'from' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('from'),
