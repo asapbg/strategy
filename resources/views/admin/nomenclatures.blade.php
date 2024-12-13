@@ -153,13 +153,13 @@
 {{--                        </div>--}}
                     </div>
                     <div class="row mb-2">
-                        <div class="col-sm-3">
-                            <a class="btn btn-info btn-block nomenclature-btn align-content-center"
-                               href="{{ route('admin.advisory-boards.nomenclature.field-of-actions.index') }}">
-                                <i class="fas fa-file"></i>
-                                {{ trans_choice('custom.advisory_board_nomenclature_field_of_actions', 2) }}
-                            </a>
-                        </div>
+{{--                        <div class="col-sm-3">--}}
+{{--                            <a class="btn btn-info btn-block nomenclature-btn align-content-center"--}}
+{{--                               href="{{ route('admin.advisory-boards.nomenclature.field-of-actions.index') }}">--}}
+{{--                                <i class="fas fa-file"></i>--}}
+{{--                                {{ trans_choice('custom.advisory_board_nomenclature_field_of_actions', 2) }}--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
 
                         <div class="col-sm-3">
                             <a class="btn btn-info btn-block nomenclature-btn"
