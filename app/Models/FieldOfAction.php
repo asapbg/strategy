@@ -58,6 +58,11 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
         $query->where('parentid', 1);
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(FieldOfAction::class, 'parentid');
+    }
+
     public function scopeActive($query){
         $query->where('field_of_actions.active', 1);
     }

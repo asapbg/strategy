@@ -27,6 +27,7 @@ class FieldOfActionController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? FieldOfAction::PAGINATE;
         $actions = FieldOfAction::orderBy('parentid')
+            ->with('parent')
             ->orderByTranslation('name')
             ->FilterBy($requestFilter)
             ->whereActive($active)
@@ -148,6 +149,13 @@ class FieldOfActionController extends AdminController
                 'type' => 'text',
                 'placeholder' => __('validation.attributes.name'),
                 'value' => $request->input('name'),
+                'col' => 'col-md-4'
+            ),
+            'parentid' => array(
+                'type' => 'select',
+                'options' => optionsFromModel($this->getParentFields(), true),
+                'placeholder' => 'Ниво',
+                'value' => $request->input('parentid'),
                 'col' => 'col-md-4'
             )
         );

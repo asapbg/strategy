@@ -24,6 +24,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{__('validation.attributes.label')}}</th>
+                            <th>Ниво</th>
                             <th>{{__('custom.active_f')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
@@ -34,6 +35,7 @@
                                 <tr>
                                     <td>{{ $action->id }}</td>
                                     <td><i class="text-primary {{ $action->icon_class }} mr-2"></i> {{ $action->name }}</td>
+                                    <td>{{ $action->parent?->name }}</td>
                                     <td>
                                         @can('update', $action)
                                             @includeIf('partials.toggle-boolean', ['object' => $action, 'model' => 'FieldOfAction'])
