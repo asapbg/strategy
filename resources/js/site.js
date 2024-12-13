@@ -527,6 +527,14 @@ function setDomElFontSize(newSize, ignoreOriginalSize) {
     }
 }
 
+function removeUrlParameter(parameter) {
+    const url = new URL(window.location.href); // Get the current URL
+
+    url.searchParams.delete(parameter);          // Remove the 'page' parameter
+
+    window.history.replaceState(null, '', url.toString()); // Update the URL without refreshing
+}
+
 //ajaxList();
 // ===================
 // !!! DO NOT CHANGE
