@@ -61,33 +61,33 @@
 {{--                                            </div>--}}
 
                                             <div class="col-auto">
-                                                @can('delete', $item)
-                                                    @if(!$archiveItem->deleted_at)
-                                                        <a href="javascript:;"
-                                                           class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
-                                                           data-target="#modal-remove-working-program"
-                                                           data-resource-id="{{ $archiveItem->id }}"
-                                                           data-resource-delete-url="{{ route('admin.advisory-boards.function.delete', ['item' => $item, 'working_program' => $archiveItem]) }}"
-                                                           data-toggle="tooltip"
-                                                           title="{{__('custom.delete')}}">
-                                                            <i class="fa fa-trash"></i>
-                                                        </a>
-                                                    @endif
-                                                @endcan
+{{--                                                @can('delete', $item)--}}
+{{--                                                    @if(!$archiveItem->deleted_at)--}}
+{{--                                                        <a href="javascript:;"--}}
+{{--                                                           class="btn btn-sm btn-danger js-toggle-delete-resource-modal"--}}
+{{--                                                           data-target="#modal-remove-working-program"--}}
+{{--                                                           data-resource-id="{{ $archiveItem->id }}"--}}
+{{--                                                           data-resource-delete-url="{{ route('admin.advisory-boards.function.delete', ['item' => $item, 'working_program' => $archiveItem]) }}"--}}
+{{--                                                           data-toggle="tooltip"--}}
+{{--                                                           title="{{__('custom.delete')}}">--}}
+{{--                                                            <i class="fa fa-trash"></i>--}}
+{{--                                                        </a>--}}
+{{--                                                    @endif--}}
+{{--                                                @endcan--}}
 
-                                                @can('restore', $item)
-                                                    @if($archiveItem->deleted_at)
-                                                        <a href="javascript:;"
-                                                           class="btn btn-sm btn-success js-toggle-restore-resource-modal"
-                                                           data-target="#modal-restore-section"
-                                                           data-resource-id="{{ $archiveItem->id }}"
-                                                           data-resource-restore-url="{{ route('admin.advisory-boards.function.restore', ['item' => $item, 'working_program' => $archiveItem]) }}"
-                                                           data-toggle="tooltip"
-                                                           title="{{__('custom.restore')}}">
-                                                            <i class="fa fa-plus"></i>
-                                                        </a>
-                                                    @endif
-                                                @endcan
+{{--                                                @can('restore', $item)--}}
+{{--                                                    @if($archiveItem->deleted_at)--}}
+{{--                                                        <a href="javascript:;"--}}
+{{--                                                           class="btn btn-sm btn-success js-toggle-restore-resource-modal"--}}
+{{--                                                           data-target="#modal-restore-section"--}}
+{{--                                                           data-resource-id="{{ $archiveItem->id }}"--}}
+{{--                                                           data-resource-restore-url="{{ route('admin.advisory-boards.function.restore', ['item' => $item, 'working_program' => $archiveItem]) }}"--}}
+{{--                                                           data-toggle="tooltip"--}}
+{{--                                                           title="{{__('custom.restore')}}">--}}
+{{--                                                            <i class="fa fa-plus"></i>--}}
+{{--                                                        </a>--}}
+{{--                                                    @endif--}}
+{{--                                                @endcan--}}
                                             </div>
                                         </div>
                                     </div>
@@ -123,33 +123,33 @@
 {{--                                            </div>--}}
 
                                             <div class="col-auto">
-                                                @can('delete', $item)
-                                                    @if(!$archiveItem->deleted_at)
-                                                        <a href="javascript:;"
-                                                           class="btn btn-sm btn-danger js-toggle-delete-resource-modal"
-                                                           data-target="#modal-delete-meeting"
-                                                           data-resource-id="{{ $archiveItem->id }}"
-                                                           data-resource-delete-url="{{ route('admin.advisory-boards.meetings.delete', ['item' => $item, 'meeting' => $archiveItem]) }}"
-                                                           data-toggle="tooltip"
-                                                           title="{{__('custom.delete')}}">
-                                                            <i class="fa fa-trash"></i>
-                                                        </a>
-                                                    @endif
-                                                @endcan
+{{--                                                @can('delete', $item)--}}
+{{--                                                    @if(!$archiveItem->deleted_at)--}}
+{{--                                                        <a href="javascript:;"--}}
+{{--                                                           class="btn btn-sm btn-danger js-toggle-delete-resource-modal"--}}
+{{--                                                           data-target="#modal-delete-meeting"--}}
+{{--                                                           data-resource-id="{{ $archiveItem->id }}"--}}
+{{--                                                           data-resource-delete-url="{{ route('admin.advisory-boards.meetings.delete', ['item' => $item, 'meeting' => $archiveItem]) }}"--}}
+{{--                                                           data-toggle="tooltip"--}}
+{{--                                                           title="{{__('custom.delete')}}">--}}
+{{--                                                            <i class="fa fa-trash"></i>--}}
+{{--                                                        </a>--}}
+{{--                                                    @endif--}}
+{{--                                                @endcan--}}
 
-                                                @can('restore', $item)
-                                                    @if($archiveItem->deleted_at)
-                                                        <a href="javascript:;"
-                                                           class="btn btn-sm btn-success js-toggle-restore-resource-modal"
-                                                           data-target="#modal-restore-meeting"
-                                                           data-resource-id="{{ $archiveItem->id }}"
-                                                           data-resource-restore-url="{{ route('admin.advisory-boards.meetings.restore', ['item' => $item, 'meeting' => $archiveItem]) }}"
-                                                           data-toggle="tooltip"
-                                                           title="{{__('custom.restore')}}">
-                                                            <i class="fa fa-plus"></i>
-                                                        </a>
-                                                    @endif
-                                                @endcan
+{{--                                                @can('restore', $item)--}}
+{{--                                                    @if($archiveItem->deleted_at)--}}
+{{--                                                        <a href="javascript:;"--}}
+{{--                                                           class="btn btn-sm btn-success js-toggle-restore-resource-modal"--}}
+{{--                                                           data-target="#modal-restore-meeting"--}}
+{{--                                                           data-resource-id="{{ $archiveItem->id }}"--}}
+{{--                                                           data-resource-restore-url="{{ route('admin.advisory-boards.meetings.restore', ['item' => $item, 'meeting' => $archiveItem]) }}"--}}
+{{--                                                           data-toggle="tooltip"--}}
+{{--                                                           title="{{__('custom.restore')}}">--}}
+{{--                                                            <i class="fa fa-plus"></i>--}}
+{{--                                                        </a>--}}
+{{--                                                    @endif--}}
+{{--                                                @endcan--}}
                                             </div>
                                         </div>
                                     </div>
@@ -187,60 +187,60 @@
                         </div>
                     </div>
 
-{{--                    <div class="row">--}}
-{{--                        <div class="col-12">--}}
-{{--                            <hr/>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    @if($archive_category == 1)--}}
-{{--                        <div class="p-3">--}}
-{{--                            <div class="row">--}}
-{{--                                <div class="col-12">--}}
-{{--                                    <h4>{{ __('custom.information') }}</h4>--}}
-{{--                                </div>--}}
+                    <div class="row">
+                        <div class="col-12">
+                            <hr/>
+                        </div>
+                    </div>
+                    @if($archive_category == 1)
+                        <div class="p-3">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4>{{ __('custom.information') }}</h4>
+                                </div>
 
-{{--                                @if(isset($archiveItem->decisions) && $archiveItem->decisions->count() > 0)--}}
-{{--                                    @foreach($archiveItem->decisions as $information)--}}
-{{--                                        <div class="col-12">--}}
-{{--                                            <p>--}}
-{{--                                                {{ __('custom.meeting_date') . ':' . ' ' . \Carbon\Carbon::parse($information->date_of_meeting)->format('d.m.Y') }}--}}
-{{--                                            </p>--}}
-{{--                                        </div>--}}
+                                @if(isset($archiveItem->decisions) && $archiveItem->decisions->count() > 0)
+                                    @foreach($archiveItem->decisions as $information)
+                                        <div class="col-12">
+                                            <p>
+                                                {{ __('custom.meeting_date') . ':' . ' ' . \Carbon\Carbon::parse($information->date_of_meeting)->format('d.m.Y') }}
+                                            </p>
+                                        </div>
 
-{{--                                        <div class="col-12">--}}
-{{--                                            <p>--}}
-{{--                                                {{ __('validation.attributes.agenda') . ':' . ' ' . $information->agenda }}--}}
-{{--                                            </p>--}}
-{{--                                        </div>--}}
+                                        <div class="col-12">
+                                            <p>
+                                                {{ __('validation.attributes.agenda') . ':' . ' ' . $information->agenda }}
+                                            </p>
+                                        </div>
 
-{{--                                        <div class="col-12">--}}
-{{--                                            <p>--}}
-{{--                                                {{ __('validation.attributes.protocol') . ':' . ' ' . $information->protocol }}--}}
-{{--                                            </p>--}}
-{{--                                        </div>--}}
+                                        <div class="col-12">
+                                            <p>
+                                                {{ __('validation.attributes.protocol') . ':' . ' ' . $information->protocol }}
+                                            </p>
+                                        </div>
 
-{{--                                        <div class="col-12">--}}
-{{--                                            <p>--}}
-{{--                                                {{ __('validation.attributes.decisions') . ':' }} {!! $information->decisions !!}--}}
-{{--                                            </p>--}}
-{{--                                        </div>--}}
+                                        <div class="col-12">
+                                            <p>
+                                                {{ __('validation.attributes.decisions') . ':' }} {!! $information->decisions !!}
+                                            </p>
+                                        </div>
 
-{{--                                        <div class="col-12">--}}
-{{--                                            <p>--}}
-{{--                                                {{ __('validation.attributes.suggestions') . ':' }} {!! $information->suggestions !!}--}}
-{{--                                            </p>--}}
-{{--                                        </div>--}}
+                                        <div class="col-12">
+                                            <p>
+                                                {{ __('validation.attributes.suggestions') . ':' }} {!! $information->suggestions !!}
+                                            </p>
+                                        </div>
 
-{{--                                        <div class="col-12">--}}
-{{--                                            <p>--}}
-{{--                                                {{ __('validation.attributes.other') . ':' }} {!! $information->other !!}--}}
-{{--                                            </p>--}}
-{{--                                        </div>--}}
-{{--                                    @endforeach--}}
-{{--                                @endif--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    @endif--}}
+                                        <div class="col-12">
+                                            <p>
+                                                {{ __('validation.attributes.other') . ':' }} {!! $information->other !!}
+                                            </p>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    @endif
 
                     <div class="p-3">
                         <div class="row justify-content-between align-items-center">
@@ -268,23 +268,23 @@
                             <div class="col-auto">
                                 @if(!$view_mode)
                                     @if($archive_category == 2)
-                                        <button type="button" class="btn btn-success"
-                                                data-toggle="modal"
-                                                data-target="#modal-add-function-file"
-                                                onclick="setFunctionFileObjectId('{{ $archiveItem->id }}')">
-                                            <i class="fa fa-plus mr-3"></i>
-                                            {{ __('custom.add') . ' ' . __('custom.file') }}
-                                        </button>
+{{--                                        <button type="button" class="btn btn-success"--}}
+{{--                                                data-toggle="modal"--}}
+{{--                                                data-target="#modal-add-function-file"--}}
+{{--                                                onclick="setFunctionFileObjectId('{{ $archiveItem->id }}')">--}}
+{{--                                            <i class="fa fa-plus mr-3"></i>--}}
+{{--                                            {{ __('custom.add') . ' ' . __('custom.file') }}--}}
+{{--                                        </button>--}}
                                     @endif
 
                                     @if($archive_category == 1)
-                                            <button type="button" class="btn btn-success"
-                                                    data-toggle="modal"
-                                                    data-target="#modal-add-meeting-file"
-                                                    onclick="setMeetingFileObjectId('{{ $archiveItem->id }}')">
-                                                <i class="fa fa-plus mr-3"></i>
-                                                {{ __('custom.add') . ' ' . __('custom.file') }}
-                                            </button>
+{{--                                            <button type="button" class="btn btn-success"--}}
+{{--                                                    data-toggle="modal"--}}
+{{--                                                    data-target="#modal-add-meeting-file"--}}
+{{--                                                    onclick="setMeetingFileObjectId('{{ $archiveItem->id }}')">--}}
+{{--                                                <i class="fa fa-plus mr-3"></i>--}}
+{{--                                                {{ __('custom.add') . ' ' . __('custom.file') }}--}}
+{{--                                            </button>--}}
                                     @endif
                                 @endif
                             </div>

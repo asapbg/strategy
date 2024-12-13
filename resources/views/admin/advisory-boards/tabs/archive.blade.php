@@ -13,4 +13,4 @@
     </div>
 </form>
 
-@include('admin.partial.archive_list', ['items' => $archive, 'current_tab' => 'archive'])
+@include('admin.partial.archive_list', ['items' => $archive, 'current_tab' => 'archive', 'view_mode' => true])
