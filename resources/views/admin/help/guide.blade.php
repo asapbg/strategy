@@ -10,7 +10,8 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="row mt-3">
-                            <embed src="{{ asset(DIRECTORY_SEPARATOR.'help'.DIRECTORY_SEPARATOR.$file) }}" width="800px" height="2100px" />
+                            {{--Prevent browser caching with the date query parameter--}}
+                            <embed src="{{ asset(DIRECTORY_SEPARATOR.'help'.DIRECTORY_SEPARATOR.$file) }}?date={{ time() }}" width="800px" height="2100px" />
                         </div>
                     </div>
                 </div>
