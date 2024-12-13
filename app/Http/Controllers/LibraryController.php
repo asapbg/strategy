@@ -61,7 +61,7 @@ class LibraryController extends Controller
         $publicationCategories = PublicationCategory::optionsList(true, $type);
 
         if ($type->value === PublicationTypesEnum::TYPE_ADVISORY_BOARD->value) {
-            $publicationCategories = FieldOfAction::advisoryBoard()->with('translations')->select('id')->get();
+            $publicationCategories = FieldOfAction::Active()->advisoryBoard()->with('translations')->select('id')->get();
         }
 
         return $this->view('site.publications.index',

@@ -11,6 +11,8 @@
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
+                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Nomenclature\FieldOfActionController@index'])
+
                         <a href="{{ route('admin.nomenclature.field-of-actions.create') }}"
                            class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
@@ -22,6 +24,7 @@
                         <tr>
                             <th>ID</th>
                             <th>{{__('validation.attributes.label')}}</th>
+                            <th>{{__('custom.active_f')}}</th>
                             <th>{{__('custom.actions')}}</th>
                         </tr>
                         </thead>
@@ -31,6 +34,11 @@
                                 <tr>
                                     <td>{{ $action->id }}</td>
                                     <td><i class="text-primary {{ $action->icon_class }} mr-2"></i> {{ $action->name }}</td>
+                                    <td>
+                                        @can('update', $action)
+                                            @includeIf('partials.toggle-boolean', ['object' => $action, 'model' => 'FieldOfAction'])
+                                        @endcan
+                                    </td>
                                     <td class="text-center">
                                         @can('update', $action)
                                             <a href="{{ route( 'admin.nomenclature.field_of_actions.edit', $action) }}"

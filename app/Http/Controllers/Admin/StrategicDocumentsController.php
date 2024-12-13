@@ -133,9 +133,9 @@ class StrategicDocumentsController extends AdminController
                 $strategicDocumentLevels =  enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', !$item->id, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]);
 
                 //Field of actions split by parent categories
-                $ekateAreas = \App\Models\FieldOfAction::Area()->with(['translations'])->orderByTranslation('name')->get();
-                $ekateMunicipalities = \App\Models\FieldOfAction::Municipal()->with(['translations'])->orderByTranslation('name')->get();
-                $policyAreas = \App\Models\FieldOfAction::Central()->with(['translations'])->orderByTranslation('name')->get();
+                $ekateAreas = \App\Models\FieldOfAction::Active()->Area()->with(['translations'])->orderByTranslation('name')->get();
+                $ekateMunicipalities = \App\Models\FieldOfAction::Active()->Municipal()->with(['translations'])->orderByTranslation('name')->get();
+                $policyAreas = \App\Models\FieldOfAction::Active()->Central()->with(['translations'])->orderByTranslation('name')->get();
             } else {
                 //$authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
                 if($item->id){
@@ -155,9 +155,9 @@ class StrategicDocumentsController extends AdminController
                 $userPolicyAreas = $user->institution ?
                     ($user->institution->fieldsOfAction->count() ? $user->institution->fieldsOfAction->pluck('id')->toArray() : [0])
                     : [0];
-                $ekateAreas = $user->institution ? \App\Models\FieldOfAction::Area()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
-                $ekateMunicipalities = $user->institution ? \App\Models\FieldOfAction::Municipal()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
-                $policyAreas = $user->institution ? \App\Models\FieldOfAction::Central()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
+                $ekateAreas = $user->institution ? \App\Models\FieldOfAction::Active(true)->Area()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
+                $ekateMunicipalities = $user->institution ? \App\Models\FieldOfAction::Active(true)->Municipal()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
+                $policyAreas = $user->institution ? \App\Models\FieldOfAction::Active(true)->Central()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
             }
             return $this->view(self::EDIT_VIEW, compact('section', 'item', 'storeRouteName', 'listRouteName', 'translatableFields',
                 'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',

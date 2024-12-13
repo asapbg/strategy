@@ -56,7 +56,7 @@ class InstitutionController extends AdminController
         $listRouteName = self::LIST_ROUTE;
         $translatableFields = Institution::translationFieldsProperties();
         $consultationLevels = ConsultationLevel::all();
-        $fieldOfActions = FieldOfAction::with(['translations'])
+        $fieldOfActions = FieldOfAction::Active()->with(['translations'])
             ->where('parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory($item->level->nomenclature_level))
             ->orderByTranslation('name')->get();
 
