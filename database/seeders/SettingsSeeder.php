@@ -243,7 +243,7 @@ class SettingsSeeder extends Seeder
                 'type' => 'summernote',
                 'editable' => 1,
                 'is_required' => 1,
-                'value' => '&lt;p&gt;Уважаеми членове на ${name},&lt;/p&gt;&lt;p&gt;Във връзка със задълженията на ${name}, ви уведомяваме за предстоящо заседание:&lt;/p&gt;&lt;p&gt;Дата на заседанието: ${date}&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;Повече информация може да намерите на следния адрес: ${link}.&lt;/p&gt;'
+                'value' => '&lt;p&gt;Уважаеми членове на ${name},&lt;/p&gt;&lt;p&gt;Във връзка със задълженията на ${name}, ви уведомяваме за предстоящо заседание:&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;Дата на заседанието: ${date}&lt;/p&gt;'
             ]
         );
 
