@@ -100,7 +100,7 @@ class StrategicDocumentsController extends AdminController
      * @param string $section
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse
      */
-    public function edit(Request $request, $id = 0, string $section = 'general')
+    public function edit(Request $request, $id = 0, string $section = 'general', StrategicDocumentFile $strategicFile = NULL)
     {
         $user = auth()->user();
         $item = $this->getRecord($id, ['documents', 'documents.translations', 'pris.actType','documentType.translations','translation']);
@@ -162,9 +162,9 @@ class StrategicDocumentsController extends AdminController
             return $this->view(self::EDIT_VIEW, compact('section', 'item', 'storeRouteName', 'listRouteName', 'translatableFields',
                 'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
                 'policyAreas', 'legalActTypes', 'ekateAreas', 'ekateMunicipalities', 'adminUser'));
-        } else if($section == self::SECTION_FILES){
-            return $this->view(self::EDIT_VIEW, compact('section', 'item', 'strategicDocumentTypes'));
-        } else{
+        } else if($section == self::SECTION_FILES) {
+            return $this->view(self::EDIT_VIEW, compact('section', 'item', 'strategicDocumentTypes', 'strategicFile'));
+        } else {
             return redirect(route('admin.strategic_documents.edit', [$item->id ?? 0, self::SECTION_GENERAL]));
         }
 
@@ -217,7 +217,6 @@ class StrategicDocumentsController extends AdminController
 
                 $file = $validated['file_'.$code];
 //                $desc = $validated['description_'.$code];
-
                 $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
                 $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
                 $newFile = new StrategicDocumentFile([
@@ -254,6 +253,71 @@ class StrategicDocumentsController extends AdminController
             if ($redirect) {
                 return redirect($route)->with('success', 'Файлът е качен успешно');
             }
+        } catch (\Exception $e) {
+            throw $e;
+            logError('Upload file strategic document', $e->getMessage());
+            return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
+        }
+    }
+
+    public function updateFileLanguage(Request $request, $objectId, $typeObject, StrategicDocumentFile $strategicFile = NULL) {
+        try {
+            $validated = $request->all();
+            // Upload File
+            $pDir = match ((int)$typeObject) {
+                \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT,
+                \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN => \App\Models\StrategicDocumentFile::DIR_PATH,
+                default => '',
+            };
+
+            //$default = $lang['default'];
+            $code = $strategicFile->locale;
+
+            $data = [
+                'strategic_document_id' => $objectId,
+                'strategic_document_type_id' => $typeObject,
+                'sys_user' => auth()->user()->id,
+                'locale' => $code,
+                'description' => $validated['description_'.$code],
+                'file_info' => $validated['file_info_'.$code] ?? NULL,
+                'version' => '1.0',
+                'visible_in_report' => isset($validated['is_visible_in_report'])
+            ];
+
+            if (isset($validated['file_' . $code])) {
+                /*
+                 * We could delete the old file here, however in case the client wants some sort of version control of the files,
+                 * we wouldn't be able to retrieve them if they're physically deleted.
+                 * We can always get the old location of the file from the activity log.
+                 */
+                $file = $validated['file_'.$code];
+//                $desc = $validated['description_'.$code];
+
+                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
+
+                $data['filename'] = $fileNameToStore;
+                $data['content_type'] = $file->getClientMimeType();
+                $data['path'] = $pDir.$fileNameToStore;
+            }
+
+            $strategicFile->update($data);
+
+            $ocr = new FileOcr($strategicFile->refresh());
+            $ocr->extractText();
+
+            switch ((int)$typeObject) {
+                case \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT:
+                    $route = route('admin.strategic_documents.edit', [$objectId, StrategicDocumentsController::SECTION_FILES]);
+                    break;
+                case \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN:
+                    $route = route('admin.strategic_documents.document.edit', [$objectId, StrategicDocumentsController::SECTION_FILES]);
+                    break;
+                default:
+                    $route = '';
+            }
+
+            return redirect($route)->with('success', 'Файлът е качен успешно');
         } catch (\Exception $e) {
             throw $e;
             logError('Upload file strategic document', $e->getMessage());

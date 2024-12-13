@@ -1,30 +1,57 @@
-<form class="row" action="{{ route('admin.strategic_documents.upload.file.languages', ['object_id' => $item && $item->id ? $item->id : 0, 'object_type' => \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
+<form class="row" action="{{
+    $strategicFile
+        ? route('admin.strategic_documents.update.file.languages',
+            ['object_id' => $item && $item->id ? $item->id : 0, 'object_type' => \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT, 'strategicFile' => $strategicFile])
+        : route('admin.strategic_documents.upload.file.languages',
+            ['object_id' => $item && $item->id ? $item->id : 0, 'object_type' => \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT, 'strategicFile' => null]) }}" method="post" name="form" id="form" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="formats" value="ALLOWED_FILE_STRATEGIC_DOC">
-    @php($defaultLang = config('app.default_lang'))
+    @php
+        $defaultLang = config('app.default_lang');
 
+        $langs = config('available_languages');
+        if ($strategicFile) {
+            $langs = $strategicFile->locale == 'bg' ? [$langs[1]] : [$langs[2]];
+        }
+    @endphp
     <div class="row">
-        @include('admin.partial.edit_field_translate',
-            [
-                'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),
-                'field' => 'description',
-                'required' => true,
-                'item' => null
-            ])
+        @foreach($langs as $lang)
+            <div class="col-md-6 mb-3">
+                <label for="description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }}
+                    @if($lang['code'] == $defaultLang)
+                        <span class="required">*</span>
+                    @endif
+                </label>
+                <input value="{{ old('description_'.$lang['code'], $strategicFile->description ?? '') }}"
+                       class="form-control form-control-sm @error('description_'.$lang['code']) is-invalid @enderror"
+                       id="description_{{ $lang['code'] }}"
+                       type="text"
+                       name="description_{{ $lang['code'] }}">
+                @error('description_'.$lang['code'])
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        @endforeach
     </div>
 
-{{--    <div class="row">--}}
-{{--        @include('admin.partial.edit_field_translate',--}}
-{{--            [--}}
-{{--                'translatableFields' => \App\Models\StrategicDocumentFile::translationFieldsProperties(),--}}
-{{--                'field' => 'file_info',--}}
-{{--                'required' => false,--}}
-{{--                'item' => null--}}
-{{--            ])--}}
-{{--    </div>--}}
+    <div class="row">
+        @foreach($langs as $lang)
+            <div class="col-md-6 mb-3">
+                <label for="file_info_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.file_info_'.$lang['code']) }}
+                </label>
+                <textarea class="summernote"
+                    name="file_info_{{ $lang['code'] }}" id="file_info_{{ $lang['code'] }}">
+                    {!! old('file_info_'.$lang['code'], $strategicFile->file_info ?? '') !!}
+                </textarea>
+                @error('file_info_'.$lang['code'])
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        @endforeach
+    </div>
 
     <div class="row">
-        @foreach(config('available_languages') as $lang)
+        @foreach($langs as $lang)
             <div class="col-md-6 mb-3">
                 <div class="form-group">
                     <label for="file_{{ $lang['code'] }}" class="form-label col-sm-12">{{ __('validation.attributes.file_'.$lang['code']) }}
@@ -42,6 +69,17 @@
             </div>
         @endforeach
     </div>
+
+    @if($strategicFile)
+        <div class="row">
+            <div class="col-4">
+                <a class="btn" type="button" target="_blank" href="{{ route('strategy-document.download-file', ['id' => $strategicFile->id]) }}">
+                    <i class="fas fa-download me-1" role="button" title="{{ __('custom.download') }}"></i>
+                    {{ __('custom.download') }} {{ l_trans('custom.file') }}
+                </a>
+            </div>
+        </div>
+    @endif
 
     <div class="row">
 {{--        <div class="col-md-6">--}}
@@ -114,7 +152,7 @@
         </div>
     </div>
 </form>
-@if($item->files)
+@if($item->files && !$strategicFile)
     <table class="table table-sm table-hover table-bordered mt-4">
         <tbody>
         <tr>
@@ -128,6 +166,10 @@
 {{--                        <td><i class="fas @if($f->visible_in_report)  fa-check text-success @else fa-minus text-danger @endif"></i></td>--}}
                         <td>
 {{--                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">--}}
+                            <a class="btn btn-sm btn-success"
+                                href="{{ route('admin.strategic_documents.edit', ['id' => $item->id, 'section' => \App\Http\Controllers\Admin\StrategicDocumentsController::SECTION_FILES, 'strategicFile' => $f]) }}">
+                                <i class="fas fa-edit me-1"></i>
+                            </a>
                             <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('strategy-document.download-file', ['id' => $f->id]) }}">
                                 <i class="fas fa-download me-1" role="button"
                                    data-toggle="tooltip" title="{{ __('custom.download') }}"></i>

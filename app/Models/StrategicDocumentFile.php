@@ -26,7 +26,7 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
         return false;
     }
 
-    const TRANSLATABLE_FIELDS = ['display_name', 'file_info'];
+    const TRANSLATABLE_FIELDS = ['display_name'];
     const MODULE_NAME = ('custom.strategic_document_files');
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
@@ -39,7 +39,7 @@ class StrategicDocumentFile extends ModelActivityExtend implements TranslatableC
 
     protected $fillable = ['strategic_document_id', 'strategic_document_type_id', 'valid_at',
         'visible_in_report', 'sys_user', 'path', 'file_text', 'sd_file_text_ts_bg',
-        'filename', 'content_type', 'ord', 'parent_id', 'version', 'strategic_document_file_id'];
+        'filename', 'content_type', 'ord', 'parent_id', 'version', 'strategic_document_file_id', 'file_info'];
 
     const DIR_PATH = 'strategic_doc'.DIRECTORY_SEPARATOR;
 
