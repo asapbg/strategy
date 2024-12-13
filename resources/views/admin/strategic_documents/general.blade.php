@@ -420,6 +420,7 @@
 
                 </div>
             </div>
+
             @if(!$item->id)
                 <div class="card">
                     <div class="card-body">
@@ -433,7 +434,9 @@
                         </div>
 
                         <div class="mt-2" id="files-container">
-    {{--                        @includeIf('admin.strategic_documents.partials.inline-file-upload', ['index' => 0])--}}
+                            @foreach(old('files', []) as $key => $file)
+                                @includeIf('admin.strategic_documents.partials.inline-file-upload', ['index' => $key])
+                            @endforeach
                         </div>
                     </div>
                 </div>
