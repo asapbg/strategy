@@ -6,13 +6,13 @@ use App\Enums\PublicationTypesEnum;
 use App\Exports\AdvBoardReportExport;
 use App\Models\AdvisoryActType;
 use App\Models\AdvisoryBoard;
-use App\Models\AdvisoryBoard\AdvisoryBoardNomenclatureFieldOfAction;
 use App\Models\AdvisoryBoardCustom;
 use App\Models\AdvisoryBoardFunction;
 use App\Models\AdvisoryBoardMeeting;
 use App\Models\AdvisoryChairmanType;
 use App\Models\AuthorityAdvisoryBoard;
 use App\Models\CustomRole;
+use App\Models\FieldOfAction;
 use App\Models\Page;
 use App\Models\Publication;
 use App\Models\User;
@@ -800,7 +800,7 @@ class AdvisoryBoardController extends Controller
             ),
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(AdvisoryBoardNomenclatureFieldOfAction::optionsList()),
+                'options' => optionsFromModel(FieldOfAction::optionsList(false, FieldOfAction::CATEGORY_NATIONAL)),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
@@ -888,7 +888,7 @@ class AdvisoryBoardController extends Controller
         return array(
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(AdvisoryBoardNomenclatureFieldOfAction::optionsList()),
+                'options' => optionsFromModel(FieldOfAction::optionsList(false, FieldOfAction::CATEGORY_NATIONAL)),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
