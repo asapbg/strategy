@@ -146,7 +146,7 @@ class AdvisoryBoardController extends Controller
             ->SortedBy($sort, $sortOrd)
             ->when($queryDefaultSort, function ($query) use ($groupByColumn) {
                 $query->orderBy('advisory_boards.active', 'desc')
-                    ->orderBy('advisory_board_translations.name')
+                    ->when(count($groupByColumn) < 3, fn($q) => $q->orderBy('advisory_board_translations.name'))
                     ->when(count($groupByColumn) == 3, fn($q) => $q->orderBy($groupByColumn[2], 'asc'));
             })
             ->groupBy($groupByColumn);
