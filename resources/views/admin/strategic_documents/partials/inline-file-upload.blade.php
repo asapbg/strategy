@@ -10,9 +10,9 @@
                 </label>
                 <div class="col-12">
                     <input class="form-control form-control-sm col-sm-12 @error('description_'.$lang['code']) is-invalid @enderror"
-                           type="text" name="files[{{ $index }}][description_{{ $lang['code'] }}]">
+                           type="text" name="files[{{ $index }}][description_{{ $lang['code'] }}]" value="{{ old("files.$index.description_" . $lang['code'], '') }}">
                 </div>
-                @error('file_'.$lang['code'])
+                @error('description_'.$lang['code'])
                 <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>

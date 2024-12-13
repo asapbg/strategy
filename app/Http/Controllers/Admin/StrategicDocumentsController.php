@@ -290,6 +290,9 @@ class StrategicDocumentsController extends AdminController
             if(isset($validated['ekatte_municipality_id'])){
                 unset($validated['ekatte_municipality_id']);
             }
+            if (isset($validated['date_expiring_indefinite']) && $validated['date_expiring_indefinite']) {
+                $validated['document_date_expiring'] = NULL;
+            }
             //END Ugly fix for wrong fields and connections
             if( $validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS ) {
                 $validated['strategic_act_number'] = null;
