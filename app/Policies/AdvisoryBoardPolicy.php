@@ -80,7 +80,7 @@ class AdvisoryBoardPolicy
      */
     public function update(User $user, AdvisoryBoard $advisoryBoard): bool
     {
-        return $this->generalCheckAndModerator($user, $advisoryBoard);
+        return $this->generalCheckAndModerator($user, $advisoryBoard) && $advisoryBoard->active;
     }
 
     /**
