@@ -23,7 +23,7 @@
                                     {{ __('validation.attributes.date_of_meeting') }}:
                                     <span class="required">*</span></label>
                                 <input type="text" class="form-control form-control-sm datepicker"
-                                       value="" id="date_of_meeting" name="date_of_meeting">
+                                       value="" id="date_of_meeting" name="date_of_meeting" readonly/>
                             </div>
 
                             <div class="ajax-error text-danger mt-1 error_date_of_meeting"></div>

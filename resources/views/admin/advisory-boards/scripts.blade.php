@@ -259,16 +259,20 @@
                 dataType: 'json',
                 success: function (data) {
                     form.querySelector('input[name=advisory_board_meeting_decision_id]').value = data.id;
-                    form.querySelector('#date_of_meeting').value = new Date(data.date_of_meeting).toLocaleDateString();
+                    form.querySelector('#date_of_meeting').value = new Date(data.date_of_meeting).toLocaleDateString().replaceAll('/', '.');
                     form.querySelector('#agenda').value = data.agenda;
                     form.querySelector('#protocol').value = data.protocol;
                     for(let i = 0; i < data.translations.length; i++){
-                        if(data.translations[i].locale == 'bg'){
-                            $(form.querySelector('#' + translatable_fields[i] + '_bg')).summernote("code", data.translations[i][translatable_fields[i]]);
-                        }
+                        const translation = data.translations[i];
 
-                        if(data.translations[i].locale == 'en'){
-                            $(form.querySelector('#' + translatable_fields[i] + '_en')).summernote("code", data.translations[i][translatable_fields[i]]);
+                        for (let field of translatable_fields) {
+                            if(translation.locale == 'bg'){
+                                $(form.querySelector('#' + field + '_bg')).summernote("code", translation[field]);
+                            }
+
+                            if(translation.locale == 'en'){
+                                $(form.querySelector('#' + field + '_en')).summernote("code", translation[field]);
+                            }
                         }
                     }
                 },
@@ -619,8 +623,9 @@
             window.location = url + after_url;
         }
 
-        function prepareMeetingId(id, form) {
+        function prepareMeetingId(id, form, protocol_at) {
             form.querySelector('input[name=advisory_board_meeting_id]').value = id;
+            form.querySelector('input[id=date_of_meeting]').value = protocol_at;
         }
 
         function setMeetingFileObjectId(id) {

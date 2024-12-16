@@ -79,7 +79,7 @@
                                                                         data-toggle="modal"
                                                                         data-target="#modal-add-meeting-decisions"
                                                                         title="{{ __('custom.add') . ' ' . __('custom.information') }}"
-                                                                        onclick="prepareMeetingId('{{ $meeting->id }}', MEETING_DECISIONS_FORM)">
+                                                                        onclick="prepareMeetingId('{{ $meeting->id }}', MEETING_DECISIONS_FORM, '{{ \Carbon\Carbon::parse($meeting->next_meeting)->format('d.m.Y') }}')">
                                                                     <i class="fa fa-handshake"></i>
                                                                     {{ __('custom.protocols_and_decisions') }}
                                                                 </button>
@@ -179,35 +179,40 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.agenda') . ':' . ' ' . $information->agenda }}
-                                                        </p>
-                                                    </div>
+                                                    @if(!empty($information->agenda))
+                                                        <div class="col-12">
+                                                            <p class="font-weight-bold">{{ __('validation.attributes.agenda') . ':' . ' ' }}</p>
+                                                            <p>{{ $information->agenda }}</p>
+                                                        </div>
+                                                    @endif
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.protocol') . ':' . ' ' . $information->protocol }}
-                                                        </p>
-                                                    </div>
+                                                    @if(!empty($information->protocol))
+                                                        <div class="col-12">
+                                                            <p class="font-weight-bold">{{ __('validation.attributes.protocol') . ':' }}</p>
+                                                            <p>{{ $information->protocol }}</p>
+                                                        </div>
+                                                    @endif
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.decisions') . ':' }} {!! $information->decisions !!}
-                                                        </p>
-                                                    </div>
+                                                    @if(!empty($information->decisions))
+                                                        <div class="col-12">
+                                                            <p class="font-weight-bold">{{ __('validation.attributes.decisions') . ':' }}</p>
+                                                            <p>{!! $information->decisions !!}</p>
+                                                        </div>
+                                                    @endif
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.suggestions') . ':' }} {!! $information->suggestions !!}
-                                                        </p>
-                                                    </div>
+                                                    @if(!empty($information->suggestions))
+                                                        <div class="col-12">
+                                                            <p class="font-weight-bold">{{ __('validation.attributes.suggestions') . ':' }}</p>
+                                                            <p>{!! $information->suggestions !!}</p>
+                                                        </div>
+                                                    @endif
 
-                                                    <div class="col-12">
-                                                        <p>
-                                                            {{ __('validation.attributes.other') . ':' }} {!! $information->other !!}
-                                                        </p>
-                                                    </div>
+                                                    @if(!empty($information->other))
+                                                        <div class="col-12">
+                                                            <p class="font-weight-bold">{{ __('validation.attributes.other') . ':' }}</p>
+                                                            <p>{!! $information->other !!}</p>
+                                                        </div>
+                                                    @endif
                                                 @endforeach
                                             @endif
                                         </div>
