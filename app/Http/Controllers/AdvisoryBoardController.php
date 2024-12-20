@@ -808,7 +808,7 @@ class AdvisoryBoardController extends Controller
             ),
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList(false, FieldOfAction::CATEGORY_NATIONAL)),
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL)),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
@@ -896,7 +896,7 @@ class AdvisoryBoardController extends Controller
         return array(
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList(false, FieldOfAction::CATEGORY_NATIONAL)),
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL)),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
