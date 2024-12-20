@@ -114,7 +114,7 @@ class AdvisoryBoardController extends Controller
         $items = AdvisoryBoard::select('advisory_boards.*')
             ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
                 'authority', 'authority.translations', 'advisoryChairmanType', 'advisoryChairmanType.translations',
-                'advisoryActType', 'advisoryActType.translations'])
+                'advisoryActType', 'advisoryActType.translations', 'chairmen', 'chairmen.translations'])
             ->leftJoin('advisory_board_translations', function ($j) {
                 $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
                     ->where('advisory_board_translations.locale', '=', app()->getLocale());
