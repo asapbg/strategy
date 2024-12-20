@@ -139,7 +139,7 @@
                         </td>
                         <td>
                             @foreach ($strategicDocument->filesByLocale as $f)
-                                <a style="display: block;" href="{{ route('download.file', $f) }}" title="{{ __('custom.download') }}">
+                                <a style="display: block;" href="{{ route('strategy-document.download-file', $f) }}" title="{{ __('custom.download') }}">
                                     {{ $f->description }} - {{ displayDate($f->created_at) }}
                                 </a>
                             @endforeach
