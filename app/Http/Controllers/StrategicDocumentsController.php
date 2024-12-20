@@ -444,11 +444,19 @@ class StrategicDocumentsController extends Controller
 
                     $tableCell = $tableRow->addCell(4000);
                     $tableCell->addText(
-                        $row->document_date_accepted && $row->document_date_expiring
-                                ?  displayDate($row->document_date_accepted) . ' - ' . displayDate($row->document_date_expiring)
-                                : ($row->document_date_accepted
-                                    ? __('custom.from') . ' ' . displayDate($row->document_date_accepted)
-                                    : __('custom.to') . ' ' . displayDate($row->document_date_expiring))
+//                        $row->document_date_accepted && $row->document_date_expiring
+//                                ?  displayDate($row->document_date_accepted) . ' - ' . displayDate($row->document_date_expiring)
+//                                : ($row->document_date_accepted
+//                                    ? __('custom.from') . ' ' . displayDate($row->document_date_accepted)
+//                                    : __('custom.to') . ' ' . displayDate($row->document_date_expiring))
+
+                        ($row->document_date_accepted
+                                ? \Carbon\Carbon::parse($row->document_date_accepted)->format('d-m-Y')
+                                : '' )
+                            . ' - ' .
+                            ($row->document_date_expiring
+                                ? \Carbon\Carbon::parse($row->document_date_expiring)->format('d-m-Y')
+                                : __('custom.unlimited'))
                     );
                 }
 
