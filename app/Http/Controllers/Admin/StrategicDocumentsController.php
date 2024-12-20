@@ -691,6 +691,19 @@ class StrategicDocumentsController extends AdminController
                 'options' => optionsFromModel(StrategicDocumentType::with('translations')->orderByTranslation('name')->get()),
                 'col' => 'col-md-4'
             ),
+            'status' => array(
+                'type' => 'select',
+                'label' => __('site.strategic_document.categories_based_on_livecycle'),
+                'multiple' => false,
+                'options' => array(
+                    ['name' => '', 'value' => ''],
+                    ['name' => trans_choice('custom.effective', 1), 'value' => 'active'],
+                    ['name' => trans_choice('custom.expired', 1), 'value' => 'expired'],
+                    ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
+                ),
+                'value' => request()->input('status', 'active'),
+                'col' => 'col-md-4'
+            ),
             'only_deleted' => array(
                 'type' => 'checkbox',
                 'checked' => $request->input('only_deleted'),
