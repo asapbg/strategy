@@ -18,9 +18,9 @@
         @foreach($langs as $lang)
             <div class="col-md-6 mb-3">
                 <label for="description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }}
-                    @if($lang['code'] == $defaultLang)
-                        <span class="required">*</span>
-                    @endif
+{{--                    @if($lang['code'] == $defaultLang)--}}
+{{--                        <span class="required">*</span>--}}
+{{--                    @endif--}}
                 </label>
                 <input value="{{ old('description_'.$lang['code'], $strategicFile->description ?? '') }}"
                        class="form-control form-control-sm @error('description_'.$lang['code']) is-invalid @enderror"
@@ -162,7 +162,7 @@
         </tr>
         @foreach($item->files as $f)
                     <tr>
-                        <td>{{ $f->description }} ({{ strtoupper($f->locale) }})</td>
+                        <td>{{ $f->description ?? $f->filename }} ({{ strtoupper($f->locale) }})</td>
 {{--                        <td><i class="fas @if($f->visible_in_report)  fa-check text-success @else fa-minus text-danger @endif"></i></td>--}}
                         <td>
 {{--                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">--}}

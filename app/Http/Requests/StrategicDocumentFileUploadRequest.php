@@ -30,7 +30,7 @@ class StrategicDocumentFileUploadRequest extends FormRequest
     {
         session(['hasErrorsFromFileTab' => false]);
         $rules = [
-            'description_bg' => ['required', 'max:500'],
+            'description_bg' => ['nullable', 'max:500'],
             'description_en' => ['nullable', 'max:500'],
             'valid_at' => ['required_if:date_valid_indefinite_files,0', 'date', 'nullable'],
             'strategic_document_type_id' => ['nullable', 'numeric', 'exists:strategic_document_type,id'],
@@ -50,9 +50,9 @@ class StrategicDocumentFileUploadRequest extends FormRequest
 //            }
 //        }
 
-        foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
-            $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
-        }
+//        foreach (StrategicDocumentFile::translationFieldsProperties() as $field => $properties) {
+//            $rules[$field .'_'. app()->getLocale()] = $properties['rules'];
+//        }
 
         return $rules;
     }

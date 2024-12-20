@@ -4,9 +4,9 @@
             <div class="form-group">
                 <label for="description_{{ $lang['code'] }}" class="form-label col-sm-12">
                     {{ __('validation.attributes.description_'.$lang['code']) }}
-                    @if($lang['code'] == 'bg')
-                        <span class="required">*</span>
-                    @endif
+{{--                    @if($lang['code'] == 'bg')--}}
+{{--                        <span class="required">*</span>--}}
+{{--                    @endif--}}
                 </label>
                 <div class="col-12">
                     <input class="form-control form-control-sm col-sm-12 @error('description_'.$lang['code']) is-invalid @enderror"

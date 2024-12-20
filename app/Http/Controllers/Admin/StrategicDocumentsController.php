@@ -223,7 +223,7 @@ class StrategicDocumentsController extends AdminController
                 //$default = $lang['default'];
                 $code = $lang['code'];
 
-                if (!isset($validated['file_'.$code]) || !isset($validated['description_'.$code])) {
+                if (!isset($validated['file_'.$code])) {
                     continue;
                 }
 
@@ -234,12 +234,12 @@ class StrategicDocumentsController extends AdminController
                 $newFile = new StrategicDocumentFile([
                     'strategic_document_id' => $objectId,
                     'strategic_document_type_id' => $typeObject,
-                    'filename' => $fileNameToStore,
+                    'filename' => $file->getClientOriginalName(),
                     'content_type' => $file->getClientMimeType(),
                     'path' => $pDir.$fileNameToStore,
                     'sys_user' => auth()->user()->id,
                     'locale' => $code,
-                    'description' => $validated['description_'.$code],
+                    'description' => $validated['description_'.$code] ?? NULL,
                     'file_info' => $validated['file_info_'.$code] ?? NULL,
                     'version' => '1.0',
                     'visible_in_report' => isset($validated['is_visible_in_report'])

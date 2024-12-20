@@ -74,7 +74,7 @@
                 <td>
                     @foreach ($docFiles as $f)
                         <a style="display: block;"  href="{{ route('strategy-document.download-file', $f['id']) }}" title="{{ __('custom.download') }}">
-                            {{ $f['description_'.app()->getLocale()] }} - {{ displayDate($f['created_at']) }}
+                            {{ $f['description_'.app()->getLocale()] ?? $f->filename }} - {{ displayDate($f['created_at']) }}
                         </a>
                     @endforeach
                 </td>
