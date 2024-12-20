@@ -5,10 +5,15 @@ use App\Http\Controllers\DevelopNewActionPlan;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImpactAssessmentController;
 use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OpenGovernmentPartnership;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+
+    Route::controller(NotificationsController::class)->group(function () {
+        Route::get('/notifications/{id}', 'show')->name('web.view_notification');
+    });
 
     Route::get('/set-cookie', [CookieController::class, 'setCookie']);
     Route::get('/reset-visual-options', [CookieController::class, 'resetVisualOptions']);
