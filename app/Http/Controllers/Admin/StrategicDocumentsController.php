@@ -75,7 +75,7 @@ class StrategicDocumentsController extends AdminController
             })
             ->FilterBy($requestFilter)
             ->when(isset($requestFilter['only_deleted']), fn($q) => $q->onlyTrashed())
-            ->when($requestFilter['strategic_document_type_id'], fn($q, $value) => $q->where('strategic_document_type_id', $value));
+            ->when(($requestFilter['strategic_document_type_id'] ?? null), fn($q, $value) => $q->where('strategic_document_type_id', $value));
 
         if (!$request->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])) {
             $userPolicyAreas = $request->user()->institution ?
@@ -688,7 +688,7 @@ class StrategicDocumentsController extends AdminController
                 'type' => 'select',
                 'placeholder' => trans_choice('custom.nomenclature.strategic_document_type', 1),
                 'value' => $request->input('strategic_document_type_id'),
-                'options' => StrategicDocumentType::with('translations')->orderByTranslation('name')->get(),
+                'options' => optionsFromModel(StrategicDocumentType::with('translations')->orderByTranslation('name')->get()),
                 'col' => 'col-md-4'
             ),
             'only_deleted' => array(
