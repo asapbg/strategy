@@ -63,10 +63,25 @@
                                         @php($searchFieldPolicy = $document->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value ? 'fieldOfActions' : ($document->strategic_document_level_id == \App\Enums\InstitutionCategoryLevelEnum::AREA->value ? 'areas' : 'municipalities'))
 
                                         <a href="{{ route('strategy-documents.index').'?'.$searchFieldPolicy.'[]='.$document->policyArea->id }}"
-                                           title="{{ $document->policyArea->name }}" class="text-decoration-none mb-2">
+                                           title="{{ $document->policyArea->name }}" class="text-decoration-none mb-2 d-block">
                                             <i class="text-primary {{ $document->policyArea->icon_class }} me-1" title="{{ $document->policyArea->name }}"></i>
                                             {{ $document->policyArea->name }}
                                         </a>
+                                    @endif
+                                    @if($document->documentType)
+                                        @can('view',  $document->documentType)
+                                            <a href="{{ route('admin.nomenclature.strategic_document_type.edit', [$document->documentType?->id]) }}"
+                                               class="main-color text-decoration-none mb-2 d-block">
+                                                 <span class="obj-icon-info me-2">
+                                                <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $document->documentType->name }} </span>
+                                            </a>
+                                        @else
+                                            <a href="#"
+                                               class="main-color text-decoration-none fs-18">
+                                                 <span class="obj-icon-info me-2">
+                                                <i class="fas fa-bezier-curve me-2 main-color fs-18" title="Тип консултация"></i>{{ $document->documentType->name }} </span>
+                                            </a>
+                                        @endcan
                                     @endif
 
                                     <div class="meta-consul mt-2">

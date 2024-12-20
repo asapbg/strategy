@@ -358,7 +358,7 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     public static function list(array $filter, string $sort = 'title', string $sortOrd = 'desc', int $paginate = self::PAGINATE){
         return self::select('strategic_document.*')
             ->Active()
-            ->with(['translations', 'policyArea', 'policyArea.translations'])
+            ->with(['translations', 'policyArea', 'policyArea.translations', 'documentType.translations'])
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
             ->leftJoin('field_of_action_translations', function ($j){
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
@@ -367,6 +367,11 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
             ->leftJoin('strategic_document_translations', function ($j){
                 $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
                     ->where('strategic_document_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('strategic_document_type', 'strategic_document_type.id', '=', 'strategic_document.strategic_document_type_id')
+            ->leftJoin('strategic_document_type_translations', function ($j){
+                $j->on('strategic_document_type_translations.strategic_document_type_id', '=', 'strategic_document_type.id')
+                    ->where('strategic_document_type_translations.locale', '=', app()->getLocale());
             })
             ->FilterBy($filter)
             ->SortedBy($sort,$sortOrd)

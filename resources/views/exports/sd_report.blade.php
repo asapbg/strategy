@@ -26,10 +26,18 @@
 @endif
             <table style="border-collapse:collapse;">
                 <tr>
-                    <th colspan="5" style="background: #d9d7d7; font-weight: bold; text-align: center;"><b>{{ mb_strtoupper($data['title']) }}</b></th>
+                    <th colspan="6" style="background: #d9d7d7; font-weight: bold; text-align: center;"><b>{{ mb_strtoupper($data['title']) }}</b></th>
+                </tr>
+                <tr>
+                    <th colspan="6">
+                        <p class="fw-600">
+                            {{ trans_choice('custom.total_pagination_result', $data['rows']->count(), ['number' => $data['rows']->count()]) }}
+                        </p>
+                    </th>
                 </tr>
                 <tr>
                     <th><b>{{ __('custom.title') }}</b></th>
+                    <th><b>{{ trans_choice('custom.nomenclature.strategic_document_type', 1) }}</b></th>
                     <th><b>{{ __('site.strategic_document.level') }}</b></th>
                     <th><b>{{ trans_choice('custom.field_of_actions', 1) }}</b></th>
                     <th><b>{{ trans_choice('custom.authority_accepting_strategic', 1) }}</b></th>
@@ -39,6 +47,7 @@
                     @foreach($data['rows'] as $row)
                         <tr>
                             <td><a href="{{ route('strategy-document.view', $row->id) }}">{{ $row->title }}</a></td>
+                            <td>{{ $row->documentType ? $row->documentType->name : '---' }}</td>
                             <td>{{ $row->strategic_document_level_id ? __('custom.strategic_document.dropdown.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($row->strategic_document_level_id)) : '---' }}</td>
                             <td>{{ $row->policyArea ? $row->policyArea->name : '---' }}</td>
                             <td>{{ $row->acceptActInstitution ? $row->acceptActInstitution->name : '---' }}</td>

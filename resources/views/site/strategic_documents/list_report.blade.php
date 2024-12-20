@@ -4,7 +4,7 @@
             {!! $pageTopContent->value !!}
         </div>
     @endif
-    @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'subscribe' => false, 'export_excel' => true, 'export_pdf' => true])
+    @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'subscribe' => false, 'export_excel' => true, 'export_pdf' => true, 'export_word' => true])
     @include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_strategic_documents')])
 
     <div class="row mb-2">
@@ -24,6 +24,7 @@
                 <thead>
                     <tr>
                         <th>{{ __('custom.title') }}</th>
+                        <th>{{ trans_choice('custom.nomenclature.strategic_document_type', 1) }}</th>
                         <th>{{ __('site.strategic_document.level') }}</th>
                         <th>{{ trans_choice('custom.field_of_actions', 1) }}</th>
                         <th>{{ trans_choice('custom.authority_accepting_strategic', 1) }}</th>
@@ -38,6 +39,9 @@
                                class="text-decoration-none" title="{{ $document->title }}">
                                 {{ $document->title }}
                             </a>
+                        </td>
+                        <td>
+                            {{ $document->documentType ? $document->documentType->name : '---' }}
                         </td>
                         <td>
                             {{ $document->strategic_document_level_id ? __('custom.strategic_document.dropdown.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($document->strategic_document_level_id)) : '---' }}

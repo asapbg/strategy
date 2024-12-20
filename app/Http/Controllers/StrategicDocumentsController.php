@@ -333,7 +333,7 @@ class StrategicDocumentsController extends Controller
 
         $q = StrategicDocument::select('strategic_document.*')
             ->Active()
-            ->with(['translations', 'policyArea', 'policyArea.translations', 'acceptActInstitution', 'acceptActInstitution.translations'])
+            ->with(['translations', 'policyArea', 'policyArea.translations', 'acceptActInstitution', 'acceptActInstitution.translations', 'documentType.translations'])
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
             ->leftJoin('field_of_action_translations', function ($j){
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
@@ -342,6 +342,11 @@ class StrategicDocumentsController extends Controller
             ->leftJoin('strategic_document_translations', function ($j){
                 $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
                     ->where('strategic_document_translations.locale', '=', app()->getLocale());
+            })
+            ->leftJoin('strategic_document_type', 'strategic_document_type.id', '=', 'strategic_document.strategic_document_type_id')
+            ->leftJoin('strategic_document_type_translations', function ($j){
+                $j->on('strategic_document_type_translations.strategic_document_type_id', '=', 'strategic_document_type.id')
+                    ->where('strategic_document_type_translations.locale', '=', app()->getLocale());
             })
             ->whereNull('parent_document_id')
             ->FilterBy($requestFilter)
@@ -354,7 +359,7 @@ class StrategicDocumentsController extends Controller
             });
             //->GroupBy('strategic_document.id');
 
-        if($request->input('export_excel') || $request->input('export_pdf')){
+        if($request->input('export_excel') || $request->input('export_pdf') || $request->input('export_word')){
             $items = $q->get();
             $exportData = [
                 'title' => __('custom.strategic_documents_report_title'),
@@ -368,8 +373,90 @@ class StrategicDocumentsController extends Controller
                 $pdf = PDF::loadView('exports.sd_report', ['data' => $exportData, 'isPdf' => true]);
 //                dd('ready loading');
                 return $pdf->download($fileName.'.pdf');
-            } else{
+            } else if ($request->input('export_excel')) {
                 return Excel::download(new StrategicDocumentsExport($exportData), $fileName.'.xlsx');
+            } else {
+                $fileName .= '.docx';
+
+                $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+                // Add section
+                $section = $phpWord->addSection();
+
+                // Add title and text
+                $section->addTitle($exportData['title']);
+                $section->addText(trans_choice('custom.total_pagination_result', $exportData['rows']->count(), ['number' => $exportData['rows']->count()]));
+                $section->addTextBreak();
+
+                // Define table style
+                $tableStyle = [
+                    'borderSize' => 6,
+                    'borderColor' => '000000',
+                    'cellMargin' => 80,
+                ];
+
+                $fontStyle = ['bold' => true];
+
+                $table = $section->addTable($tableStyle);
+                $headerRow = $table->addRow();
+
+
+                $headerCell = $headerRow->addCell(4000);
+                $headerCell->addText(__('custom.title'), $fontStyle);
+                $headerCell = $headerRow->addCell(4000);
+                $headerCell->addText(trans_choice('custom.nomenclature.strategic_document_type', 1), $fontStyle);
+                $headerCell = $headerRow->addCell(4000);
+                $headerCell->addText(__('site.strategic_document.level'), $fontStyle);
+                $headerCell = $headerRow->addCell(4000);
+                $headerCell->addText(trans_choice('custom.field_of_actions', 1), $fontStyle);
+                $headerCell = $headerRow->addCell(4000);
+                $headerCell->addText(trans_choice('custom.authority_accepting_strategic', 1), $fontStyle);
+                $headerCell = $headerRow->addCell(4000);
+                $headerCell->addText(__('custom.validity'), $fontStyle);
+//                            <td>
+//                @if($row->document_date_accepted && $row->document_date_expiring)
+//                {{ displayDate($row->document_date_accepted) .' - '. displayDate($row->document_date_expiring) }}
+//                                @elseif($row->document_date_accepted || $row->document_date_expiring)
+//                                    @if($row->document_date_accepted)
+//                {{ __('custom.from') .' '.displayDate($row->document_date_accepted) }}
+//                                    @else
+//                                        {{ __('custom.to') .' '.displayDate($row->document_date_expiring) }}
+//                                    @endif
+//                                @endif
+//                            </td>
+                foreach ($exportData['rows'] as $row) {
+                    $tableRow = $table->addRow();
+
+                    $tableCell = $tableRow->addCell(4000);
+                    $tableCell->addText($row->title);
+
+                    $tableCell = $tableRow->addCell(4000);
+                    $tableCell->addText($row->documentType ? $row->documentType->name : '---');
+
+                    $tableCell = $tableRow->addCell(4000);
+                    $tableCell->addText($row->strategic_document_level_id ? __('custom.strategic_document.dropdown.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($row->strategic_document_level_id)) : '---');
+
+                    $tableCell = $tableRow->addCell(4000);
+                    $tableCell->addText($row->policyArea ? $row->policyArea->name : '---');
+
+                    $tableCell = $tableRow->addCell(4000);
+                    $tableCell->addText($row->acceptActInstitution ? $row->acceptActInstitution->name : '---');
+
+                    $tableCell = $tableRow->addCell(4000);
+                    $tableCell->addText(
+                        $row->document_date_accepted && $row->document_date_expiring
+                                ?  displayDate($row->document_date_accepted) . ' - ' . displayDate($row->document_date_expiring)
+                                : ($row->document_date_accepted
+                                    ? __('custom.from') . ' ' . displayDate($row->document_date_accepted)
+                                    : __('custom.to') . ' ' . displayDate($row->document_date_expiring))
+                    );
+                }
+
+                $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+
+                $objWriter->save(storage_path($fileName));
+
+                return response()->download(storage_path($fileName), $fileName)->deleteFileAfterSend();
             }
         } else{
             $items = $q->paginate($paginate);
@@ -585,10 +672,11 @@ class StrategicDocumentsController extends Controller
     private function sorters()
     {
         return array(
-            'fieldOfAction' => ['class' => 'col-md-3', 'label' => trans_choice('custom.field_of_actions', 1)],
+            'fieldOfAction' => ['class' => 'col-md-2', 'label' => trans_choice('custom.field_of_actions', 1)],
+            'strategicDocumentType' => ['class' => 'col-md-3', 'label' => trans_choice('custom.nomenclature.strategic_document_type', 1)],
             'title' => ['class' => 'col-md-2', 'label' => __('custom.title')],
-            'validFrom' => ['class' => 'col-md-3', 'label' => __('custom.valid_from')],
-            'validTo' => ['class' => 'col-md-3', 'label' => __('custom.valid_to')],
+            'validFrom' => ['class' => 'col-md-2', 'label' => __('custom.valid_from')],
+            'validTo' => ['class' => 'col-md-2', 'label' => __('custom.valid_to')],
         );
     }
 

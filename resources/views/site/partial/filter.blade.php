@@ -379,6 +379,13 @@
                                             <i class="fas fa-file-pdf text-danger me-2"></i>{{ __('custom.export') }}
                                         </a>
                                     @endif
+                                    @if(isset($export_word) && $export_word)
+                                        <a class="btn btn-success ajaxExportWord"
+                                           href="{{ url()->current().'?'.http_build_query(array_merge($fRequest, ['export_word' => 1])) }}"
+                                           target="_blank">
+                                            <i class="fas fa-file-word text-danger me-2"></i>{{ __('custom.export') }}
+                                        </a>
+                                    @endif
                                 @else
                                     @if(isset($export_excel) && $export_excel)
                                         <button type="submit" class="btn btn-success" name="export_excel" value="1">
@@ -389,6 +396,13 @@
                                         <button type="submit" class="btn btn-success" name="export_pdf" value="1">
                                             <i class="fas fa-file-pdf text-danger me-2"></i>{{ __('custom.export') }}
                                         </button>
+                                    @endif
+                                    @if(isset($export_word) && $export_word)
+                                        <a class="btn btn-success ajaxExportWord"
+                                           href="{{ url()->current().'?'.http_build_query(array_merge($fRequest, ['export_word' => 1])) }}"
+                                           target="_blank">
+                                            <i class="fas fa-file-word text-danger me-2"></i>{{ __('custom.export') }}
+                                        </a>
                                     @endif
                                 @endif
 
