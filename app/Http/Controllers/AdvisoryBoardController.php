@@ -58,6 +58,7 @@ class AdvisoryBoardController extends Controller
             ['value' => 'chairmanType', 'name' => trans_choice('custom.advisory_chairman_type', 1)],
             ['value' => 'npo', 'name' => __('custom.presence_npo_representative')],
             ['value' => 'actOfCreation', 'name' => __('validation.attributes.act_of_creation')],
+            ['value' => 'status', 'name' => __('validation.attributes.status')]
         );
 
         $rf = $request->all();
@@ -104,6 +105,9 @@ class AdvisoryBoardController extends Controller
         }
         if ($requestGroupBy == 'actOfCreation' || $sort == 'actOfCreation') {
             $groupByColumn[] = 'advisory_act_type_translations.name';
+        }
+        if ($requestGroupBy == 'status') {
+            $groupByColumn[] = 'advisory_boards.active';
         }
 //        }
 
