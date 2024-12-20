@@ -170,22 +170,22 @@
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
 
-                        @php $display = !empty(old('other_authority_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none'; @endphp
-                            <!-- Друг вид орган, към който е създаден съветът -->
-                        <div class="row mt-1" id="other_authority_container" style="display: {{ $display }};">
-                            @foreach(config('available_languages') as $lang)
-                                <div class="col-6">
-                                    <label for="other_authority_name_{{ $lang['code'] }}">
-                                        {{ __('custom.other_authority') }}({{ Str::upper($lang['code']) }})
-                                    </label>
+{{--                        @php $display = !empty(old('other_authority_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none'; @endphp--}}
+{{--                            <!-- Друг вид орган, към който е създаден съветът -->--}}
+{{--                        <div class="row mt-1" id="other_authority_container" style="display: {{ $display }};">--}}
+{{--                            @foreach(config('available_languages') as $lang)--}}
+{{--                                <div class="col-6">--}}
+{{--                                    <label for="other_authority_name_{{ $lang['code'] }}">--}}
+{{--                                        {{ __('custom.other_authority') }}({{ Str::upper($lang['code']) }})--}}
+{{--                                    </label>--}}
 
-                                    <input type="text" id="other_authority_name_{{ $lang['code'] }}"
-                                           name="other_authority_name_{{ $lang['code']}}"
-                                           class="form-control form-control-sm"
-                                           value="{{ old('other_authority_name_' . $lang['code'], '') }}" autocomplete="off">
-                                </div>
-                            @endforeach
-                        </div>
+{{--                                    <input type="text" id="other_authority_name_{{ $lang['code'] }}"--}}
+{{--                                           name="other_authority_name_{{ $lang['code']}}"--}}
+{{--                                           class="form-control form-control-sm"--}}
+{{--                                           value="{{ old('other_authority_name_' . $lang['code'], '') }}" autocomplete="off">--}}
+{{--                                </div>--}}
+{{--                            @endforeach--}}
+{{--                        </div>--}}
                     </div>
                 </div>
             </div>

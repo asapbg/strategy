@@ -92,7 +92,7 @@ class AdvisoryBoardController extends AdminController
         $this->authorize('create', AdvisoryBoard::class);
 
         $item = new AdvisoryBoard();
-        $field_of_actions = FieldOfAction::orderByTranslation('name')->get();
+        $field_of_actions = FieldOfAction::advisoryBoard()->orderByTranslation('name')->get();
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();

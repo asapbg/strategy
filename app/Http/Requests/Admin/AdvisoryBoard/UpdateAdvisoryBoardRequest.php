@@ -33,7 +33,7 @@ class UpdateAdvisoryBoardRequest extends FormRequest
      */
     public function rules(): array
     {
-        $this->createNecessaryNomenclatures();
+//        $this->createNecessaryNomenclatures();
 
         $rules = [
             'policy_area_id'            => 'required|integer|exists:field_of_actions,id',
