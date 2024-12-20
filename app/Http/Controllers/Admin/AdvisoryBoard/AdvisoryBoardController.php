@@ -98,7 +98,8 @@ class AdvisoryBoardController extends AdminController
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $translatableFields = AdvisoryBoard::translationFieldsProperties();
-        $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email'])
+        $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
+            ->with(['institution' => fn($q) => $q->with(['translations'])])
             ->orderBy('username')
             ->where('user_type', '=', 1)
             ->get();
@@ -320,7 +321,8 @@ class AdvisoryBoardController extends AdminController
         $authorities = AuthorityAdvisoryBoard::with('translations')->orderBy('id')->get();
 
         $moderators = $item->moderators;
-        $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email'])
+        $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
+            ->with(['institution' => fn($q) => $q->with(['translations'])])
             ->orderBy('username')
             ->where('user_type', '=', 1)
             ->when($moderators, function ($q) use($moderators){

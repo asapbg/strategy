@@ -386,7 +386,7 @@
                                         @foreach($all_users as $user)
                                             @php $selected = old('moderator_id', '') == $user->id ? 'selected' : ''; @endphp
 
-                                            <option value="{{ $user->id }}" {{ $selected }}>{{ implode(' ', [$user->first_name, $user->middle_name, $user->last_name]) }} ({{ $user->email }})</option>
+                                            <option value="{{ $user->id }}" {{ $selected }}>{{ $user->fullInformation }}</option>
                                         @endforeach
                                     @endif
                                 </select>

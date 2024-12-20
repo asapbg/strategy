@@ -27,7 +27,7 @@
 {{--                                            <option value="" @if(empty(old('recipient'))) selected @endif></option>--}}
                                             @if(isset($moderators) && $moderators->count())
                                                 @foreach($moderators as $row)
-                                                    <option value="{{ $row->id }}" @if(in_array($row->id, old('recipient', []))) selected @endif>{{ $row->fullName() }}</option>
+                                                    <option value="{{ $row->id }}" @if(in_array($row->id, old('recipient', []))) selected @endif>{{ $row->fullInformation }}</option>
                                                 @endforeach
                                             @endif
                                         </select>

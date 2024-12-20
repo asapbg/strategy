@@ -129,6 +129,43 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
         );
     }
 
+    public function fullInformation(): Attribute
+    {
+        return Attribute::make(
+            get: function() {
+                $imploded = "$this->first_name ";
+
+                if ($this->middle_name) {
+                    $imploded .= "$this->middle_name ";
+                }
+
+                $imploded .= "$this->last_name";
+
+                if ($this->email) {
+                    $imploded .= " | $this->email";
+                }
+
+                if (!empty($this->phone)) {
+                    $imploded .= " | $this->phone";
+                }
+
+                if ($this->institution) {
+                    $imploded .= ' | ' . $this->institution->getModelName();
+                }
+
+                if ($this->job) {
+                    $imploded .= " | $this->job";
+                }
+
+                if ($this->unit) {
+                    $imploded .= " | $this->unit";
+                }
+
+                return $imploded;
+            }
+        );
+    }
+
     /**
      * Route notifications for the mail channel.
      *
