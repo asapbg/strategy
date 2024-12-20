@@ -141,6 +141,14 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
 
                 $imploded .= "$this->last_name";
 
+                if ($this->moderateAdvisoryBoards->count() > 0) {
+                    foreach ($this->moderateAdvisoryBoards as $moderateAdvisoryBoard) {
+                        if ($moderateAdvisoryBoard->board) {
+                            $imploded .= " | " . $moderateAdvisoryBoard->board->getModelName();
+                        }
+                    }
+                }
+
                 if ($this->email) {
                     $imploded .= " | $this->email";
                 }

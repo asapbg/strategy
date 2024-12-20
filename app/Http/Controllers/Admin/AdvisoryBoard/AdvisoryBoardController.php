@@ -99,7 +99,7 @@ class AdvisoryBoardController extends AdminController
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $translatableFields = AdvisoryBoard::translationFieldsProperties();
         $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
-            ->with(['institution' => fn($q) => $q->with(['translations'])])
+            ->with(['institution' => fn($q) => $q->with(['translations']), 'moderateAdvisoryBoards' => fn($q) => $q->with(['board' => fn($q) => $q->with(['translations'])])])
             ->orderBy('username')
             ->where('user_type', '=', 1)
             ->get();
@@ -322,7 +322,7 @@ class AdvisoryBoardController extends AdminController
 
         $moderators = $item->moderators;
         $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
-            ->with(['institution' => fn($q) => $q->with(['translations'])])
+            ->with(['institution' => fn($q) => $q->with(['translations']), 'moderateAdvisoryBoards' => fn($q) => $q->with(['board' => fn($q) => $q->with(['translations'])])])
             ->orderBy('username')
             ->where('user_type', '=', 1)
             ->when($moderators, function ($q) use($moderators){
