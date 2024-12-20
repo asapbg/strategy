@@ -66,6 +66,21 @@
                 @endphp
             @elseif($groupByField == 'actOfCreation')
                 @php groupItems($groups, $item, 'advisory_act_type_id', 'advisory_act_type_id', 'advisoryActType'); @endphp
+            @elseif($groupByField == 'status')
+                @php
+                    $found_group = $groups->where('id', $item->active)->first();
+
+                    if (!$found_group) {
+                        $groups->push([
+                            'group_type' => 'active',
+                            'id' => $item->active,
+                            'name' => $item->active ? __('custom.active') : __('custom.inactive'),
+                            'items' => collect([$item]),
+                        ]);
+                    } else {
+                        $found_group['items']->push($item);
+                    }
+                @endphp
             @endif
         @endforeach
 

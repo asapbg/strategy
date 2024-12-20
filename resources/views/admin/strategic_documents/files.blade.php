@@ -18,9 +18,9 @@
         @foreach($langs as $lang)
             <div class="col-md-6 mb-3">
                 <label for="description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }}
-{{--                    @if($lang['code'] == $defaultLang)--}}
-{{--                        <span class="required">*</span>--}}
-{{--                    @endif--}}
+                    @if($lang['code'] == $defaultLang)
+                        <span class="required">*</span>
+                    @endif
                 </label>
                 <input value="{{ old('description_'.$lang['code'], $strategicFile->description ?? '') }}"
                        class="form-control form-control-sm @error('description_'.$lang['code']) is-invalid @enderror"

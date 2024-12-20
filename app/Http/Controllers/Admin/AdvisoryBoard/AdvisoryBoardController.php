@@ -67,7 +67,7 @@ class AdvisoryBoardController extends AdminController
                         });
                     });
             })
-            ->when($status != '', function ($query) use ($status) {
+            ->when($status != '' && $status > -1, function ($query) use ($status) {
                 $query->where('active', $status == '0' ? 'false' : 'true');
             })
             ->when($limitItems, function ($query){
@@ -92,14 +92,14 @@ class AdvisoryBoardController extends AdminController
         $this->authorize('create', AdvisoryBoard::class);
 
         $item = new AdvisoryBoard();
-        $field_of_actions = FieldOfAction::advisoryBoard()->orderByTranslation('name')->get();
+        $field_of_actions = FieldOfAction::advisoryBoard()->orderByTranslation('name')->where('active', true)->get();
         $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::orderBy('id')->get();
         $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $translatableFields = AdvisoryBoard::translationFieldsProperties();
         $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
-            ->with(['institution' => fn($q) => $q->with(['translations'])])
+            ->with(['institution' => fn($q) => $q->with(['translations']), 'moderateAdvisoryBoards' => fn($q) => $q->with(['board' => fn($q) => $q->with(['translations'])])])
             ->orderBy('username')
             ->where('user_type', '=', 1)
             ->get();
@@ -312,7 +312,7 @@ class AdvisoryBoardController extends AdminController
             $query->with('translations');
         }])->find($item->id);
 
-        $field_of_actions = FieldOfAction::advisoryBoard()->with('translations')->orderByTranslation('name')->get();
+        $field_of_actions = FieldOfAction::advisoryBoard()->with('translations')->orderByTranslation('name')->where('active', true)->get();
         $advisory_chairman_types = AdvisoryChairmanType::with('translations')->orderBy('id')->get();
         $advisory_act_types = AdvisoryActType::with('translations')->orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
@@ -322,7 +322,7 @@ class AdvisoryBoardController extends AdminController
 
         $moderators = $item->moderators;
         $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
-            ->with(['institution' => fn($q) => $q->with(['translations'])])
+            ->with(['institution' => fn($q) => $q->with(['translations']), 'moderateAdvisoryBoards' => fn($q) => $q->with(['board' => fn($q) => $q->with(['translations'])])])
             ->orderBy('username')
             ->where('user_type', '=', 1)
             ->when($moderators, function ($q) use($moderators){

@@ -52,15 +52,18 @@
                             <td>{{ $row->policyArea ? $row->policyArea->name : '---' }}</td>
                             <td>{{ $row->acceptActInstitution ? $row->acceptActInstitution->name : '---' }}</td>
                             <td>
-                                @if($row->document_date_accepted && $row->document_date_expiring)
-                                    {{ displayDate($row->document_date_accepted) .' - '. displayDate($row->document_date_expiring) }}
-                                @elseif($row->document_date_accepted || $row->document_date_expiring)
-                                    @if($row->document_date_accepted)
-                                        {{ __('custom.from') .' '.displayDate($row->document_date_accepted) }}
-                                    @else
-                                        {{ __('custom.to') .' '.displayDate($row->document_date_expiring) }}
-                                    @endif
-                                @endif
+{{--                                @if($row->document_date_accepted && $row->document_date_expiring)--}}
+{{--                                    {{ displayDate($row->document_date_accepted) .' - '. displayDate($row->document_date_expiring) }}--}}
+{{--                                @elseif($row->document_date_accepted || $row->document_date_expiring)--}}
+{{--                                    @if($row->document_date_accepted)--}}
+{{--                                        {{ __('custom.from') .' '.displayDate($row->document_date_accepted) }}--}}
+{{--                                    @else--}}
+{{--                                        {{ __('custom.to') .' '.displayDate($row->document_date_expiring) }}--}}
+{{--                                    @endif--}}
+{{--                                @endif--}}
+                                {{ $row->document_date_accepted ? \Carbon\Carbon::parse($row->document_date_accepted)->format('d-m-Y') : '' }}
+                                -
+                                {{ $row->document_date_expiring ? \Carbon\Carbon::parse($row->document_date_expiring)->format('d-m-Y') : __('custom.unlimited') }}
                             </td>
                         </tr>
                     @endforeach

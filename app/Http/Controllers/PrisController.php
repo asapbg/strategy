@@ -436,6 +436,26 @@ class PrisController extends Controller
                 'value' => $request->input('importer'),
                 'col' => 'col-md-4'
             ),
+            'formGroupInstitution' => array(
+                'title' => __('custom.criteria') . ':',
+                'class' => '',
+                'fields' => array(
+                    'institutionFullSearch' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('institutionFullSearch') : false,
+                        'label' => __('custom.full_keyword'),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
+                    'institutionUpperLowerCase' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('institutionUpperLowerCase') : false,
+                        'label' => __('custom.upper_lower_case'),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
+                )
+            ),
             'fromDate' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('fromDate'),

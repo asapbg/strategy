@@ -58,6 +58,7 @@ class AdvisoryBoardController extends Controller
             ['value' => 'chairmanType', 'name' => trans_choice('custom.advisory_chairman_type', 1)],
             ['value' => 'npo', 'name' => __('custom.presence_npo_representative')],
             ['value' => 'actOfCreation', 'name' => __('validation.attributes.act_of_creation')],
+            ['value' => 'status', 'name' => __('validation.attributes.status')]
         );
 
         $rf = $request->all();
@@ -105,12 +106,15 @@ class AdvisoryBoardController extends Controller
         if ($requestGroupBy == 'actOfCreation' || $sort == 'actOfCreation') {
             $groupByColumn[] = 'advisory_act_type_translations.name';
         }
+        if ($requestGroupBy == 'status') {
+            $groupByColumn[] = 'advisory_boards.active';
+        }
 //        }
 
         $items = AdvisoryBoard::select('advisory_boards.*')
             ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
                 'authority', 'authority.translations', 'advisoryChairmanType', 'advisoryChairmanType.translations',
-                'advisoryActType', 'advisoryActType.translations'])
+                'advisoryActType', 'advisoryActType.translations', 'chairmen', 'chairmen.translations'])
             ->leftJoin('advisory_board_translations', function ($j) {
                 $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
                     ->where('advisory_board_translations.locale', '=', app()->getLocale());
@@ -804,7 +808,7 @@ class AdvisoryBoardController extends Controller
             ),
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList(false, FieldOfAction::CATEGORY_NATIONAL)),
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL)),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),
@@ -892,7 +896,7 @@ class AdvisoryBoardController extends Controller
         return array(
             'fieldOfActions' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(FieldOfAction::optionsList(false, FieldOfAction::CATEGORY_NATIONAL)),
+                'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_NATIONAL)),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.field_of_actions', 1),

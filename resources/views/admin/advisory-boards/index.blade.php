@@ -27,7 +27,7 @@
                                             class="form-control form-control-sm select2">
                                         <option value="">---</option>
                                         @foreach(\App\Enums\StatusEnum::options() as $name => $value)
-                                            @php $selected = request()->get('status', '') == $value ? 'selected' : '' @endphp
+                                            @php $selected = request()->get('status', '-1') == $value ? 'selected' : '' @endphp
                                             <option
                                                 value="{{ $value }}" {{ $selected }}>{{ __('custom.'.strtolower($name)) }}</option>
                                         @endforeach

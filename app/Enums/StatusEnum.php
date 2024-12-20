@@ -12,4 +12,5 @@ enum StatusEnum: int
 
     case ACTIVE = 1; // Активен
     case INACTIVE = 0; // Неактивен
+    case ALL = -1; // Всички
 }
