@@ -44,10 +44,10 @@ class AdvisoryBoardController extends Controller
     public function index(Request $request)
     {
         $customRequestParam = null;
-        if (!$request->ajax() && is_null($request->input('status'))) {
-            $request->request->add(['status' => 1]);
-            $customRequestParam = ['status' => 1];
-        }
+//        if (!$request->ajax() && is_null($request->input('status'))) {
+//            $request->request->add(['status' => 1]);
+//            $customRequestParam = ['status' => 1];
+//        }
 
         $rssUrl = config('feed.feeds.adv_boards.url');
 
@@ -66,10 +66,14 @@ class AdvisoryBoardController extends Controller
         $requestFilter = $request->all();
         //Filter
         $filter = $this->boardFilters($request);
-        if (!$request->ajax() && is_null($request->input('status'))) {
-            $filter['status']['value'] = 1;
-            $requestFilter['status'] = 1;
-        }
+        // Sorting the options by value
+//            usort($filter['status']['options'], function ($a, $b) {
+//                return $a['value'] <=> $b['value'];
+//            });
+//        if (!$request->ajax() && is_null($request->input('status'))) {
+//            $filter['status']['value'] = 1;
+//            $requestFilter['status'] = 1;
+//        }
         //Sorter
         $sorter = $this->boardSorters();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'active';
