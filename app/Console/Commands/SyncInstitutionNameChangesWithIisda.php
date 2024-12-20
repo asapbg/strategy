@@ -34,20 +34,83 @@ class SyncInstitutionNameChangesWithIisda extends Command
         Log::info("Cron run sync:iisda.");
         activity()->disableLogging();
 
-        $level_ministry_id = InstitutionLevel::where('system_name', '=', 'Ministry')->first()->id;
-        $institutions = Institution::select('id', 'eik')
+        $institutions = Institution::select('institution.id', 'eik', 'batch_id', 'names.id as history_id', 'names.name as h_name')
+            ->join('institution_history_names as names', 'names.institution_id', '=', 'institution.id')
             ->without('translations')
-            ->where('institution_level_id', '<>', $level_ministry_id)
+            ->where('names.valid_from', '<=', '2015-05-15')
             ->where('eik', '<>', 'N/A')
-            ->orderBy('id')
-            ->skip(600)
-            ->take(100)
+            //->whereIn('institution.id', [3])
+            ->whereNotIn('institution.id', [143,137])
+            ->orderBy('institution.id')
+            ->skip(113)
+            //->take(100)
             ->get();
-        //dd($institutions);
+        //dd($institutions->first());
+
+//        $dataSoap = $this->searchBatchVersions('1263', '2013-04-15');
+//        $responseArray = $this->getSoapResponse($dataSoap);
+//        if (isset($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType'])) {
+//            dd($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes']['Name']);
+//        }
+//        dd('ok');
+
+        foreach ($institutions as $institution) {
+
+            $date_from = new \DateTime('2010-04-15');
+            $backward_months = 185;
+
+            $current_name = $institution->h_name;
+
+            for ($i = 0; $i < $backward_months; $i++) {
+                $dateAt = $date_from->format("Y-m-d");
+
+                $dataSoap = $this->searchBatchVersions($institution->batch_id, $dateAt);
+                $responseArray = $this->getSoapResponse($dataSoap);
+
+                // Subtract one month
+                $date_from->modify('-1 month');
+
+                if (!$responseArray) {
+                    Log::error('Sync Institution: Unable to parse soap xml response');
+                    return Command::FAILURE;
+                }
+                if (isset($responseArray['error']) && $responseArray['error']) {
+                    return Command::FAILURE;
+                }
+                if (!isset($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'])) {
+                    dump("No results backwards for $current_name");
+                    break;
+                }
+
+                $institutionIisda = $responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'];
+                if ($current_name != $institutionIisda['Name']) {
+                    dump("Запис валиден до $dateAt на $current_name != {$institutionIisda['Name']}");
+
+                    $current_name = $institutionIisda['Name'];
+
+                    if (!isset($currentName)) {
+                        $currentName = InstitutionHistoryName::find($institution->history_id);
+                    }
+                    $currentName->valid_from = $dateAt;
+                    $currentName->save();
+
+                    $currentName = $institution->historyNames()->create([
+                        'name' => $current_name,
+                        'current' => false,
+                        'valid_from' => '2000-01-01',
+                        'valid_till' => $dateAt
+                    ]);
+
+                }
+            }
+            sleep(10);
+        }
+
+        return Command::SUCCESS;
 
         $date_from = new \DateTime('2015-05-15');
-        $end = new \DateTime(date('Y-m-d'));
-        $interval = \DateInterval::createFromDateString('1 month');
+        $end = new \DateTime(now());
+        $interval = new \DateInterval('P1M');
         $period = new \DatePeriod($date_from, $interval, $end);
 
         foreach ($institutions as $institution) {
@@ -73,7 +136,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
                     return Command::FAILURE;
                 }
                 if (!isset($responseArray['sBody']['SearchBatchesIdentificationInfoResponse']['SearchBatchesIdentificationInfoResult']['BatchIdentificationInfoType']['@attributes'])) {
-                    continue;
+                    break;
                 }
 
                 $institutionIisda = $responseArray['sBody']['SearchBatchesIdentificationInfoResponse']['SearchBatchesIdentificationInfoResult']['BatchIdentificationInfoType']['@attributes'];
@@ -127,14 +190,18 @@ class SyncInstitutionNameChangesWithIisda extends Command
 
     /**
      * @param $batchIdentificationNumber
+     * @param $dateAt
      * @param $from_date
      * @param $to_date
      * @return string
      */
-    private function searchBatchVersions($batchIdentificationNumber, $from_date = null, $to_date = null): string
+    private function searchBatchVersions($batchIdentificationNumber, $dateAt = null, $from_date = null, $to_date = null): string
     {
         //0000000086 - Министерство на транспорта и съобщенията
-        $batchIdentificationNumber = "<int:batchIdentificationNumber>$batchIdentificationNumber</int:batchIdentificationNumber>";
+        $batchIdentificationNumber = "<int:batchIdentificationNumber><int:string>$batchIdentificationNumber</int:string></int:batchIdentificationNumber>";
+        if ($dateAt) {
+            $dateAt = "<int:dateAt>$dateAt</int:dateAt>";
+        }
         if ($from_date) {
             //$dateTime = date("c", strtotime("2024-01-01 00:00:00"));
             $from_date = "<int:fromDate>$from_date</int:fromDate>";
@@ -143,11 +210,15 @@ class SyncInstitutionNameChangesWithIisda extends Command
             //$dateTime = date("c", strtotime("2024-01-01 00:00:00"));
             $to_date = "<int:toDate>$to_date</int:toDate>";
         }
-        return '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:int="http://iisda.government.bg/RAS/IntegrationServices"><soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing"><wsa:Action>http://iisda.government.bg/RAS/IntegrationServices/IBatchInfoService/SearchBatchesIdentificationInfo</wsa:Action><wsa:To>https://iisda.government.bg/Services/RAS/RAS.Integration.Host/BatchInfoService.svc</wsa:To></soap:Header>
+        return '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:int="http://iisda.government.bg/RAS/IntegrationServices">
+<soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+<wsa:Action>http://iisda.government.bg/RAS/IntegrationServices/IBatchInfoService/GetBatchDetailedInfo</wsa:Action>
+<wsa:To>https://iisda.government.bg/Services/RAS/RAS.Integration.Host/BatchInfoService.svc</wsa:To>
+</soap:Header>
    <soap:Body>
-      <int:SearchBatchVersions>
-         ' . $batchIdentificationNumber . $from_date . $to_date . '
-      </int:SearchBatchVersions>
+      <int:GetBatchDetailedInfo>
+         ' . $batchIdentificationNumber . $dateAt . $from_date . $to_date . '
+      </int:GetBatchDetailedInfo>
    </soap:Body>
 </soap:Envelope>';
     }
@@ -181,6 +252,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
             return ['error' => 1];
         } else {
             $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $response);
+            //file_put_contents('iisda.xml', $response);
             $xml = simplexml_load_string($response);
             $json = json_encode($xml);
 

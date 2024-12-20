@@ -20,6 +20,7 @@ use App\Traits\FilterSort;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 
@@ -78,6 +79,16 @@ class Institution extends ModelActivityExtend implements TranslatableContract
     public function historyNames()
     {
         return $this->hasMany(InstitutionHistoryName::class)->orderBy('valid_from');
+    }
+
+    /**
+     * Get institution's current name
+     *
+     * @return hasOne
+     */
+    public function currentHistoryName()
+    {
+        return $this->hasOne(InstitutionHistoryName::class)->whereCurrent(true);
     }
 
     /**

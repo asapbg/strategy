@@ -245,10 +245,12 @@
                                                             <select id="legal_act_type_filter" name="legal_act_type_filter"  class="form-control form-control-sm select2
                                                                 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror"
                                                             >
-                                                                <option value="0">{{ trans_choice('custom.legal_act_types', 1) }}</option>
+                                                                <option value="">-- изберете {{ l_trans('custom.legal_act_types') }} --</option>
                                                                 @if(isset($legalActTypes) && $legalActTypes->count())
                                                                     @foreach($legalActTypes as $row)
-                                                                        <option value="{{ $row->id }}" @if(old('legal_act_type_filter', '') == $row->id) selected @endif>{{ $row->name }}</option>
+                                                                        <option value="{{ $row->id }}" @if(old('legal_act_type_filter') == $row->id) selected @endif>
+                                                                            {{ $row->name }}
+                                                                        </option>
                                                                     @endforeach
                                                                 @endif
                                                             </select>
@@ -271,9 +273,9 @@
                                                         </div>
                                                         <div class="col-md-3">
                                                             <select id="connect_type" name="connect_type" class="form-control form-control-sm select2 @error('connect_type'){{ 'is-invalid' }}@enderror">
-                                                                <option value="0" @if(old('connect_type', 0) == 0) selected @endif>---</option>
+                                                                <option value="">---</option>
                                                                 @foreach(\App\Enums\PrisDocChangeTypeEnum::options() as $name => $val)
-                                                                    <option value="{{ $val }}" @if(old('connect_type', 0) == $val) selected @endif>{{ __('custom.pris.change_enum.'.$name) }}</option>
+                                                                    <option value="{{ $val }}" @if(old('connect_type') == $val) selected @endif>{{ __('custom.pris.change_enum.'.$name) }}</option>
                                                                 @endforeach
                                                             </select>
                                                             @error('connect_type')
@@ -297,26 +299,35 @@
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        @if($item->changedDocs->count() || $item->changedByDocs->count())
+                                                        @if($item->changedDocs->count() || $item->changedByDocs->count() || $item->changedDocsWithoutRelation->count())
                                                             <div class="col-12 mt-4" id="connected_documents">
+                                                                @foreach($item->changedDocsWithoutRelation as $pris)
+                                                                    <div id="disconnect_text_{{ $item->id }}">
+                                                                        <i class="text-primary fas fa-link mr-2"></i>
+                                                                        {{ $pris->connect_text }}
+                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-text="{{ $pris->connect_text }}" role="button"></i>
+                                                                    </div>
+                                                                @endforeach
                                                                 @foreach($item->changedDocs as $pris)
                                                                     <div id="disconnect_{{ $pris->id }}">
                                                                         <a class="mr-2" href="{{ route('admin.pris.edit', $pris->id) }}" target="_blank">
                                                                            <i class="text-primary fas fa-link mr-2"></i>
-                                                                            {{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name_single }} {{ $pris->regNum }} {{ $pris->pivot->connect_text ? "({$pris->pivot->connect_text})" : "" }}
+                                                                            {{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }}
+                                                                            {{ $pris->actType->name_single }} {{ $pris->regNum }} {{ $pris->pivot->connect_text ? "({$pris->pivot->connect_text})" : "" }}
                                                                         </a>
                                                                         <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
                                                                     </div>
                                                                 @endforeach
-                                                                    @foreach($item->changedByDocs as $pris)
-                                                                        <div id="disconnect_{{ $pris->id }}">
-                                                                            <a class="mr-2" href="{{ route('admin.pris.edit', $pris->id) }}" target="_blank">
-                                                                                <i class="text-primary fas fa-link mr-2"></i>
-                                                                                {{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }} {{ $pris->actType->name_single }} {{ $pris->regNum }} {{ $pris->pivot->connect_text ? "({$pris->pivot->connect_text})" : "" }}
-                                                                            </a>
-                                                                            <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
-                                                                        </div>
-                                                                    @endforeach
+                                                                @foreach($item->changedByDocs as $pris)
+                                                                    <div id="disconnect_{{ $pris->id }}">
+                                                                        <a class="mr-2" href="{{ route('admin.pris.edit', $pris->id) }}" target="_blank">
+                                                                            <i class="text-primary fas fa-link mr-2"></i>
+                                                                            {{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }}
+                                                                            {{ $pris->actType->name_single }} {{ $pris->regNum }} {{ $pris->pivot->connect_text ? "({$pris->pivot->connect_text})" : "" }}
+                                                                        </a>
+                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
+                                                                    </div>
+                                                                @endforeach
                                                             </div>
                                                         @endif
                                                         @if($item->old_id)
@@ -460,7 +471,7 @@
             $('#connect-documents').on('click', function(){
                 errorContainer.html('');
                 $.ajax({
-                    url  : '<?php echo route("admin.pris.connect"); ?>',
+                    url  : '{{ route("admin.pris.connect") }}',
                     type : 'POST',
                     data : {
                         _token: '{{ csrf_token() }}',
@@ -469,11 +480,12 @@
                         connect_type: $('#connect_type').val(),
                         connect_text: $('#connect_text').val()
                     },
-                    success : function(data) {
-                        if( typeof data.error != 'undefined' ) {
-                            errorContainer.html(data.message);
-                        } else {
+                    success : function(response) {
+                        if (response.success) {
                             location.reload();
+                        } else {
+                            console.log(response.message);
+                            errorContainer.html(response.message);
                         }
                     },
                     error : function() {
@@ -494,15 +506,20 @@
                 errorContainer.html('');
                 let prisId = $(this).data('pris');
                 let connectId = $(this).data('disconnect');
+                let connectText = $(this).data('text');
                 $.ajax({
                     url  : '<?php echo route("admin.pris.disconnect"); ?>',
                     type : 'POST',
-                    data : { _token: '{{ csrf_token() }}', id: prisId, disconnect: connectId },
+                    data : { _token: '{{ csrf_token() }}', id: prisId, disconnect: connectId, connect_text: connectText },
                     success : function(data) {
                         if( typeof data.error != 'undefined' ) {
                             errorContainer.html(data.message);
                         } else {
-                            console.log('#disconnect_' + connectId);
+                            if (connectText) {
+                                $('#disconnect_text_' + prisId).remove();
+                                return;
+                            }
+                            //console.log('#disconnect_' + connectId);
                             $('#disconnect_' + connectId).remove();
                         }
                     },

@@ -282,10 +282,11 @@ class PrisController extends Controller
 
     public function show(Request $request, $category, int $id = 0)
     {
-        $item = Pris::LastVersion()->InPris()->Published()->with(['translation', 'actType', 'actType.translation',
-            'tags', 'tags.translation', 'changedDocs',
-            'changedDocs.actType', 'changedDocs.actType.translation',
-            'changedDocs.institution', 'changedDocs.institution.translation', 'files'])->find($id);
+        $item = Pris::LastVersion()->InPris()->Published()->with([
+            'translation', 'actType', 'actType.translation', 'tags', 'tags.translation', 'changedDocsWithoutRelation',
+            'changedDocs.actType.translation', 'changedDocs.institution.translation', 'files'
+        ])
+            ->find($id);
         if( !$item ) {
             abort(Response::HTTP_NOT_FOUND);
         }

@@ -9,6 +9,7 @@ use App\Http\Requests\PrisStoreRequest;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegalActType;
 use App\Models\Pris;
+use App\Models\PrisChangePris;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
 use Carbon\Carbon;
@@ -81,7 +82,7 @@ class PrisController extends AdminController
      */
     public function edit(Request $request, int $id)
     {
-        $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType']) : new Pris();
+        $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType','changedDocsWithoutRelation']) : new Pris();
 
         if (($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Pris::class)) {
             return back()->with('warning', __('messages.unauthorized'));
@@ -138,47 +139,65 @@ class PrisController extends AdminController
     public function connectDocuments(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id' => ['required', 'exists:pris,id'],
-            'connect_type' => ['required', 'numeric', 'in:' . join(',', PrisDocChangeTypeEnum::values())],
-            'connect_text' => ['nullable', 'string', 'max:255'],
-            'connectIds' => ['required', 'array'],
-            'connectIds.*' => ['required', 'exists:pris,id'],
+            'id'                => ['required', 'exists:pris,id'],
+            'connectIds'        => ['nullable', 'required_with:connect_type', 'array'],
+            'connectIds.*'      => ['nullable', 'exists:pris,id'],
+            'connect_type'      => ['nullable', 'required_without:connect_text', 'numeric'],
+            'connect_text'      => ['nullable', 'required_without:connect_type,connectIds', 'string', 'max:255'],
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => 1, 'message' => $validator->errors()->first()], 200);
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], Response::HTTP_OK);
         }
 
         $validated = $validator->validated();
         $item = Pris::find((int)$validated['id']);
         if ($request->user()->cannot('update', $item)) {
-            return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], 200);
+            return response()->json(['success' => false, 'message' => __('messages.unauthorized')], Response::HTTP_UNAUTHORIZED);
         }
 
-        $item->changedDocs()->attach($validated['connectIds'], ['connect_type' => $validated['connect_type'],'connect_text' => $validated['connect_text']]);
-        Pris::whereIn('id', $validated['connectIds'])->update(['connection_status' => PrisDocChangeTypeEnum::toStatus($validated['connect_type'])]);
+        if (isset($validated['connectIds'])) {
+            $item->changedDocs()->attach(
+                $validated['connectIds'],
+                ['connect_type' => $validated['connect_type'],'connect_text' => $validated['connect_text']]
+            );
+            Pris::whereIn('id', $validated['connectIds'])->update(['connection_status' => PrisDocChangeTypeEnum::toStatus($validated['connect_type'])]);
+        } else {
+            DB::table('pris_change_pris')->insert([
+                'pris_id' => $item->id,
+                'changed_pris_id' => null,
+                'connect_type' => $validated['connect_type'],
+                'connect_text' => $validated['connect_text']
+            ]);
+        }
 
-        return response()->json(['success' => 1], 200);
+        return response()->json(['success' => true], Response::HTTP_OK);
     }
 
     public function disconnectDocuments(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:pris,id'],
-            'disconnect' => ['required', 'exists:pris,id']
+            'disconnect' => ['nullable', 'exists:pris,id'],
+            'connect_text' => ['nullable', 'string']
         ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => 1, 'message' => $validator->errors()->first()], 200);
-        }
-
         $validated = $validator->validated();
-        $item = Pris::find((int)$validated['id']);
-        if ($request->user()->cannot('update', $item)) {
-            return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], 200);
+        if (!isset($validated['disconnect']) && !isset($validated['connect_text'])) {
+            return response()->json(['error' => 1, 'message' => 'Липсват данни'], Response::HTTP_OK);
         }
 
-        $item->changedDocs()->detach($validated['disconnect']);
+        $pris = Pris::find((int)$validated['id']);
+        if ($request->user()->cannot('update', $pris)) {
+            return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], Response::HTTP_UNAUTHORIZED);
+        }
 
-        return response()->json(['success' => 1], 200);
+        if (isset($validated['disconnect']) && !is_null($validated['disconnect'])) {
+            $pris->changedDocs()->detach($validated['disconnect']);
+        }
+        if (isset($validated['connect_text']) && !is_null($validated['connect_text'])) {
+            PrisChangePris::where('pris_id', $pris->id)->where('connect_text', $validated['connect_text'])->delete();
+        }
+
+        return response()->json(['success' => 1], Response::HTTP_OK);
     }
 
     /**
