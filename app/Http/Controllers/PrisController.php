@@ -41,7 +41,6 @@ class PrisController extends Controller
             'col' => 'col-md-1 d-inline me-2'
         ];
 
-
         //Sorter
         $sorter = $this->sorters();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'docDate';
@@ -60,7 +59,7 @@ class PrisController extends Controller
                 $query->where('pris.in_archive', 0);
             })
             ->LastVersion()
-            ->InPris()
+            //->InPris()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions.historyNames', 'institutions.translation'])
             ->when($institutions, function ($query) use ($institutions) {
@@ -298,7 +297,7 @@ class PrisController extends Controller
         $menuCategories = [];
         $menuCategoriesArchive = [];
         $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
-            ->Pris()
+            //->Pris()
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
         if( $actTypes->count() ) {
