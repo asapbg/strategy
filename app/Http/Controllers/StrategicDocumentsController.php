@@ -183,12 +183,14 @@ class StrategicDocumentsController extends Controller
                     and strategic_document.deleted_at is null
                     and strategic_document.strategic_document_level_id = '.$cat
                     . (match($request->get('status', 'active')) {
-                        'active' => 'and strategic_document.document_date_accepted <= \''.$now.'\'
-                                    and strategic_document.document_date_expiring >= \''.$now.'\'',
+                        'active' => 'and (strategic_document.document_date_expiring is null
+                                    or strategic_document.document_date_expiring >= \''.$now.'\')',
 
                         'expired' => 'and strategic_document.document_date_expiring <= \''.$now.'\'',
 
-                        'public_consultation' => 'and public_consultation.open_to <= \''.$now.'\' and public_consultation.active = 1'
+                        'public_consultation' => 'and public_consultation.open_to <= \''.$now.'\' and public_consultation.active = 1',
+
+                        default => ''
                     }) . ($request->filled('title') ? ('and strategic_document_translations.title ILIKE \'%'. $request->get('title') .'%\'') : '') . '
                 group by strategic_document.id, field_of_actions.id, field_of_action_translations.name, children.id, children.depth, children.path
                 order by field_of_action_translations.name, strategic_document.id, children.path, children.depth asc

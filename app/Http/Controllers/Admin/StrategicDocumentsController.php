@@ -62,6 +62,9 @@ class StrategicDocumentsController extends AdminController
     public function index(Request $request)
     {
         $requestFilter = $request->all();
+        if(empty($requestFilter)){
+            $requestFilter['status'] = 'active';
+        }
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? StrategicDocument::PAGINATE;
 
