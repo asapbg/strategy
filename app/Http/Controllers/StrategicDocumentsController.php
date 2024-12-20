@@ -19,6 +19,7 @@ use App\Models\StrategicDocumentChildren;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocuments\Institution;
+use App\Models\StrategicDocumentType;
 use App\Models\User;
 use App\Models\UserSubscribe;
 use App\Services\Exports\ExportService;
@@ -536,11 +537,19 @@ class StrategicDocumentsController extends Controller
                 'default' => empty($currentRequest) ? 'active' :'',
                 'col' => 'col-md-6'
             ),
+            'DocumentType' => array(
+                'type' => 'select',
+                'label' => trans_choice('custom.nomenclature.strategic_document_type', 1),
+                'value' => $request->input('DocumentType'),
+                'options' => collect(optionsFromModel(StrategicDocumentType::optionsList()))->prepend(['name' => '', 'value' => ''])->toArray(),
+                'default' => '',
+                'col' => 'col-md-6'
+            ),
             'title' => array(
                 'type' => 'text',
                 'label' => __('site.strategic_document.search_in_title_content'),
                 'value' => $request->input('title'),
-                'col' => 'col-md-6'
+                'col' => 'col-md-12'
             ),
             'paginate' => array(
                 'type' => 'select',
@@ -607,13 +616,13 @@ class StrategicDocumentsController extends Controller
                 'type' => 'datepicker',
                 'value' => $request->input('validFrom'),
                 'label' => __('custom.valid_from_m'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'validTo' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('validTo'),
                 'label' => __('custom.valid_to_m'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'status' => array(
                 'type' => 'select',
@@ -627,6 +636,14 @@ class StrategicDocumentsController extends Controller
                 ),
                 'value' => request()->input('status'),
                 'default' => empty($currentRequest) ? 'active' :'',
+                'col' => 'col-md-6'
+            ),
+            'DocumentType' => array(
+                'type' => 'select',
+                'label' => trans_choice('custom.nomenclature.strategic_document_type', 1),
+                'value' => $request->input('DocumentType'),
+                'options' => collect(optionsFromModel(StrategicDocumentType::optionsList()))->prepend(['name' => '', 'value' => ''])->toArray(),
+                'default' => '',
                 'col' => 'col-md-6'
             ),
             'paginate' => array(

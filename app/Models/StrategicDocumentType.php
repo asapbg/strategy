@@ -44,7 +44,7 @@ class StrategicDocumentType extends ModelActivityExtend implements TranslatableC
     {
         return DB::table('strategic_document_type')
             ->select(['strategic_document_type.id', 'strategic_document_type_translations.name'])
-            ->join('strategic_document_type_translations', 'strategic_document_type_translations.consultation_level_id', '=', 'strategic_document_type.id')
+            ->join('strategic_document_type_translations', 'strategic_document_type_translations.strategic_document_type_id', '=', 'strategic_document_type.id')
             ->where('strategic_document_type_translations.locale', '=', app()->getLocale())
             ->orderBy('strategic_document_type_translations.name', 'asc')
             ->get();

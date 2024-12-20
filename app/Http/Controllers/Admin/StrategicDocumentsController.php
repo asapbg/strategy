@@ -77,8 +77,8 @@ class StrategicDocumentsController extends AdminController
                 $j->on('strategic_document_translations.strategic_document_id' ,'=', 'strategic_document.id')->where('strategic_document_translations.locale', '=', app()->getLocale());
             })
             ->FilterBy($requestFilter)
-            ->when(isset($requestFilter['only_deleted']), fn($q) => $q->onlyTrashed())
-            ->when(($requestFilter['strategic_document_type_id'] ?? null), fn($q, $value) => $q->where('strategic_document_type_id', $value));
+            ->when(isset($requestFilter['only_deleted']), fn($q) => $q->onlyTrashed());
+//            ->when(($requestFilter['strategic_document_type_id'] ?? null), fn($q, $value) => $q->where('strategic_document_type_id', $value));
 
         if (!$request->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])) {
             $userPolicyAreas = $request->user()->institution ?
@@ -687,10 +687,10 @@ class StrategicDocumentsController extends AdminController
                 'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', false, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
                 'col' => 'col-md-4'
             ),
-            'strategic_document_type_id' => array(
+            'DocumentType' => array(
                 'type' => 'select',
                 'placeholder' => trans_choice('custom.nomenclature.strategic_document_type', 1),
-                'value' => $request->input('strategic_document_type_id'),
+                'value' => $request->input('DocumentType'),
                 'options' => optionsFromModel(StrategicDocumentType::with('translations')->orderByTranslation('name')->get()),
                 'col' => 'col-md-4'
             ),
