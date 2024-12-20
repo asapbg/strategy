@@ -84,12 +84,10 @@
                                 <div class="col-12">
                                     <select id="strategic_document_type_id" name="strategic_document_type_id"
                                             class="form-control form-control-sm select2 @error('strategic_document_type_id'){{ 'is-invalid' }}@enderror">
-                                        @if(!$item->id)
                                             <option value=""
-                                                    @if(old('strategic_document_type_id', '') == '') selected @endif>
+                                                    @if(!old('strategic_document_type_id', ($item->id ? $item->strategic_document_type_id : 0))) selected @endif>
                                                 ---
                                             </option>
-                                        @endif
                                         @if(isset($strategicDocumentTypes) && $strategicDocumentTypes->count())
                                             @foreach($strategicDocumentTypes as $row)
                                                 @if($row->active || ($item && $item->strategic_document_type_id == $row->id))
