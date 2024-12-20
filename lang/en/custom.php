@@ -1352,4 +1352,6 @@ return [
     'low_contrast'  => 'Low contrast',
     'increase_text' => 'Increase text',
     'decrease_text' => 'Reduce text',
+    'upper_lower_case'  => 'Upper/lower case',
+    'full_keyword'      => 'Full keyword'
 ];
