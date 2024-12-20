@@ -3,7 +3,7 @@
         <div class="col-md-2 mb-3">
             <div class="form-group">
                 <label for="description_{{ $lang['code'] }}" class="form-label col-sm-12">
-                    {{ __('validation.attributes.description_'.$lang['code']) }}
+                    {{ __('validation.attributes.display_name_'.$lang['code']) }}
 {{--                    @if($lang['code'] == 'bg')--}}
 {{--                        <span class="required">*</span>--}}
 {{--                    @endif--}}
