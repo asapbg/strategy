@@ -135,10 +135,10 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
      * @param  \Illuminate\Notifications\Notification  $notification
      * @return array|string
      */
-    public function routeNotificationForMail($notification): array|string
-    {
-        return $this->user_type == User::USER_TYPE_INTERNAL ? (config('app.env') != 'production' ? config('mail.local_to_mail') : $this->email) : $this->email;
-    }
+//    public function routeNotificationForMail($notification): array|string
+//    {
+//        return $this->user_type == User::USER_TYPE_INTERNAL ? (config('app.env') != 'production' ? config('mail.local_to_mail') : $this->email) : $this->email;
+//    }
 
     public function sendEmailVerificationNotification()
     {
