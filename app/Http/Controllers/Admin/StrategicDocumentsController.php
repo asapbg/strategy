@@ -74,7 +74,8 @@ class StrategicDocumentsController extends AdminController
                 $j->on('strategic_document_translations.strategic_document_id' ,'=', 'strategic_document.id')->where('strategic_document_translations.locale', '=', app()->getLocale());
             })
             ->FilterBy($requestFilter)
-            ->when(isset($requestFilter['only_deleted']), fn($q) => $q->onlyTrashed());
+            ->when(isset($requestFilter['only_deleted']), fn($q) => $q->onlyTrashed())
+            ->when($requestFilter['strategic_document_type_id'], fn($q, $value) => $q->where('strategic_document_type_id', $value));
 
         if (!$request->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])) {
             $userPolicyAreas = $request->user()->institution ?
@@ -91,7 +92,15 @@ class StrategicDocumentsController extends AdminController
         $publishRouteName = self::PUBLISH_ROUTE;
         $unPublishRouteName = self::UNPUBLISH_ROUTE;
 
-        return $this->view(self::LIST_VIEW, compact('filter', 'items', 'toggleBooleanModel', 'editRouteName', 'listRouteName','publishRouteName', 'unPublishRouteName'));
+        return $this->view(self::LIST_VIEW, compact(
+            'filter',
+            'items',
+            'toggleBooleanModel',
+            'editRouteName',
+            'listRouteName',
+            'publishRouteName',
+            'unPublishRouteName'
+        ));
     }
 
     /**
@@ -675,14 +684,21 @@ class StrategicDocumentsController extends AdminController
                 'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', false, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
                 'col' => 'col-md-4'
             ),
+            'strategic_document_type_id' => array(
+                'type' => 'select',
+                'placeholder' => trans_choice('custom.nomenclature.strategic_document_type', 1),
+                'value' => $request->input('strategic_document_type_id'),
+                'options' => StrategicDocumentType::with('translations')->orderByTranslation('name')->get(),
+                'col' => 'col-md-4'
+            ),
             'only_deleted' => array(
                 'type' => 'checkbox',
                 'checked' => $request->input('only_deleted'),
                 'placeholder' => __('custom.all_deleted'),
                 'value' => 1,
-                'col' => 'col-md-4',
+                'col' => 'col-md-12',
                 'class' => 'fw-normal'
-            )
+            ),
         );
     }
 
