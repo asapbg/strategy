@@ -68,7 +68,7 @@ class StorePublicConsultationRequest extends FormRequest
             }
         }
 
-        if(auth()->user()->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]) && !request()->isMethod('put')) {
+        if(auth()->user()->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]) && (!request()->isMethod('put') || $this->item->old_id)) {
             $rules['institution_id'] = ['required', 'numeric', 'exists:institution,id'];
         }
 

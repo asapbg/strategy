@@ -132,8 +132,8 @@ class PublicConsultationController extends AdminController
         if($isAdmin) {
             $institutions = Institution::optionsListWithAttr();
             $institutionLevels = InstitutionCategoryLevelEnum::options();
-            $fieldsOfActions = $item->id ? $item->importerInstitution->fieldsOfAction : FieldOfAction::with(['translation'])->Active()->orderByTranslation('name')->get();
-            $actTypes = $item->id ? ActType::with(['translation'])
+            $fieldsOfActions = ($item->id && !$item->old_id) ? $item->importerInstitution->fieldsOfAction : FieldOfAction::with(['translation'])->Active()->orderByTranslation('name')->get();
+            $actTypes = ($item->id && !$item->old_id) ? ActType::with(['translation'])
                 ->where('consultation_level_id', '=', $item->consultation_level_id)
                 ->get() : ActType::with(['translation'])->get();
         } else {
@@ -186,6 +186,7 @@ class PublicConsultationController extends AdminController
         }
 
         $storeRequest = new StorePublicConsultationRequest();
+        $storeRequest->item = $item;
         $validator = Validator::make($request->all(), $storeRequest->rules());
         if( $validator->fails() ) {
             return back()->withInput($request->all())->withErrors($validator->errors());
@@ -229,7 +230,7 @@ class PublicConsultationController extends AdminController
             $validated['law_id'] = isset($validated['law_id']) && $validated['law_id'] > 0 ? $validated['law_id'] : null;
 
             $fillable = $this->getFillableValidated($validated, $item);
-            if( !$id ) {
+            if( !$id || $item->old_id ) {
                 $institution = $isAdmin ? Institution::find((int)$validated['institution_id']) : ($request->user()->institution ? $request->user()->institution : null);
                 $fillable['consultation_level_id'] = $institution ? $institution->level->nomenclature_level : 0;
             }
@@ -239,7 +240,7 @@ class PublicConsultationController extends AdminController
             }
             $item->active = $request->filled('active') ? $request->input('active') : 0;
 
-            if( !$id ) {
+            if( !$id || $item->old_id ) {
                 $item->importer_institution_id = $institution ? $institution->id : null;
                 $item->responsible_institution_id = $institution ? $institution->id : null;
             }

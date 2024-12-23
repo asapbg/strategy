@@ -7,7 +7,7 @@
     <input type="hidden" name="id" value="{{ $item->id ?? 0 }}">
     <input type="hidden" name="nomenclature_level" id="nomenclature_level" value="@if(!$isAdmin || $item->id){{ $item->id ? $item->nomenclatureLevelLabel : $userInstitutionLevel }}@else{{ '0' }}@endif">
     <div class="row">
-        @if($item->id)
+        @if($item->id && !$item->old_id)
             <div class="col-md-2">
                 <div class="form-group">
                     <label class="col-auto control-label">{{ trans_choice('custom.number', 1) }}: </label> {{ $item->reg_num }}
@@ -59,7 +59,7 @@
                                     <option value="" @if('' == old('institution_id', '')) selected @endif>---</option>
                                     @if(isset($institutions) && $institutions->count())
                                         @foreach($institutions as $option)
-                                            <option value="{{ $option->value }}" @if($option->value == old('institution_id', ($item->id ? $item->institution_id : ''))) selected @endif
+                                            <option value="{{ $option->value }}" @if($option->value == old('institution_id', ($item->id ? ($item->institution_id ?? $item->importer_institution_id) : ''))) selected @endif
                                             data-level="{{ $option->level }}" data-foa="{{ $option->foa }}">{{ $option->name }}</option>
                                         @endforeach
                                     @endif
@@ -428,7 +428,7 @@
                     $('#nomenclature_level').val(level);
                     $('#levelLabel').html(levelsLabel[level]);
 
-                    $('#act_type_id').val('').trigger('change');
+                    $('#act_type_id').val('{{ old('act_type_id', ($item->id ? $item->act_type_id : 0)) }}').trigger('change');
                     $('#act_type_id option').each(function (){
                         if(parseInt($(this).data('level')) == level) {
                             $(this).attr('disabled', false);
@@ -437,7 +437,7 @@
                         }
                     });
 
-                    $('#field_of_actions_id').val('').trigger('change');
+                    $('#field_of_actions_id').val('{{ old('field_of_actions_id', ($item->id ? $item->field_of_actions_id : 0)) }}').trigger('change');
 
                     $('#field_of_actions_id option').each(function (){
                         if(typeof foa != 'undefined'){
