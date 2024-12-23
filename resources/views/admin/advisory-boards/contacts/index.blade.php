@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h2 class="mb-4">
-                            {{ __('site.advisory_boards.contacts.title') }}
+                            {{ __('site.admin.advisory_boards.contacts.title') }}
                         </h2>
                     </div>
                 </div>
