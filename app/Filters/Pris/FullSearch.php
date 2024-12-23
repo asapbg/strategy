@@ -20,6 +20,7 @@ class FullSearch extends QueryFilter implements FilterContract
                 $searchInLegalReason = is_array($filter) && isset($filter['legalReasonSearch']) ? 1 : null;
                 $searchInTags = is_array($filter) && isset($filter['tagsSearch']) ? 1 : null;
 
+                $whereFulltext = $value;
                 $whereTag = "tag_translations.label ilike '%$value%'";
                 $whereAbout = "pris_translations.about ilike '%$value%'";
                 $whereLegalReason = "pris_translations.legal_reason ilike '%$value%'";
@@ -27,12 +28,14 @@ class FullSearch extends QueryFilter implements FilterContract
                 if (strstr($value, ",")) {
                     $tags = explode(",", $value);
                     $tags_count = count($tags);
+                    $whereFulltext = "";
                     $whereAbout = "(";
                     $whereLegalReason = "(";
                     if ($logicalАnd == "OR") {
                         $whereTag = "(";
                         foreach ($tags as $key => $tag) {
                             $tag = trim($tag);
+                            $whereFulltext .= $key === 0 ? $tag : " | $tag";
                             $whereTag .= $key === 0 ? "tag_translations.label = '$tag'" : " OR tag_translations.label = '$tag'";
                             $whereAbout .= $key === 0 ? "pris_translations.about ilike '%$tag%'" : " OR pris_translations.about ilike '%$tag%'";
                             $whereLegalReason .= $key === 0 ? "pris_translations.legal_reason ilike '%$tag%'" : " OR pris_translations.legal_reason ilike '%$tag%'";
@@ -41,6 +44,7 @@ class FullSearch extends QueryFilter implements FilterContract
                     } else {
                         foreach ($tags as $key => $tag) {
                             $tag = trim(mb_strtolower($tag));
+                            $whereFulltext .= $key === 0 ? $tag : " & $tag";
                             $trimmed_tags .= $key === 0 ? "'$tag'" : ", '$tag'";
                             $whereAbout .= $key === 0 ? "pris_translations.about ilike '%$tag%'" : " AND pris_translations.about ilike '%$tag%'";
                             $whereLegalReason .= $key === 0 ? "pris_translations.legal_reason ilike '%$tag%'" : " AND pris_translations.legal_reason ilike '%$tag%'";
@@ -70,11 +74,12 @@ class FullSearch extends QueryFilter implements FilterContract
                 }
                 //dd($queryTag);
                 if ($searchInFiles || $searchInAbout || $searchInLegalReason || $searchInTags) {
-                    $q->where(function ($q) use ($searchInFiles, $searchInAbout, $searchInLegalReason, $searchInTags, $value, $queryTag, $whereAbout, $whereLegalReason) {
+                    $q->where(function ($q) use ($searchInFiles, $searchInAbout, $searchInLegalReason, $searchInTags, $whereFulltext, $queryTag, $whereAbout, $whereLegalReason) {
                         $q->where('pris.id', '=', 0)
-                            ->when($searchInFiles, function ($query) use ($value) {
-                                $query->orWhereHas('files', function (Builder $query) use ($value) {
-                                    $query->whereRaw('file_text_ts_bg @@ plainto_tsquery(\'bulgarian\', ?)', [$value]);
+                            ->when($searchInFiles, function ($query) use ($whereFulltext) {
+                                $query->orWhereHas('files', function (Builder $query) use ($whereFulltext) {
+//                                    $query->whereRaw("to_tsvector('bulgarian', file_text_ts_bg::text) @@ plainto_tsquery('bulgarian', ?)", [$whereFulltext]);
+                                    $query->whereRaw('file_text_ts_bg @@ plainto_tsquery(\'bulgarian\', ?)', [$whereFulltext]);
                                 });
                             })
                             ->when($searchInAbout, function ($query) use ($whereAbout) {
