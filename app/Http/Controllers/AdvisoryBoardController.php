@@ -186,13 +186,46 @@ class AdvisoryBoardController extends Controller
         $hasSubscribeEmail = $this->hasSubscription(null, AdvisoryBoard::class, $subscribeFilter);
         $hasSubscribeRss = false;
 
+        $other_nomenclatures = [
+            'authoritys'        => AuthorityAdvisoryBoard::with(['translation'])->whereNotNull('created_by')->get(),
+            'actOfCreations'    => AdvisoryActType::with(['translation'])->whereNotNull('created_by')->get(),
+            'chairmanTypes'     => AdvisoryChairmanType::with(['translation'])->whereNotNull('created_by')->get(),
+        ];
+
+        $selected_authorities = $requestFilter['authoritys'] ?? [];
+        foreach ($selected_authorities as $selected_authority) {
+            $exists = $other_nomenclatures['authoritys']->where('id', $selected_authority)->first();
+
+            if ($exists) {
+                $filter['authoritys']['options'][] = ['value' => $exists->id, 'name' => $exists->translation?->name];
+            }
+        }
+
+        $selected_act_of_creations = $requestFilter['actOfCreations'] ?? [];
+        foreach ($selected_act_of_creations as $selected_act_of_creation) {
+            $exists = $other_nomenclatures['actOfCreations']->where('id', $selected_act_of_creation)->first();
+
+            if ($exists) {
+                $filter['actOfCreations']['options'][] = ['value' => $exists->id, 'name' => $exists->translation?->name];
+            }
+        }
+
+        $selected_chairman_types = $requestFilter['chairmanTypes'] ?? [];
+        foreach ($selected_chairman_types as $selected_chairman_type)        {
+            $exists = $other_nomenclatures['chairmanTypes']->where('id', $selected_chairman_type)->first();
+
+            if ($exists) {
+                $filter['chairmanTypes']['options'][] = ['value' => $exists->id, 'name' => $exists->translation?->name];
+            }
+        }
+
         $closeSearchForm = true;
         if ($request->ajax()) {
             $closeSearchForm = false;
             return view('site.advisory-boards.list', compact('filter', 'sorter', 'items', 'rf', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
         }
         $this->setSeo(__('site.seo_title'), trans_choice('custom.advisory_boards', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.advisory_boards', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
-        return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm', 'customRequestParam'));
+        return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm', 'customRequestParam', 'other_nomenclatures'));
     }
 
     /**
@@ -822,7 +855,8 @@ class AdvisoryBoardController extends Controller
                 'default' => '',
                 'label' => __('custom.type_of_governing'),
                 'value' => request()->input('authoritys'),
-                'col' => 'col-md-6'
+                'col' => 'col-md-6',
+                'onchange' => ["showOtherValues('authoritys', this.value)"],
             ),
             'actOfCreations' => array(
                 'type' => 'select',
@@ -830,8 +864,9 @@ class AdvisoryBoardController extends Controller
                 'multiple' => true,
                 'default' => '',
                 'label' => __('validation.attributes.act_of_creation'),
-                'value' => $request->input('actOfCreation'),
-                'col' => 'col-md-6'
+                'value' => request()->input('actOfCreations'),
+                'col' => 'col-md-6',
+                'onchange' => ["showOtherValues('actOfCreations', this.value)"],
             ),
             'chairmanTypes' => array(
                 'type' => 'select',
@@ -839,8 +874,9 @@ class AdvisoryBoardController extends Controller
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.advisory_chairman_type', 1),
-                'value' => $request->input('chairmanTypes'),
-                'col' => 'col-md-6'
+                'value' => request()->input('chairmanTypes'),
+                'col' => 'col-md-6',
+                'onchange' => ["showOtherValues('chairmanTypes', this.value)"],
             ),
             'npo' => array(
                 'type' => 'select',

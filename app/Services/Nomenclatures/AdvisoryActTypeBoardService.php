@@ -18,7 +18,9 @@ class AdvisoryActTypeBoardService
             return $exists;
         }
 
-        $new = AdvisoryActType::create([]);
+        $new = AdvisoryActType::create([
+            'created_by' => auth()->id(),
+        ]);
 
         return $this->storeTranslateOrNew(AdvisoryActType::TRANSLATABLE_FIELDS, $new, ['name_bg' => $name_bg, 'name_en' => $name_en]);
     }

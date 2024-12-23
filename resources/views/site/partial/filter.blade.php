@@ -78,6 +78,7 @@
                                                                 class="form-select select2 @if(isset($field['class'])){{$field['class'] }}@endif @if(isset($field['skipCategoriesControl']) && $field['skipCategoriesControl']) skipCategoriesControl @endif"
                                                                 name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
                                                                 id="{{ $key }}"
+                                                                @if(isset($field['onchange']) && is_array($field['onchange'])) onchange="{!! implode(';', $field['onchange']) !!}" @endif
                                                                 @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
                                                                 {{-- select with groups--}}
                                                                 @if(isset($field['group']) && $field['group'])

@@ -18,7 +18,9 @@ class AdvisoryChairmanTypeBoardService
             return $exists;
         }
 
-        $new = AdvisoryChairmanType::create([]);
+        $new = AdvisoryChairmanType::create([
+            'created_by' => auth()->id(),
+        ]);
 
         return $this->storeTranslateOrNew(AdvisoryChairmanType::TRANSLATABLE_FIELDS, $new, ['name_bg' => $name_bg, 'name_en' => $name_en]);
     }

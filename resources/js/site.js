@@ -417,7 +417,6 @@ function ajaxList(domElement) {
                 HideLoadingSpinner();
             });
         } else {
-            console.log('ok');
             $($(this).data('container')).load(url, function (){
                 //ShowLoadingSpinner();
                 initInputs();
@@ -517,6 +516,49 @@ function changeFontSize(increase) {
     }
 }
 
+function createListGroupItem(content, id) {
+    const a = document.createElement('a');
+
+    a.href = '#';
+    a.classList.add('list-group-item', 'list-group-item-action');
+    a.textContent = content;
+    a.setAttribute('data-id', id);
+    a.onclick = () => a.classList.toggle('active'); // Pass content to the handler
+
+    return a;
+}
+
+function addOptionToSelect2(selectElementId, optionText, optionValue, is_selected = false) {
+    // Find the Select2 element
+    const selectElement = $(selectElementId);
+
+    // Create a new option
+    const newOption = new Option(optionText, optionValue, false, false);
+
+    // Check if the option should be selected
+    if (is_selected) {
+        newOption.selected = true;
+    }
+
+    // Append the new option to the Select2 element
+    selectElement.append(newOption).trigger('change');
+}
+
+function removeOptionFromSelect2(selectElementId, wordToRemove) {
+    // Find the Select2 element
+    const selectElement = $(selectElementId);
+
+    // Loop through options and remove those containing the specified word
+    selectElement.find('option').each(function () {
+        if ($(this).text().toLowerCase().includes(wordToRemove.toLowerCase())) {
+            $(this).remove(); // Remove the option
+        }
+    });
+
+    // Trigger change to update Select2
+    selectElement.trigger('change');
+}
+
 function setDomElFontSize(newSize, ignoreOriginalSize) {
     if (!ignoreOriginalSize || (newSize != 100)) {
         $("div, span, p, a, i, h1, h2, h3, h4, h5, button, input").css({
@@ -556,9 +598,7 @@ $(document).ready(function () {
     });
 
     $('li.visual-option').on('click', function (){
-        console.log($(this));
         if($(this).hasClass('vo-contrast') && !vo_ajax ) {
-            console.log('high contrast')
             $('body').toggleClass('high-contrast');
             vo_high_contrast = $('body').hasClass('high-contrast') ? 1 : 0;
             if( vo_high_contrast ) {
@@ -603,7 +643,6 @@ $(document).ready(function () {
 
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
     if (hash) {
-        console.log('#' + hash + '-tab');
         $('#' + hash + '-tab').trigger('click');
     }
 
@@ -906,8 +945,6 @@ $(document).ready(function () {
             } else{
                 $('#subscription_id').val($("#si").val());
                 $('#subscription_name').val($("#sn").val());
-                console.log($("#si").val(), $("#sn").val());
-                console.log($("#subscription_id").val(), $("#subscription_name").val());
                 $('#edit-subscription-name').submit();
             }
         });
