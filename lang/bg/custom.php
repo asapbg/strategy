@@ -406,6 +406,8 @@ return [
     'system_li' => 'Настройки - Законодателни инициативи',
     'system_strategy_doc' => 'Настройки - Стратегически документи',
     'system_advisory_boards' => 'Настройки - Консултативни съвети',
+    'settings.sync' => 'Синхронизация',
+    'settings.sections.sync' => 'Синхронизация',
     'settings.sections.advisory_board' => 'Консултативни съвети',
     'settings.advisory_board_new_decision_email_template' => 'Шаблон на електронно писмо за ново заседание',
     'settings.session_time_limit' => 'Потребителска сесия без активност (в минути)',
@@ -1394,5 +1396,10 @@ return [
     'increase_text'     => 'Увеличаване на текста',
     'decrease_text'     => 'Намаляване на текста',
     'upper_lower_case'  => 'Главни/малки букви',
-    'full_keyword'      => 'Цели ключови думи'
+    'full_keyword'      => 'Цели ключови думи',
+    'sync_all_institutions' => 'Синхронизирай всички институции',
+    'are_you_sure_sync_all' => 'Сигурни ли сте, че искате да синхронизирате всички институции?',
+    'start_syncing' => 'Започни синхронизация',
+    'sync_started' => 'Синхронизиране... Моля изчакайте!',
+    'are_you_sure_start' => 'Сигурни ли сте, че искате да стартирате',
 ];

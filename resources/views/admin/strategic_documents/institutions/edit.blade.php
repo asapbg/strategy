@@ -39,6 +39,12 @@
 
                 <div class="card-body">
                     <div class="tab-content" id="custom-tabsContent">
+                        @php
+                            $sync_title = __('custom.settings.sync') . ' ' . __('custom.of') . ' ' . $item->name;
+                            $sync_question = __('custom.are_you_sure_start') . ' ' . Str::lcfirst($sync_title) . '?';
+                        @endphp
+
+                        @includeIf('admin.settings.sync', ['title' => $sync_title, 'question' => $sync_question])
 
                         <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
                             @php($storeRoute = route($storeRouteName, ['item' => $item->id]))
@@ -121,10 +127,12 @@
 
                         <div class="tab-pane fade" id="ct-iisda-sync" role="tabpanel" aria-labelledby="ct-iisda-sync-tab">
                             <div class="col-md-6">
-                                <a href="javascript:;" class="btn btn-success" onclick="$(this).hide();$('#sync-started-text').show()">
+                                <a href="javascript:;" class="btn btn-success"
+                                   onclick="$('#sync-institutions-modal').modal('show')"
+                                >
                                     Стартирай синхронизация ad hoc
                                 </a>
-                                <p id="sync-started-text" style="display: none">Синхронизацията е стартирана</p>
+{{--                                <p id="sync-started-text" style="display: none">Синхронизацията е стартирана</p>--}}
                             </div>
                         </div>
 

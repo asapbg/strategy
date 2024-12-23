@@ -406,6 +406,8 @@ return [
     'system_li' => 'Settings - Legislative Initiatives',
     'system_strategy_doc' => 'Settings - Strategy docs',
     'system_advisory_boards' => 'Settings - Advisory Boards',
+    'settings.sync' => 'Synchronization',
+    'settings.sections.sync' => 'Synchronization',
     'settings.sections.advisory_board' => 'Advisory Boards',
     'settings.advisory_board_new_decision_email_template' => 'Email template for new advisory board meetings',
     'settings.session_time_limit' => 'User session with no activity (in minutes)',
@@ -1363,5 +1365,10 @@ return [
     'increase_text' => 'Increase text',
     'decrease_text' => 'Reduce text',
     'upper_lower_case'  => 'Upper/lower case',
-    'full_keyword'      => 'Full keyword'
+    'full_keyword'      => 'Full keyword',
+    'sync_all_institutions' => 'Sync all institutions',
+    'are_you_sure_sync_all' => 'Are you sure you want to sync all institutions?',
+    'start_syncing' => 'Start synchronization',
+    'sync_started' => 'Synchronizing... Please wait!',
+    'are_you_sure_start' => 'Are you sure you want to start',
 ];

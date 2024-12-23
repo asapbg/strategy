@@ -49,4 +49,5 @@
     'data_updated_successfully' => 'Data updated successfully',
     'success_delete_subscribe'         => 'You have successfully deleted your subscription',
     'success_edit_subscribe'         => 'You have successfully edited your subscription',
+    'sync_finished_successfully' => 'Successful synchronization',
 ];
