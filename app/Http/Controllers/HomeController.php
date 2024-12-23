@@ -110,6 +110,7 @@ class HomeController extends Controller
         $paginate = 4;
         $is_search = $request->has('search');
         $title = $request->offsetGet('pc_search_title');
+        $now = Carbon::now()->format('Y-m-d');
         $consultations = PublicConsultation::select('public_consultation.*')
             ->ActivePublic()
             ->where('public_consultation_translations.locale', app()->getLocale())
@@ -124,6 +125,9 @@ class HomeController extends Controller
             ->when($title, function ($query, $title) {
                 return $query->where('field_of_action_translations.name', 'ILIKE', "%$title%")
                     ->orWhere('public_consultation_translations.title', 'ILIKE', "%$title%");
+            })->where(function ($q) use($now){
+                $q->where('public_consultation.open_from', '<=', $now);
+                $q->where('public_consultation.open_to', '>=', $now);
             })
             ->orderBy('public_consultation.created_at', 'DESC')
             ->paginate($paginate);
@@ -177,6 +181,7 @@ class HomeController extends Controller
         $paginate = StrategicDocument::HOME_PAGINATE;
         $is_search = $request->has('search');
         $requestFilter = $request->offsetGet('keywords') ? ['text' => $request->offsetGet('keywords')] : [];
+        $requestFilter['status'] = 'active';
         $strategicDocuments = StrategicDocument::list($requestFilter, 'created_at', 'dsc', $paginate);
 
         if ($is_search) {
