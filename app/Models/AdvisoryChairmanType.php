@@ -57,6 +57,7 @@ class AdvisoryChairmanType extends ModelActivityExtend implements TranslatableCo
             ->join('advisory_chairman_type_translations', 'advisory_chairman_type_translations.advisory_chairman_type_id', '=', 'advisory_chairman_type.id')
             ->where('advisory_chairman_type_translations.locale', '=', app()->getLocale())
             ->whereNull('advisory_chairman_type.deleted_at')
+            ->whereNull('advisory_chairman_type.created_by')
             ->orderBy('advisory_chairman_type_translations.name', 'asc')
             ->get();
     }

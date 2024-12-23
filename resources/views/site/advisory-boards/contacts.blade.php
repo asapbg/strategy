@@ -21,12 +21,17 @@
                                 <p class="team-member-name fs-3 main-color mb-0">
                                     {{ $m->fullName() }}
                                 </p>
+
                                 <p class="team-position text-secondary mb-2 fw-600 text-uppercase">
                                     @foreach($m->roles as $r)
                                         @if(in_array($r->name, [\App\Models\CustomRole::MODERATOR_ADVISORY_BOARDS, \App\Models\CustomRole::MODERATOR_ADVISORY_BOARD]))
                                             {{ $r->display_name }}
                                         @endif
                                     @endforeach
+                                </p>
+
+                                <p>
+                                    {{ $m->advisoryBoardNames() }}
                                 </p>
 
                                 @if($m->job)

@@ -18,7 +18,9 @@ class AuthorityAdvisoryBoardService
             return $exists;
         }
 
-        $new = AuthorityAdvisoryBoard::create([]);
+        $new = AuthorityAdvisoryBoard::create([
+            'created_by' => auth()->id(),
+        ]);
 
         return $this->storeTranslateOrNew(AuthorityAdvisoryBoard::TRANSLATABLE_FIELDS, $new, ['name_bg' => $name_bg, 'name_en' => $name_en]);
     }

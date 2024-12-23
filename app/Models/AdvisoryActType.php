@@ -54,6 +54,7 @@ class AdvisoryActType extends ModelActivityExtend implements TranslatableContrac
             ->join('advisory_act_type_translations', 'advisory_act_type_translations.advisory_act_type_id', '=', 'advisory_act_type.id')
             ->where('advisory_act_type_translations.locale', '=', app()->getLocale())
             ->whereNull('advisory_act_type.deleted_at')
+            ->whereNull('advisory_act_type.created_by')
             ->orderBy('advisory_act_type_translations.name', 'asc')
             ->get();
     }
