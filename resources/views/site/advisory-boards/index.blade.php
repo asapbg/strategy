@@ -29,6 +29,13 @@
         const searchModal = $('#search-other-nomenclature-modal');
 
         function showOtherValues(nomenclature_key) {
+            const content = getSelectedOptionContent(nomenclature_key) ?? '';
+            const current_lang = @json(app()->getLocale());
+
+            if (!content.toLowerCase().includes(current_lang == 'bg' ? 'друг' : 'other')) {
+                return false;
+            }
+
             searchModal.find('input[name=select2_id]').val(nomenclature_key);
 
             const nomenclatures = other_nomenclatures[nomenclature_key];
@@ -44,6 +51,13 @@
                     list.append(item);
                 }
             }
+        }
+
+        function getSelectedOptionContent(select2_id) {
+            const selectElement = document.querySelector('#' + select2_id);
+            const selectedOptionContent = selectElement.options[selectElement.selectedIndex]?.textContent;
+
+            return selectedOptionContent;
         }
     </script>
 @endpush

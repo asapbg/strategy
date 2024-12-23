@@ -30,7 +30,6 @@
 
         function generateOptionsFromListGroup() {
             const select2_id = $('#search-other-nomenclature-modal input[name=select2_id]').val();
-            console.log(select2_id, $('#search-other-nomenclature-modal input[name=select2_id]'))
             const list = $('#search-other-nomenclature-modal').find('.list-group');
             const selected_items = [];
 
