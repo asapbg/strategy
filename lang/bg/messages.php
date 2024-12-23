@@ -49,4 +49,5 @@
     'data_updated_successfully'    => 'Данните са обновени успешно',
     'success_delete_subscribe'         => 'Успешно изтрихте абонамента',
     'success_edit_subscribe'         => 'Успешно редактирахте абонамента',
+    'sync_finished_successfully' => 'Успешна синхронизация',
 ];

@@ -38,6 +38,10 @@ class Setting extends ModelActivityExtend
     const FACEBOOK_PAGE_LONG_LIVE_TOKEN = 'page_access_token_long';
     const FACEBOOK_APP_ID = 'app_id';
 
+    /* TYPES */
+
+    const TYPE_SYNC = 'sync';
+
 
     //activity
     protected string $logName = "settings";

@@ -21,55 +21,67 @@
                         <form action="{{ route('admin.settings.store') }}" method="post">
                             @csrf
                             @method('PUT')
+
                             <input type="hidden" name="section" value="{{ $section }}">
+
                             @foreach($settings as $row)
-                                <div class="form-group">
-                                    <label class="control-label" for="active">{{ __('custom.settings.'.$row->name) }} @if($row->is_required) <span class="required">*</span> @endif</label>
-                                    <div>
-                                        @if($row->name == \App\Models\Setting::OGP_ADV_BOARD_FORUM)
-                                            <select name="{{ $row->name }}" class="form-control form-control-sm select2 @error($row->name){{ 'is-invalid' }}@enderror">
-                                                <option value="0" @if((int)$row->value == 0) selected @endif>---</option>
-                                                @php($advBoards = \App\Models\AdvisoryBoard::with(['translations'])->orderByTranslation('name')->get())
-                                                @if($advBoards->count())
-                                                    @foreach($advBoards as $adv)
-                                                        <option value="{{ $adv->id }}" @if((int)$row->value == $adv->id) selected @endif>{{ $adv->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                        @elseif($row->name == \App\Models\Setting::FACEBOOK_IS_ACTIVE)
-                                            <div class="form-check">
-                                                <input type="radio" id="{{ $row->name.'1' }}" name="{{ $row->name }}" class="form-check-input" value="1" @if(old($row->name, ($row->value ?? 0)) == 1) checked @endif>
-                                                <label class="form-check-label" for="{{ $row->name.'1' }}">
-                                                    Активна
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" id="{{ $row->name.'0' }}" name="{{ $row->name }}" class="form-check-input" value="0" @if(old($row->name, ($row->value ?? 0)) == 0) checked @endif>
-                                                <label class="form-check-label" for="{{ $row->name.'0' }}">
-                                                    Неактивна
-                                                </label>
-                                            </div>
-                                        @else
-                                            @switch($row->type)
-                                                @case('summernote')
-                                                    <textarea name="{{ $row->name }}" class="form-control form-control-sm summernote @error($row->name){{ 'is-invalid' }}@enderror">{{ old($row->name, ($row->value)) }}</textarea>
-                                                @break
-                                                @default
-                                                    <input name="{{ $row->name }}" value="{{ old($row->name, ($row->value)) }}" class="form-control form-control-sm @error($row->name){{ 'is-invalid' }}@enderror" type="{{ $row->type }}">
-                                            @endswitch
-                                        @endif
-                                        @error($row->name)
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                        @enderror
+                                @if($row->type == \App\Models\Setting::TYPE_SYNC)
+                                    @includeIf('admin.settings.sync', ['show_button' => true])
+                                @else
+                                    <div class="form-group">
+                                        <label class="control-label" for="active">{{ __('custom.settings.'.$row->name) }} @if($row->is_required) <span class="required">*</span> @endif</label>
+                                        <div>
+                                            @if($row->name == \App\Models\Setting::OGP_ADV_BOARD_FORUM)
+                                                <select name="{{ $row->name }}" class="form-control form-control-sm select2 @error($row->name){{ 'is-invalid' }}@enderror">
+                                                    <option value="0" @if((int)$row->value == 0) selected @endif>---</option>
+                                                    @php($advBoards = \App\Models\AdvisoryBoard::with(['translations'])->orderByTranslation('name')->get())
+                                                    @if($advBoards->count())
+                                                        @foreach($advBoards as $adv)
+                                                            <option value="{{ $adv->id }}" @if((int)$row->value == $adv->id) selected @endif>{{ $adv->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            @elseif($row->name == \App\Models\Setting::FACEBOOK_IS_ACTIVE)
+                                                <div class="form-check">
+                                                    <input type="radio" id="{{ $row->name.'1' }}" name="{{ $row->name }}" class="form-check-input" value="1" @if(old($row->name, ($row->value ?? 0)) == 1) checked @endif>
+                                                    <label class="form-check-label" for="{{ $row->name.'1' }}">
+                                                        Активна
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="{{ $row->name.'0' }}" name="{{ $row->name }}" class="form-check-input" value="0" @if(old($row->name, ($row->value ?? 0)) == 0) checked @endif>
+                                                    <label class="form-check-label" for="{{ $row->name.'0' }}">
+                                                        Неактивна
+                                                    </label>
+                                                </div>
+                                            @else
+                                                @switch($row->type)
+                                                    @case('summernote')
+                                                        <textarea name="{{ $row->name }}" class="form-control form-control-sm summernote @error($row->name){{ 'is-invalid' }}@enderror">{{ old($row->name, ($row->value)) }}</textarea>
+                                                        @break
+                                                    @default
+                                                        <input name="{{ $row->name }}" value="{{ old($row->name, ($row->value)) }}" class="form-control form-control-sm @error($row->name){{ 'is-invalid' }}@enderror" type="{{ $row->type }}">
+                                                @endswitch
+                                            @endif
+                                            @error($row->name)
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             @endforeach
 
-                            <div class="form-group row">
-                                <div class="col-md-6 col-md-offset-3">
-                                    <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-                                </div>
-                            </div>
+                            @switch($row->type)
+                                @case(\App\Models\Setting::TYPE_SYNC)
+                                    @break
+
+                                @default
+                                    <div class="form-group row">
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                                        </div>
+                                    </div>
+                            @endswitch
                         </form>
                         @if(isset($disabledSettings) && $disabledSettings->count())
                             @foreach($disabledSettings as $ds)
