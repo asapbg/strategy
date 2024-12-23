@@ -88,6 +88,7 @@ return [
     'calc.criteria' => 'Критерий',
     'home_page' => 'Начална страница',
     'advisory_boards.contacts.title' => 'Контакти на служители от дирекция „Координация на политики и концесии"',
+    'admin.advisory_boards.contacts.title' => 'Контакти на служители от дирекция "Консултативни съвети"',
     'advisory_boards.moderators_contacts.title' => 'Контакти на модератори към консултативния съвет',
     'advisory_boards.moderators' => 'Модератори',
     'advisory_boards.moderators_information' => 'Информация за модератора „Консултативен съвет“',

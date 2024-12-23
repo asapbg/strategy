@@ -88,6 +88,7 @@ return [
     'calc.criteria' => 'Criteria',
     'home_page' => 'Home Page',
     'advisory_boards.contacts.title' => 'Policy and Concessions Coordination Staff Contacts',
+    'admin.advisory_boards.contacts.title' => 'Advisory boards contacts list',
     'advisory_boards.moderators_contacts.title' => 'Advisory Board Moderator Contacts',
     'advisory_boards.moderators' => 'Moderators',
     'advisory_boards.moderators_information' => 'Advisory Board Moderator Information',
