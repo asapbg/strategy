@@ -26,6 +26,7 @@ class seedOldLastPris extends Command
     /**
      * The console command description.
      *
+     *
      * @var string
      */
     protected $description = 'Migrate last PRIS data to application';
@@ -39,7 +40,7 @@ class seedOldLastPris extends Command
     {
         activity()->disableLogging();
 
-        $this->info('Start at '.date('Y-m-d H:i:s'));
+        $this->info('Start at ' . date('Y-m-d H:i:s'));
         file_put_contents('institutions_for_mapping_last_pris.txt', '');
 
         //Check how many are old pris
@@ -51,14 +52,14 @@ class seedOldLastPris extends Command
         //Create default institution
         $diEmail = 'magdalena.mitkova+egov@asap.bg';
         $dInstitution = Institution::where('email', '=', $diEmail)->withTrashed()->first();
-        if(!$dInstitution) {
+        if (!$dInstitution) {
             $insLevel = InstitutionLevel::create([
                 'system_name' => 'default'
             ]);
-            if(!$insLevel) {
+            if (!$insLevel) {
                 $this->error('Cant create default institution');
             }
-            if($insLevel) {
+            if ($insLevel) {
                 foreach ($locales as $locale) {
                     $insLevel->translateOrNew($locale['code'])->name = 'Default Level';
                 }
@@ -70,7 +71,7 @@ class seedOldLastPris extends Command
                 'institution_level_id' => $insLevel->id
             ]);
 
-            if(!$dInstitution) {
+            if (!$dInstitution) {
                 $this->error('Cant create default institution');
             }
             foreach ($locales as $locale) {
@@ -138,9 +139,17 @@ class seedOldLastPris extends Command
                 'importer' => 'Министерство на регионалното развитие, Министерство на отбраната',
                 'institution_id' => [0, 140]
             ],
+            'МРР' => [
+                'importer' => 'Министерство на регионалното развитие',
+                'institution_id' => null
+            ],
             'ЗМПИР, МТСП' => [
                 'importer' => 'Заместник министър-председател по икономическото развитие, Министерство на труда и социалната политика',
                 'institution_id' => [127, 144]
+            ],
+            'ЗМПИР' => [
+                'importer' => 'Заместник министър-председател по икономическото развитие',
+                'institution_id' => 127
             ],
             'МРР, МК' => [
                 'importer' => 'Министерство на регионалното развитие, Министерство на културата',
@@ -153,6 +162,18 @@ class seedOldLastPris extends Command
             'МО, МРР' => [
                 'importer' => 'Министерство на отбраната, Министерство на регионалното развитие',
                 'institution_id' => [140, 0]
+            ],
+            'МО, МЕУ' => [
+                'importer' => 'МО, МЕУ',
+                'institution_id' => [146, 130]
+            ],
+            'МЗ, МЕУ' => [
+                'importer' => 'МЗ, МЕУ',
+                'institution_id' => [132, 130]
+            ],
+            'министър-председателят, МРР' => [
+                'importer' => 'министър-председателят, МРР',
+                'institution_id' => [127, 0]
             ],
             'ЗМП, МП' => [
                 'importer' => 'Заместник министър-председател, Министерство на правосъдието',
@@ -177,6 +198,22 @@ class seedOldLastPris extends Command
             'МЗХ, МРР' => [
                 'importer' => 'Министерство на земеделието и храните, Министерство на регионалното развитие',
                 'institution_id' => [133, 0]
+            ],
+            'МЗм' => [
+                'importer' => 'МЗм',
+                'institution_id' => 133
+            ],
+            'МИИ, МЗм' => [
+                'importer' => 'МИИ, МЗм',
+                'institution_id' => [134, 133]
+            ],
+            'МЗм, МЕ' => [
+                'importer' => 'МЗм, МЕ',
+                'institution_id' => [133, 131]
+            ],
+            'МЕ, ММС' => [
+                'importer' => 'МЕ, ММС',
+                'institution_id' => [131, 137]
             ],
             'МК, МРР' => [
                 'importer' => 'Министерство на културата, Министерство на регионалното развитие',
@@ -204,7 +241,7 @@ class seedOldLastPris extends Command
             ],
             'МУСЕС, МТИТС' => [
                 'importer' => 'Министър по управление на средставата от Европейския съюз, Министерство на транспорта, информационните технологии и съобщенията',
-                'institution_id' => [0, 0]
+                'institution_id' => [0, 143]
             ],
             'МИЕТ, МУСЕС' => [
                 'importer' => 'Министерство на икономиката, енергетиката и туризма, Министър по управление на средставата от Европейския съюз',
@@ -212,7 +249,11 @@ class seedOldLastPris extends Command
             ],
             'МТИТС, МУСЕС' => [
                 'importer' => 'Министерство на транспорта, информационните технологии и съобщенията, Министър по управление на средставата от Европейския съюз',
-                'institution_id' => [0, 0]
+                'institution_id' => [143, 0]
+            ],
+            'МТИТС, МЕ' => [
+                'importer' => 'МТИТС, МЕ',
+                'institution_id' => [143, 0]
             ],
             'ВОМН, МРРБ' => [
                 'importer' => 'Министерство на образованието, младежта и науката, Министерство на регионалното развитие и благоустройството',
@@ -229,6 +270,14 @@ class seedOldLastPris extends Command
             'МИС МФ' => [
                 'importer' => 'Министерство на извънредните ситуации, Министерство на финансите',
                 'institution_id' => [0, 146]
+            ],
+            'МЕУ' => [
+                'importer' => 'МЕУ',
+                'institution_id' => 130
+            ],
+            'МЕУ, МВР' => [
+                'importer' => 'МЕУ, МВР',
+                'institution_id' => [130, 129]
             ],
             'МФ МРРБ МТ' => [
                 'importer' => 'Министерство на финансите, Министерство на регионалното развитие и благоустройството, Министерство на туризма',
@@ -546,6 +595,50 @@ class seedOldLastPris extends Command
                 'importer' => 'Министерство на околната среда и водите',
                 'institution_id' => 139,
             ],
+            'МОСВ, МЕ, МФ' => [
+                'importer' => 'МОСВ, МЕ, МФ',
+                'institution_id' => [139, 131, 146],
+            ],
+            'МОСВ, МЕ' => [
+                'importer' => 'МОСВ, МЕ',
+                'institution_id' => [139, 131],
+            ],
+            'МЕ, МИИ, МФ' => [
+                'importer' => 'МЕ, МИИ, МФ',
+                'institution_id' => [131, 134, 146],
+            ],
+            'МОСВ, МРРБ, МЕ, МЗХ, МВР' => [
+                'importer' => 'МОСВ, МРРБ, МЕ, МЗХ, МВР',
+                'institution_id' => [139, 142, 131, 133, 129],
+            ],
+            'МОСВ, МИ, МЕ, МРРБ, МЗХ, МЗ' => [
+                'importer' => 'МОСВ, МИ, МЕ, МРРБ, МЗХ, МЗ',
+                'institution_id' => [139, 0, 131, 142, 133, 129, 132],
+            ],
+            'МРРБ, МЕ' => [
+                'importer' => 'МРРБ, МЕ',
+                'institution_id' => [142, 131],
+            ],
+            'МЕ' => [
+                'importer' => 'МЕ',
+                'institution_id' => 131,
+            ],
+            'МИ, МЕ' => [
+                'importer' => 'МИ, МЕ',
+                'institution_id' => [0, 131],
+            ],
+            'МЕ, МИ' => [
+                'importer' => 'МЕ, МИ',
+                'institution_id' => [131, 0],
+            ],
+            'МЕ, МФ' => [
+                'importer' => 'МЕ, МФ',
+                'institution_id' => [131, 146],
+            ],
+            'МФ, МЕ' => [
+                'importer' => 'МФ, МЕ',
+                'institution_id' => [146, 131],
+            ],
             'МП' => [
                 'importer' => 'Министерство на правосъдието',
                 'institution_id' => 141,
@@ -586,17 +679,69 @@ class seedOldLastPris extends Command
                 'importer' => 'Министерски съвет и неговата администрация',
                 'institution_id' => 127,
             ],
+            'Вицепремиер Пл.Панайотов, МВнР' => [
+                'importer' => 'Заместник министър-председател, Министерство на външните работи',
+                'institution_id' => [127, 128],
+            ],
+            'Вицепремиер Пл. Панайотов,МВнР' => [
+                'importer' => 'Заместник министър-председател, Министерство на външните работи',
+                'institution_id' => [127, 128],
+            ],
+            'Пл. Панайотов, МВнР, МЕВ, МФ' => [
+                'importer' => 'Заместник министър-председател, МВнР, МЕВ, МФ',
+                'institution_id' => [127, 128, 146],
+            ],
+            'Пламен Панайотов, МИ, МО, МФ' => [
+                'importer' => 'Заместник министър-председател, МИ, МО, МФ',
+                'institution_id' => 127,
+            ],
+            'Вицепремиер Пл. Панайотов' => [
+                'importer' => 'Заместник министър-председател',
+                'institution_id' => 127,
+            ],
+            'Вицепремиерът Пламен Панайотов' => [
+                'importer' => 'Заместник министър-председател',
+                'institution_id' => 127,
+            ],
+            'Вицепремиер Пл. Панайотов, МП' => [
+                'importer' => 'Заместник министър-председател, МП',
+                'institution_id' => [127, 141],
+            ],
+            'Вицепремиер Пл. Панайотов, МВР' => [
+                'importer' => 'Заместник министър-председател, МВР',
+                'institution_id' => [127, 129],
+            ],
+            'МВР, Вицепремиер Пл. Панайотов' => [
+                'importer' => 'МВР, Заместник министър-председател',
+                'institution_id' => [129, 127],
+            ],
+            'МДДАР' => [
+                'importer' => 'МДААР',
+                'institution_id' => null,
+            ],
+            'МУСЕС' => [
+                'importer' => 'МУСЕС',
+                'institution_id' => 127,
+            ],
             'МТ' => [
                 'importer' => 'Министерство на туризма',
                 'institution_id' => 145,
             ],
             'МТИТС' => [
                 'importer' => 'Министерство на транспорта, информационните технологии и съобщенията',
-                'institution_id' => null,
+                'institution_id' => 143,
             ],
             'МТС' => [
                 'importer' => 'Министерство на транспорта и съобщенията',
                 'institution_id' => 143,
+            ],
+            'МТС, МЕУ' => [
+                'importer' => 'МТС, МЕУ',
+                'institution_id' => [143, 130],
+            ],
+            'МTC, м-р без портфейл' => [
+                'importer' => 'МТС, министър без портфейл',
+                'institution_id' => [143, 127],
             ],
             'МТС_' => [
                 'importer' => 'Министерство на транспорта и съобщенията',
@@ -608,6 +753,10 @@ class seedOldLastPris extends Command
             ],
             'МТСП' => [
                 'importer' => 'Министерство на труда и социалната политика',
+                'institution_id' => 144,
+            ],
+            'м-рът на труда и соц.политика' => [
+                'importer' => 'МТСП',
                 'institution_id' => 144,
             ],
             'МТТ' => [
@@ -898,6 +1047,18 @@ class seedOldLastPris extends Command
                 'importer' => 'Заместник министър-председателят',
                 'institution_id' => 127,
             ],
+            'ЗАМ МИНИСТЪР-ПРЕДСЕДАТЕЛЯ МЕВ' => [
+                'importer' => 'Заместник министър-председател, МЕВ',
+                'institution_id' => [127, 128],
+            ],
+            'зам.мин.-предс. МВнР, МЕВ' => [
+                'importer' => 'Заместник министър-председател, МВнР, МЕВ',
+                'institution_id' => [127, 0, 128],
+            ],
+            'МВнР, МЕВ, вицепремиер' => [
+                'importer' => 'МВнР, МЕВ, заместник министър-председател,',
+                'institution_id' => [128, 0, 127],
+            ],
             'м-р Ф. Хюсменова' => [
                 'importer' => 'М-р Ф. Хюсменова',
                 'institution_id' => 127,
@@ -1110,6 +1271,10 @@ class seedOldLastPris extends Command
                 'importer' => 'Заместник министър-председателят и министър на външните работи',
                 'institution_id' => 127,
             ],
+            'министър-председател и министър на външните работи' => [
+                'importer' => 'Министър-председател и министър на външните работи',
+                'institution_id' => 127,
+            ],
             'заместник-министърът и министър на вътрешните работи' => [
                 'importer' => 'Заместник министър-председателят и министър на вътрешните работи',
                 'institution_id' => 127,
@@ -1128,6 +1293,22 @@ class seedOldLastPris extends Command
             ],
             'заместник министър-председател по европейските фондове' => [
                 'importer' => 'Заместник министър-председател по европейските фондове',
+                'institution_id' => 127,
+            ],
+            'заместник министър-председател по ефективно управление' => [
+                'importer' => 'Заместник министър-председател по ефективно управление',
+                'institution_id' => 127,
+            ],
+            'заместнек министър-председател по ефективно управление' => [
+                'importer' => 'Заместник министър-председател по ефективно управление',
+                'institution_id' => 127,
+            ],
+            'замeстник министър-председател по ефективно управление' => [
+                'importer' => 'Заместник министър-председател по ефективно управление',
+                'institution_id' => 127,
+            ],
+            'заместник министър-председател по ефективно управление, заместник министър-председател по еврофондовете и министър на финансите' => [
+                'importer' => 'Заместник министър-председател по ефективно управление',
                 'institution_id' => 127,
             ],
             'заместник министър-председател по европейските фондове и икономическа политика' => [
@@ -1162,6 +1343,10 @@ class seedOldLastPris extends Command
                 'importer' => 'Заместник министър-председател по обществения ред и сигурност и министър на отбраната',
                 'institution_id' => 127,
             ],
+            'земестник министър-председател по обществения ред и сигурността и министър на отбраната' => [
+                'importer' => 'Заместник министър-председател по обществения ред и сигурност и министър на отбраната',
+                'institution_id' => 127,
+            ],
             'заместник министър-председател по обществен ред и сигурност и министър на отбраната' => [
                 'importer' => 'Заместник министър-председател по обществения ред и сигурност и министър на отбраната',
                 'institution_id' => 127,
@@ -1185,6 +1370,10 @@ class seedOldLastPris extends Command
             'замстник министър-председател по обществения ред и сигурността и министър на отбраната' => [
                 'importer' => 'Заместник министър-председател по обществения ред и сигурност и министър на отбраната',
                 'institution_id' => 127,
+            ],
+            'заместник министър-председател по обществения ред и сигурността и министър на отбраната, министър на финансите' => [
+                'importer' => 'заместник министър-председател по обществения ред и сигурността и министър на отбраната, МФ',
+                'institution_id' => [127, 146],
             ],
             'заместник министър председател по правосъдната реформа и министър на външните работи' => [
                 'importer' => 'Заместник министър-председател по правосъдната реформа и сигурност и министър на външните работи',
@@ -1266,6 +1455,10 @@ class seedOldLastPris extends Command
                 'importer' => 'Заместник министър-председател по управление на европейските средства',
                 'institution_id' => 127,
             ],
+            'заместник министър-председател и министър на финансите' => [
+                'importer' => 'Заместник министър-председател и министър на финансите',
+                'institution_id' => null,
+            ],
             'заместник министър-председател по еврофондовете министър на финансите' => [
                 'importer' => 'Заместник министър-председател по еврофондовете министър на финансите',
                 'institution_id' => 127,
@@ -1278,7 +1471,15 @@ class seedOldLastPris extends Command
                 'importer' => 'Заместник министър-председател по еврофондовете министър на финансите',
                 'institution_id' => 127,
             ],
+            'заместник министър-председател по еврофондовете и министър на финансите, МЕУ' => [
+                'importer' => 'Заместник министър-председател по еврофондовете министър на финансите, МЕУ',
+                'institution_id' => [127, 130],
+            ],
             'заместнек министър-председател по еврофондовете и министър на финансите' => [
+                'importer' => 'Заместник министър-председател по еврофондовете министър на финансите',
+                'institution_id' => 127,
+            ],
+            'заместник министър-председател по еврофодновете и министър на финансите' => [
                 'importer' => 'Заместник министър-председател по еврофондовете министър на финансите',
                 'institution_id' => 127,
             ],
@@ -1466,12 +1667,12 @@ class seedOldLastPris extends Command
         //$currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
         $currentStep = 0;
 
-        if( (int)$maxOldId[0]->max ) {
+        if ((int)$maxOldId[0]->max) {
             $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
             try {
                 while ($currentStep <= $maxOldId && !$stop) {
-                    echo "FromId: ".$currentStep.PHP_EOL;
+                    echo "FromId: " . $currentStep . PHP_EOL;
                     $oldDbResult = DB::connection('pris')->select('select
                                 pris.id as old_id,
                                 pris."number" as doc_num,
@@ -1511,27 +1712,27 @@ class seedOldLastPris extends Command
                             $data = json_decode($json, true);
 
                             //Update existing
-                            if(isset($ourPris) && sizeof($ourPris) && isset($ourPris[(int)$item->old_id])){
-                                $this->comment('Pris with old id '.$item->old_id.' already exist');
+                            if (isset($ourPris) && sizeof($ourPris) && isset($ourPris[(int)$item->old_id])) {
+                                $this->comment('Pris with old id ' . $item->old_id . ' already exist');
                                 $existPris = Pris::find($ourPris[(int)$item->old_id]);
 
-                                if($existPris){
+                                if ($existPris) {
                                     $about = null;
                                     $legal_reason = null;
                                     $oldImporters = null;
                                     $importer = null;
                                     //Update version
-                                    if($existPris->last_version != $item->last_version){
+                                    if ($existPris->last_version != $item->last_version) {
                                         $existPris->last_version = $item->last_version;
                                         $existPris->save();
                                     }
 
-                                    if(isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
+                                    if (isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
                                         $attributes = $data['DocumentContent']['Attribute'];
                                         foreach ($attributes as $att) {
                                             //get about
-                                            if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Относно') {
-                                                if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                            if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Относно') {
+                                                if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                                     $about = $att['Value']['Value'];
                                                 } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
                                                     $about = $att['Value'];
@@ -1539,8 +1740,8 @@ class seedOldLastPris extends Command
                                             }
 
                                             //get about
-                                            if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Правно основание') {
-                                                if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                            if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Правно основание') {
+                                                if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                                     $legal_reason = $att['Value']['Value'];
                                                 } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
                                                     $legal_reason = $att['Value'];
@@ -1548,8 +1749,8 @@ class seedOldLastPris extends Command
                                             }
 
                                             //get tags
-                                            if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Термини') {
-                                                if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                            if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Термини') {
+                                                if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                                     //echo "Tags: ".$att['Value']['Value'].PHP_EOL;
                                                     $tags = preg_split('/\r\n|\r|\n/', $att['Value']['Value']);
                                                 } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
@@ -1560,9 +1761,9 @@ class seedOldLastPris extends Command
 
                                             //importer
                                             //institution_id
-                                            if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
+                                            if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
                                                 $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
-                                                if($val) {
+                                                if ($val) {
                                                     $oldImporters = $val;
                                                     //echo "Importer: ".$att['Value']['Value'].PHP_EOL;
                                                     $importerStr = [];
@@ -1570,69 +1771,69 @@ class seedOldLastPris extends Command
 
                                                     $explode = explode(',', $val);
                                                     foreach ($explode as $e) {
-                                                        if(isset($importers[trim($e)])) {
-                                                            if(
+                                                        if (isset($importers[trim($e)])) {
+                                                            if (
                                                                 (!is_array($importers[trim($e)]['institution_id']) && !is_null($importers[trim($e)]['institution_id']))
                                                                 || (is_array($importers[trim($e)]['institution_id']) && sizeof($importers[trim($e)]['institution_id']) && array_sum($importers[trim($e)]['institution_id']) > 0)
                                                             ) {
-                                                                if(is_array($importers[trim($e)]['institution_id'])){
-                                                                    foreach ($importers[trim($e)]['institution_id'] as $i){
-                                                                        if($i > 0){
+                                                                if (is_array($importers[trim($e)]['institution_id'])) {
+                                                                    foreach ($importers[trim($e)]['institution_id'] as $i) {
+                                                                        if ($i > 0) {
                                                                             $importerInstitutions[] = $i;
                                                                         }
                                                                     }
-                                                                } else{
+                                                                } else {
                                                                     $importerInstitutions[] = $importers[trim($e)]['institution_id'];
                                                                 }
                                                                 $importerStr[] = $importers[trim($e)]['importer'];
-                                                            } else{
+                                                            } else {
                                                                 $importerStr[] = $importers[trim($e)]['importer'];
-                                                                if(!isset($institutionForMapping[trim($e)])) {
+                                                                if (!isset($institutionForMapping[trim($e)])) {
                                                                     //TODO for mapping
                                                                     file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $e . PHP_EOL, FILE_APPEND);
                                                                     $institutionForMapping[trim($e)] = trim($e);
                                                                 }
                                                             }
-                                                        } else{
+                                                        } else {
 //                                                    $valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
                                                             $valNoNeLine = preg_replace("/[\r\n]+/", ";", $val);
                                                             $explodeByRow = explode(';', $valNoNeLine);
-                                                            if(sizeof($explodeByRow)){
-                                                                foreach ($explodeByRow as $eByRow){
+                                                            if (sizeof($explodeByRow)) {
+                                                                foreach ($explodeByRow as $eByRow) {
                                                                     if (isset($importers[trim($eByRow)])) {
                                                                         $importerStr[] = $importers[trim($eByRow)]['importer'];
                                                                         if (
                                                                             (!is_array($importers[trim($eByRow)]['institution_id']) && !is_null($importers[trim($eByRow)]['institution_id']))
                                                                             || (is_array($importers[trim($eByRow)]['institution_id']) && sizeof($importers[trim($eByRow)]['institution_id']) && array_sum($importers[trim($eByRow)]['institution_id']) > 0)
                                                                         ) {
-                                                                            if(is_array($importers[trim($eByRow)]['institution_id'])){
-                                                                                foreach ($importers[trim($eByRow)]['institution_id'] as $i){
-                                                                                    if($i > 0){
+                                                                            if (is_array($importers[trim($eByRow)]['institution_id'])) {
+                                                                                foreach ($importers[trim($eByRow)]['institution_id'] as $i) {
+                                                                                    if ($i > 0) {
                                                                                         $importerInstitutions[] = $i;
                                                                                     }
                                                                                 }
-                                                                            } else{
+                                                                            } else {
                                                                                 $importerInstitutions[] = $importers[trim($eByRow)]['institution_id'];
                                                                             }
-                                                                        } else{
-                                                                            if(!isset($institutionForMapping[trim($eByRow)])) {
+                                                                        } else {
+                                                                            if (!isset($institutionForMapping[trim($eByRow)])) {
                                                                                 //TODO for mapping
                                                                                 file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $eByRow . PHP_EOL, FILE_APPEND);
                                                                                 $institutionForMapping[trim($eByRow)] = trim($eByRow);
                                                                             }
                                                                         }
-                                                                    } else{
+                                                                    } else {
                                                                         //TODO for mapping
-                                                                        if(!isset($institutionForMapping[trim($eByRow)])){
-                                                                            file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: '.$eByRow.PHP_EOL, FILE_APPEND);
+                                                                        if (!isset($institutionForMapping[trim($eByRow)])) {
+                                                                            file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: ' . $eByRow . PHP_EOL, FILE_APPEND);
                                                                             $institutionForMapping[trim($eByRow)] = trim($eByRow);
                                                                         }
                                                                     }
                                                                 }
-                                                            } else{
+                                                            } else {
                                                                 //TODO for mapping
-                                                                if(!isset($institutionForMapping[trim($e)])){
-                                                                    file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: '.$e.PHP_EOL, FILE_APPEND);
+                                                                if (!isset($institutionForMapping[trim($e)])) {
+                                                                    file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: ' . $e . PHP_EOL, FILE_APPEND);
                                                                     $institutionForMapping[trim($e)] = trim($e);
                                                                 }
                                                             }
@@ -1653,7 +1854,7 @@ class seedOldLastPris extends Command
 
                                         $existPris->save();
 
-                                        if(isset($importerInstitutions) && sizeof($importerInstitutions)) {
+                                        if (isset($importerInstitutions) && sizeof($importerInstitutions)) {
                                             $existPris->institutions()->sync($importerInstitutions);
                                         }
 
@@ -1690,7 +1891,7 @@ class seedOldLastPris extends Command
                             //Create model
                             $fileForExeption = null;
 
-                            if(isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
+                            if (isset($data['DocumentContent']) && isset($data['DocumentContent']['Attribute']) && sizeof($data['DocumentContent']['Attribute'])) {
                                 $attributes = $data['DocumentContent']['Attribute'];
                                 //main record
                                 $prepareNewPris = [
@@ -1723,8 +1924,8 @@ class seedOldLastPris extends Command
                                 //1. Parse tags and insert if need to
                                 foreach ($attributes as $att) {
                                     //get tags
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Термини') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Термини') {
+                                        if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             //echo "Tags: ".$att['Value']['Value'].PHP_EOL;
                                             $tags = preg_split('/\r\n|\r|\n/', $att['Value']['Value']);
                                         } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
@@ -1733,15 +1934,15 @@ class seedOldLastPris extends Command
                                         }
                                     }
                                     //get date
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Дата') {
-                                        if(isset($att['Value']) && isset($att['Value']['Date']) && !empty($att['Value']['Date'])) {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Дата') {
+                                        if (isset($att['Value']) && isset($att['Value']['Date']) && !empty($att['Value']['Date'])) {
                                             $prepareNewPris['doc_date'] = Carbon::parse($att['Value']['Date'])->format($formatDate);
                                         }
                                     }
                                     //get number
-                                    if(empty($prepareNewPris['doc_num']) && isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Номер') {
+                                    if (empty($prepareNewPris['doc_num']) && isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Номер') {
                                         $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
-                                        if($val) {
+                                        if ($val) {
                                             //echo "Doc Num: ".$att['Value']['Value'].PHP_EOL;
                                             $prepareNewPris['old_doc_num'] = $val;
                                             $docNum = explode('-', $val);
@@ -1749,32 +1950,32 @@ class seedOldLastPris extends Command
                                         }
                                     }
                                     //get protocol
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Протокол') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Протокол') {
+                                        if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['protocol'] = is_array($att['Value']['Value']) ? (!empty($att['Value']['Value']) ? implode(';', $att['Value']['Value']) : null) : $att['Value']['Value'];
                                         } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) && !isset($att['Value']['Value'])) {
                                             $prepareNewPris['protocol'] = is_array($att['Value']) ? (!empty($att['Value']) ? implode(';', $att['Value']) : null) : $att['Value'];
                                         }
                                     }
                                     //newspaper num
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'ДВ брой') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'ДВ брой') {
+                                        if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['newspaper_number'] = (int)$att['Value']['Value'];
                                         } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
                                             $prepareNewPris['newspaper_number'] = (int)$att['Value'];
                                         }
                                     }
                                     //newspaper year
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'ДВ година') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'ДВ година') {
+                                        if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['newspaper_year'] = (int)$att['Value']['Value'];
                                         } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
                                             $prepareNewPris['newspaper_year'] = (int)$att['Value'];
                                         }
                                     }
                                     //newspaper full
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Обнародвано в ДВ') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Обнародвано в ДВ') {
+                                        if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['old_newspaper_full'] = $att['Value']['Value'];
                                         } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
                                             $prepareNewPris['old_newspaper_full'] = $att['Value'];
@@ -1782,9 +1983,9 @@ class seedOldLastPris extends Command
                                     }
                                     //importer
                                     //institution_id
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Вносител') {
                                         $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
-                                        if($val) {
+                                        if ($val) {
                                             $prepareNewPris['old_importers'] = $val;
                                             //echo "Importer: ".$att['Value']['Value'].PHP_EOL;
                                             $importerStr = [];
@@ -1792,69 +1993,69 @@ class seedOldLastPris extends Command
 
                                             $explode = explode(',', $val);
                                             foreach ($explode as $e) {
-                                                if(isset($importers[trim($e)])) {
-                                                    if(
+                                                if (isset($importers[trim($e)])) {
+                                                    if (
                                                         (!is_array($importers[trim($e)]['institution_id']) && !is_null($importers[trim($e)]['institution_id']))
                                                         || (is_array($importers[trim($e)]['institution_id']) && sizeof($importers[trim($e)]['institution_id']) && array_sum($importers[trim($e)]['institution_id']) > 0)
                                                     ) {
-                                                        if(is_array($importers[trim($e)]['institution_id'])){
-                                                            foreach ($importers[trim($e)]['institution_id'] as $i){
-                                                                if($i > 0){
+                                                        if (is_array($importers[trim($e)]['institution_id'])) {
+                                                            foreach ($importers[trim($e)]['institution_id'] as $i) {
+                                                                if ($i > 0) {
                                                                     $importerInstitutions[] = $i;
                                                                 }
                                                             }
-                                                        } else{
+                                                        } else {
                                                             $importerInstitutions[] = $importers[trim($e)]['institution_id'];
                                                         }
                                                         $importerStr[] = $importers[trim($e)]['importer'];
-                                                    } else{
+                                                    } else {
                                                         $importerStr[] = $importers[trim($e)]['importer'];
-                                                        if(!isset($institutionForMapping[trim($e)])) {
+                                                        if (!isset($institutionForMapping[trim($e)])) {
                                                             //TODO for mapping
                                                             file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $e . PHP_EOL, FILE_APPEND);
                                                             $institutionForMapping[trim($e)] = trim($e);
                                                         }
                                                     }
-                                                } else{
+                                                } else {
 //                                                    $valNoNeLine = str_replace(['\r\n', '\n\r','\n', '\r'], ';', $val);
                                                     $valNoNeLine = preg_replace("/[\r\n]+/", ";", $val);
                                                     $explodeByRow = explode(';', $valNoNeLine);
-                                                    if(sizeof($explodeByRow)){
-                                                        foreach ($explodeByRow as $eByRow){
+                                                    if (sizeof($explodeByRow)) {
+                                                        foreach ($explodeByRow as $eByRow) {
                                                             if (isset($importers[trim($eByRow)])) {
                                                                 $importerStr[] = $importers[trim($eByRow)]['importer'];
                                                                 if (
                                                                     (!is_array($importers[trim($eByRow)]['institution_id']) && !is_null($importers[trim($eByRow)]['institution_id']))
                                                                     || (is_array($importers[trim($eByRow)]['institution_id']) && sizeof($importers[trim($eByRow)]['institution_id']) && array_sum($importers[trim($eByRow)]['institution_id']) > 0)
                                                                 ) {
-                                                                    if(is_array($importers[trim($eByRow)]['institution_id'])){
-                                                                        foreach ($importers[trim($eByRow)]['institution_id'] as $i){
-                                                                            if($i > 0){
+                                                                    if (is_array($importers[trim($eByRow)]['institution_id'])) {
+                                                                        foreach ($importers[trim($eByRow)]['institution_id'] as $i) {
+                                                                            if ($i > 0) {
                                                                                 $importerInstitutions[] = $i;
                                                                             }
                                                                         }
-                                                                    } else{
+                                                                    } else {
                                                                         $importerInstitutions[] = $importers[trim($eByRow)]['institution_id'];
                                                                     }
-                                                                } else{
-                                                                    if(!isset($institutionForMapping[trim($eByRow)])) {
+                                                                } else {
+                                                                    if (!isset($institutionForMapping[trim($eByRow)])) {
                                                                         //TODO for mapping
                                                                         file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing ID in mapping: ' . $eByRow . PHP_EOL, FILE_APPEND);
                                                                         $institutionForMapping[trim($eByRow)] = trim($eByRow);
                                                                     }
                                                                 }
-                                                            } else{
+                                                            } else {
                                                                 //TODO for mapping
-                                                                if(!isset($institutionForMapping[trim($eByRow)])){
-                                                                    file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: '.$eByRow.PHP_EOL, FILE_APPEND);
+                                                                if (!isset($institutionForMapping[trim($eByRow)])) {
+                                                                    file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: ' . $eByRow . PHP_EOL, FILE_APPEND);
                                                                     $institutionForMapping[trim($eByRow)] = trim($eByRow);
                                                                 }
                                                             }
                                                         }
-                                                    } else{
+                                                    } else {
                                                         //TODO for mapping
-                                                        if(!isset($institutionForMapping[trim($e)])){
-                                                            file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: '.$e.PHP_EOL, FILE_APPEND);
+                                                        if (!isset($institutionForMapping[trim($e)])) {
+                                                            file_put_contents('institutions_for_mapping_last_pris.txt', 'Missing in mapping: ' . $e . PHP_EOL, FILE_APPEND);
                                                             $institutionForMapping[trim($e)] = trim($e);
                                                         }
                                                     }
@@ -1864,16 +2065,16 @@ class seedOldLastPris extends Command
                                         }
                                     }
                                     //get about
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Относно') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Относно') {
+                                        if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['about'] = $att['Value']['Value'];
                                         } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
                                             $prepareNewPris['about'] = $att['Value'];
                                         }
                                     }
                                     //get about
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Правно основание') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Правно основание') {
+                                        if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['legal_reason'] = $att['Value']['Value'];
                                         } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
                                             $prepareNewPris['legal_reason'] = $att['Value'];
@@ -1881,17 +2082,17 @@ class seedOldLastPris extends Command
                                     }
                                     //4. Parse id doc connections and create them in pris_change_pris
                                     //get old pris change pris
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Промени') {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Промени') {
                                         $val = isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value']) ? $att['Value']['Value'] : (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value']) ? $att['Value'] : null);
-                                        if($val) {
+                                        if ($val) {
                                             //echo "Changes: ".$att['Value']['Value'].PHP_EOL;
                                             $oldChanges = preg_split('/\r\n|\r|\n/', $val);
                                             $prepareNewPris['old_connections'] = sizeof($oldChanges) ? implode('; ', $oldChanges) : $oldChanges;
                                         }
                                     }
 
-                                    if(isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Статус') {
-                                        if(isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
+                                    if (isset($att['@attributes']) && isset($att['@attributes']['Name']) && $att['@attributes']['Name'] == 'Статус') {
+                                        if (isset($att['Value']) && isset($att['Value']['Value']) && !empty($att['Value']['Value'])) {
                                             $prepareNewPris['connection_status'] = (int)$att['Value']['Value'];
                                         } elseif (isset($att['Value']) && !empty($att['Value']) && !isset($att['Value']['Value'])) {
                                             $prepareNewPris['connection_status'] = (int)$att['Value'];
@@ -1901,7 +2102,7 @@ class seedOldLastPris extends Command
                                 }
 
                                 //Legal type category correction if need to
-                                if($prepareNewPris['legal_act_type_id'] == $protocolsId && str_contains($prepareNewPris['doc_num'], '.')) {
+                                if ($prepareNewPris['legal_act_type_id'] == $protocolsId && str_contains($prepareNewPris['doc_num'], '.')) {
                                     $prepareNewPris['legal_act_type_id'] = $protocolDecisionsId;
                                 }
 
@@ -1910,7 +2111,7 @@ class seedOldLastPris extends Command
                                 $newItem->fill($prepareNewPris);
                                 $newItem->save();
 
-                                if($newItem->id) {
+                                if ($newItem->id) {
                                     foreach ($locales as $locale) {
                                         $newItem->translateOrNew($locale['code'])->about = $prepareNewPris['about'];
                                         $newItem->translateOrNew($locale['code'])->legal_reason = $prepareNewPris['legal_reason'];
@@ -1918,7 +2119,7 @@ class seedOldLastPris extends Command
                                     }
                                     $newItem->save();
 
-                                    if(isset($importerInstitutions) && sizeof($importerInstitutions)) {
+                                    if (isset($importerInstitutions) && sizeof($importerInstitutions)) {
                                         $newItem->institutions()->sync($importerInstitutions);
                                     }
                                 }
@@ -1953,11 +2154,11 @@ class seedOldLastPris extends Command
                         }
                     }
 
-                    if($currentStep == $maxOldId){
+                    if ($currentStep == $maxOldId) {
                         $stop = true;
-                    } else{
+                    } else {
                         $currentStep += $step;
-                        if($currentStep > $maxOldId){
+                        if ($currentStep > $maxOldId) {
                             $currentStep = $maxOldId;
                         }
                     }
@@ -1966,6 +2167,6 @@ class seedOldLastPris extends Command
                 Log::error('Migration old pris: ' . $e);
             }
         }
-        $this->info('End at '.date('Y-m-d H:i:s'));
+        $this->info('End at ' . date('Y-m-d H:i:s'));
     }
 }
