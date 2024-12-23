@@ -125,11 +125,12 @@ class HomeController extends Controller
             ->when($title, function ($query, $title) {
                 return $query->where('field_of_action_translations.name', 'ILIKE', "%$title%")
                     ->orWhere('public_consultation_translations.title', 'ILIKE', "%$title%");
-            })->where(function ($q) use($now){
-                $q->where('public_consultation.open_from', '<=', $now);
-                $q->where('public_consultation.open_to', '>=', $now);
             })
-            ->orderBy('public_consultation.created_at', 'DESC')
+//            ->where(function ($q) use($now){
+//                $q->where('public_consultation.open_from', '<=', $now);
+//                $q->where('public_consultation.open_to', '>=', $now);
+//            })
+            ->orderBy('public_consultation.id', 'DESC')
             ->paginate($paginate);
 
         if ($is_search) {
@@ -182,7 +183,7 @@ class HomeController extends Controller
         $is_search = $request->has('search');
         $requestFilter = $request->offsetGet('keywords') ? ['text' => $request->offsetGet('keywords')] : [];
         $requestFilter['status'] = 'active';
-        $strategicDocuments = StrategicDocument::list($requestFilter, 'created_at', 'desc', $paginate);
+        $strategicDocuments = StrategicDocument::list($requestFilter, 'id', 'desc', $paginate);
 
         if ($is_search) {
             return $this->view('site.home.strategic_documents', compact('strategicDocuments'));

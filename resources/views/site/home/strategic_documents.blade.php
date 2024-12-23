@@ -60,7 +60,7 @@
 
                             <div class="meta-consul mt-2">
                                 <span class="text-secondary">
-                                    {{ displayDate($sd->document_date_accepted) }} г. - {{ displayDate($sd->document_date_expiring) }} г.
+                                    {{ displayDate($sd->document_date_accepted) }} г. - {{ $sd->document_date_expiring ? displayDate($sd->document_date_expiring) . ' г.' : __('custom.date_expring_indefinite') }}
                                 </span>
 
                                 <a href="{{ route('strategy-document.view', $sd->id) }}" title="{{ $sd->translation?->title }}">
