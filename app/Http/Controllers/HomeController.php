@@ -183,7 +183,7 @@ class HomeController extends Controller
         $is_search = $request->has('search');
         $requestFilter = $request->offsetGet('keywords') ? ['text' => $request->offsetGet('keywords')] : [];
         $requestFilter['status'] = 'active';
-        $strategicDocuments = StrategicDocument::list($requestFilter, 'id', 'desc', $paginate);
+        $strategicDocuments = StrategicDocument::list($requestFilter, 'valid_from', 'desc', $paginate);
 
         if ($is_search) {
             return $this->view('site.home.strategic_documents', compact('strategicDocuments'));
