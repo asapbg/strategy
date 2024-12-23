@@ -129,6 +129,23 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
         );
     }
 
+    public function advisoryBoardNames(): string
+    {
+        $imploded = '';
+
+        if ($this->moderateAdvisoryBoards->count() > 0) {
+            foreach ($this->moderateAdvisoryBoards as $index => $moderateAdvisoryBoard) {
+                if ($moderateAdvisoryBoard->board) {
+                    $separator = ($index + 1) == $this->moderateAdvisoryBoards->count() ? '' : ', ';
+
+                    $imploded .= $moderateAdvisoryBoard->board->getModelName() . $separator;
+                }
+            }
+        }
+
+        return $imploded;
+    }
+
     public function fullInformation(): Attribute
     {
         return Attribute::make(
