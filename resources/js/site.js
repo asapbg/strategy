@@ -89,12 +89,14 @@ MyModal.prototype.loadModalBody = function (_myModal) {
     });
 }
 
-function ShowLoadingSpinner() {
+function ShowLoadingSpinner(no_timeout = false) {
     $("#ajax_loader_backgr").show();
     $("#ajax_loader").show();
-    setTimeout(() => {
-        HideLoadingSpinner();
-    }, 2500);
+    if (!no_timeout) {
+        setTimeout(() => {
+            HideLoadingSpinner();
+        }, 2500);
+    }
 }
 
 function HideLoadingSpinner() {
@@ -205,8 +207,7 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
 // ===================
 
 
-function initInputs()
-{
+function initInputs() {
     $('.select2').select2(select2Options);
     $('.datepicker, .datepicker-btn').datepicker('destroy');
     $('.datepicker, .datepicker-btn').datepicker({
@@ -389,6 +390,7 @@ function ajaxList(domElement) {
     });
     $(document).on('click', domElement + ' .ajaxSearch', function (e){
         e.preventDefault();
+        ShowLoadingSpinner(true);
         let url = $(this).data('url');
         // console.log($(this), $(this).hasClass('clear'));
         if (!$(this).hasClass('clear')) {
@@ -407,20 +409,22 @@ function ajaxList(domElement) {
                 }
             });
             $($(this).data('container')).load(url + '?' + jQuery.param( dataObj ), function (){
-                ShowLoadingSpinner();
+                //ShowLoadingSpinner();
                 initInputs();
                 categoriesControl();
                 institutionControl();
                 ajaxList($(this).data('container'));
+                HideLoadingSpinner();
             });
-        } else{
+        } else {
             console.log('ok');
             $($(this).data('container')).load(url, function (){
-                ShowLoadingSpinner();
+                //ShowLoadingSpinner();
                 initInputs();
                 categoriesControl();
                 institutionControl();
-                ajaxList($(this).data('container'));
+                ajaxList($(this).data('container'))
+                HideLoadingSpinner();
             });
         }
 

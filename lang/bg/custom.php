@@ -1384,5 +1384,6 @@ return [
     'increase_text'     => 'Увеличаване на текста',
     'decrease_text'     => 'Намаляване на текста',
     'upper_lower_case'  => 'Главни/малки букви',
-    'full_keyword'      => 'Цели ключови думи'
+    'full_keyword'      => 'Цели ключови думи',
+    'logical_and'      => 'Логическо "И"',
 ];

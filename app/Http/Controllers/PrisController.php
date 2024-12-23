@@ -50,6 +50,7 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
+        $logical_and = $request->offsetGet('logical_and');
         $in_archive = $request->offsetGet('in_archive');
         $institutions = $requestFilter['institutions'] ?? null;
         unset($requestFilter['institutions']);
@@ -81,12 +82,6 @@ class PrisController extends Controller
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
-//            ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
-//            ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
-//            ->leftJoin('tag_translations', function ($j){
-//                $j->on('tag_translations.tag_id', '=', 'tag.id')
-//                    ->where('tag_translations.locale', '=', app()->getLocale());
-//            })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
@@ -355,7 +350,7 @@ class PrisController extends Controller
         return array(
             'legalActTypes' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(LegalActType::optionsList(true), true),
+                'options' => optionsFromModel(LegalActType::optionsListForPrisSearch(), true),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.legal_act_types', 1),
@@ -400,6 +395,19 @@ class PrisController extends Controller
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'
                     )
+                )
+            ),
+            'formGroupAnd' => array(
+                'title' => __('custom.criteria') . ':',
+                'class' => 'mb-4',
+                'fields' => array(
+                    'logicalАnd' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('logicalАnd') : false,
+                        'label' => __('custom.logical_and'),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
                 )
             ),
             'docNum' => array(

@@ -51,6 +51,7 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     {
         return $query->where('in_pris', 1);
     }
+
     public function scopeStrategyCategories($query)
     {
         return $query->whereIn('id', [self::TYPE_DECREES, self::TYPE_PROTOCOL_DECISION, self::TYPE_DECISION]);
@@ -77,12 +78,23 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
             ->select(['legal_act_type.id', 'legal_act_type_translations.name'])
             ->join('legal_act_type_translations', 'legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
             ->where('legal_act_type_translations.locale', '=', app()->getLocale())
-            ->where('legal_act_type.in_pris','=', 1);
-        if($withoutLaw) {
+            ->where('legal_act_type.in_pris', '=', 1);
+        if ($withoutLaw) {
             $q->where('legal_act_type.id', '<>', LegalActType::TYPE_ORDER);
         }
 
         return $q->orderBy('legal_act_type_translations.name', 'asc')
+            ->get();
+    }
+
+    public static function optionsListForPrisSearch()
+    {
+        return DB::table('legal_act_type')
+            ->select(['legal_act_type.id', 'legal_act_type_translations.name'])
+            ->join('legal_act_type_translations', 'legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+            ->where('legal_act_type_translations.locale', '=', app()->getLocale())
+            ->where('legal_act_type.id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->orderBy('legal_act_type_translations.name', 'asc')
             ->get();
     }
 }

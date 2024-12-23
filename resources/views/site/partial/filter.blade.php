@@ -188,7 +188,7 @@
                                             @foreach($field['fields'] as $groupKey => $groupField)
                                                 @if ($groupKey == "in_archive" || $groupKey == "in_current")
                                                     </div>
-                                                    <div class="col-12 mb-4">
+                                                    <div class="col-12">
                                                         <label class="form-label ms-3 me-3 custom-left-border">{{ $field['title'] }}</label>
                                                 @endif
                                                 <div class="{{ $groupField['col'] ?? 'col-md-6' }} col-12 mb-2  @if($groupField['type'] == 'subjects') d-flex @endif">
