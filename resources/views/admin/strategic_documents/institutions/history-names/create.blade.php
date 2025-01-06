@@ -55,6 +55,15 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <div class="icheck-primary col-12">
+                                    <input class="form-check-input" type="checkbox" name="current" id="current" {{ old('current') ? 'checked' : '' }}>
+                                    <label class="form-check-label control-label" for="current">
+                                        Текущо наименование
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group">

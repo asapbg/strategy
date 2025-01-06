@@ -37,38 +37,96 @@ class SyncInstitutionNameChangesWithIisda extends Command
         $institutions = Institution::select('institution.id', 'eik', 'batch_id', 'names.id as history_id', 'names.name as h_name')
             ->join('institution_history_names as names', 'names.institution_id', '=', 'institution.id')
             ->without('translations')
-            ->where('names.valid_from', '<=', '2015-05-15')
+//            ->where('names.valid_from', '<=', '2015-05-15')
             ->where('eik', '<>', 'N/A')
-            //->whereIn('institution.id', [3])
-            ->whereNotIn('institution.id', [143,137])
+            ->whereIn('institution.id', [134])
+//            ->whereNotIn('institution.id', [143,137])
             ->orderBy('institution.id')
-            ->skip(113)
+            //->skip(113)
             //->take(100)
             ->get();
         //dd($institutions->first());
 
-//        $dataSoap = $this->searchBatchVersions('1263', '2013-04-15');
+//        $dataSoap = $this->searchBatchVersions('1091', '2013-04-15');
 //        $responseArray = $this->getSoapResponse($dataSoap);
 //        if (isset($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType'])) {
 //            dd($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes']['Name']);
 //        }
 //        dd('ok');
 
+//        foreach ($institutions as $institution) {
+//
+//            $date_from = new \DateTime('2010-04-15');
+//            $backward_months = 185;
+//
+//            $current_name = $institution->h_name;
+//
+//            for ($i = 0; $i < $backward_months; $i++) {
+//                $dateAt = $date_from->format("Y-m-d");
+//
+//                $dataSoap = $this->searchBatchVersions($institution->batch_id, $dateAt);
+//                $responseArray = $this->getSoapResponse($dataSoap);
+//
+//                // Subtract one month
+//                $date_from->modify('-1 month');
+//
+//                if (!$responseArray) {
+//                    Log::error('Sync Institution: Unable to parse soap xml response');
+//                    return Command::FAILURE;
+//                }
+//                if (isset($responseArray['error']) && $responseArray['error']) {
+//                    return Command::FAILURE;
+//                }
+//                if (!isset($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'])) {
+//                    dump("No results backwards for $current_name");
+//                    break;
+//                }
+//
+//                $institutionIisda = $responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'];
+//                if ($current_name != $institutionIisda['Name']) {
+//                    dump("Запис валиден до $dateAt на $current_name != {$institutionIisda['Name']}");
+//
+//                    $current_name = $institutionIisda['Name'];
+//
+//                    if (!isset($currentName)) {
+//                        $currentName = InstitutionHistoryName::find($institution->history_id);
+//                    }
+//                    $currentName->valid_from = $dateAt;
+//                    $currentName->save();
+//
+//                    $currentName = $institution->historyNames()->create([
+//                        'name' => $current_name,
+//                        'current' => false,
+//                        'valid_from' => '2000-01-01',
+//                        'valid_till' => $dateAt
+//                    ]);
+//
+//                }
+//            }
+//            sleep(10);
+//        }
+//
+//        return Command::SUCCESS;
+
+        $date_from = new \DateTime('2005-01-01');
+        $end = new \DateTime(now());
+        $interval = new \DateInterval('P1M');
+        $period = new \DatePeriod($date_from, $interval, $end);
+
         foreach ($institutions as $institution) {
 
-            $date_from = new \DateTime('2010-04-15');
-            $backward_months = 185;
-
+//            if (InstitutionHistoryName::where('institution_id', $institution->id)->exists()) {
+//                continue;
+//            }
             $current_name = $institution->h_name;
+            $currentName = null;
 
-            for ($i = 0; $i < $backward_months; $i++) {
-                $dateAt = $date_from->format("Y-m-d");
+            foreach ($period as $dt) {
+                $dateAt = $dt->format("Y-m-d");
 
                 $dataSoap = $this->searchBatchVersions($institution->batch_id, $dateAt);
-                $responseArray = $this->getSoapResponse($dataSoap);
 
-                // Subtract one month
-                $date_from->modify('-1 month');
+                $responseArray = $this->getSoapResponse($dataSoap);
 
                 if (!$responseArray) {
                     Log::error('Sync Institution: Unable to parse soap xml response');
@@ -78,68 +136,10 @@ class SyncInstitutionNameChangesWithIisda extends Command
                     return Command::FAILURE;
                 }
                 if (!isset($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'])) {
-                    dump("No results backwards for $current_name");
-                    break;
+                    continue;
                 }
 
                 $institutionIisda = $responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'];
-                if ($current_name != $institutionIisda['Name']) {
-                    dump("Запис валиден до $dateAt на $current_name != {$institutionIisda['Name']}");
-
-                    $current_name = $institutionIisda['Name'];
-
-                    if (!isset($currentName)) {
-                        $currentName = InstitutionHistoryName::find($institution->history_id);
-                    }
-                    $currentName->valid_from = $dateAt;
-                    $currentName->save();
-
-                    $currentName = $institution->historyNames()->create([
-                        'name' => $current_name,
-                        'current' => false,
-                        'valid_from' => '2000-01-01',
-                        'valid_till' => $dateAt
-                    ]);
-
-                }
-            }
-            sleep(10);
-        }
-
-        return Command::SUCCESS;
-
-        $date_from = new \DateTime('2015-05-15');
-        $end = new \DateTime(now());
-        $interval = new \DateInterval('P1M');
-        $period = new \DatePeriod($date_from, $interval, $end);
-
-        foreach ($institutions as $institution) {
-
-            if (InstitutionHistoryName::where('institution_id', $institution->id)->exists()) {
-                continue;
-            }
-            $current_name = "";
-            $currentName = null;
-
-            foreach ($period as $dt) {
-                $dateAt = $dt->format("c");
-
-                $dataSoap = $this->dataSoapSearchBatchesIdentificationInfo($institution->eik, $dateAt);
-
-                $responseArray = $this->getSoapResponse($dataSoap);
-
-                if (!$responseArray) {
-                    Log::error('Sync Institution: Unable to parse soap xml response');
-                    return Command::FAILURE;
-                }
-                if (isset($responseArray['error']) && $responseArray['error']) {
-                    return Command::FAILURE;
-                }
-                if (!isset($responseArray['sBody']['SearchBatchesIdentificationInfoResponse']['SearchBatchesIdentificationInfoResult']['BatchIdentificationInfoType']['@attributes'])) {
-                    break;
-                }
-
-                $institutionIisda = $responseArray['sBody']['SearchBatchesIdentificationInfoResponse']['SearchBatchesIdentificationInfoResult']['BatchIdentificationInfoType']['@attributes'];
                 if ($current_name != $institutionIisda['Name']) {
 
                     $valid_from = $dt->format("Y-m-d");

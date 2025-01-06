@@ -118,9 +118,15 @@ class InstitutionController extends AdminController
 
         try {
 
-            $validated['current'] = false;
+            $validated['current'] = $request->has('current');
             $validated['valid_from'] = databaseDate($validated['valid_from']);
             $validated['valid_till'] = databaseDate($validated['valid_till']);
+            if ($validated['current']) {
+                $institution->historyNames()->where('current', true)->update([
+                    'valid_till' => $validated['valid_from'],
+                    'current' => false
+                ]);
+            }
             $institution->historyNames()->create($validated);
 
             return to_route('admin.strategic_documents.institutions.edit', $id)->with('success', 'Записът беше добавен успешно');
