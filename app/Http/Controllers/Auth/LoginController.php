@@ -152,6 +152,7 @@ class LoginController extends Controller
             \Auth::guard($guard)->login($user);
             $user->eauth = 0;
             $user->last_login_at = Carbon::now();
+            $user->ip = $request->ip();
             $user->save();
 
             $subscriptionsColl = $user->subscriptions()
