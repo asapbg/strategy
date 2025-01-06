@@ -19,7 +19,10 @@ trait RequestCreateNecessaryNomenclaturesTrait
         // if other authority is selected, create nomenclature
         if ($selected_authority_id == AuthorityAdvisoryBoard::getOtherAuthorityId()) {
             $authorityService = new AuthorityAdvisoryBoardService();
-            $authority = $authorityService->create($this->request->get('other_authority_name_bg'), $this->request->get('other_authority_name_en'));
+            $authority = $authorityService->create(
+                $this->request->get('other_authority_name_bg'),
+                ($this->request->get('other_authority_name_en') ?? $this->request->get('other_authority_name_bg'))
+            );
 
             // Update the request with the newly created authority's ID
             $this->merge([
@@ -31,7 +34,10 @@ trait RequestCreateNecessaryNomenclaturesTrait
 
         if ($selected_act_type_id == AdvisoryActType::getOtherId()) {
             $actTypeService = new AdvisoryActTypeBoardService();
-            $actType = $actTypeService->create($this->request->get('other_act_type_name_bg'), $this->request->get('other_act_type_name_en'));
+            $actType = $actTypeService->create(
+                $this->request->get('other_act_type_name_bg'),
+                ($this->request->get('other_act_type_name_en') ?? $this->request->get('other_act_type_name_bg'))
+            );
 
             // Update the request with the newly created authority's ID
             $this->merge([
@@ -43,7 +49,10 @@ trait RequestCreateNecessaryNomenclaturesTrait
 
         if ($selected_chairman_type_id == AdvisoryChairmanType::getOtherId()) {
             $chairmanTypeService = new AdvisoryChairmanTypeBoardService();
-            $chairmanType = $chairmanTypeService->create($this->request->get('other_chairman_type_name_bg'), $this->request->get('other_chairman_type_name_en'));
+            $chairmanType = $chairmanTypeService->create(
+                $this->request->get('other_chairman_type_name_bg'),
+                ($this->request->get('other_chairman_type_name_en') ?? $this->request->get('other_chairman_type_name_bg'))
+            );
 
             // Update the request with the newly created authority's ID
             $this->merge([
