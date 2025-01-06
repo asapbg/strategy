@@ -327,7 +327,9 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             }
 
             if(isset($filters['consultationId']) && $filters['consultationId'] > 0) {
-                $q->where('public_consultation_id', (int)$filters['consultationId']);
+                $q->where(function ($query) use ($filters) {
+                    $query->where('public_consultation_id', (int)$filters['consultationId'])->orWhereNull('public_consultation_id');
+                });
             }
 
             $q->whereNull('pris.deleted_at');

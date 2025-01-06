@@ -137,7 +137,7 @@
                                 </div>
                             </div>
                             <div class="row mb-4 d-none prisSection">
-                                <div class="col-md-12 d-none" id="pris-act">
+                                <div class="col-md-12" id="pris-act">
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label">
