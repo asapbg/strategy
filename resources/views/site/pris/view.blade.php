@@ -105,6 +105,7 @@
                     </div>
                 @endif
 
+                @if($item->actType->id != App\Models\LegalActType::TYPE_PROTOCOL)
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
                         <i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('site.public_consultation.importer') }}
@@ -115,7 +116,12 @@
 {{--                            <a href="{{ route('pris.index').'?importer='.$item->importer }}" class="text-decoration-none">{{ $item->importer }} </a>--}}
                     </div>
                 </div>
+                @endif
 
+                @php
+                    $locale = app()->getLocale();
+                    $decisionProtocol = $item->decision_protocol && $item->decisionProtocol ? $item->decisionProtocol : null
+                @endphp
                 @if($item->actType->id != App\Models\LegalActType::TYPE_PROTOCOL)
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
@@ -123,7 +129,6 @@
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        @php($decisionProtocol = $item->decision_protocol && $item->decisionProtocol ? $item->decisionProtocol : null)
                         @if($decisionProtocol)
                             <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($decisionProtocol->actType->name_single), 'id' => $decisionProtocol->id]) : route('pris.view', ['category' => $decisionProtocol->actType->name_single, 'id' => $decisionProtocol->id]) }}" target="_blank">@if(!empty($item->protocol_point)){{ __('site.point_short').' '.$item->protocol_point }} {{ __('custom.from') }} @endif{{ $decisionProtocol->mcDisplayName }}</a>
                         @else
@@ -137,16 +142,17 @@
                         <div class="col-md-3 pris-left-column">
                             <i class="fa-solid fa-newspaper main-color me-1"></i>{{ __('validation.attributes.newspaper') }}
                         </div>
-                            <div class="col-md-9 pris-left-column">
-                                @if($item->newspaper_number || $item->newspaper_year)
-                                    <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?newspaperNumber='.$item->newspaper_number.'&newspaperYear='.$item->newspaper_year }}" title="{{ __('validation.attributes.newspaper') }} - {{ $item->newspaper }}" target="_blank" class="text-decoration-none"> {{ $item->newspaper }}</a>
-                                @else
-                                    {{ $item->newspaper }}
-                                @endif
-                            </div>
+                        <div class="col-md-9 pris-left-column">
+                            @if($item->newspaper_number || $item->newspaper_year)
+                                <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?newspaperNumber='.$item->newspaper_number.'&newspaperYear='.$item->newspaper_year }}" title="{{ __('validation.attributes.newspaper') }} - {{ $item->newspaper }}" target="_blank" class="text-decoration-none"> {{ $item->newspaper }}</a>
+                            @else
+                                {{ $item->newspaper }}
+                            @endif
+                        </div>
                     </div>
                 @endif
 
+                @if($item->actType->id != App\Models\LegalActType::TYPE_PROTOCOL)
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
                         <i class="fa-solid fa-gavel main-color me-1"></i>{{ __('custom.pris_legal_reason') }}
@@ -156,7 +162,9 @@
                         {!! $item->legal_reason !!}
                     </div>
                 </div>
+                @endif
 
+                @if($item->actType->id != App\Models\LegalActType::TYPE_PROTOCOL)
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
                         <i class="fa-solid fa-tags main-color me-1"></i>{{ trans_choice('custom.tags', 2) }}
@@ -169,7 +177,9 @@
                         @endif
                     </div>
                 </div>
+                @endif
 
+                @if($item->actType->id != App\Models\LegalActType::TYPE_PROTOCOL)
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
                         <i class="fa-solid fa-arrow-right-arrow-left main-color me-1"></i>{{ __('custom.change_docs') }}
@@ -195,29 +205,9 @@
                                 </a>
                             @endforeach
                         @endif
-{{--                        @if(!empty($item->old_connections))--}}
-{{--                                {!! $item->oldConnectionsHtml !!}--}}
-{{--                        @endif--}}
                     </div>
                 </div>
-
-{{--                <div class="row pris-row pb-2 mb-2">--}}
-{{--                    <div class="col-md-3 pris-left-column">--}}
-{{--                        <i class="fa-solid fa-list-ol main-color me-1"></i>Версия--}}
-{{--                    </div>--}}
-{{--                    <div class="col-md-9 pris-left-column">--}}
-{{--                        <p class="mb-0">--}}
-{{--                            <a href="#" class="text-decoration-none">12.01.2023г. от потребител Георги Иванов</a>--}}
-{{--                        </p>--}}
-{{--                        <p class="mb-0">--}}
-{{--                            <a href="#" class="text-decoration-none">15.02.2023г. от потребител Георги Иванов</a>--}}
-{{--                        </p>--}}
-{{--                        <p class="mb-0">--}}
-{{--                            <a href="#" class="text-decoration-none">17.03.2023г. от потребител Георги Иванов</a>--}}
-{{--                        </p>--}}
-
-{{--                    </div>--}}
-{{--                </div>--}}
+                @endif
 
                 @if($item->files->count())
                     <div class="row mb-0 mt-5">
@@ -225,7 +215,6 @@
                             <h2 class="mb-1">{{ __('custom.files') }}</h2>
                         </div>
                     </div>
-                    @php($locale = app()->getLocale())
                     @foreach($item->files as $f)
                         @if($f->locale == $locale)
                             <div class="row p-1">
@@ -248,9 +237,6 @@
                                                             <span class="text-start me-3">
                                                                 <strong>{{ __('custom.date_created') }}:</strong> {{ displayDate($f->created_at) }} {{ __('custom.year_short') }}.
                                                             </span>
-{{--                                                            <span class="text-end">--}}
-{{--                                                                <strong>{{ __('custom.date_published') }}:</strong> 20.05.2023г.--}}
-{{--                                                            </span>--}}
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 text-end">
@@ -264,9 +250,6 @@
                                                             <span class="text-start me-3">
                                                                 <strong>{{ __('custom.date_created') }}:</strong> {{ displayDate($f->created_at) }} {{ __('custom.year_short') }}.
                                                             </span>
-{{--                                                            <span class="text-end">--}}
-{{--                                                                <strong>{{ __('custom.date_published') }}:</strong> 20.05.2023г.--}}
-{{--                                                            </span>--}}
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 text-end">

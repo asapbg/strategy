@@ -14,7 +14,7 @@ class FullSearch extends QueryFilter implements FilterContract
     {
         if (!empty($value)) {
             $this->query->where(function ($q) use ($filter, $value) {
-                $logicalАnd = is_array($filter) && isset($filter['logicalАnd']) ? "AND" : "OR";
+                $logicalAnd = is_array($filter) && isset($filter['logicalАnd']) ? "AND" : "OR";
                 $searchInFiles = is_array($filter) && isset($filter['fileSearch']) ? 1 : null;
                 $searchInAbout = is_array($filter) && isset($filter['aboutSearch']) ? 1 : null;
                 $searchInLegalReason = is_array($filter) && isset($filter['legalReasonSearch']) ? 1 : null;
@@ -31,7 +31,7 @@ class FullSearch extends QueryFilter implements FilterContract
                     $whereFulltext = "";
                     $whereAbout = "(";
                     $whereLegalReason = "(";
-                    if ($logicalАnd == "OR") {
+                    if ($logicalAnd == "OR") {
                         $whereTag = "(";
                         foreach ($tags as $key => $tag) {
                             $tag = trim($tag);
@@ -61,7 +61,7 @@ class FullSearch extends QueryFilter implements FilterContract
                     LEFT JOIN tag_translations on tag.id = tag_translations.tag_id AND tag_translations.locale = '$locale'
                     WHERE $whereTag
                 )";
-                if ($logicalАnd == "AND" && isset($trimmed_tags,$tags_count)) {
+                if ($logicalAnd == "AND" && isset($trimmed_tags,$tags_count)) {
                     $queryTag = "pris.id in (
                         SELECT p.id FROM pris p
                         JOIN pris_tag pt ON p.id = pt.pris_id

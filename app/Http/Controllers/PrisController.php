@@ -50,7 +50,6 @@ class PrisController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        $logical_and = $request->offsetGet('logical_and');
         $in_archive = $request->offsetGet('in_archive');
         $institutions = $requestFilter['institutions'] ?? null;
         unset($requestFilter['institutions']);
@@ -103,7 +102,7 @@ class PrisController extends Controller
         $menuCategories = [];
         $menuCategoriesArchive = [];
         $actTypes = LegalActType::with(['translations'])
-            ->Pris()
+            //->Pris()
             ->where('id', '<>', LegalActType::TYPE_ORDER)
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
@@ -285,8 +284,6 @@ class PrisController extends Controller
             abort(Response::HTTP_NOT_FOUND);
         }
 
-//        $pageTitle = $item->mcDisplayName;
-//        $this->setBreadcrumbsTitle($pageTitle);
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
 
         $menuCategories = [];
@@ -312,9 +309,6 @@ class PrisController extends Controller
 
         $pageTitle = __('site.pris.page_title');
         $extraBreadCrumbs = [];
-//        if($item->actType) {
-//            $extraBreadCrumbs[] = ['name' => $item->actType->name, 'url' => route('pris.category', ['category' => Str::slug($item->actType->name)]).'?legalАctТype='.$item->actType->id];
-//        }
         if($item->in_archive){
             $extraBreadCrumbs = array(['name' => __('site.pris.archive'), 'url' => route('pris.archive')]);
         }
