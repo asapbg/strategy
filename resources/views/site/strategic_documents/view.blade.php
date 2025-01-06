@@ -89,7 +89,7 @@
                         <div class="col-md-4 mb-4">
                             <h3 class="mb-2 fs-18">{{ trans_choice('custom.strategic_document_type', 1) }}</h3>
 
-                            <a href="#" class="main-color text-decoration-none fs-18">
+                            <a href="{{ route('strategy-documents.index').'?DocumentType='.$strategicDocument->strategic_document_type_id }}" class="main-color text-decoration-none fs-18">
                             <span class="obj-icon-info me-2">
                                 <i class="fas fa-bezier-curve me-2 main-color fs-18" ></i>{{ $strategicDocument->documentType->name ?? __('custom.unidentified') }}
                             </span>
@@ -122,7 +122,7 @@
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ __('custom.effective_at') }}</h3>
-                        <a href="#" class="main-color text-decoration-none fs-18" id="dateAccepted"
+                        <a href="{{ route('strategy-documents.reports').'?validFrom='.$strategicDocument->document_date_accepted }}" class="main-color text-decoration-none fs-18" id="dateAccepted"
                            data-document-date-accepted="{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('d.m.Y') }}">
                         <span class="obj-icon-info me-2">
                             <i class="fas fa-calendar main-color me-2 fs-18"
@@ -132,7 +132,7 @@
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ trans_choice('custom.date_expiring', 1) }}</h3>
 
-                        <a href="#" class="main-color text-decoration-none fs-18" id="dateExpiring"
+                        <a href="{{ route('strategy-documents.reports').'?validTo='.$strategicDocument->document_date_expiring }}" class="main-color text-decoration-none fs-18" id="dateExpiring"
                            @if ($strategicDocument->document_date_expiring) data-document-date-expiring="{{ \Carbon\Carbon::parse($strategicDocument->document_date_expiring)->format('d.m.Y') }}"
                            @else
                                data-document-date-expiring="true" @endif>
@@ -162,7 +162,7 @@
                             @endif
                             @if($strategicDocument->acceptActInstitution)
                                 <span>{{ trans_choice('custom.of', 1) }}</span>
-                                <a href="#" class="main-color text-decoration-none">
+                                <a href="{{ route('strategy-documents.reports').'?acceptActInstitution[]='.$strategicDocument->accept_act_institution_type_id }}" class="main-color text-decoration-none">
                                     {{ $strategicDocument->acceptActInstitution?->name }}
                                 </a>
                             @endif
