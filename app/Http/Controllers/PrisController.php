@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActType;
-use App\Models\Consultations\PublicConsultation;
-use App\Models\InstitutionLevel;
 use App\Models\LegalActType;
 use App\Models\Pris;
 use App\Models\Setting;
-use App\Models\StrategicDocuments\Institution;
-use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -24,9 +19,9 @@ class PrisController extends Controller
         //Filter
         $rf = $request->all();
         $requestFilter = $request->all();
-        if( isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
+        if (isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
             $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
-            if( $actType && Str::slug($actType->name) != $category ){
+            if ( $actType && Str::slug($actType->name) != $category ){
                 return redirect(route('pris.index', $request->query()));
             }
         }
@@ -51,8 +46,8 @@ class PrisController extends Controller
         $defaultDirection = $sortOrd;
 
         $in_archive = $request->offsetGet('in_archive');
-        $institutions = $requestFilter['institutions'] ?? null;
-        unset($requestFilter['institutions']);
+//        $institutions = $requestFilter['institutions'] ?? null;
+//        unset($requestFilter['institutions']);
 
         $items = Pris::select('pris.*')
             ->when(!$in_archive, function ($query) {
@@ -62,16 +57,16 @@ class PrisController extends Controller
             //->InPris()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions.historyNames', 'institutions.translation'])
-            ->when($institutions, function ($query) use ($institutions) {
-                $query->join(
-                        'pris_institution as pi',
-                        'pi.pris_id',
-                        '=',
-                        DB::raw("pris.id AND pi.institution_id IN(".implode(',', $institutions).")")
-                    )
-                    ->join('institution', 'institution.id', '=', DB::raw("pi.institution_id AND institution.active = '1' AND institution.deleted_at IS NULL"))
-                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
-            })
+//            ->when($institutions, function ($query) use ($institutions) {
+//                $query->join(
+//                        'pris_institution as pi',
+//                        'pi.pris_id',
+//                        '=',
+//                        DB::raw("pris.id AND pi.institution_id IN(".implode(',', $institutions).")")
+//                    )
+//                    ->join('institution', 'institution.id', '=', DB::raw("pi.institution_id AND institution.active = '1' AND institution.deleted_at IS NULL"))
+//                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
+//            })
             ->leftJoin('pris_translations', function ($j){
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
@@ -106,7 +101,7 @@ class PrisController extends Controller
             ->where('id', '<>', LegalActType::TYPE_ORDER)
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
-        if( $actTypes->count() ) {
+        if ($actTypes->count()) {
             foreach ($actTypes as $act) {
                 $menuCategories[] = [
                     'label' => $act->name,
@@ -124,9 +119,9 @@ class PrisController extends Controller
 
         $pageTitle = __('site.pris.page_title');
         $extraBreadCrumbs = [];
-        if(isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
+        if (isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
             $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
-            if($actType) {
+            if ($actType) {
                 $extraBreadCrumbs[] = ['name' => $actType->name, 'url' => ''];
             }
         }
@@ -156,9 +151,9 @@ class PrisController extends Controller
         //Filter
         $rf = $request->all();
         $requestFilter = $request->all();
-        if( isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
+        if (isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
             $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
-            if( $actType && Str::slug($actType->name) != $category ){
+            if ( $actType && Str::slug($actType->name) != $category ){
                 return redirect(route('pris.index', $request->query()));
             }
         }
@@ -213,16 +208,9 @@ class PrisController extends Controller
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
-//            ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
-//            ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
-//            ->leftJoin('tag_translations', function ($j){
-//                $j->on('tag_translations.tag_id', '=', 'tag.id')
-//                    ->where('tag_translations.locale', '=', app()->getLocale());
-//            })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
-            //->GroupBy('pris.id', 'institution_translations.name', 'legal_act_type_translations.name')
             ->paginate($paginate);
 
 
@@ -231,7 +219,7 @@ class PrisController extends Controller
         $no_rss = true;
         $no_email_subscribe = true;
 
-        if( $request->ajax() ) {
+        if ($request->ajax()) {
             return view('site.pris.list', compact('filter','sorter', 'items', 'rf','hasSubscribeEmail',
                 'hasSubscribeRss', 'requestFilter', 'no_rss', 'no_email_subscribe'));
         }
@@ -243,7 +231,7 @@ class PrisController extends Controller
             ->where('id', '<>', LegalActType::TYPE_ORDER)
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
-        if( $actTypes->count() ) {
+        if ($actTypes->count()) {
             foreach ($actTypes as $act) {
                 $menuCategories[] = [
                     'label' => $act->name,
@@ -261,9 +249,9 @@ class PrisController extends Controller
 
         $pageTitle = __('site.menu.pris');
         $extraBreadCrumbs = array(['name' => __('site.pris.archive'), 'url' => route('pris.archive')]);
-        if(isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
+        if (isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
             $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
-            if($actType) {
+            if ($actType) {
                 $extraBreadCrumbs[] = ['name' => $actType->name, 'url' => ''];
             }
         }
@@ -275,12 +263,15 @@ class PrisController extends Controller
 
     public function show(Request $request, $category, int $id = 0)
     {
-        $item = Pris::LastVersion()->InPris()->Published()->with([
-            'translation', 'actType', 'actType.translation', 'tags', 'tags.translation', 'changedDocsWithoutRelation',
-            'changedDocs.actType.translation', 'changedDocs.institution.translation', 'files'
-        ])
+        $item = Pris::LastVersion()
+            //->InPris()
+            ->Published()
+            ->with([
+                'translation', 'actType', 'actType.translation', 'tags', 'tags.translation', 'changedDocsWithoutRelation',
+                'changedDocs.actType.translation', 'changedDocs.institution.translation', 'files'
+            ])
             ->find($id);
-        if( !$item ) {
+        if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
 
@@ -292,7 +283,7 @@ class PrisController extends Controller
             //->Pris()
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
-        if( $actTypes->count() ) {
+        if ($actTypes->count()) {
             foreach ($actTypes as $act) {
                 $menuCategories[] = [
                     'label' => $act->name,
@@ -309,12 +300,12 @@ class PrisController extends Controller
 
         $pageTitle = __('site.pris.page_title');
         $extraBreadCrumbs = [];
-        if($item->in_archive){
+        if ($item->in_archive){
             $extraBreadCrumbs = array(['name' => __('site.pris.archive'), 'url' => route('pris.archive')]);
         }
-        if(isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
+        if (isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
             $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
-            if($actType) {
+            if ($actType) {
                 $extraBreadCrumbs[] = ['name' => $actType->name, 'url' => ''];
             }
         }
@@ -333,7 +324,7 @@ class PrisController extends Controller
     {
         return array(
             'category' => ['class' => 'col-md-3', 'label' => trans_choice('custom.category', 1)],
-            'importer' => ['class' => 'col-md-3', 'label' => trans_choice('custom.institutions', 1)],
+//            'importer' => ['class' => 'col-md-3', 'label' => trans_choice('custom.institutions', 1)],
             'docDate' => ['class' => 'col-md-3', 'label' => __('custom.date')],
             'docNum' => ['class' => 'col-md-3', 'label' => __('custom.number')],
         );
@@ -422,15 +413,15 @@ class PrisController extends Controller
                 'label' => __('custom.date'),
                 'col' => 'col-md-3'
             ),
-            'institutions' => array(
-                'type' => 'subjects',
-                'label' => trans_choice('custom.institutions', 1),
-                'multiple' => true,
-                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', trans_choice('custom.institutions', 1)),
-                'value' => request()->input('institutions'),
-                'default' => '',
-                'col' => 'col-md-3'
-            ),
+//            'institutions' => array(
+//                'type' => 'subjects',
+//                'label' => trans_choice('custom.institutions', 1),
+//                'multiple' => true,
+//                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', trans_choice('custom.institutions', 1)),
+//                'value' => request()->input('institutions'),
+//                'default' => '',
+//                'col' => 'col-md-3'
+//            ),
             'importer' => array(
                 'type' => 'text',
                 'label' => trans_choice('custom.importers', 1),
@@ -509,13 +500,13 @@ class PrisController extends Controller
         $customBreadcrumbs = array(
             ['name' => __('site.menu.pris'), 'url' => route('pris.index')]
         );
-        if(!empty($extraItems)){
+        if (!empty($extraItems)){
             foreach ($extraItems as $eItem){
                 $customBreadcrumbs[] = $eItem;
             }
         }
 
-        if($item){
+        if ($item){
             $customBreadcrumbs[] = ['name' => $item->mcDisplayName, 'url' => ''];
         }
         $this->setBreadcrumbsFull($customBreadcrumbs);

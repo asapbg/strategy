@@ -62,18 +62,18 @@
                                             <i class="fa-solid fa-thumbtack  main-color" title="{{ $item->actType->name }}"></i>
                                             {{ $item->actType->name }}
                                         </a>
-                                        @if($item->institutions->count())
-                                            @foreach($item->institutions as $i)
-                                                @if($i->id != config('app.default_institution_id'))
-                                                    <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?institutions[]='.$i->id }}"
-                                                       title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-2 me-2" target="_blank"
-                                                    >
-                                                        <i class="fas fa-university fa-link main-color" title="{{ $i->getHistorycalName(databaseDate($item->doc_date)) }}"></i>
-                                                        {{ $i->getHistorycalName(databaseDate($item->doc_date)) }}
-                                                    </a>
-                                                @endif
-                                            @endforeach
-                                        @endif
+{{--                                        @if($item->institutions->count())--}}
+{{--                                            @foreach($item->institutions as $i)--}}
+{{--                                                @if($i->id != config('app.default_institution_id'))--}}
+{{--                                                    <a href="{{ route($item->in_archive ? 'pris.archive' : 'pris.index').'?institutions[]='.$i->id }}"--}}
+{{--                                                       title="{{ trans_choice('custom.institutions', 1) }}" class="text-decoration-none mb-2 me-2" target="_blank"--}}
+{{--                                                    >--}}
+{{--                                                        <i class="fas fa-university fa-link main-color" title="{{ $i->getHistorycalName(databaseDate($item->doc_date)) }}"></i>--}}
+{{--                                                        {{ $i->getHistorycalName(databaseDate($item->doc_date)) }}--}}
+{{--                                                    </a>--}}
+{{--                                                @endif--}}
+{{--                                            @endforeach--}}
+{{--                                        @endif--}}
                                     </div>
                                     <div class="meta-consul">
                                         <div class="anotation text-secondary mb-2">
