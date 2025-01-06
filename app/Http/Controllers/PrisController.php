@@ -335,7 +335,7 @@ class PrisController extends Controller
         return array(
             'legalActTypes' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(LegalActType::optionsListForPrisSearch(), true),
+                'options' => optionsFromModel(LegalActType::optionsListForPrisSearch(true), true),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.legal_act_types', 1),
