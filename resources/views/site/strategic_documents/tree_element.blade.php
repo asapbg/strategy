@@ -80,6 +80,30 @@
                         </a>
                     </div>
                 @endif
+                <div class="col-md-4 mb-4">
+                    @php
+                        $d->pris = NULL;
+                        if ($d->pris_act_id) {
+                            $d->pris = \App\Models\Pris::find($d->pris_act_id);
+                        }
+                    @endphp
+                    @if($d->pris)
+                        <h3 class="mb-2 fs-18">{{ trans_choice('custom.acceptment_act', 1) }}</h3>
+                        <div class="fs-18">
+                            @if ($d->pris?->doc_num && $d->pris?->published_at)
+                                <a href="{{ $d->pris->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($d->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) }}"
+                                   class="main-color text-decoration-none">
+                                    {{ $d->pris?->actType?->name . ' №/' . $d->pris?->doc_num . '/' . $d->pris?->doc_date }}
+                                </a>
+                            @endif
+                            @if($d->accept_act_institution_name)
+                                <span>{{ trans_choice('custom.of', 1) }}</span>
+                                <a href="#" class="main-color text-decoration-none">
+                                    {{ $d->accept_act_institution_name }}
+                                </a>
+                            @endif
+                        </div>
+                    @endif
             </div>
 
 
