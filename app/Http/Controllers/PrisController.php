@@ -46,8 +46,6 @@ class PrisController extends Controller
         $defaultDirection = $sortOrd;
 
         $in_archive = $request->offsetGet('in_archive');
-//        $institutions = $requestFilter['institutions'] ?? null;
-//        unset($requestFilter['institutions']);
 
         $items = Pris::select('pris.*')
             ->when(!$in_archive, function ($query) {
@@ -57,16 +55,6 @@ class PrisController extends Controller
             //->InPris()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions.historyNames', 'institutions.translation'])
-//            ->when($institutions, function ($query) use ($institutions) {
-//                $query->join(
-//                        'pris_institution as pi',
-//                        'pi.pris_id',
-//                        '=',
-//                        DB::raw("pris.id AND pi.institution_id IN(".implode(',', $institutions).")")
-//                    )
-//                    ->join('institution', 'institution.id', '=', DB::raw("pi.institution_id AND institution.active = '1' AND institution.deleted_at IS NULL"))
-//                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
-//            })
             ->leftJoin('pris_translations', function ($j){
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
@@ -178,8 +166,8 @@ class PrisController extends Controller
         $defaultDirection = $sortOrd;
 
         $in_current = $request->offsetGet('in_current');
-        $institutions = $requestFilter['institutions'] ?? null;
-        unset($requestFilter['institutions']);
+//        $institutions = $requestFilter['institutions'] ?? null;
+//        unset($requestFilter['institutions']);
 
         $items = Pris::select('pris.*')
             ->when(!$in_current, function ($query) {
@@ -193,16 +181,16 @@ class PrisController extends Controller
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
             })
-            ->when($institutions, function ($query) use ($institutions) {
-                $query->join(
-                    'pris_institution as pi',
-                    'pi.pris_id',
-                    '=',
-                    DB::raw("pris.id AND pi.institution_id IN(".implode(',', $institutions).")")
-                )
-                    ->join('institution', 'institution.id', '=', DB::raw("pi.institution_id AND institution.active = '1' AND institution.deleted_at IS NULL"))
-                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
-            })
+//            ->when($institutions, function ($query) use ($institutions) {
+//                $query->join(
+//                    'pris_institution as pi',
+//                    'pi.pris_id',
+//                    '=',
+//                    DB::raw("pris.id AND pi.institution_id IN(".implode(',', $institutions).")")
+//                )
+//                    ->join('institution', 'institution.id', '=', DB::raw("pi.institution_id AND institution.active = '1' AND institution.deleted_at IS NULL"))
+//                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
+//            })
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
             ->join('legal_act_type_translations', function ($j){
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
@@ -359,6 +347,13 @@ class PrisController extends Controller
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'
                     ),
+                    'importer' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('importer') : true,
+                        'label' => trans_choice('custom.importers', 1),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
                     'aboutSearch' => array(
                         'type' => 'checkbox',
                         'checked' => $request->ajax() ? $request->input('aboutSearch') : true,
@@ -382,10 +377,24 @@ class PrisController extends Controller
                     )
                 )
             ),
-            'formGroupAnd' => array(
+            'formGroupAndOrKeyword' => array(
                 'title' => __('custom.criteria') . ':',
                 'class' => 'mb-4',
                 'fields' => array(
+                    'fullKeyword' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('fullKeyword') : false,
+                        'label' => __('custom.full_keyword'),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
+                    'upperLowerCase' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('upperLowerCase') : false,
+                        'label' => __('custom.upper_lower_case'),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
                     'logicalАnd' => array(
                         'type' => 'checkbox',
                         'checked' => $request->ajax() ? $request->input('logicalАnd') : false,
@@ -422,32 +431,32 @@ class PrisController extends Controller
 //                'default' => '',
 //                'col' => 'col-md-3'
 //            ),
-            'importer' => array(
-                'type' => 'text',
-                'label' => trans_choice('custom.importers', 1),
-                'value' => $request->input('importer'),
-                'col' => 'col-md-4'
-            ),
-            'formGroupInstitution' => array(
-                'title' => __('custom.criteria') . ':',
-                'class' => '',
-                'fields' => array(
-                    'institutionFullSearch' => array(
-                        'type' => 'checkbox',
-                        'checked' => $request->ajax() ? $request->input('institutionFullSearch') : false,
-                        'label' => __('custom.full_keyword'),
-                        'value' => 1,
-                        'col' => 'col-md-1 d-inline me-2'
-                    ),
-                    'institutionUpperLowerCase' => array(
-                        'type' => 'checkbox',
-                        'checked' => $request->ajax() ? $request->input('institutionUpperLowerCase') : false,
-                        'label' => __('custom.upper_lower_case'),
-                        'value' => 1,
-                        'col' => 'col-md-1 d-inline me-2'
-                    ),
-                )
-            ),
+//            'importer' => array(
+//                'type' => 'text',
+//                'label' => trans_choice('custom.importers', 1),
+//                'value' => $request->input('importer'),
+//                'col' => 'col-md-4'
+//            ),
+//            'formGroupInstitution' => array(
+//                'title' => __('custom.criteria') . ':',
+//                'class' => '',
+//                'fields' => array(
+//                    'institutionFullSearch' => array(
+//                        'type' => 'checkbox',
+//                        'checked' => $request->ajax() ? $request->input('institutionFullSearch') : false,
+//                        'label' => __('custom.full_keyword'),
+//                        'value' => 1,
+//                        'col' => 'col-md-1 d-inline me-2'
+//                    ),
+//                    'institutionUpperLowerCase' => array(
+//                        'type' => 'checkbox',
+//                        'checked' => $request->ajax() ? $request->input('institutionUpperLowerCase') : false,
+//                        'label' => __('custom.upper_lower_case'),
+//                        'value' => 1,
+//                        'col' => 'col-md-1 d-inline me-2'
+//                    ),
+//                )
+//            ),
             'fromDate' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('fromDate'),

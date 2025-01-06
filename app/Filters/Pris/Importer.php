@@ -10,19 +10,20 @@ class Importer extends QueryFilter implements FilterContract{
 
     public function handle($value, $filter = null): void
     {
+        $value = ""; // stop using this as it was in separate field and now is not
         if (!empty($value)) {
             $value = "'%$value%'";
             $importerColumn = 'importer::text';
             $oldImporterColumn = 'pris.old_importers';
             $condition = 'LIKE';
 
-            if (!isset($filter['institutionUpperLowerCase'])) {
+            if (!isset($filter['upperLowerCase'])) {
                 $value = "UPPER($value)";
                 $importerColumn = "UPPER($importerColumn)";
                 $oldImporterColumn = "UPPER($oldImporterColumn)";
             }
 
-            if (isset($filter['institutionFullSearch'])) {
+            if (isset($filter['fullKeyword'])) {
                 $condition = '=';
                 $value = str_replace('%', '', $value);
             }
