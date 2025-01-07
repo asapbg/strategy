@@ -42,6 +42,7 @@
             const list = searchModal.find('.list-group');
 
             list.html('');
+            searchModal.find('.modal-title').text(content.trim());
             searchModal.modal('show');
 
             if (nomenclatures.length) {
