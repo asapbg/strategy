@@ -63,7 +63,7 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract, Feeda
         $requestFilter = $request->all();
         return static::with(['translations'])
             ->where('active', '=', 1)
-            ->whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)
+            ->Visible()
             ->where('national_plan', '=', 1)
             ->FilterBy($requestFilter)
             ->orderByRaw("created_at desc")
@@ -84,6 +84,13 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract, Feeda
     public function scopeNotNational($query)
     {
         return $query->where('ogp_plan.national_plan', '=', 0);
+    }
+
+    public function scopeVisible($query) {
+        return $query
+            ->whereHas('status', function ($q) {
+            $q->whereIn('type', [OgpStatusEnum::ACTIVE->value, OgpStatusEnum::FINAL->value]);
+        });
     }
 
     protected function fromDate(): Attribute
@@ -246,7 +253,7 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract, Feeda
     {
         return OgpPlan::Active()
             ->National()
-            ->whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)
+            ->Visible()
             ->FilterBy($filter)
             ->orderBy('created_at', 'desc')
             ->get();

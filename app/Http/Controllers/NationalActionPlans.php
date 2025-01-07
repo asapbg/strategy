@@ -33,7 +33,7 @@ class NationalActionPlans extends Controller
         $rssUrl = config('feed.feeds.national_plans.url');
         $items = OgpPlan::Active()
             ->National()
-            ->whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)
+            ->Visible()
             ->FilterBy($request->all())
             ->orderBy('created_at', 'desc')
             ->paginate(OgpPlan::PAGINATE);
@@ -62,7 +62,7 @@ class NationalActionPlans extends Controller
      */
     public function show(Request $request, $id)
     {
-        $plan = OgpPlan::whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)->find($id);
+        $plan = OgpPlan::Visible()->find($id);
         if(!$plan){
             return back()->with('warning', __('messages.record_not_found'));
         }
@@ -93,7 +93,7 @@ class NationalActionPlans extends Controller
 
     public function export(Request $request, $id)
     {
-        $plan = OgpPlan::whereRelation('status', 'type', OgpStatusEnum::ACTIVE->value)->findOrFail($id);
+        $plan = OgpPlan::Visible()->findOrFail($id);
         if(!$plan){
             return back()->with('warning', __('messages.record_not_found'));
         }

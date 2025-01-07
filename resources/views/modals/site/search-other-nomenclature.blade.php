@@ -3,7 +3,7 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title mb-0"></h4>
+                <h4 class="modal-title mb-0">тест</h4>
 
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -12,11 +12,16 @@
             <div class="modal-body overflow-scroll" style="max-height: 40vh;">
                 <input type="hidden" name="select2_id"/>
 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="other-nomenclature-search"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" placeholder="{{ __('custom.search') }}" aria-label="search" aria-describedby="other-nomenclature-search">
+                </div>
+
                 <div class="list-group"></div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('custom.cancel') }}</button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ __('custom.cancel') }}</button>
 
                 <button type="button" class="btn btn-success" onclick="generateOptionsFromListGroup();">{{ __('custom.select') }}</button>
             </div>
@@ -48,5 +53,18 @@
 
             $('#search-other-nomenclature-modal').modal('hide');
         }
+
+        document.querySelector('#other-nomenclature-search + input').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase(); // Get the input value and convert to lowercase
+            const listItems = document.querySelectorAll('.list-group .list-group-item'); // Get all list items
+
+            listItems.forEach(item => {
+                if (item.textContent.toLowerCase().includes(searchTerm)) {
+                    item.classList.remove('d-none'); // Show the item if it matches
+                } else {
+                    item.classList.add('d-none'); // Hide the item if it doesn't match
+                }
+            });
+        });
     </script>
 @endpush
