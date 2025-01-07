@@ -100,7 +100,7 @@ class AdvisoryBoardController extends AdminController
         $translatableFields = AdvisoryBoard::translationFieldsProperties();
         $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
             ->with(['institution' => fn($q) => $q->with(['translations']), 'moderateAdvisoryBoards' => fn($q) => $q->with(['board' => fn($q) => $q->with(['translations'])])])
-            ->orderBy('username')
+            ->orderByRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) ASC")
             ->where('user_type', '=', 1)
             ->get();
 
@@ -323,7 +323,7 @@ class AdvisoryBoardController extends AdminController
         $moderators = $item->moderators;
         $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
             ->with(['institution' => fn($q) => $q->with(['translations']), 'moderateAdvisoryBoards' => fn($q) => $q->with(['board' => fn($q) => $q->with(['translations'])])])
-            ->orderBy('username')
+            ->orderByRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) ASC")
             ->where('user_type', '=', 1)
             ->when($moderators, function ($q) use($moderators){
                 if($moderators->count()){
