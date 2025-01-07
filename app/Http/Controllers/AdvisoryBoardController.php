@@ -516,8 +516,10 @@ class AdvisoryBoardController extends Controller
 
             $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])
                 ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
-                ->orderByRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) ASC")
-                ->get();
+                ->get()
+                ->sortByDesc(function ($item, $key) {
+                    return $item->advisoryBoardNames();
+                });
 
             $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), trans_choice('custom.contacts', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.contacts', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
             return $this->view('site.advisory-boards.contacts', compact('moderators', 'pageTitle'));
