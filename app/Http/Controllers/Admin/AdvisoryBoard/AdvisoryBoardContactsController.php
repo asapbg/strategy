@@ -19,10 +19,8 @@ class AdvisoryBoardContactsController extends Controller
 
         $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])
             ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
-            ->get()
-            ->sortByDesc(function ($item, $key) {
-                return $item->advisoryBoardNames();
-            });
+            ->orderByRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) ASC")
+            ->get();
 
         $this->setTitlePlural(__('site.admin.advisory_boards.contacts.title'));
 
