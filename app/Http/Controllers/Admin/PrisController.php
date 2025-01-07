@@ -13,11 +13,13 @@ use App\Models\PrisChangePris;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,23 +48,56 @@ class PrisController extends AdminController
         $paginate = $filter['paginate'] ?? Pris::PAGINATE;
 
         $institutions = $requestFilter['institutions'] ?? null;
-        unset($requestFilter['institutions']);
+        $importer = $requestFilter['importer'] ?? null;
+        $fullKeyword = isset($requestFilter['fullKeyword']) ? true : false;
+        $upperLowerCase = isset($requestFilter['upperLowerCase']) ? true : false;
+        $locale = app()->getLocale();
+        $condition = $upperLowerCase ? 'LIKE' : 'ILIKE';
+        $whereImporter = "pris.old_importers $condition '%$importer%'
+                    OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND importer::text $condition '%$importer%')
+                ";
+        if ($fullKeyword) {
+            $whereImporter = "(";
+            $whereImporter .= "pris.old_importers $condition '% $importer %'";
+            $whereImporter .= " OR pris.old_importers $condition '% $importer'";
+            $whereImporter .= " OR pris.old_importers $condition '$importer %'";
+            $whereImporter .= ")";
+            $whereImporter .= " OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND (";
+            $whereImporter .= "importer::text $condition '% $importer %'";
+            $whereImporter .= " OR importer::text $condition '% $importer'";
+            $whereImporter .= " OR importer::text $condition '$importer %'";
+            $whereImporter .= "))";
+        }
 
         $items = Pris::select('pris.*')
-            ->with(['actType', 'actType.translations'])
-            ->LastVersion()
+            ->with(['translations', 'actType.translations', 'institutions.translation'])
+            ->leftJoin('pris_translations', function ($j) {
+                $j->on('pris_translations.pris_id', '=', 'pris.id')
+                    ->where('pris_translations.locale', '=', app()->getLocale());
+            })
+            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
+            ->join('legal_act_type_translations', function ($j) {
+                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+            })
+            ->where('pris.asap_last_version', '=', 1)
             ->when($institutions, function ($query) use ($institutions) {
                 $query->join(
                     'pris_institution as pi',
                     'pi.pris_id',
                     '=',
-                    DB::raw("pris.id AND pi.institution_id IN(".implode(',', $institutions).")")
+                    DB::raw("pris.id AND pi.institution_id IN(" . implode(',', $institutions) . ")")
                 )
                     ->join('institution', 'institution.id', '=', DB::raw("pi.institution_id AND institution.active = '1' AND institution.deleted_at IS NULL"))
-                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
+                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '" . app()->getLocale() . "'"));
+            })
+            ->when($importer, function ($query) use ($whereImporter) {
+                $query->where(function ($q) use ($whereImporter) {
+                    $q->where('pris.id', '=', 0)->orWhereRaw($whereImporter);
+                });
             })
             ->FilterBy($requestFilter)
-            ->orderBy('pris.created_at', 'desc')
+            ->orderBy('pris.doc_date', 'desc')
             ->paginate($paginate);
         $toggleBooleanModel = 'Pris';
         $editRouteName = self::EDIT_ROUTE;
@@ -78,11 +113,11 @@ class PrisController extends AdminController
     /**
      * @param Request $request
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @return RedirectResponse|View
      */
     public function edit(Request $request, int $id)
     {
-        $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType','changedDocsWithoutRelation']) : new Pris();
+        $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType', 'changedDocsWithoutRelation']) : new Pris();
 
         if (($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Pris::class)) {
             return back()->with('warning', __('messages.unauthorized'));
@@ -99,6 +134,10 @@ class PrisController extends AdminController
         );
     }
 
+    /**
+     * @param PrisStoreRequest $request
+     * @return RedirectResponse
+     */
     public function store(PrisStoreRequest $request)
     {
         $validated = $request->validated();
@@ -136,14 +175,19 @@ class PrisController extends AdminController
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function connectDocuments(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id'                => ['required', 'exists:pris,id'],
-            'connectIds'        => ['nullable', 'required_with:connect_type', 'array'],
-            'connectIds.*'      => ['nullable', 'exists:pris,id'],
-            'connect_type'      => ['nullable', 'required_without:connect_text', 'numeric'],
-            'connect_text'      => ['nullable', 'required_without:connect_type,connectIds', 'string', 'max:255'],
+            'id' => ['required', 'exists:pris,id'],
+            'connectIds' => ['nullable', 'required_with:connect_type', 'array'],
+            'connectIds.*' => ['nullable', 'exists:pris,id'],
+            'connect_type' => ['nullable', 'required_without:connect_text', 'numeric'],
+            'connect_text' => ['nullable', 'required_without:connect_type,connectIds', 'string', 'max:255'],
         ]);
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], Response::HTTP_OK);
@@ -158,7 +202,7 @@ class PrisController extends AdminController
         if (isset($validated['connectIds'])) {
             $item->changedDocs()->attach(
                 $validated['connectIds'],
-                ['connect_type' => $validated['connect_type'],'connect_text' => $validated['connect_text']]
+                ['connect_type' => $validated['connect_type'], 'connect_text' => $validated['connect_text']]
             );
             Pris::whereIn('id', $validated['connectIds'])->update(['connection_status' => PrisDocChangeTypeEnum::toStatus($validated['connect_type'])]);
         } else {
@@ -173,6 +217,11 @@ class PrisController extends AdminController
         return response()->json(['success' => true], Response::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function disconnectDocuments(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -203,6 +252,7 @@ class PrisController extends AdminController
     /**
      * Delete existing pris record
      *
+     * @param Request $request
      * @param Pris $item
      * @return RedirectResponse
      */
@@ -234,8 +284,8 @@ class PrisController extends AdminController
         }
 
         $exist = Tag::whereHas('translation', function ($q) use ($request) {
-                $q->where('label', '=', $request->input('label_bg'))->where('locale', '=', 'bg');
-            })
+            $q->where('label', '=', $request->input('label_bg'))->where('locale', '=', 'bg');
+        })
             ->orWhereHas('translation', function ($q) use ($request) {
                 $q->where('label', '=', $request->input('label_en'))->where('locale', '=', 'en');
             })
@@ -274,23 +324,26 @@ class PrisController extends AdminController
                 'type' => 'text',
                 'placeholder' => __('custom.pris_about'),
                 'value' => $request->input('about'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
             'legalReason' => array(
                 'type' => 'text',
                 'placeholder' => __('custom.pris_legal_reason'),
                 'value' => $request->input('legalReason'),
-                'col' => 'col-md-3'
+                'col' => 'col-md-4'
             ),
-//            'tags' => array(
-//                'type' => 'select',
-//                'options' => optionsFromModel(Tag::get()),
-//                'multiple' => true,
-//                'default' => '',
-//                'placeholder' => trans_choice('custom.tags', 2),
-//                'value' => $request->input('tags'),
-//                'col' => 'col-md-6'
-//            ),
+            'tags' => array(
+                'type' => 'text',
+                'placeholder' => trans_choice('custom.tags', 2),
+                'value' => $request->input('tags'),
+                'col' => 'col-md-4'
+            ),
+            'importer' => array(
+                'type' => 'text',
+                'placeholder' => trans_choice('custom.importers', 1),
+                'value' => $request->input('importer'),
+                'col' => 'col-md-4'
+            ),
             'institutions' => array(
                 'type' => 'subjects',
                 'placeholder' => trans_choice('custom.institutions', 1),
@@ -298,6 +351,7 @@ class PrisController extends AdminController
                 'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', trans_choice('custom.institutions', 1)),
                 'value' => request()->input('institutions'),
                 'default' => '',
+                'col' => 'col-md-8'
             ),
             'fromDate' => array(
                 'type' => 'datepicker',
@@ -346,6 +400,27 @@ class PrisController extends AdminController
                 'placeholder' => __('custom.content'),
                 'value' => $request->input('filesContent'),
                 'col' => 'col-md-9'
+            ),
+            'fullKeyword' => array(
+                'type' => 'checkbox',
+                'checked' => $request->input('fullKeyword'),
+                'placeholder' => __('custom.full_keyword'),
+                'value' => 1,
+                'col' => 'col-md-2'
+            ),
+            'upperLowerCase' => array(
+                'type' => 'checkbox',
+                'checked' => $request->input('upperLowerCase'),
+                'placeholder' => __('custom.upper_lower_case'),
+                'value' => 1,
+                'col' => 'col-md-2'
+            ),
+            'logicalАnd' => array(
+                'type' => 'checkbox',
+                'checked' => $request->input('logicalАnd'),
+                'placeholder' => __('custom.logical_and'),
+                'value' => 1,
+                'col' => 'col-md-2'
             ),
         );
     }

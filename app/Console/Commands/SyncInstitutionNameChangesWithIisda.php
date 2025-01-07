@@ -39,7 +39,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
             ->without('translations')
 //            ->where('names.valid_from', '<=', '2015-05-15')
             ->where('eik', '<>', 'N/A')
-            ->whereIn('institution.id', [134])
+            ->whereIn('institution.id', [138])
 //            ->whereNotIn('institution.id', [143,137])
             ->orderBy('institution.id')
             //->skip(113)
@@ -108,7 +108,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
 //
 //        return Command::SUCCESS;
 
-        $date_from = new \DateTime('2005-01-01');
+        $date_from = new \DateTime('2000-01-01');
         $end = new \DateTime(now());
         $interval = new \DateInterval('P1M');
         $period = new \DatePeriod($date_from, $interval, $end);

@@ -20,11 +20,15 @@
                                        value="{{ old($key, $field['value']) }}" >
                                 @break('datepicker')
                                 @case('checkbox')
-                                    <label class="@if(isset($field['class'])){{ $field['class'] }}@endif">
-                                        <input type="checkbox" name="{{ $key }}" @if($field['checked']) checked @endif
-                                        value="{{ $field['value'] }}" >
-                                        {{ $field['placeholder'] }}
-                                    </label>
+                                    <div class="icheck-primary @if(isset($field['class'])){{ $field['class'] }}@endif">
+                                        <input type="checkbox" class="form-check-input" name="{{ $key }}" id="{{ $key }}"
+                                               @if($field['checked']) checked @endif
+                                                value="{{ $field['value'] }}"
+                                        >
+                                        <label class="form-check-label" for="{{ $key }}">
+                                            {{ $field['placeholder'] }}
+                                        </label>
+                                    </div>
 
                                 @break('checkbox')
                                 @case('select')

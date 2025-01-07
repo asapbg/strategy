@@ -36,7 +36,10 @@
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->regNum }}</td>
                             <td>
-                                @if($item->institutions->count() && ($item->institutions->count() > 1 || $item->institutions->first()->id != config('app.default_institution_id')))
+                                @if(
+                                    $item->institutions->count() && ($item->institutions->count() > 1
+                                    || $item->institutions->first()->id != config('app.default_institution_id'))
+                                )
                                     @foreach($item->institutions as $i)
                                         @if($i->id != config('app.default_institution_id'))
                                             {{ $i->name }}<br>

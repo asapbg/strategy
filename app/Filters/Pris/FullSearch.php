@@ -34,6 +34,20 @@ class FullSearch extends QueryFilter implements FilterContract
                     OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND importer::text $condition '%$value%')
                 ";
                 if ($fullKeyword) {
+                    $whereTag = "tag_translations.label $condition '$value'";
+
+                    $whereAbout = "(";
+                    $whereAbout .= "pris_translations.about $condition '% $value %'";
+                    $whereAbout .= " OR pris_translations.about $condition '% $value'";
+                    $whereAbout .= " OR pris_translations.about $condition '$value %'";
+                    $whereAbout .= ")";
+
+                    $whereLegalReason = "(";
+                    $whereLegalReason .= "pris_translations.legal_reason $condition '% $value %'";
+                    $whereLegalReason .= " OR pris_translations.legal_reason $condition '% $value'";
+                    $whereLegalReason .= " OR pris_translations.legal_reason $condition '$value %'";
+                    $whereLegalReason .= ")";
+
                     $whereImporter = "(";
                     $whereImporter .= "pris.old_importers $condition '% $value %'";
                     $whereImporter .= " OR pris.old_importers $condition '% $value'";
@@ -72,6 +86,7 @@ class FullSearch extends QueryFilter implements FilterContract
                                 $whereAbout .= " OR pris_translations.about $condition '% $tag'";
                                 $whereAbout .= " OR pris_translations.about $condition '$tag %'";
                                 $whereAbout .= ")";
+
                                 $whereLegalReason .= "(";
                                 $whereLegalReason .= "pris_translations.legal_reason $condition '% $tag %'";
                                 $whereLegalReason .= " OR pris_translations.legal_reason $condition '% $tag'";
@@ -102,6 +117,7 @@ class FullSearch extends QueryFilter implements FilterContract
                                 $whereAbout .= " OR pris_translations.about $condition '% $tag'";
                                 $whereAbout .= " OR pris_translations.about $condition '$tag %'";
                                 $whereAbout .= ")";
+
                                 $whereLegalReason .= "(";
                                 $whereLegalReason .= "pris_translations.legal_reason $condition '% $tag %'";
                                 $whereLegalReason .= " OR pris_translations.legal_reason $condition '% $tag'";

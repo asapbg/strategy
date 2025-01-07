@@ -502,8 +502,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $documents = [];
         $documentTypes = $forPublic ? DocTypesEnum::docsByActTypePublic($this->act_type_id) : DocTypesEnum::docsByActType($this->act_type_id);
         foreach ($documentTypes as $docType) {
-            $doc = DB::table('public_consultation')
-                ->select([
+            $doc = PublicConsultation::select([
                     'files.id', 'files.doc_type', 'files.content_type', 'files.created_at', 'files.version',
                     DB::raw('files.description_'.app()->getLocale().' as description')
                 ])
@@ -516,7 +515,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                 ->where('public_consultation.id', '=', $this->id)
                 ->orderBy('created_at', 'desc')
                 ->first();
-            if( $doc ) {
+            if ($doc) {
                 $documents[] = $doc;
             }
         }

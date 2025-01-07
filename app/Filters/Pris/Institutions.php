@@ -10,6 +10,7 @@ class Institutions extends QueryFilter implements FilterContract{
 
     public function handle($value, $filter = null): void
     {
+        $value = "";
         if( is_array($value) && sizeof($value) ){
             if(str_contains($value[0], ',')) {
                 $explode = explode(',', $value[0]);

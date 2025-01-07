@@ -6,7 +6,6 @@ use App\Models\LegalActType;
 use App\Models\Pris;
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,13 +20,13 @@ class PrisController extends Controller
         $requestFilter = $request->all();
         if (isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
             $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
-            if ( $actType && Str::slug($actType->name) != $category ){
+            if ($actType && Str::slug($actType->name) != $category) {
                 return redirect(route('pris.index', $request->query()));
             }
         }
 
         $filter = $this->filters($request);
-        $filter['fullSearch']['label'] .= "/".__('custom.search_in_archive');
+        $filter['fullSearch']['label'] .= "/" . __('custom.search_in_archive');
         $filter['formGroup']['fields']['in_archive'] = [
             'type' => 'checkbox',
             'checked' => $request->ajax() ? $request->input('in_archive') : true,
@@ -54,19 +53,19 @@ class PrisController extends Controller
             ->LastVersion()
             //->InPris()
             ->Published()
-            ->with(['translations', 'actType', 'actType.translations', 'institutions.historyNames', 'institutions.translation'])
-            ->leftJoin('pris_translations', function ($j){
+            ->with(['translations', 'actType.translations', 'institutions.historyNames', 'institutions.translation'])
+            ->leftJoin('pris_translations', function ($j) {
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
             })
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
-            ->join('legal_act_type_translations', function ($j){
+            ->join('legal_act_type_translations', function ($j) {
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)
+            ->SortedBy($sort, $sortOrd)
             //->GroupBy('pris.id', 'institution_translations.name', 'legal_act_type_translations.name')
             ->paginate($paginate);
 
@@ -78,7 +77,7 @@ class PrisController extends Controller
         if ($request->ajax()) {
             $closeSearchForm = false;
             return view('site.pris.list',
-                compact('filter','sorter', 'items', 'rf','hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm')
+                compact('filter', 'sorter', 'items', 'rf', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm')
             );
         }
 
@@ -93,17 +92,17 @@ class PrisController extends Controller
             foreach ($actTypes as $act) {
                 $menuCategories[] = [
                     'label' => $act->name,
-                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'url' => route('pris.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
                     'slug' => Str::slug($act->name)
                 ];
                 $menuCategoriesArchive[] = [
                     'label' => $act->name,
-                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
                     'slug' => Str::slug($act->name)
                 ];
             }
         }
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS . '_' . app()->getLocale())->first();
 
         $pageTitle = __('site.pris.page_title');
         $extraBreadCrumbs = [];
@@ -141,13 +140,13 @@ class PrisController extends Controller
         $requestFilter = $request->all();
         if (isset($requestFilter['legalАctТype']) && !empty($requestFilter['legalАctТype']) && !empty($category)) {
             $actType = LegalActType::with(['translations'])->find((int)$requestFilter['legalАctТype']);
-            if ( $actType && Str::slug($actType->name) != $category ){
+            if ($actType && Str::slug($actType->name) != $category) {
                 return redirect(route('pris.index', $request->query()));
             }
         }
 
         $filter = $this->filters($request);
-        $filter['fullSearch']['label'] .= "/".__('custom.pris_actual_acts');
+        $filter['fullSearch']['label'] .= "/" . __('custom.pris_actual_acts');
         $filter['formGroup']['fields']['in_current'] = [
             'type' => 'checkbox',
             'checked' => $request->ajax() ? $request->input('in_current') : false,
@@ -177,7 +176,7 @@ class PrisController extends Controller
             ->InPris()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions.historyNames', 'institutions.translation'])
-            ->leftJoin('pris_translations', function ($j){
+            ->leftJoin('pris_translations', function ($j) {
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
             })
@@ -192,13 +191,13 @@ class PrisController extends Controller
 //                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
 //            })
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
-            ->join('legal_act_type_translations', function ($j){
+            ->join('legal_act_type_translations', function ($j) {
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)
+            ->SortedBy($sort, $sortOrd)
             ->paginate($paginate);
 
 
@@ -208,7 +207,7 @@ class PrisController extends Controller
         $no_email_subscribe = true;
 
         if ($request->ajax()) {
-            return view('site.pris.list', compact('filter','sorter', 'items', 'rf','hasSubscribeEmail',
+            return view('site.pris.list', compact('filter', 'sorter', 'items', 'rf', 'hasSubscribeEmail',
                 'hasSubscribeRss', 'requestFilter', 'no_rss', 'no_email_subscribe'));
         }
 
@@ -223,17 +222,17 @@ class PrisController extends Controller
             foreach ($actTypes as $act) {
                 $menuCategories[] = [
                     'label' => $act->name,
-                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'url' => route('pris.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
                     'slug' => Str::slug($act->name)
                 ];
                 $menuCategoriesArchive[] = [
                     'label' => $act->name,
-                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
                     'slug' => Str::slug($act->name)
                 ];
             }
         }
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS . '_' . app()->getLocale())->first();
 
         $pageTitle = __('site.menu.pris');
         $extraBreadCrumbs = array(['name' => __('site.pris.archive'), 'url' => route('pris.archive')]);
@@ -244,7 +243,7 @@ class PrisController extends Controller
             }
         }
         $this->composeBreadcrumbs($extraBreadCrumbs);
-        return $this->view('site.pris.index', compact('filter','sorter', 'items', 'pageTitle', 'menuCategories',
+        return $this->view('site.pris.index', compact('filter', 'sorter', 'items', 'pageTitle', 'menuCategories',
             'menuCategoriesArchive', 'pageTopContent', 'rf', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'hasSubscribeRss',
             'requestFilter', 'no_rss', 'no_email_subscribe'));
     }
@@ -263,7 +262,7 @@ class PrisController extends Controller
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS.'_'.app()->getLocale())->first();
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS . '_' . app()->getLocale())->first();
 
         $menuCategories = [];
         $menuCategoriesArchive = [];
@@ -275,12 +274,12 @@ class PrisController extends Controller
             foreach ($actTypes as $act) {
                 $menuCategories[] = [
                     'label' => $act->name,
-                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'url' => route('pris.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
                     'slug' => Str::slug($act->name)
                 ];
                 $menuCategoriesArchive[] = [
                     'label' => $act->name,
-                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
                     'slug' => Str::slug($act->name)
                 ];
             }
@@ -288,7 +287,7 @@ class PrisController extends Controller
 
         $pageTitle = __('site.pris.page_title');
         $extraBreadCrumbs = [];
-        if ($item->in_archive){
+        if ($item->in_archive) {
             $extraBreadCrumbs = array(['name' => __('site.pris.archive'), 'url' => route('pris.archive')]);
         }
         if (isset($requestFilter['legalАctТype']) && $requestFilter['legalАctТype']) {
@@ -332,7 +331,7 @@ class PrisController extends Controller
             ),
             'fullSearch' => array(
                 'type' => 'text',
-                'label' => __('custom.files').'/'.__('custom.pris_about').'/'.__('custom.pris_legal_reason').'/'.trans_choice('custom.tags', 2),
+                'label' => __('custom.files') . '/' . __('custom.pris_about') . '/' . __('custom.pris_legal_reason') . '/' . trans_choice('custom.tags', 2),
                 'value' => $request->input('fullSearch'),
                 'col' => 'col-md-12'
             ),
@@ -505,17 +504,18 @@ class PrisController extends Controller
      * @param $item
      * @return void
      */
-    private function composeBreadcrumbs(array $extraItems = [], $item = null){
+    private function composeBreadcrumbs(array $extraItems = [], $item = null)
+    {
         $customBreadcrumbs = array(
             ['name' => __('site.menu.pris'), 'url' => route('pris.index')]
         );
-        if (!empty($extraItems)){
-            foreach ($extraItems as $eItem){
+        if (!empty($extraItems)) {
+            foreach ($extraItems as $eItem) {
                 $customBreadcrumbs[] = $eItem;
             }
         }
 
-        if ($item){
+        if ($item) {
             $customBreadcrumbs[] = ['name' => $item->mcDisplayName, 'url' => ''];
         }
         $this->setBreadcrumbsFull($customBreadcrumbs);
