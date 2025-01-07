@@ -92,7 +92,7 @@ class FullSearch extends QueryFilter implements FilterContract
                                 $trimmed_tags .= $upperLowerCase ? "'$tag'" : "'".mb_strtolower($tag)."'";
                             } else {
                                 $whereFulltext .= " & $tag";
-                                $trimmed_tags .= ", '$tag'";
+                                $trimmed_tags .= $upperLowerCase ? ", '$tag'" : ", '".mb_strtolower($tag)."'";
                                 $whereAbout .= " AND ";
                                 $whereLegalReason .= " AND ";
                             }
