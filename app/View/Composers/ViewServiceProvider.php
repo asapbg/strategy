@@ -90,9 +90,9 @@ class ViewServiceProvider extends ServiceProvider
             ];
             $nationalPlan = OgpPlan::Active()
                 ->National()
-                ->whereHas('status', function ($q){
-                $q->where('type', '=', OgpStatusEnum::ACTIVE->value);
-            })->orderBy('from_date', 'asc')->get();
+                ->Visible()
+                ->orderBy('from_date', 'asc')
+                ->get();
 
             if($nationalPlan->count()) {
                 foreach ($nationalPlan as $plan){
