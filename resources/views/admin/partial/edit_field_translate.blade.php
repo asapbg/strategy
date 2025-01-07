@@ -25,7 +25,7 @@
                             @if($disabled)
                                 {!! old($oldFieldValueName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) !!}
                             @else
-                                <textarea id="{{ $fieldName }}" name="{{ $fieldName }}" @if($disabled) readonly disabled @endif class="form-control form-control-sm summernote @error($fieldName){{ 'is-invalid' }}@enderror">{{ old($oldFieldValueName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) }}</textarea>
+                                <textarea id="{{ $fieldName }}" name="{{ $fieldName }}" @if($disabled) readonly disabled @endif class="form-control form-control-sm summernote @error($fieldName){{ 'is-invalid' }}@enderror">{!! old($oldFieldValueName, ($item && $item->id ? ($item->translate($language['code']) ? $item->translate($language['code'])->{$field} : '') : ($default_val ?? '' ) )) !!}</textarea>
 
                             @endif
                             @break
