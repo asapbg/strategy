@@ -28,13 +28,21 @@ class LanguageFileUploadRequest extends FormRequest
         }
         $formatInput = request()->input('formats');
         $formats = constant("\App\Models\File::$formatInput");
-        return [
+
+        $rules = [
             'description_bg' => ['nullable', 'string', 'max:255', 'required_without:description_en', 'required_with:file_bg'],
             'description_en' => ['nullable', 'string', 'max:255', 'required_without:description_bg', 'required_with:file_en'],
             'is_visible' => ['nullable', 'numeric'],
             'formats' => ['required', 'string'],
-            'file_bg' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats), 'required_with:description_bg'],
-            'file_en' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats), 'required_with:description_en']
+            'file_bg' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats)],
+            'file_en' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats)]
         ];
+
+        if (!isset($this->fileRecord)) {
+            $rules['file_bg'][] = 'required_with:description_bg';
+            $rules['file_en'][] = 'required_with:description_en';
+        }
+
+        return $rules;
     }
 }

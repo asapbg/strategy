@@ -412,6 +412,110 @@ class Controller extends BaseController
         }
     }
 
+    public function editFileLanguages(File $fileRecord, $objectType) {
+        return match ((int)$objectType) {
+            File::CODE_OBJ_AB_PAGE => '', // TODO
+            File::CODE_OBJ_PAGE => '', // TODO
+            File::CODE_OBJ_PRIS => '', // TODO
+            File::CODE_OBJ_PUBLICATION => '', // TODO
+            File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL => '', // TODO
+            File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL => '', // TODO
+            File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN => $this->view('admin.strategic_documents.documents.edit-file', compact('fileRecord')), // TODO
+            File::CODE_OBJ_OGP => '', // TODO
+
+            default => '',
+        };
+    }
+
+    /**
+     * @param LanguageFileUploadRequest $request
+     * @param File $file
+     * @param $objectId
+     * @param $typeObject
+     * @param int $docType
+     * @param bool $redirect
+     * @return Application|RedirectResponse|Redirector|void
+     */
+    public function updateFileLanguages(LanguageFileUploadRequest $request, File $fileRecord, $typeObject, $docType = 0, $redirect = true) {
+        try {
+            $typeObjectToSave = $typeObject == File::CODE_OBJ_AB_PAGE ? File::CODE_OBJ_PAGE : $typeObject;
+            $validated = $request->all();
+            // Upload File
+            $pDir = match ((int)$typeObject) {
+                File::CODE_OBJ_AB_PAGE => File::PAGE_UPLOAD_DIR,
+                File::CODE_OBJ_PAGE => File::PAGE_UPLOAD_DIR,
+                File::CODE_OBJ_PRIS => File::PAGE_UPLOAD_PRIS,
+                File::CODE_OBJ_PUBLICATION => File::PUBLICATION_UPLOAD_DIR,
+                File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL => File::OP_GENERAL_UPLOAD_DIR,
+                File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL => File::LP_GENERAL_UPLOAD_DIR,
+                File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN => StrategicDocumentFile::DIR_PATH,
+                File::CODE_OBJ_OGP => File::OGP_PLAN_UPLOAD_DIR,
+
+                default => '',
+            };
+
+            $code = $fileRecord->locale;
+
+            $data = [
+                'code_object' => $typeObjectToSave,
+                'doc_type' => (int)$docType > 0 ? $docType : null,
+//                'filename' => $fileNameToStore,
+//                'content_type' => $file->getClientMimeType(),
+//                'path' => $pDir.$fileNameToStore,
+                'description_'.$code => $validated['description_'.$code],
+                'sys_user' => $request->user()->id,
+                'locale' => $code,
+//                'version' => ($version + 1).'.0',
+                'is_visible' => isset($validated['is_visible']) ? (int)$validated['is_visible'] : 0
+            ];
+
+            if (isset($validated['file_'.$code])) {
+                $file = $validated['file_'.$code];
+
+                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
+
+                $data['filename'] = $fileNameToStore;
+                $data['content_type'] = $file->getClientMimeType();
+                $data['path'] = $pDir.$fileNameToStore;
+            }
+
+            $fileRecord->update($data);
+
+            $ocr = new FileOcr($fileRecord->refresh());
+            $ocr->extractText();
+
+            switch ((int)$typeObject) {
+                case File::CODE_OBJ_PRIS:
+                    $route = route('admin.pris.edit', ['item' => $fileRecord->id_object]) . '#ct-files';
+                    break;
+                case File::CODE_OBJ_PAGE:
+                    $page = Page::find($fileRecord->id_object);
+                    if($page && $page->module_enum && $page->module_enum == PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value){
+                        $route = route('admin.impact_assessments.library.edit', ['item' => $fileRecord->id_object, 'module' => $page->module_enum]) . '#ct-files';
+                    } else{
+                        $route = route('admin.page.edit', ['item' => $fileRecord->id_object]) . '#ct-files';
+                    }
+                    break;
+                case File::CODE_OBJ_AB_PAGE:
+                case File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN:
+                    $route = route('admin.strategic_documents.document.edit', $fileRecord->id_object);
+                    break;
+                case File::CODE_OBJ_OGP:
+                    $route = route('admin.ogp.plan.edit', ['id' => $fileRecord->id_object]).'#report';
+                    break;
+                default:
+                    $route = '';
+            }
+            if ($redirect) {
+                return redirect($route)->with('success', 'Файлът/файловте са качени успешно');
+            }
+        } catch (Exception $e) {
+            logError('Upload file', $e->getMessage());
+            return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
+        }
+    }
+
     /**
      * @param string $title
      * @param string $img
