@@ -12,32 +12,58 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @if(str_contains(request()->url(), 'public-consultation')) active @endif"
-                        href="{{ route('public_consultation.index') }}">{{ __('site.menu.public_consultation') }}</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('impact_assessment.index') }}" type="button">{{ trans_choice('custom.impact_assessment', 1) }}</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('pris.index') }}">{{ __('site.menu.pris') }}</a>
-                </li>
-
-                <li class="nav-item ">
-                    <a href="{{ route('legislative_initiatives.index') }}" class="nav-link" type="button">{{ __('site.ogp_menu') }}
+                        href="{{ route('public_consultation.index') }}"
+                    >
+                        {{ __('site.menu.public_consultation') }}
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('strategy-documents.index') }}">{{ trans_choice('custom.strategic_documents', 2) }}</a>
+                    <a class="nav-link @if(str_contains(request()->url(), 'impact_assessment')) active @endif"
+                       href="{{ route('impact_assessment.index') }}" type="button"
+                    >
+                        {{ trans_choice('custom.impact_assessment', 1) }}
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('advisory-boards.index') }}" type="button">{{ trans_choice('custom.advisory_boards', 2) }}</a>
+                    <a class="nav-link @if(str_contains(request()->url(), 'pris') || str_contains(request()->url(), 'legislative-programs') || str_contains(request()->url(), 'operational-programs')) active @endif"
+                       href="{{ route('pris.index') }}"
+                    >
+                        {{ __('site.menu.pris') }}
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('library.publications') }}" class="nav-link" type="button">{{ __('custom.library') }}</a>
+                    <a class="nav-link @if(str_contains(request()->url(), 'legislative-initiatives') || str_contains(request()->url(), 'ogp')) active @endif"
+                       href="{{ route('legislative_initiatives.index') }}" type="button"
+                    >
+                        {{ __('site.ogp_menu') }}
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @if(str_contains(request()->url(), 'strategy-documents')) active @endif"
+                       href="{{ route('strategy-documents.index') }}"
+                    >
+                        {{ trans_choice('custom.strategic_documents', 2) }}
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @if(str_contains(request()->url(), 'advisory-boards')) active @endif"
+                       href="{{ route('advisory-boards.index') }}" type="button"
+                    >
+                        {{ trans_choice('custom.advisory_boards', 2) }}
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @if(str_contains(request()->url(), 'library/')) active @endif"
+                       href="{{ route('library.publications') }}" type="button"
+                    >
+                        {{ __('custom.library') }}
+                    </a>
                 </li>
 
                 <li class="nav-item top-bar-left-side-mobile">

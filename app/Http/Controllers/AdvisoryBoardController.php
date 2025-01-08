@@ -224,6 +224,7 @@ class AdvisoryBoardController extends Controller
             $closeSearchForm = false;
             return view('site.advisory-boards.list', compact('filter', 'sorter', 'items', 'rf', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
         }
+        $this->composeBreadcrumbs(null);
         $this->setSeo(__('site.seo_title'), trans_choice('custom.advisory_boards', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.advisory_boards', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm', 'customRequestParam', 'other_nomenclatures'));
     }
@@ -519,6 +520,7 @@ class AdvisoryBoardController extends Controller
                 ->orderByRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) ASC")
                 ->get();
 
+            $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
             $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), trans_choice('custom.contacts', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.contacts', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
             return $this->view('site.advisory-boards.contacts', compact('moderators', 'pageTitle'));
         }
@@ -564,6 +566,7 @@ class AdvisoryBoardController extends Controller
             return view('site.advisory-boards.main_news_list', compact('filter', 'sorter', 'items', 'requestFilter'));
         }
 
+        $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.news', 2), 'url' => '']));
         $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), trans_choice('custom.news', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.advisory_boards', 2), 'description' => trans_choice('custom.news', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.main_news', compact('filter', 'sorter', 'items', 'defaultOrderBy', 'defaultDirection', 'pageTitle', 'requestFilter'));
     }
@@ -576,6 +579,7 @@ class AdvisoryBoardController extends Controller
 
         $publication = $item;
 //        $this->setSlider(trans_choice('custom.advisory_boards', 2), $item->headerImg);
+        $this->composeBreadcrumbs($item);
         $this->setSeo($publication->meta_title ?? $publication->title, $publication->meta_description ?? $publication->short_content, $publication->meta_keyword, array('title' => $publication->meta_title ?? $publication->title, 'img' => $publication->mainImg ? $publication->mainImg->path : Publication::DEFAULT_IMG_ADV));
         return $this->view('site.advisory-boards.main_news_details', compact('publication', 'pageTitle'));
     }
@@ -592,6 +596,7 @@ class AdvisoryBoardController extends Controller
         }
         $pageTitle = $page->name;
 //        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.documents', 2), 'url' => '']));
         $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
 
         return $this->view('site.advisory-boards.page', compact('page', 'pageTitle'));
@@ -609,6 +614,7 @@ class AdvisoryBoardController extends Controller
         }
         $pageTitle = $page->name;
 //        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
+        $this->composeBreadcrumbs(null, array(['name' => __('site.base_info'), 'url' => '']));
         $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
 
         return $this->view('site.advisory-boards.page', compact('page', 'pageTitle'));
@@ -643,9 +649,10 @@ class AdvisoryBoardController extends Controller
             $selectColumns[] = DB::raw('count(advisory_board_meetings.id) as meetings');
         }
         $q = AdvisoryBoard::select($selectColumns)
-            ->with(['policyArea', 'policyArea.translations', 'translations', 'moderators',
-                'authority', 'authority.translations', 'advisoryChairmanType', 'advisoryChairmanType.translations',
-                'advisoryActType', 'advisoryActType.translations'])
+            ->with([
+                'policyArea.translations', 'translations', 'moderators', 'authority.translations',
+                'advisoryChairmanType.translations', 'advisoryActType.translations'
+            ])
             ->leftJoin('advisory_board_translations', function ($j) {
                 $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
                     ->where('advisory_board_translations.locale', '=', app()->getLocale());
@@ -1030,11 +1037,14 @@ class AdvisoryBoardController extends Controller
         $customBreadcrumbs = array(
             ['name' => trans_choice('custom.advisory_boards', 2), 'url' => route('advisory-boards.index')]
         );
+        if ($this->route_name == 'advisory-boards.news.details') {
+            $customBreadcrumbs[] = ['name' => trans_choice('custom.news', 2), 'url' => route('advisory-boards.news')];
+        }
         if ($item && $item->policyArea) {
             $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('advisory-boards.index') . '?fieldOfActions[]=' . $item->policyArea->id];
         }
         if ($item) {
-            $customBreadcrumbs[] = ['name' => $item->name, 'url' => !empty($extraItems) ? route('advisory-boards.view', $item) : null];
+            $customBreadcrumbs[] = ['name' => $item->name ?? $item->title, 'url' => !empty($extraItems) ? route('advisory-boards.view', $item) : null];
         }
         if (!empty($extraItems)) {
             foreach ($extraItems as $eItem) {

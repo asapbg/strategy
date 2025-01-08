@@ -44,7 +44,7 @@ class Controller extends BaseController
     protected array $languages = [];
 
     /** @var string $route_name */
-    private ?string $route_name;
+    protected ?string $route_name;
 
     protected array $slider = [];
     protected array $customBreadcrumb = [];

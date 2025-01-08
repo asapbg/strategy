@@ -163,92 +163,94 @@ class seedOldPublicConsultations extends Command
                             m.email,
                             pc.summary as description
                         from dbo.publicconsultations pc
-                        join dbo.users u on u.userid = pc.createdbyuserid
-                        join dbo.membership m on m.userid = u.userid
+                        left join dbo.users u on u.userid = pc.createdbyuserid
+                        left join dbo.membership m on m.userid = u.userid
                         left join dbo.categories c on c.id = pc.categoryid
                         where pc.languageid = 1
+                              --and pc.id = 177
                               and pc.id >= $currentStep
                               and pc.id < ".($currentStep + $step)."
                         order by pc.id
                 ");
 
                 if (sizeof($oldDbResult)) {
-                    foreach ($oldDbResult as $item) {
+                    foreach ($oldDbResult as $result) {
 
                         $fieldOfAct = null;
 
-                        if ((int)$item->consultation_level_id == InstitutionCategoryLevelEnum::CENTRAL->value) {
+                        if ((int)$result->consultation_level_id == InstitutionCategoryLevelEnum::CENTRAL->value) {
 
                             $fieldOfAct = (
                                 isset($fieldOfActionsNational) && sizeof($fieldOfActionsNational)
-                                && isset($fieldOfActionsNational[mb_strtolower($item->field_of_actions_name)])
+                                && isset($fieldOfActionsNational[mb_strtolower($result->field_of_actions_name)])
                             )
-                                ? (int)$fieldOfActionsNational[mb_strtolower($item->field_of_actions_name)]
+                                ? (int)$fieldOfActionsNational[mb_strtolower($result->field_of_actions_name)]
                                 : null;
 
-                        } elseif ((int)$item->consultation_level_id == InstitutionCategoryLevelEnum::AREA->value) {
+                        } elseif ((int)$result->consultation_level_id == InstitutionCategoryLevelEnum::AREA->value) {
 
                             $fieldOfAct = (
-                                isset($fieldOfActionsArea) && sizeof($fieldOfActionsArea) && isset($fieldOfActionsArea[mb_strtolower($item->field_of_actions_name)])
+                                isset($fieldOfActionsArea) && sizeof($fieldOfActionsArea) && isset($fieldOfActionsArea[mb_strtolower($result->field_of_actions_name)])
                             )
-                                ? (int)$fieldOfActionsArea[mb_strtolower($item->field_of_actions_name)]
+                                ? (int)$fieldOfActionsArea[mb_strtolower($result->field_of_actions_name)]
                                 : null;
 
-                        } elseif ((int)$item->consultation_level_id == InstitutionCategoryLevelEnum::MUNICIPAL->value) {
+                        } elseif ((int)$result->consultation_level_id == InstitutionCategoryLevelEnum::MUNICIPAL->value) {
 
                             $fieldOfAct = (
                                 isset($fieldOfActionsMunicipal) && sizeof($fieldOfActionsMunicipal)
-                                && isset($fieldOfActionsMunicipal[mb_strtolower($item->field_of_actions_name)])
+                                && isset($fieldOfActionsMunicipal[mb_strtolower($result->field_of_actions_name)])
                             )
-                                ? (int)$fieldOfActionsMunicipal[mb_strtolower($item->field_of_actions_name)]
+                                ? (int)$fieldOfActionsMunicipal[mb_strtolower($result->field_of_actions_name)]
                                 : null;
 
                         }
 
                         if (!$fieldOfAct) {
                             //Collect not existing fields of actions or create mapping on fly
-                            file_put_contents('old_pc_field_of_actions', $item->field_of_actions_name . PHP_EOL, FILE_APPEND);
+                            file_put_contents('old_pc_field_of_actions', $result->field_of_actions_name . PHP_EOL, FILE_APPEND);
                         }
 
-                        if (isset($ourUsersInstitutions[$item->author_id])) {
-                            $institutionId = $ourUsersInstitutions[$item->author_id] ?? $dInstitution->id;
-                        } else if (isset($ourUsersInstitutionsByMail[$item->email])) {
-                            $institutionId = $ourUsersInstitutionsByMail[$item->email];
+                        if (isset($ourUsersInstitutions[$result->author_id])) {
+                            $institutionId = $ourUsersInstitutions[$result->author_id] ?? $dInstitution->id;
+                        } else if (isset($ourUsersInstitutionsByMail[$result->email])) {
+                            $institutionId = $ourUsersInstitutionsByMail[$result->email];
                         } else {
                             $institutionId = $dInstitution->id;
                         }
+                        //dd($result->author_id, $result->email, $institutionId);
                         //$institution = Institution::withTrashed()->find($institutionId);
                         //$institutionLevel = $institution ? ($institution->level->nomenclature_level == 0 ? null : $institution->level->nomenclature_level) : null;
 
-                        if (isset($ourUsersIds[$item->author_id])) {
-                            $author = (int)$ourUsersIds[$item->author_id];
+                        if (isset($ourUsersIds[$result->author_id])) {
+                            $author = (int)$ourUsersIds[$result->author_id];
                         } else {
                             $author = null;
                         }
 
-                        $actType = $this->getActType($item);
+                        $actType = $this->getActType($result);
 
-                        if (isset($ourPc[(int)$item->old_id])) {
-                            $this->comment('Consultation with old id ' . $item->old_id . ' already exist');
-                            $existPc = PublicConsultation::withTrashed()->find($ourPc[(int)$item->old_id]);
+                        if (isset($ourPc[(int)$result->old_id])) {
+                            $this->comment('Consultation with old id ' . $result->old_id . ' already exist');
+                            $existPc = PublicConsultation::withTrashed()->find($ourPc[(int)$result->old_id]);
 
                             if ($existPc) {
                                 $existPc->importer_institution_id = $institutionId;
                                 $existPc->responsible_institution_id = $institutionId;
-                                $existPc->deleted_at = !empty($item->deleted_at) ? Carbon::parse($item->deleted_at)->format($formatTimestamp) : null;
-                                $existPc->updated_at = !empty($item->updated_at) ? Carbon::parse($item->updated_at)->format($formatTimestamp) : null;
-                                $existPc->consultation_level_id = $item->consultation_level_id;
-                                $existPc->open_from = !empty($item->open_from) ? Carbon::parse($item->open_from)->format($formatDate) : null;
-                                $existPc->open_to = !empty($item->open_to) ? Carbon::parse($item->open_to)->format($formatDate) : null;
-                                $existPc->active = $item->active;
+                                $existPc->deleted_at = !empty($result->deleted_at) ? Carbon::parse($result->deleted_at)->format($formatTimestamp) : null;
+                                $existPc->updated_at = !empty($result->updated_at) ? Carbon::parse($result->updated_at)->format($formatTimestamp) : null;
+                                $existPc->consultation_level_id = $result->consultation_level_id;
+                                $existPc->open_from = !empty($result->open_from) ? Carbon::parse($result->open_from)->format($formatDate) : null;
+                                $existPc->open_to = !empty($result->open_to) ? Carbon::parse($result->open_to)->format($formatDate) : null;
+                                $existPc->active = $result->active;
                                 $existPc->field_of_actions_id = (int)$fieldOfAct;
                                 $existPc->act_type_id = $actType;
                                 $existPc->user_id = $author;
                                 $existPc->save();
 
                                 foreach ($locales as $locale) {
-                                    $existPc->translateOrNew($locale['code'])->title = $item->title;
-                                    $existPc->translateOrNew($locale['code'])->description = stripHtmlTags(html_entity_decode($item->description));
+                                    $existPc->translateOrNew($locale['code'])->title = $result->title;
+                                    $existPc->translateOrNew($locale['code'])->description = stripHtmlTags(html_entity_decode($result->description));
                                 }
                                 $existPc->save();
                                 PublicConsultation::withTrashed()->where('old_id', '=', $existPc->old_id)->where('id', '<>', $existPc->id)->update(['old_id' => null]);
@@ -257,19 +259,19 @@ class seedOldPublicConsultations extends Command
                         }
 
                         $prepareNewPc = [
-                            'old_id' => $item->old_id,
-                            'consultation_level_id' => $item->consultation_level_id,
+                            'old_id' => $result->old_id,
+                            'consultation_level_id' => $result->consultation_level_id,
                             'act_type_id' => $actType,
                             'legislative_program_id' => null,
                             'operational_program_id' => null,
-                            'open_from' => !empty($item->open_from) ? Carbon::parse($item->open_from)->format($formatDate) : null,
-                            'open_to' => !empty($item->open_to) ? Carbon::parse($item->open_to)->format($formatDate) : null,
+                            'open_from' => !empty($result->open_from) ? Carbon::parse($result->open_from)->format($formatDate) : null,
+                            'open_to' => !empty($result->open_to) ? Carbon::parse($result->open_to)->format($formatDate) : null,
                             'importer_institution_id' => $institutionId,
                             'responsible_institution_id' => $institutionId,
-                            'active' => $item->active,
-                            'deleted_at' => !empty($item->deleted_at) ? Carbon::parse($item->deleted_at)->format($formatTimestamp) : null,
-                            'created_at' => !empty($item->created_at) ? Carbon::parse($item->created_at)->format($formatTimestamp) : null,
-                            'updated_at' => !empty($item->updated_at) ? Carbon::parse($item->updated_at)->format($formatTimestamp) : null,
+                            'active' => $result->active,
+                            'deleted_at' => !empty($result->deleted_at) ? Carbon::parse($result->deleted_at)->format($formatTimestamp) : null,
+                            'created_at' => !empty($result->created_at) ? Carbon::parse($result->created_at)->format($formatTimestamp) : null,
+                            'updated_at' => !empty($result->updated_at) ? Carbon::parse($result->updated_at)->format($formatTimestamp) : null,
                             'reg_num' => null,
                             'monitorstat' => null,
                             'operational_program_row_id' => null,
@@ -277,8 +279,8 @@ class seedOldPublicConsultations extends Command
                             'field_of_actions_id' => (int)$fieldOfAct,
                             'law_id' => null,
                             'pris_id' => null,
-                            'title' => $item->title,
-                            'description' => $item->description,
+                            'title' => $result->title,
+                            'description' => $result->description,
                             'user_id' => $author
                         ];
 
@@ -305,7 +307,7 @@ class seedOldPublicConsultations extends Command
                                 case when pcomments.isactive = true then 1 else 0 end as active,
                                 case when pcomments.isapproved  = true then 1 else 0 end as approved
                             from dbo.publicconsultationcomments pcomments
-                            where pcomments.consultationid = ' . $item->old_id . '
+                            where pcomments.consultationid = ' . $result->old_id . '
                             order by pcomments.datecreated asc');
 
                             if (sizeof($oldDbComments)) {
@@ -326,7 +328,7 @@ class seedOldPublicConsultations extends Command
                                 }
                             }
                             //TODO migrate files
-                            $this->comment('Finish import of public consultation with old ID ' . $item->old_id);
+                            $this->comment('Finish import of public consultation with old ID ' . $result->old_id);
                         }
                     }
                 }
@@ -349,24 +351,24 @@ class seedOldPublicConsultations extends Command
     }
 
     /**
-     * @param $item
+     * @param $result
      * @return int
      */
-    private function getActType($item): int
+    private function getActType($result): int
     {
         $actType = null;
-        if (!empty($item->title)) {
-            if (str_contains($item->title, 'Постановление на Министерския съвет')) {
+        if (!empty($result->title)) {
+            if (str_contains($result->title, 'Постановление на Министерския съвет')) {
                 $actType = ActType::ACT_COUNCIL_OF_MINISTERS;
-            } elseif (str_contains($item->title, 'Решение на Министерския съвет')) {
+            } elseif (str_contains($result->title, 'Решение на Министерския съвет')) {
                 $actType = ActType::ACT_COUNCIL_OF_MINISTERS;
-            } elseif (str_contains($item->title, 'Рамкова позиция')) {
+            } elseif (str_contains($result->title, 'Рамкова позиция')) {
                 $actType = ActType::ACT_FRAME_POSITION;
-            } elseif (str_contains($item->title, 'Правилник')) {
+            } elseif (str_contains($result->title, 'Правилник')) {
                 $actType = ActType::ACT_NON_NORMATIVE_COUNCIL_OF_MINISTERS;
-            } elseif (str_contains($item->title, 'Наредба')) {
+            } elseif (str_contains($result->title, 'Наредба')) {
                 $actType = ActType::ACT_MINISTER;
-            } elseif (str_contains($item->title, 'Закон')) {
+            } elseif (str_contains($result->title, 'Закон')) {
                 $actType = ActType::ACT_LAW;
             }
         }
