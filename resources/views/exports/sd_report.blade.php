@@ -9,6 +9,7 @@
             @page {
                 margin: 0 !important;
                 padding: 5px 0 !important;
+                size: A4 landscape;
             }
             body {
                 font-family: DejaVu Sans, sans-serif;
@@ -46,7 +47,7 @@
                 @if(isset($data['rows']) && $data['rows']->count())
                     @foreach($data['rows'] as $row)
                         <tr>
-                            <td><a href="{{ route('strategy-document.view', $row->id) }}">{{ $row->title }}</a></td>
+                            <td><a style="text-decoration: none" href="{{ route('strategy-document.view', $row->id) }}">{{ $row->title }}</a></td>
                             <td>{{ $row->documentType ? $row->documentType->name : '---' }}</td>
                             <td>{{ $row->strategic_document_level_id ? __('custom.strategic_document.dropdown.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($row->strategic_document_level_id)) : '---' }}</td>
                             <td>{{ $row->policyArea ? $row->policyArea->name : '---' }}</td>

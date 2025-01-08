@@ -441,6 +441,10 @@
                 controlDateExpiration();
             });
 
+            $('.accept_act_institution_type_id').on('change', function () {
+                controlPrisSection();
+            });
+
             controlDateExpiration();
             controlPrisSection();
             acceptActInstitutionByLevel();
