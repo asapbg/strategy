@@ -231,9 +231,7 @@ class LegislativeInitiativeController extends AdminController
             if ($activeFB->value) {
                 $facebookApi = new Facebook();
                 $facebookApi->postOnPage(array(
-                    'message' => "На Портала за обществени консултации е направено предложение за промяна на {$legislativeInitiative->law?->name} и ако събере
-                                 подкрепа от $legislativeInitiative->cap регистрирани потребители, ще бъде изпратена автоматично на компетентната институция.
-                                 Срокът за коментари и подкрепа е: " . displayDate($legislativeInitiative->active_support) . ". Вижте повече на линка.",
+                    'message' => "На Портала за обществени консултации е направено предложение за промяна на {$legislativeInitiative->law?->name} и ако събере подкрепа от $legislativeInitiative->cap регистрирани потребители, ще бъде изпратена автоматично на компетентната институция. Срокът за коментари и подкрепа е: " . displayDate($legislativeInitiative->active_support) . ". Вижте повече на линка.",
                     'link' => route('legislative_initiatives.view', $legislativeInitiative),
                     'published' => true
                 ));
