@@ -35,7 +35,7 @@ class FacebookNewTokens extends Command
         if($activeFB->value){
             $facebookApi = new Facebook();
             //get and save userLongLiveToken
-            $userLongLiveToken = $facebookApi->getUserLongLiveToken();
+            $userLongLiveToken = $facebookApi->getUserLongLivedToken();
             if(!isset($userLongLiveToken['error'])){
                 Setting::where('name', '=', Setting::FACEBOOK_USER_LONG_LIVE_TOKEN)
                     ->where('section', '=', Setting::FACEBOOK_SECTION)
@@ -47,7 +47,7 @@ class FacebookNewTokens extends Command
             }
 
             $facebookApi->initTokens();
-            $pageLongLiveToken = $facebookApi->getPageLongLiveToken();
+            $pageLongLiveToken = $facebookApi->getPageLongLivedToken();
             if(!isset($pageLongLiveToken['error'])){
                 Setting::where('name', '=', Setting::FACEBOOK_PAGE_LONG_LIVE_TOKEN)
                     ->where('section', '=', Setting::FACEBOOK_SECTION)

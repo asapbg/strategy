@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\CloseLegislativeInitiativeRequest;
 use App\Http\Requests\StoreLegislativeInitiativeRequest;
 use App\Http\Requests\UpdateLegislativeInitiativeRequest;
+use App\Library\Facebook;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\Law;
 use App\Models\LegislativeInitiative;
@@ -66,18 +67,18 @@ class LegislativeInitiativeController extends AdminController
             ->with(['user', 'law', 'law.translation', 'likes', 'dislikes'])
             ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
             ->join('law_institution', function ($query) use ($institution) {
-                $query->on('law_institution.law_id', '=', 'law.id')->when(!empty($institution),function ($query) use ($institution) {
-                    $query->whereIn('law_institution.institution_id',$institution);
+                $query->on('law_institution.law_id', '=', 'law.id')->when(!empty($institution), function ($query) use ($institution) {
+                    $query->whereIn('law_institution.institution_id', $institution);
                 });
             })
             ->join('institution', 'law_institution.institution_id', '=', 'institution.id')
-            ->join('institution_translations', function ($q){
+            ->join('institution_translations', function ($q) {
                 $q->on('institution_translations.institution_id', '=', 'institution.id')->where('institution_translations.locale', '=', app()->getLocale());
             })
             ->when(!empty($law), function ($query) use ($law) {
                 $query->whereIn('law.id', $law);
             })
-            ->when(!empty($keywords), function ($query) use ($keywords){
+            ->when(!empty($keywords), function ($query) use ($keywords) {
                 $query->orWhere('legislative_initiative.description', 'ilike', '%' . $keywords . '%')
                     ->orWhereHas('user', function ($query) use ($keywords) {
                         $query->where('first_name', 'ilike', '%' . $keywords . '%');
@@ -88,9 +89,9 @@ class LegislativeInitiativeController extends AdminController
             ->when(!empty($order_by), function ($query) use ($order_by, $order_by_direction) {
                 $direction = !in_array($order_by_direction, ['asc', 'desc']) ? 'asc' : $order_by_direction;
 
-                if($order_by == 'institutions'){
+                if ($order_by == 'institutions') {
                     $query->orderBy('institution_translations.name', $direction);
-                }else {
+                } else {
                     $query->orderBy('legislative_initiative.created_at', $direction);
                 }
             })
@@ -99,23 +100,23 @@ class LegislativeInitiativeController extends AdminController
 
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs(null, array(['name' => __('site.all_legislative_initiative'), 'url' => '']));
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI . '_' . app()->getLocale())->first();
 
         $defaultDirection = $request->get('direction');
 
         $requestFilter = $request->all();
         $hasSubscribeEmail = $this->hasSubscription(null, LegislativeInitiative::class, $requestFilter);
         $hasSubscribeRss = false;
-        $this->setSeo(__('site.seo_title'),  trans_choice('custom.legislative_initiatives', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.legislative_initiatives', 2), 'img' => LegislativeInitiative::DEFAULT_IMG));
+        $this->setSeo(__('site.seo_title'), trans_choice('custom.legislative_initiatives', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.legislative_initiatives', 2), 'img' => LegislativeInitiative::DEFAULT_IMG));
 
-        return $this->view(self::LIST_VIEW, compact('items', 'institutions','pageTitle', 'pageTopContent',
+        return $this->view(self::LIST_VIEW, compact('items', 'institutions', 'pageTitle', 'pageTopContent',
             'laws', 'defaultDirection', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
 
     public function create(Request $request)
     {
-        if($request->user()->cannot('create', LegislativeInitiative::class)){
+        if ($request->user()->cannot('create', LegislativeInitiative::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $regulatoryActs = RegulatoryAct::orderBy('id')->get();
@@ -125,15 +126,15 @@ class LegislativeInitiativeController extends AdminController
 
         $lawWithActivePc = array();
         //get law with active public consultation
-        $lawWithPcDB = Law::with(['translation', 'pc' => function($q){
+        $lawWithPcDB = Law::with(['translation', 'pc' => function ($q) {
             $q->ActivePeriodPublic();
         }])->get();
 
-        if($lawWithPcDB->count()){
-            foreach ($lawWithPcDB as $r){
-                if($r->pc->count()){
-                    foreach ($r->pc as $pc){
-                        if(!isset($lawWithActivePc[$r->id])){
+        if ($lawWithPcDB->count()) {
+            foreach ($lawWithPcDB as $r) {
+                if ($r->pc->count()) {
+                    foreach ($r->pc as $pc) {
+                        if (!isset($lawWithActivePc[$r->id])) {
                             $lawWithActivePc[$r->id] = array();
                         }
                         $lawWithActivePc[$r->id][] = [
@@ -148,7 +149,7 @@ class LegislativeInitiativeController extends AdminController
 
         $institutions = Institution::optionsListWithAttr();
         $this->composeBreadcrumbs(null, array(['name' => __('site.new_legislative_initiative'), 'url' => '']));
-        $this->setSeo(__('site.seo_title'),  __('site.new_legislative_initiative'), '', array('title' => __('site.seo_title'), 'description' => __('site.new_legislative_initiative'), 'img' => LegislativeInitiative::DEFAULT_IMG));
+        $this->setSeo(__('site.seo_title'), __('site.new_legislative_initiative'), '', array('title' => __('site.seo_title'), 'description' => __('site.new_legislative_initiative'), 'img' => LegislativeInitiative::DEFAULT_IMG));
 
         $settingsCap = Setting::where('name', '=', Setting::OGP_LEGISLATIVE_INIT_REQUIRED_LIKES)
             ->where('section', '=', Setting::OGP_LEGISLATIVE_INIT_SECTION)->first();
@@ -162,13 +163,13 @@ class LegislativeInitiativeController extends AdminController
     }
 
     /**
-     * @param Request               $request
+     * @param Request $request
      * @param LegislativeInitiative $item
      *
      */
     public function edit(Request $request, LegislativeInitiative $item)
     {
-        if($request->user()->cannot('update', $item)){
+        if ($request->user()->cannot('update', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
@@ -179,20 +180,21 @@ class LegislativeInitiativeController extends AdminController
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($item);
         $institutions = Institution::optionsListWithAttr();
-        $this->setSeo($item->facebookTitle,  $item->ogDescription, '', array('title' => $item->facebookTitle, 'description' => $item->ogDescription, 'img' => LegislativeInitiative::DEFAULT_IMG));
+        $this->setSeo($item->facebookTitle, $item->ogDescription, '', array('title' => $item->facebookTitle, 'description' => $item->ogDescription, 'img' => LegislativeInitiative::DEFAULT_IMG));
         return $this->view(self::EDIT_VIEW, compact('item', 'pageTitle', 'storeRouteName', 'listRouteName', 'translatableFields', 'regulatoryActs', 'institutions'));
     }
 
     public function store(StoreLegislativeInitiativeRequest $request)
     {
         $validated = $request->validated();
-        if($request->user()->cannot('create', LegislativeInitiative::class)){
+        if ($request->user()->cannot('create', LegislativeInitiative::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-
         DB::beginTransaction();
         try {
-            $selectedInstitutions = array_filter($validated['institutions'] ?? [], function ($v) { return (int)$v > 0; });
+            $selectedInstitutions = array_filter($validated['institutions'] ?? [], function ($v) {
+                return (int)$v > 0;
+            });
             unset($validated['institutions']);
             $validated['author_id'] = auth()->user()->id;
 
@@ -204,41 +206,58 @@ class LegislativeInitiativeController extends AdminController
                 ->where('section', '=', Setting::OGP_LEGISLATIVE_INIT_SECTION)->first();
             $validated['active_support'] = Carbon::now()->addDays($settingsSupportDays ? $settingsSupportDays->value : 50)->endOfDay()->format('Y-m-d H:i:s');
 
-            $new = new LegislativeInitiative();
-            $new->fill($validated);
-            $new->save();
+            $legislativeInitiative = new LegislativeInitiative();
+            $legislativeInitiative->fill($validated);
+            $legislativeInitiative->save();
 
             //Set all if selected all
-            if(!sizeof($selectedInstitutions)){
+            if (!sizeof($selectedInstitutions)) {
                 $selectedInstitutions = Law::find($validated['law_id'])->institutions->pluck('id')->toArray();
             }
-            $new->institutions()->sync($selectedInstitutions);
+            $legislativeInitiative->institutions()->sync($selectedInstitutions);
 
-            $new->votes()->create([
+            $legislativeInitiative->votes()->create([
                 'user_id' => $request->user()->id,
                 'is_like' => 1
             ]);
 
+            /**
+             * Post to Facebook
+             */
+            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
+                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
+                ->get()
+                ->first();
+            if ($activeFB->value) {
+                $facebookApi = new Facebook();
+                $facebookApi->postOnPage(array(
+                    'message' => "На Портала за обществени консултации е направено предложение за промяна на {$legislativeInitiative->law?->name} и ако събере
+                                 подкрепа от $legislativeInitiative->cap регистрирани потребители, ще бъде изпратена автоматично на компетентната институция.
+                                 Срокът за коментари и подкрепа е: " . displayDate($legislativeInitiative->active_support) . ". Вижте повече на линка.",
+                    'link' => route('legislative_initiatives.view', $legislativeInitiative),
+                    'published' => true
+                ));
+            }
 
-            $new->refresh();
-            if($new->cap <= $new->countSupport()) {
-                $new->status = LegislativeInitiativeStatusesEnum::STATUS_SEND->value;
-                $new->ready_to_send = 1;
-                $new->end_support_at = Carbon::now()->format('Y-m-d H:i:s');
-                $new->save();
+            $legislativeInitiative->refresh();
+            if ($legislativeInitiative->cap <= $legislativeInitiative->countSupport()) {
+                $legislativeInitiative->status = LegislativeInitiativeStatusesEnum::STATUS_SEND->value;
+                $legislativeInitiative->ready_to_send = 1;
+                $legislativeInitiative->end_support_at = Carbon::now()->format('Y-m-d H:i:s');
+                $legislativeInitiative->save();
 
                 //Send notification to author and all voted for successful initiative
-                $likesUserIds = $new->likes->pluck('user_id')->toArray();
-                if(sizeof($likesUserIds)){
+                $likesUserIds = $legislativeInitiative->likes->pluck('user_id')->toArray();
+                if (sizeof($likesUserIds)) {
                     $users = User::whereIn('id', $likesUserIds)->get();
-                    if($users->count()){
-                        foreach ($users as $n){
-                            $n->notify(new LegislativeInitiativeSuccessful($new));
+                    if ($users->count()) {
+                        foreach ($users as $n) {
+                            $n->notify(new LegislativeInitiativeSuccessful($legislativeInitiative));
                         }
                     }
                 }
-                if($new->user){
-                    $new->user->notify(new LegislativeInitiativeSuccessful($new));
+                if ($legislativeInitiative->user && !in_array($legislativeInitiative->user->id, $likesUserIds)) {
+                    $legislativeInitiative->user->notify(new LegislativeInitiativeSuccessful($legislativeInitiative));
                 }
             }
             DB::commit();
@@ -258,13 +277,13 @@ class LegislativeInitiativeController extends AdminController
         $pageTitle = $this->pageTitle;
         $this->composeBreadcrumbs($item, array(['name' => __('site.all_legislative_initiative'), 'url' => '']));
 
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI.'_'.app()->getLocale())->first();
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI . '_' . app()->getLocale())->first();
         $needSupport = ($item->cap - $item->countSupport());
 
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = false;
 
-        $this->setSeo($item->facebookTitle,  $item->ogDescription, '', array('title' => $item->facebookTitle, 'description' => $item->ogDescription, 'img' => LegislativeInitiative::DEFAULT_IMG));
+        $this->setSeo($item->facebookTitle, $item->ogDescription, '', array('title' => $item->facebookTitle, 'description' => $item->ogDescription, 'img' => LegislativeInitiative::DEFAULT_IMG));
 
         return $this->view(self::SHOW_VIEW, compact('item', 'pageTopContent', 'pageTitle', 'needSupport',
             'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
@@ -274,19 +293,21 @@ class LegislativeInitiativeController extends AdminController
     {
         $validated = $request->validated();
 
-        if($request->user()->cannot('update', $item)){
+        if ($request->user()->cannot('update', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         DB::beginTransaction();
         try {
-            $selectedInstitutions = array_filter($validated['institutions'] ?? [], function ($v) { return (int)$v > 0; });
+            $selectedInstitutions = array_filter($validated['institutions'] ?? [], function ($v) {
+                return (int)$v > 0;
+            });
             unset($validated['institutions']);
 
             $item->fill($validated);
             $item->save();
 
             //Set all if selected all
-            if(!sizeof($selectedInstitutions)){
+            if (!sizeof($selectedInstitutions)) {
                 $selectedInstitutions = Law::find($validated['law_id'])->institutions->pluck('id')->toArray();
             }
             $item->institutions()->sync($selectedInstitutions);
@@ -303,7 +324,7 @@ class LegislativeInitiativeController extends AdminController
 
     public function close(CloseLegislativeInitiativeRequest $request, LegislativeInitiative $item)
     {
-        if($request->user()->cannot('close', $item)){
+        if ($request->user()->cannot('close', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -314,10 +335,10 @@ class LegislativeInitiativeController extends AdminController
 
             //Send notification to all voted for closed initiative
             $likesUserIds = $item->likes->pluck('user_id')->toArray();
-            if(sizeof($likesUserIds)){
+            if (sizeof($likesUserIds)) {
                 $users = User::whereIn('id', $likesUserIds)->get();
-                if($users->count()){
-                    foreach ($users as $n){
+                if ($users->count()) {
+                    foreach ($users as $n) {
                         $n->notify(new LegislativeInitiativeClosed($item, 'closed'));
                     }
                 }
@@ -332,17 +353,17 @@ class LegislativeInitiativeController extends AdminController
 
     public function destroy(Request $request, LegislativeInitiative $item)
     {
-        if($request->user()->cannot('delete', $item)){
+        if ($request->user()->cannot('delete', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         try {
             $item->delete();
             //Send notification to all voted for closed initiative
             $likesUserIds = $item->likes->pluck('user_id')->toArray();
-            if(sizeof($likesUserIds)){
+            if (sizeof($likesUserIds)) {
                 $users = User::whereIn('id', $likesUserIds)->get();
-                if($users->count()){
-                    foreach ($users as $n){
+                if ($users->count()) {
+                    foreach ($users as $n) {
                         $n->notify(new LegislativeInitiativeClosed($item, 'deleted', false));
                     }
                 }
@@ -358,12 +379,12 @@ class LegislativeInitiativeController extends AdminController
 
     public function info()
     {
-        $page = Page::with(['files' => function($q) {
+        $page = Page::with(['files' => function ($q) {
             $q->where('locale', '=', app()->getLocale());
         }])
             ->where('system_name', '=', Page::LEGISLATIVE_INITIATIVE_INFO)
             ->first();
-        if(!$page){
+        if (!$page) {
             abort(404);
         }
         $pageTitle = $this->pageTitle;
@@ -379,20 +400,21 @@ class LegislativeInitiativeController extends AdminController
      * @param $extraItems
      * @return void
      */
-    private function composeBreadcrumbs($item = null, $extraItems = []){
+    private function composeBreadcrumbs($item = null, $extraItems = [])
+    {
         $customBreadcrumbs = array(
             ['name' => __('custom.legislative_initiatives'), 'url' => route('legislative_initiatives.index')]
         );
 
-        if(!empty($extraItems)){
-            foreach ($extraItems as $eItem){
+        if (!empty($extraItems)) {
+            foreach ($extraItems as $eItem) {
                 $customBreadcrumbs[] = $eItem;
             }
         }
 
-        if($item){
+        if ($item) {
             $customBreadcrumbs[] = [
-                'name' => (__('custom.change_f').' '.__('custom.in').' '.$item->law?->name),
+                'name' => (__('custom.change_f') . ' ' . __('custom.in') . ' ' . $item->law?->name),
                 'url' => (!empty($extraItems) ? route('legislative_initiatives.view', $item) : null)
             ];
         }

@@ -447,9 +447,9 @@ return [
     'settings.user_id'                     => 'Потребител (ID)',
     'settings.user_token'                     => 'Потребител (Token)',
     'settings.page_id'                     => 'Страница (ID)',
-    'settings.user_token_long'                     => 'Потребител (Long Live Token)',
+    'settings.user_token_long'                     => 'Потребител (Long-Lived User Access Token)',
     'settings.page_access_token'                     => 'Страница (Token за достъп)',
-    'settings.page_access_token_long'                     => 'Страница (Long Live Token за достъп)',
+    'settings.page_access_token_long'                     => 'Страница (Long-Lived Page Access Token)',
     'settings.app_id'                     => 'Клиент (App ID)',
     'settings.app_secret'                     => 'Клиент (App Secret)',
     //public sections
