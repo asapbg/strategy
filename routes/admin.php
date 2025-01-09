@@ -61,6 +61,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/upload-file/{object_id}/{object_type}', 'uploadFile')->name('upload.file');
         Route::post('/upload-file-lp-op/{object_id}/{object_type}/{row_num}/{row_month}', 'uploadFileLpOp')->name('upload.file.lp_op');
         Route::post('/upload-file-languages/{object_id}/{object_type}/{doc_type?}', 'uploadFileLanguages')->name('upload.file.languages');
+        Route::get('/edit-file-languages/{fileRecord}/{object_type}/{doc_type?}', 'editFileLanguages')->name('edit.file.languages');
+        Route::post('/update-file-languages/{fileRecord}/{object_type}/{doc_type?}', 'updateFileLanguages')->name('update.file.languages');
         Route::get('/select2-ajax/{type}', 'getSelect2Ajax')->name('select2.ajax');
     });
 

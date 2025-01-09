@@ -320,6 +320,11 @@
                                     <td>{{ $f['description_'.$f['locale']] }} ({{ strtoupper($f['locale']) }})</td>
 {{--                                    <td><i class="fas @if($f['is_visible']) fa-check text-success @else fa-minus text-danger @endif"></i></td>--}}
                                     <td>
+                                        <a class="btn btn-sm btn-success" type="button"
+                                           href="{{ route('admin.edit.file.languages', ['fileRecord' => $f['id'], 'object_type' => \App\Models\File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN]) }}">
+                                            <i class="fas fa-edit me-1" role="button"
+                                               data-toggle="tooltip" title="{{ __('custom.edit') }}"></i>
+                                        </a>
                                         <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f['id']]) }}">
                                             <i class="fas fa-download me-1" role="button"
                                                data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
