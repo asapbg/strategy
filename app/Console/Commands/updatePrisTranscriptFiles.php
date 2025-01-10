@@ -42,7 +42,7 @@ class updatePrisTranscriptFiles extends Command
         $ourLastVersionPris = Pris::withTrashed()
             ->where('asap_last_version', '=', 1)
             ->whereNotNull('old_id')
-            //->whereIn('old_id', [40564,40494])
+            ->whereIn('old_id', [105573])
             ->where('legal_act_type_id', LegalActType::TYPE_TRANSCRIPTS)
             ->orderBy('old_id')
             ->get()
@@ -92,16 +92,21 @@ class updatePrisTranscriptFiles extends Command
 
                     $fileNameToStore = trim($f->filename);
                     $fullPath = $path . $fileNameToStore;
+
                     if (Storage::disk('public_uploads')->exists($fullPath)) {
                         Storage::disk('public_uploads')->delete($fullPath);
                     }
 
                     $fullPath = $path . $ourPrisId . DIRECTORY_SEPARATOR .$fileNameToStore;
-                    Storage::disk('public_uploads')->put($fullPath, $f->file_content);
-                    File::where('id_object', $ourPrisId)->update([
-                        'path' => $fullPath,
-                    ]);
-                    $this->comment('File updated for pris with ID ' . $pris->id);
+                    if (!Storage::disk('public_uploads')->exists($fullPath)) {
+                        Storage::disk('public_uploads')->put($fullPath, $f->file_content);
+                    }
+                    File::where('id_object', $ourPrisId)
+                        ->where('filename', $fileNameToStore)
+                        ->update([
+                            'path' => $fullPath,
+                        ]);
+                    $this->comment("File $fullPath updated for pris with ID $pris->id");
                 }
             }
         } catch (\Exception $e) {
