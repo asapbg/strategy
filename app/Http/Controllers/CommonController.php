@@ -175,21 +175,23 @@ class CommonController extends Controller
     public function downloadFile(Request $request, File $file, $disk = 'public_uploads')
     {
         //TODO Do we need other check here? Permission or else in some cases
-        if( !in_array($file->code_object,
-            [
-                File::CODE_OBJ_PUBLICATION,
-                File::CODE_OBJ_LEGISLATIVE_PROGRAM,
-                File::CODE_OBJ_OPERATIONAL_PROGRAM,
-                File::CODE_OBJ_PRIS,
-                File::CODE_OBJ_PUBLIC_CONSULTATION,
-                File::CODE_AB,
-                File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL,
-                File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL,
-                File::CODE_OBJ_STRATEGIC_DOCUMENT,
-                File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN,
-                File::CODE_OBJ_OGP,
-                File::CODE_OBJ_PAGE,
-            ]) ) {
+        if (!in_array($file->code_object,
+                [
+                    File::CODE_OBJ_PUBLICATION,
+                    File::CODE_OBJ_LEGISLATIVE_PROGRAM,
+                    File::CODE_OBJ_OPERATIONAL_PROGRAM,
+                    File::CODE_OBJ_PRIS,
+                    File::CODE_OBJ_PUBLIC_CONSULTATION,
+                    File::CODE_AB,
+                    File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL,
+                    File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL,
+                    File::CODE_OBJ_STRATEGIC_DOCUMENT,
+                    File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN,
+                    File::CODE_OBJ_OGP,
+                    File::CODE_OBJ_PAGE,
+                ]
+            )
+        ) {
             return back()->with('warning', __('custom.record_not_found'));
         }
 
@@ -197,22 +199,24 @@ class CommonController extends Controller
             default => str_replace('files'.DIRECTORY_SEPARATOR, '', $file->path)
         };
 
-        if (Storage::disk('public_uploads')->has($path)) {
-            $explodeName = explode('.', $file->filename);
-            $extraName = (!empty($file->description_bg) ? substr($file->description_bg, 0, 250) : (!empty($file->description_en) ? substr($file->description_en, 0, 250) : (!empty($file->custom_name) ? substr($file->custom_name, 0, 250) : '')));
-            if(empty($extraName)){
-                $extraName = $file->filename;
-            } else{
-                $extraName.= '.'.$explodeName[(sizeof($explodeName) - 1)];
-            }
-            //            $extraName = (!empty($file->description_bg) ? \Str::slug($file->description_bg, '_').'_' : (!empty($file->description_en) ? \Str::slug($file->description_en, '_').'_' : (!empty($file->custom_name) ? \Str::slug($file->custom_name, '_').'_' : ''))).($file->id_object ? $file->id_object.'_' : '');
-            try {
-                return Storage::disk('public_uploads')->download($path, $extraName);
-            } catch (\Exception $e){
-                Log::error('Error download file (download.file): '.$e->getMessage().PHP_EOL.'file : '.$file->id.' | path: '.$path.' | extraName: '.($extraName ?? ''));
-                return back()->with('warning', __('custom.record_not_found'));
-            }
-        } else {
+        if (!Storage::disk('public_uploads')->has($path)) {
+            return back()->with('warning', __('custom.record_not_found'));
+        }
+
+        $extraName = (!empty($file->description_bg)
+            ? substr($file->description_bg, 0, 250)
+            : (!empty($file->description_en)
+                ? substr($file->description_en, 0, 250)
+                : (!empty($file->custom_name) ? substr($file->custom_name, 0, 250) : '')
+            )
+        );
+        if (empty($extraName)) {
+            $extraName = $file->filename;
+        }
+        try {
+            return Storage::disk('public_uploads')->download($path, $extraName);
+        } catch (\Exception $e){
+            Log::error('Error download file (download.file): '.$e->getMessage().PHP_EOL.'file : '.$file->id.' | path: '.$path.' | extraName: '.($extraName ?? ''));
             return back()->with('warning', __('custom.record_not_found'));
         }
     }

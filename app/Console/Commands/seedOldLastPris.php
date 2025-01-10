@@ -1673,32 +1673,33 @@ class seedOldLastPris extends Command
             try {
                 while ($currentStep <= $maxOldId && !$stop) {
                     echo "FromId: " . $currentStep . PHP_EOL;
-                    $oldDbResult = DB::connection('pris')->select('select
-                                pris.id as old_id,
-                                pris."number" as doc_num,
-                                pris.parentid as parentdocumentid,
-                                pris.rootid as rootdocumentid,
-                                pris.masterid,
-                                pris.state,
-                                pris.xstate,
-                                case when pris.islatestrevision = false then 0 else 1 end as last_version,
-                                pris.itemtypeid as old_doc_type_id,
-                                pris."xml" as to_parse_xml_details,
-                                pris.activestate as active, -- check with distinct if only 0 and 1 // check also pris.state
-                                pris.datepublished as published_at,
-                                pris.datecreated as created_at,
-                                pris.datemodified as updated_at,
-                                sum(case when att.attachid is not null then 1 else 0 end) as has_files
-                            FROM archimed.e_items pris
-                            left join edocs.attachments att on att.documentid = pris.id
-                            where true
-                                and pris.id >= ' . $currentStep . '
-                                and pris.id < ' . ($currentStep + $step) . '
-                                and pris.itemtypeid <> 5017 -- skip law records
-                                -- and pris.itemtypeid <> 5030 -- skip law records
-                                -- and documents.lastrevision = \'Y\' -- get final versions
-                            group by pris.id
-                            order by pris.id asc');
+                    $oldDbResult = DB::connection('pris')->select("
+                        SELECT pris.id as old_id,
+                               pris.number as doc_num,
+                               pris.parentid as parentdocumentid,
+                               pris.rootid as rootdocumentid,
+                               pris.masterid,
+                               pris.state,
+                               pris.xstate,
+                               case when pris.islatestrevision = false then 0 else 1 end as last_version,
+                               pris.itemtypeid as old_doc_type_id,
+                               pris.xml as to_parse_xml_details,
+                               pris.activestate as active, -- check with distinct if only 0 and 1 // check also pris.state
+                               pris.datepublished as published_at,
+                               pris.datecreated as created_at,
+                               pris.datemodified as updated_at,
+                               sum(case when att.attachid is not null then 1 else 0 end) as has_files
+                          FROM archimed.e_items pris
+                     LEFT JOIN edocs.attachments att on att.documentid = pris.id
+                         WHERE true
+                           AND pris.id >= $currentStep
+                           AND pris.id < " . ($currentStep + $step) . "
+                           AND pris.itemtypeid <> 5017 -- skip law records
+                           -- and pris.itemtypeid <> 5030 -- skip law records
+                           -- and documents.lastrevision = \'Y\' -- get final versions
+                     GROUP BY pris.id
+                     ORDER BY pris.id asc
+                    ");
 
                     if (sizeof($oldDbResult)) {
                         foreach ($oldDbResult as $item) {
