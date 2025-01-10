@@ -42,7 +42,7 @@ class updatePrisTranscriptFiles extends Command
         $ourLastVersionPris = Pris::withTrashed()
             ->where('asap_last_version', '=', 1)
             ->whereNotNull('old_id')
-            ->whereIn('old_id', [105573])
+            //->whereIn('old_id', [105573])
             ->where('legal_act_type_id', LegalActType::TYPE_TRANSCRIPTS)
             ->orderBy('old_id')
             ->get()
