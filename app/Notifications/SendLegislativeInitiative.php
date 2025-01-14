@@ -11,17 +11,17 @@ class SendLegislativeInitiative extends Notification
     use Queueable;
 
     protected $legislativeInitiative;
-    protected $ssevProfile;
+    protected $ssev_profile_id;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(LegislativeInitiative $item, int $ssevProfile)
+    public function __construct(LegislativeInitiative $item, int $ssev_profile_id)
     {
         $this->legislativeInitiative = $item;
-        $this->ssevProfile = $ssevProfile;
+        $this->ssev_profile_id = $ssev_profile_id;
     }
 
     /**
@@ -66,14 +66,10 @@ class SendLegislativeInitiative extends Notification
             'type_channel' => env('E_DELIVERY_METHOD', 2)
         ];
 
-        if ($this->ssevProfile) {
-            $eDeliveryConfig = config('e_delivery');
+        if ($this->ssev_profile_id) {
+            $communicationData['ssev_profile_id'] = $this->ssev_profile_id;
             if (config('app.env') != 'production') {
                 $communicationData['ssev_profile_id'] = config('e_delivery.local_ssev_profile_id');
-            } else {
-//                $communicationData['to_group'] = $notifiable->eik == '175370880' ? $eDeliveryConfig['group_ids']['company'] : $eDeliveryConfig['group_ids']['egov'];
-//                $communicationData['to_identity'] = $notifiable->eik;
-                $communicationData['ssev_profile_id'] = $this->ssevProfile;
             }
         } else {
             //email

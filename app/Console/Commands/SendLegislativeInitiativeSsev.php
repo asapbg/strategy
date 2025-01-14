@@ -43,34 +43,31 @@ class SendLegislativeInitiativeSsev extends Command
                    and legislative_initiative.deleted_at is null
           group by legislative_initiative.id
         ");
-dd($initiatives);
-        if (sizeof($initiatives)) {
+
+        if (count($initiatives)) {
             foreach ($initiatives as $initiative) {
                 $li = LegislativeInitiative::find($initiative->id);
-                if ($li) {
-                    if ($li->institutions->count()) {
-                        DB::beginTransaction();
-                        try {
-                            //TODO schedule SSEV notification
-                            $sendToAtLeastOne = false;
-                            foreach ($li->institutions as $institution) {
-                                dd($institution);
-                                $ssevProfile = SsevController::getInstitutionSsevProfile($institution);
-                                if ($ssevProfile) {
-                                    $sendToAtLeastOne = true;
-                                    $institution->notify(new SendLegislativeInitiative($li, $ssevProfile));
-                                }
+                if ($li->institutions->count()) {
+                    DB::beginTransaction();
+                    try {
+                        //TODO schedule SSEV notification
+                        $sendToAtLeastOne = false;
+                        foreach ($li->institutions as $institution) {
+                            $ssev_profile_id = SsevController::getInstitutionSsevProfileId($institution);
+                            if ($ssev_profile_id) {
+                                $sendToAtLeastOne = true;
+                                $institution->notify(new SendLegislativeInitiative($li, $ssev_profile_id));
                             }
-                            //legislative initiative status
-                            if ($sendToAtLeastOne) {
-                                $li->send_at = Carbon::now()->format('Y-m-d H:i:s');
-                                $li->save();
-                            }
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-                            \Log::error('Send legislative initiative (ID ' . $initiative->id . ') error: ' . $e);
                         }
+                        //legislative initiative status
+                        if ($sendToAtLeastOne) {
+                            $li->send_at = Carbon::now()->format('Y-m-d H:i:s');
+                            $li->save();
+                        }
+                        DB::commit();
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        \Log::error("Send legislative initiative (ID $initiative->id) error: " . $e);
                     }
                 }
             }

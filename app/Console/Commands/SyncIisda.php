@@ -183,9 +183,9 @@ class SyncIisda extends Command
                                     $localSubject->save();
                                     $updated = true;
 
-                                    $ssevProfile = SsevController::getInstitutionSsevProfile($localSubject);
-                                    if($ssevProfile != $localSubject->ssev_profile_id){
-                                        $localSubject->ssev_profile_id = $ssevProfile;
+                                    $ssev_profile_id = SsevController::getInstitutionSsevProfileId($localSubject);
+                                    if($ssev_profile_id != $localSubject->ssev_profile_id){
+                                        $localSubject->ssev_profile_id = $ssev_profile_id;
                                         $localSubject->save();
                                     }
                                 }
