@@ -167,12 +167,11 @@ class CommonController extends Controller
 
     /**
      * Download public file
-     * @param Request $request
      * @param File $file
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\StreamedResponse
      * @throws \League\Flysystem\FilesystemException
      */
-    public function downloadFile(Request $request, File $file, $disk = 'public_uploads')
+    public function downloadFile(File $file, $disk = 'public_uploads')
     {
         //TODO Do we need other check here? Permission or else in some cases
         if (!in_array($file->code_object,
@@ -200,9 +199,11 @@ class CommonController extends Controller
         };
 
         if (!Storage::disk('public_uploads')->has($path)) {
-            return back()->with('warning', __('custom.record_not_found'));
+            return back()->with('warning', __('custom.file_not_found'));
         }
 
+        $explodeName = explode('.', $file->filename);
+        $extension = $explodeName[(count($explodeName) - 1)];
         $extraName = (!empty($file->description_bg)
             ? substr($file->description_bg, 0, 250)
             : (!empty($file->description_en)
@@ -213,11 +214,15 @@ class CommonController extends Controller
         if (empty($extraName)) {
             $extraName = $file->filename;
         }
+        if (!strstr($extraName, $extension)) {
+            $extraName .= '.' . $extension;
+        }
         try {
+            $extraName = str_replace(['\\','/'], ['-','-'], $extraName);
             return Storage::disk('public_uploads')->download($path, $extraName);
         } catch (\Exception $e){
             Log::error('Error download file (download.file): '.$e->getMessage().PHP_EOL.'file : '.$file->id.' | path: '.$path.' | extraName: '.($extraName ?? ''));
-            return back()->with('warning', __('custom.record_not_found'));
+            return back()->with('warning', __('custom.file_not_found'));
         }
     }
 

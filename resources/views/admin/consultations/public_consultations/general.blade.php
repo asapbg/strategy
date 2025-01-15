@@ -336,7 +336,13 @@
             <label class="col-md-12 control-label" for="connected_pc">{{ __('custom.consultation_connections') }}</label>
             <div class="col-12">
                 {{--                data-connections="{{ json_encode($item->consultations->pluck('id')->toArray()) }}"--}}
-                <select id="connected_pc" name="connected_pc[]" multiple="multiple" data-current="{{ $item->id ?? 0 }}"  data-types2ajax="pc" data-urls2="{{ route('admin.select2.ajax', 'pc') }}" data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('connected_pc'){{ 'is-invalid' }}@enderror">
+                <select id="connected_pc" name="connected_pc[]" multiple="multiple"
+                        class="form-control form-control-sm select2-autocomplete-ajax @error('connected_pc'){{ 'is-invalid' }}@enderror"
+                        data-current="{{ $item->id ?? 0 }}"
+                        data-types2ajax="pc"
+                        data-urls2="{{ route('admin.select2.ajax', 'pc') }}"
+                        data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}"
+                >
                     @if($item->consultations->count())
                         @foreach($item->consultations as $row)
                             <option value="{{ $row->id }}" selected>{{ $row->title.' ('.displayDate($row->open_from).' - '.displayDate($row->open_to).')' }}</option>

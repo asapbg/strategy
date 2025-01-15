@@ -306,7 +306,7 @@ enum DocTypesEnum: int
                 break;
             case self::PC_COMMENTS_REPORT->value:
                 $rules = [
-                    'bg' => ['required', 'mimes:pdf', 'max:'.config('filesystems.max_upload_file_size')],
+                    'bg' => ['nullable', 'required_without:message', 'mimes:pdf', 'max:'.config('filesystems.max_upload_file_size')],
                     'en' => ['nullable', 'mimes:pdf', 'max:'.config('filesystems.max_upload_file_size')],
                 ];
                 break;

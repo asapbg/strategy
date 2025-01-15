@@ -144,6 +144,14 @@
             <h3 class="mb-3">{{ trans_choice('custom.useful_links', 2)  }}</h3>
             <div class="col-md-12">
                 <ul class="list-group list-group-flush">
+                    @foreach($item->consultations as $consultation)
+                        <li class="list-group-item">
+                             <a href="{{ route('public_consultation.view', $consultation->id) }}" target="_blank" class="main-color text-decoration-none">
+                                 <i class="fas fa-regular fa-link main-color me-1 fs-6"></i>
+                                 {{ $consultation->title.' ('.displayDate($consultation->open_from).' - '.displayDate($consultation->open_to).')' }}
+                             </a>
+                        </li>
+                    @endforeach
                     @foreach($item->importerInstitution->links as $l)
                         <li class="list-group-item">
                              <a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none"><i class="fas fa-regular fa-link  main-color me-1 fs-6"></i> {{ $l->title }}</a>
@@ -157,134 +165,135 @@
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ trans_choice('custom.documents', 2) }}</h3>
             <div class="row table-light">
-{{--                @if(!$item->old_id)--}}
-                    <div class="col-12 mb-2">
-                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
+
+                <div class="col-12 mb-2">
+                    <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
+                    @php($foundBaseDoc = false)
+                    @if(isset($documents) && count($documents))
                         <ul class="list-group list-group-flush">
-                            @php($foundBaseDoc = false)
-                            @if(isset($documents) && sizeof($documents))
-                                @foreach($documents as $doc)
-                                    @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'base')))
-                                        <li class="list-group-item">
-                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                                {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
-                                            </a>
-                                        </li>
-                                        @php($foundBaseDoc = true)
-                                    @endif
+                            @foreach($documents as $doc)
+                                @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'base')))
+                                    <li class="list-group-item">
+                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
+                                        </a>
+                                    </li>
+                                    @php($foundBaseDoc = true)
+                                @endif
+                                @if($item->documentsAttByLocale->count())
+                                    @php($foundBaseDocSub = 0)
+                                    @foreach($item->documentsAtt as $att)
+                                        @if($att->doc_type == $doc->doc_type.'00' && $att->locale == app()->getLocale())
+                                            @php($foundBaseDoc = true)
+                                            <li class="ms-5 list-unstyled @if(!$foundBaseDocSub) mt-2 @endif">
+                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                                    {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
+                                                </a>
+                                            </li>
+                                            @php($foundBaseDocSub = 1)
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        </ul>
+                    @endif
+                    @if($documentsImport->count())
+                        @if(!$foundBaseDoc)
+                            <div class="col-12">
+                                <ul class="list-group list-group-flush">
+                        @endif
+                            @foreach($documentsImport as $doc)
+                                <li class="list-group-item">
+                                    @include('site.partial.file_preview_or_download', ['f' => $doc])
+                                </li>
+                            @endforeach
+                        @if(!$foundBaseDoc)
+                                </ul>
+                            </div>
+                        @endif
+                        @php($foundBaseDoc)
+                    @endif
+                    @if(!$foundBaseDoc && !$documentsImport->count())
+                        <p>---</p>
+                    @endif
+                </div>
+
+                <div class="col-12 mb-2">
+                    <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.kd_documents') }}</p>
+                    <ul class="list-group list-group-flush">
+                        @php($foundKdDoc = false)
+                        @if(isset($documents) && sizeof($documents))
+                            @foreach($documents as $doc)
+                                @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'kd')))
+                                    <li class="list-group-item">
+                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
+                                        </a>
+                                    </li>
+                                    @php($foundKdDoc = true)
+
                                     @if($item->documentsAttByLocale->count())
-                                        @php($foundBaseDocSub = 0)
+                                        @php($foundKdDocSub = 0)
                                         @foreach($item->documentsAtt as $att)
-                                            @if($att->doc_type == $doc->doc_type.'00' && $att->locale == app()->getLocale())
-                                                @php($foundBaseDoc = true)
-                                                <li class="ms-5 list-unstyled @if(!$foundBaseDocSub) mt-2 @endif">
+                                            @if($att->doc_type == $doc->doc_type.'00')
+                                                @php($foundKdDoc = true)
+                                                <li class="ms-5 list-unstyled @if(!$foundKdDocSub) mt-2 @endif">
                                                     <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
                                                         {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
                                                     </a>
                                                 </li>
-                                                @php($foundBaseDocSub = 1)
+                                                @php($foundKdDocSub = 1)
                                             @endif
                                         @endforeach
                                     @endif
-                                @endforeach
-                            @endif
-                            @if($documentsImport->count())
-                                @if(!$foundBaseDoc)
-                                    <div class="col-12">
-                                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.base_documents') }}</p>
-                                        <ul class="list-group list-group-flush">
                                 @endif
-                                        @foreach($documentsImport as $doc)
-                                            <li class="list-group-item">
-                                                @include('site.partial.file_preview_or_download', ['f' => $doc])
-                                            </li>
+                            @endforeach
+                        @endif
+                        @if(!$foundKdDoc)
+                            <p>---</p>
+                        @endif
+                    </ul>
+                </div>
+
+                <div class="col-12">
+                    <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.report_documents') }}</p>
+                    @if($item->message)
+                        <div class="px-3 pt-2">{!! $item->message->content !!}</div>
+                    @endif
+                    <ul class="list-group list-group-flush">
+                        @php($foundReportDoc = false)
+                        @if(isset($documents) && sizeof($documents))
+                            @foreach($documents as $doc)
+                                @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'report')))
+                                    <li class="list-group-item">
+                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
+                                        </a>
+                                    </li>
+                                    @php($foundReportDoc = true)
+
+                                    @if($item->documentsAttByLocale->count())
+                                        @php($foundReportDocSub = 0)
+                                        @foreach($item->documentsAtt as $att)
+                                            @if($att->doc_type == $doc->doc_type.'00')
+                                                @php($foundReportDoc = true)
+                                                <li class="ms-5 list-unstyled @if(!$foundReportDocSub) mt-2 @endif">
+                                                    <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                                        {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
+                                                    </a>
+                                                </li>
+                                                @php($foundReportDocSub = 1)
+                                            @endif
                                         @endforeach
-                                @if(!$foundBaseDoc)
-                                        </ul>
-                                    </div>
+                                    @endif
                                 @endif
-                                @php($foundBaseDoc)
-                            @endif
-                            @if(!$foundBaseDoc)
-                                <p>---</p>
-                            @endif
-                        </ul>
-                    </div>
-
-                    <div class="col-12 mb-2">
-                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.kd_documents') }}</p>
-                        <ul class="list-group list-group-flush">
-                            @php($foundKdDoc = false)
-                            @if(isset($documents) && sizeof($documents))
-                                @foreach($documents as $doc)
-                                    @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'kd')))
-                                        <li class="list-group-item">
-                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                                {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
-                                            </a>
-                                        </li>
-                                        @php($foundKdDoc = true)
-
-                                        @if($item->documentsAttByLocale->count())
-                                            @php($foundKdDocSub = 0)
-                                            @foreach($item->documentsAtt as $att)
-                                                @if($att->doc_type == $doc->doc_type.'00')
-                                                    @php($foundKdDoc = true)
-                                                    <li class="ms-5 list-unstyled @if(!$foundKdDocSub) mt-2 @endif">
-                                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                                            {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
-                                                        </a>
-                                                    </li>
-                                                    @php($foundKdDocSub = 1)
-                                                @endif
-                                            @endforeach
-                                        @endif
-                                    @endif
-                                @endforeach
-                            @endif
-                            @if(!$foundKdDoc)
-                                <p>---</p>
-                            @endif
-                        </ul>
-                    </div>
-
-                    <div class="col-12">
-                        <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ __('site.public_consultation.report_documents') }}</p>
-                        <ul class="list-group list-group-flush">
-                            @php($foundReportDoc = false)
-                            @if(isset($documents) && sizeof($documents))
-                                @foreach($documents as $doc)
-                                    @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'report')))
-                                        <li class="list-group-item">
-                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                                {!! fileIcon($doc->content_type) !!} {{ $doc->description }} - {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }}
-                                            </a>
-                                        </li>
-                                        @php($foundReportDoc = true)
-
-                                        @if($item->documentsAttByLocale->count())
-                                            @php($foundReportDocSub = 0)
-                                            @foreach($item->documentsAtt as $att)
-                                                @if($att->doc_type == $doc->doc_type.'00')
-                                                    @php($foundReportDoc = true)
-                                                    <li class="ms-5 list-unstyled @if(!$foundReportDocSub) mt-2 @endif">
-                                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                                            {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
-                                                        </a>
-                                                    </li>
-                                                    @php($foundReportDocSub = 1)
-                                                @endif
-                                            @endforeach
-                                        @endif
-                                    @endif
-                                @endforeach
-                            @endif
-                            @if(!$foundReportDoc)
-                                <p>---</p>
-                            @endif
-                        </ul>
-                    </div>
-{{--                @endif--}}
+                            @endforeach
+                        @endif
+                        @if(!$foundReportDoc && !$item->message)
+                            <p>---</p>
+                        @endif
+                    </ul>
+                </div>
             </div>
         </div>
 

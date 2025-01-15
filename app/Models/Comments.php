@@ -18,10 +18,11 @@ class Comments extends Model
     protected $guarded = [];
 
     const PC_OBJ_CODE = 1;
+    const PC_OBJ_CODE_MESSAGE = 2;
 
-    public function author(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function author(): \Illuminate\Database\Eloquent\Relations\belongsTo
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id','id')->withTrashed();
     }
 
     protected function content(): Attribute

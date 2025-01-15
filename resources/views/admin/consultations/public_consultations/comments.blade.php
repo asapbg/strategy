@@ -23,12 +23,6 @@
                 <div class="text-danger mt-1">{{ $message }}</div>
                 @enderror
             </div>
-{{--            <input type="text" id="report_time" name="report_time"--}}
-{{--                   class="form-control form-control-sm timepicker @error('report_time'){{ 'is-invalid' }}@enderror"--}}
-{{--                   value="{{ old('report_time', displayDate(\Carbon\Carbon::now())) }}">--}}
-{{--            @error('report_time')--}}
-{{--            <div class="text-danger mt-1">{{ $message }}</div>--}}
-{{--            @enderror--}}
         </div>
     </div>
     <div class="col-12"></div>
@@ -44,7 +38,7 @@
         </div>
     @endforeach
     <div class="col-12"></div>
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="form-group">
             <label class="col-sm-12 control-label" for="open_from">{{ __('validation.attributes.message') }} <span class="required">*</span></label>
             <textarea class="form-control summernote @error('message') is-invalid @enderror" name="message">{{ old('message', '') }}</textarea>
@@ -62,20 +56,31 @@
 <div class="row">
     <h3><strong>Текущо становище:</strong></h3>
     @php($hasProposalReport = false)
-    @if(isset($documents) && sizeof($documents))
+    @if($item->message)
+        @php($hasProposalReport = true)
+        <p>{!! $item->message->content !!}</p>
+    @endif
+    @if(isset($documents) && count($documents))
         @foreach(config('available_languages') as $lang)
             @php($found = false)
-            @if(isset($documents[$docTypeCommentReport.'_'.$lang['code']]) && sizeof($documents[$docTypeCommentReport.'_'.$lang['code']]))
+            @if(isset($documents[$docTypeCommentReport.'_'.$lang['code']]) && count($documents[$docTypeCommentReport.'_'.$lang['code']]))
                 @if(!$found)
                     <div class="col-md-6 mb-3">
                         <label class="form-label">{{ __('validation.attributes.'.('file_'.$docTypeCommentReport.'_'.$lang['code'])) }}</label>
                 @endif
                 @foreach($documents[$docTypeCommentReport.'_'.$lang['code']] as $doc)
                     <div class="mb-3 @if($loop->first) mt-3 @endif">
-                        <a class="mr-3" href="{{ route('admin.download.file', $doc) }}" target="_blank" title="{{ __('custom.download') }}">
-                            {!! fileIcon($doc->content_type) !!} {{ $doc->{'description_'.$doc->locale} }} - {{ __('custom.'.$doc->locale) }} | {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }} | {{ $doc->user ? $doc->user->fullName() : '' }}
+                        <a class="mr-3" href="{{ route('admin.download.file', $doc->id) }}" target="_blank" title="{{ __('custom.download') }}">
+                            {!! fileIcon($doc->content_type) !!} {{ $doc->{'description_'.$doc->locale} }} - {{ __('custom.'.$doc->locale) }}
+                            | {{ __('custom.version_short').' '.$doc->version }}
+                            | {{ displayDate($doc->created_at) }} | {{ $doc->user ? $doc->user->fullName() : '' }}
                         </a>
-                        <button type="button" class="btn btn-sm btn-outline-info preview-file-modal mt-2" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">{{ __('custom.preview') }}</button>
+                        <button type="button" class="btn btn-sm btn-outline-info preview-file-modal mt-2"
+                                data-file="{{ $doc->id }}"
+                                data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}"
+                        >
+                            {{ __('custom.preview') }}
+                        </button>
                     </div>
                 @endforeach
                 @if(!$found)

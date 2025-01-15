@@ -80,15 +80,16 @@ class PublicConsultationController extends Controller
         return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'requestFilter', 'rssUrl', 'closeSearchForm'));
     }
 
-    public function show(Request $request, int $id = 0)
+    public function show(int $id = 0)
     {
         $rssUrl = route('rss.public-consultation.item', $id);
-//        return $this->view('templates.public_consultations_view');
-        $item = PublicConsultation::ActivePublic()->with([
-            'translation', 'actType.translation', 'contactPersons', 'responsibleInstitution.historyNames',
-            'importerInstitution.historyNames', 'importerInstitution.links.translations', 'pollsInPeriod.questions.answers',
-            'fieldOfAction.translation'
-        ])->find($id);
+        $item = PublicConsultation::ActivePublic()
+            ->with([
+                'translation', 'actType.translation', 'contactPersons', 'responsibleInstitution.historyNames',
+                'importerInstitution.historyNames', 'importerInstitution.links.translations', 'pollsInPeriod.questions.answers',
+                'fieldOfAction.translation', 'comments.author', 'message'
+            ])
+            ->find($id);
         if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }

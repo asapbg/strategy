@@ -39,7 +39,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     const NOTIFY_DAYS_BEFORE_END = 3;
     const PAGINATE = 20;
-    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
+    const DEFAULT_IMG = 'images' . DIRECTORY_SEPARATOR . 'ms-2023.jpg';
     const HOME_PAGINATE = 4;
     const TRANSLATABLE_FIELDS = ['title', 'description', 'short_term_reason', 'responsible_unit', 'proposal_ways', 'importer'];
     const SHORT_REASON_FIELD = 'short_term_reason';
@@ -70,11 +70,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
      */
     public function toFeedItem(): FeedItem
     {
-        $extraInfo = ($this->fieldOfAction ? '<p><b>'.(trans_choice('custom.field_of_actions', 1).': '.$this->fieldOfAction->name.'. ').'<b></p>' : '').('<p><b>'.__('custom.comments_deadline').': '.displayDate($this->open_to).'<b></p>. ').($this->importerInstitution ? '<p><b>'.trans_choice('custom.institutions', 1).': '.$this->importerInstitution?->name.'<b></p>. ' : '').($this->actType ? '<p><b>'.trans_choice('custom.act_type', 1).': '.$this->actType?->name.'<b></p>. ' : '');
+        $extraInfo = ($this->fieldOfAction ? '<p><b>' . (trans_choice('custom.field_of_actions', 1) . ': ' . $this->fieldOfAction->name . '. ') . '<b></p>' : '') . ('<p><b>' . __('custom.comments_deadline') . ': ' . displayDate($this->open_to) . '<b></p>. ') . ($this->importerInstitution ? '<p><b>' . trans_choice('custom.institutions', 1) . ': ' . $this->importerInstitution?->name . '<b></p>. ' : '') . ($this->actType ? '<p><b>' . trans_choice('custom.act_type', 1) . ': ' . $this->actType?->name . '<b></p>. ' : '');
         return FeedItem::create([
             'id' => $this->id,
             'title' => $this->title,
-            'summary' => $extraInfo.$this->description,
+            'summary' => $extraInfo . $this->description,
             'updated' => $this->updated_at,
             'created' => $this->created_at,
             'enclosure' => asset(self::DEFAULT_IMG),
@@ -97,24 +97,24 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'public_consultation.date';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
         return static::select('public_consultation.*')->with(['translations'])
-            ->join('public_consultation_translations', function ($j){
+            ->join('public_consultation_translations', function ($j) {
                 $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
                     ->where('public_consultation_translations.locale', '=', app()->getLocale());
             })
             ->join('field_of_actions', 'field_of_actions.id', '=', 'public_consultation.field_of_actions_id')
-            ->join('field_of_action_translations', function ($j){
+            ->join('field_of_action_translations', function ($j) {
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
             ->leftjoin('act_type', 'act_type.id', '=', 'public_consultation.act_type_id')
-            ->leftjoin('act_type_translations', function ($j){
+            ->leftjoin('act_type_translations', function ($j) {
                 $j->on('act_type_translations.act_type_id', '=', 'act_type.id')
                     ->where('act_type_translations.locale', '=', app()->getLocale());
             })
             ->ActivePublic()
             ->orderByRaw("public_consultation.created_at desc")
             ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)
+            ->SortedBy($sort, $sortOrd)
             ->limit(config('feed.items_per_page'), 20)
             ->get();
     }
@@ -123,7 +123,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     /**
      * Get the model name
      */
-    public function getModelName() {
+    public function getModelName()
+    {
         return $this->title;
     }
 
@@ -163,39 +164,44 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         );
     }
 
-    public function scopeActive($query){
+    public function scopeActive($query)
+    {
         $query->where('public_consultation.active', 1);
     }
 
-    public function scopeActivePublic($query){
+    public function scopeActivePublic($query)
+    {
         $query->where('public_consultation.active', 1)
             ->where('public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d'));
     }
 
-    public function scopeActivePeriodPublic($query){
+    public function scopeActivePeriodPublic($query)
+    {
         $query->where('public_consultation.active', 1)
             ->where('public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d'))
             ->where('public_consultation.open_to', '>=', Carbon::now()->format('Y-m-d'));
     }
 
-    public function scopeByUser($query){
+    public function scopeByUser($query)
+    {
         $user = auth()->user();
-        if($user && !$user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE])) {
-            if( $user->can('manage.advisory') ) {
+        if ($user && !$user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE])) {
+            if ($user->can('manage.advisory')) {
                 return $query->where('public_consultation.importer_institution_id', '=', $user->institution_id);
             }
         }
     }
 
-    public function scopeEnded($query){
+    public function scopeEnded($query)
+    {
         $query->where('public_consultation.open_to', '<', Carbon::now()->format('Y-m-d'));
     }
 
     protected function openFrom(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
-            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+            get: fn($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn($value) => !empty($value) ? Carbon::parse($value)->format('Y-m-d') : null
         );
     }
 
@@ -203,8 +209,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     protected function openTo(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
-            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+            get: fn($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn($value) => !empty($value) ? Carbon::parse($value)->format('Y-m-d') : null
         );
     }
 
@@ -212,7 +218,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         $now = Carbon::now()->format('Y-m-d');
         return Attribute::make(
-            get: fn () => ($now >= databaseDate($this->open_from) && databaseDate($this->open_to) >= $now) ? __('custom.active_f') : __('custom.inactive_f'),
+            get: fn() => ($now >= databaseDate($this->open_from) && databaseDate($this->open_to) >= $now) ? __('custom.active_f') : __('custom.inactive_f'),
         );
     }
 
@@ -220,7 +226,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         $now = Carbon::now()->format('Y-m-d');
         return Attribute::make(
-            get: fn () => ($now >= databaseDate($this->open_from) && databaseDate($this->open_to) >= $now) ? __('custom.active_f') : ( databaseDate($this->open_to) >= $now  ? __('custom.inactive_f') : __('custom.finished')),
+            get: fn() => ($now >= databaseDate($this->open_from) && databaseDate($this->open_to) >= $now) ? __('custom.active_f') : (databaseDate($this->open_to) >= $now ? __('custom.inactive_f') : __('custom.finished')),
         );
     }
 
@@ -228,7 +234,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         $now = Carbon::now()->format('Y-m-d');
         return Attribute::make(
-            get: fn () => $now >= databaseDate($this->open_from) && databaseDate($this->open_to) >= $now,
+            get: fn() => $now >= databaseDate($this->open_from) && databaseDate($this->open_to) >= $now,
         );
     }
 
@@ -237,7 +243,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $from = Carbon::parse($this->open_from);
         $to = Carbon::parse($this->open_to);
         return Attribute::make(
-            get: fn () => $from->diffInDays($to),
+            get: fn() => $from->diffInDays($to),
         );
     }
 
@@ -246,7 +252,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return Attribute::make(
 //            [Срок: <срок>] <заглавие>
             get: function () {
-                return '['.__('custom.deadline') .': '. displayDate($this->open_to) .'] '.$this->title;
+                return '[' . __('custom.deadline') . ': ' . displayDate($this->open_to) . '] ' . $this->title;
             }
         );
     }
@@ -263,7 +269,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     protected function nomenclatureLevelLabel(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->consultation_level_id ? __('custom.nomenclature_level.'.InstitutionCategoryLevelEnum::keyByValue($this->consultation_level_id)) : '---',
+            get: fn() => $this->consultation_level_id ? __('custom.nomenclature_level.' . InstitutionCategoryLevelEnum::keyByValue($this->consultation_level_id)) : '---',
         );
     }
 
@@ -349,7 +355,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         return $this->belongsToMany(Poll::class, 'public_consultation_poll', 'public_consultation_id', 'poll_id')
             ->where('status', '=', 1)
-        ->where('end_date', '<', Carbon::now()->format('Y-m-d'));
+            ->where('end_date', '<', Carbon::now()->format('Y-m-d'));
     }
 
 
@@ -362,6 +368,13 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         return $this->hasMany(Comments::class, 'object_id', 'id')
             ->where('object_code', '=', Comments::PC_OBJ_CODE)
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function message(): \Illuminate\Database\Eloquent\Relations\hasOne
+    {
+        return $this->hasOne(Comments::class, 'object_id', 'id')
+            ->where('object_code', '=', Comments::PC_OBJ_CODE_MESSAGE)
             ->orderBy('created_at', 'desc');
     }
 
@@ -379,7 +392,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         return $this->hasMany(File::class, 'id_object', 'id')
             ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
             ->whereNull('doc_type')
-            ->where('=locale','=', app()->getLocale())
+            ->where('=locale', '=', app()->getLocale())
             ->orderBy('created_at', 'desc');
     }
 
@@ -396,7 +409,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         return $this->hasMany(File::class, 'id_object', 'id')
             ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
-            ->whereIn('doc_type',  DocTypesEnum::pcDocAttTypes())
+            ->whereIn('doc_type', DocTypesEnum::pcDocAttTypes())
             ->whereNotNull('doc_type')
             ->orderBy('created_at', 'desc')
             ->orderBy('locale');
@@ -406,7 +419,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         return $this->hasMany(File::class, 'id_object', 'id')
             ->where('code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
-            ->whereIn('doc_type',  DocTypesEnum::pcDocAttTypes())
+            ->whereIn('doc_type', DocTypesEnum::pcDocAttTypes())
             ->whereNotNull('doc_type')
             ->where('locale', '=', app()->getLocale())
             ->orderBy('created_at', 'desc');
@@ -485,10 +498,10 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function lastDocumentByLocaleAndType($docType)
     {
         return DB::table('public_consultation')
-            ->select(['files.id', 'files.doc_type', DB::raw('files.description_'.app()->getLocale().' as description'), 'files.content_type', 'files.created_at', 'files.version'])
-            ->join('files', function ($j) use ($docType){
+            ->select(['files.id', 'files.doc_type', DB::raw('files.description_' . app()->getLocale() . ' as description'), 'files.content_type', 'files.created_at', 'files.version'])
+            ->join('files', function ($j) use ($docType) {
                 $j->on('files.id_object', '=', 'public_consultation.id')
-                    ->where('files.locale','=', app()->getLocale())
+                    ->where('files.locale', '=', app()->getLocale())
                     ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
                     ->where('files.doc_type', '=', $docType);
             })
@@ -503,15 +516,16 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $documentTypes = $forPublic ? DocTypesEnum::docsByActTypePublic($this->act_type_id) : DocTypesEnum::docsByActType($this->act_type_id);
         foreach ($documentTypes as $docType) {
             $doc = PublicConsultation::select([
-                    'files.id', 'files.doc_type', 'files.content_type', 'files.created_at', 'files.version',
-                    DB::raw('files.description_'.app()->getLocale().' as description')
-                ])
-                ->join('files', function ($j) use ($docType){
+                'files.id', 'files.doc_type', 'files.content_type', 'files.created_at', 'files.version',
+                DB::raw('files.description_' . app()->getLocale() . ' as description')
+            ])
+                ->join('files', function ($j) use ($docType) {
                     $j->on('files.id_object', '=', 'public_consultation.id')
-                        ->where('files.locale','=', app()->getLocale())
+                        ->where('files.locale', '=', app()->getLocale())
                         ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
                         ->where('files.doc_type', '=', $docType);
                 })
+                ->whereNull('files.deleted_at')
                 ->where('public_consultation.id', '=', $this->id)
                 ->orderBy('created_at', 'desc')
                 ->first();
@@ -525,14 +539,17 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     public function lastDocumentsByLocaleImport()
     {
-        return DB::table('public_consultation')
-            ->select(['files.id', 'files.doc_type', DB::raw('files.description_'.app()->getLocale().' as description'), 'files.content_type', 'files.created_at', 'files.version'])
-            ->join('files', function ($j){
+        return PublicConsultation::select([
+                'files.id', 'files.doc_type',
+                DB::raw('files.description_' . app()->getLocale() . ' as description'), 'files.content_type', 'files.created_at', 'files.version'
+            ])
+            ->join('files', function ($j) {
                 $j->on('files.id_object', '=', 'public_consultation.id')
-                    ->where('files.locale','=', app()->getLocale())
+                    ->where('files.locale', '=', app()->getLocale())
                     ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
                     ->whereNull('files.doc_type');
             })
+            ->whereNull('files.deleted_at')
             ->where('public_consultation.id', '=', $this->id)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -552,10 +569,10 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     public function changedFiles(): \Illuminate\Support\Collection
     {
         return DB::table('public_consultation')
-            ->select(['files.id', 'files.doc_type', DB::raw('files.description_'.app()->getLocale().' as description'), 'files.content_type', 'files.created_at', 'files.version', 'files.locale'])
-            ->join('files', function ($j){
+            ->select(['files.id', 'files.doc_type', DB::raw('files.description_' . app()->getLocale() . ' as description'), 'files.content_type', 'files.created_at', 'files.version', 'files.locale'])
+            ->join('files', function ($j) {
                 $j->on('files.id_object', '=', 'public_consultation.id')
-                    ->where('files.locale','=', app()->getLocale())
+                    ->where('files.locale', '=', app()->getLocale())
                     ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION);
             })
             ->where('public_consultation.id', '=', $this->id)
@@ -568,24 +585,25 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
     {
         $q = DB::table('public_consultation')
             ->select(['public_consultation.id', DB::raw('public_consultation.reg_num || \' / \' || public_consultation_translations.title as name')])
-            ->join('public_consultation_translations', function ($j){
+            ->join('public_consultation_translations', function ($j) {
                 $j->on('public_consultation.id', '=', 'public_consultation_translations.public_consultation_id')
                     ->where('public_consultation_translations.locale', '=', app()->getLocale());
             });
 
-        if(isset($filters['exclude']) && (int)$filters['exclude']) {
+        if (isset($filters['exclude']) && (int)$filters['exclude']) {
             $q->where('public_consultation.id', '<>', (int)$filters['exclude']);
         }
-        if(isset($filters['connections']) && is_array($filters['connections']) && sizeof($filters['connections'])) {
+        if (isset($filters['connections']) && is_array($filters['connections']) && sizeof($filters['connections'])) {
             $q->whereNotIn('public_consultation.id', $filters['connections']);
         }
-        if(isset($filters['title'])) {
-            $q->where('public_consultation_translations.title', 'ilike', '%'.$filters['title'].'%');
+        if (isset($filters['title'])) {
+            $q->where('public_consultation_translations.title', 'ilike', '%' . $filters['title'] . '%')
+                ->orWhere('public_consultation.reg_num', 'ilike', '%' . $filters['title'] . '%');
         }
-        if(isset($filters['reg_num'])) {
-            $q->where('public_consultation.reg_num', 'ilike', '%'.$filters['reg_num'].'%');
+        if (isset($filters['reg_num'])) {
+            $q->where('public_consultation.reg_num', 'ilike', '%' . $filters['reg_num'] . '%');
         }
-        if(isset($filters['pris'])) {
+        if (isset($filters['pris'])) {
             $q->where(function ($query) use ($filters) {
                 $query->where('public_consultation.pris_id', '=', (int)$filters['pris'])->orWhereNull('public_consultation.pris_id');
             });
@@ -605,7 +623,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         //Начало на обществената консултация
         $startDate = Carbon::parse($this->open_from)->format('Y-m-d 00:00:00');
         $sortedTimeline['2'] = [
-            'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::START->value)),
+            'label' => __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::START->value)),
             'date' => displayDate($startDate),
             'isActive' => $this->inPeriodBoolean || ($now > Carbon::parse($this->open_to)->format('Y-m-d H:i:s')),
 //            'description' => '<p class="'.($this->inPeriodBoolean || ($now > Carbon::parse($this->open_to)->format('Y-m-d H:i:s')) ? 'text-muted' : '').'">'.__('custom.timeline.'.(PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::START->value)).'.description').'</p>'
@@ -615,7 +633,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         //Приключване на консултацията
         $endDate = Carbon::parse($this->open_to)->format('Y-m-d 23:59:59');
         $sortedTimeline['4'] = [
-            'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::END->value)),
+            'label' => __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::END->value)),
             'date' => displayDate($endDate),
             'isActive' => $now > Carbon::parse($this->open_to)->format('Y-m-d H:i:s'),
 //            'description' => '<p class="'.($now < Carbon::parse($this->open_to)->format('Y-m-d H:i:s') ? 'text-muted' : '').'">'.__('custom.timeline.'.(PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::END->value)).'.description').'</p>'
@@ -624,12 +642,12 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
         //Приемане на акта от Министерския съвет
         $pris = $this->pris;
-        if($pris){
-            $prisEventLabel = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
-            $prisEventDescription = '<p><a class="text-primary" href="'.($pris->in_archive ? route('pris.archive.view', ['category' => $pris->actType->name, 'id' => $pris->id]) : route('pris.view', ['category' => $pris->actType->name, 'id' => $pris->id])).'" target="_blank">'.$pris->mcDisplayName.'</a></p>';
+        if ($pris) {
+            $prisEventLabel = __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
+            $prisEventDescription = '<p><a class="text-primary" href="' . ($pris->in_archive ? route('pris.archive.view', ['category' => $pris->actType->name, 'id' => $pris->id]) : route('pris.view', ['category' => $pris->actType->name, 'id' => $pris->id])) . '" target="_blank">' . $pris->mcDisplayName . '</a></p>';
         } else {
-            $prisEventLabel = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
-            $prisEventDescription = $pdf ? '---' : __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value).'.description');
+            $prisEventLabel = __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
+            $prisEventDescription = $pdf ? '---' : __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value) . '.description');
         }
         $sortedTimeline['6'] = [
             'label' => $prisEventLabel,
@@ -642,11 +660,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         foreach ([PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value,
                      PublicConsultationTimelineEnum::FILE_CHANGE->value,
                      PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value
-                 ] as $e){
+                 ] as $e) {
             $found = 0;
-            if($events->count()) {
+            if ($events->count()) {
                 foreach ($events as $event) {
-                    if($e == $event->event_id) {
+                    if ($e == $event->event_id) {
                         switch ($event->event_id) {
                             case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
                                 $label = $event->object instanceof OperationalProgramRow ? __('custom.op_project_timeline_label') : __('custom.lp_project_timeline_label');
@@ -656,24 +674,24 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 //                                    'date' => displayDate($event->updated_at),
                                     'date' => $event->object->month,
                                     'isActive' => true,
-                                    'description' => '<p><a class="text-primary" target="_blank" href="'.route(($event->object instanceof OperationalProgramRow ? 'op.view' : 'lp.view') , ['id' => $event->object instanceof OperationalProgramRow ? $event->object->operational_program_id : $event->object->legislative_program_id ]).'">'.$event->object->value.'</a></p>'
+                                    'description' => '<p><a class="text-primary" target="_blank" href="' . route(($event->object instanceof OperationalProgramRow ? 'op.view' : 'lp.view'), ['id' => $event->object instanceof OperationalProgramRow ? $event->object->operational_program_id : $event->object->legislative_program_id]) . '">' . $event->object->value . '</a></p>'
                                 ];
                                 $found = 1;
                                 break;
                             case PublicConsultationTimelineEnum::FILE_CHANGE->value:
                             case PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value:
-                                $index = $event->event_id == PublicConsultationTimelineEnum::FILE_CHANGE->value ? '3_'.$event->created_at : '5';
-                                if($event->object->{'description_' . app()->getLocale()}) {
+                                $index = $event->event_id == PublicConsultationTimelineEnum::FILE_CHANGE->value ? '3_' . $event->created_at : '5';
+                                if ($event->object->{'description_' . app()->getLocale()}) {
                                     $sortedTimeline[$index] = [
-                                        'label' => __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($event->event_id)),
+                                        'label' => __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue($event->event_id)),
                                         'date' => displayDate($event->created_at),
                                         'isActive' => true,
-                                        'description' => $pdf ? '<a href="'.route('download.file', $event->object->id).'">'.$event->object->{'description_' . app()->getLocale()}.'</a>'
+                                        'description' => $pdf ? '<a href="' . route('download.file', $event->object->id) . '">' . $event->object->{'description_' . app()->getLocale()} . '</a>'
                                             : '<p><span class="d-inline-block">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="'.$event->object->id.'" data-url="'.route('admin.preview.file.modal', ['id' => $event->object->id]).'" title="'.__('custom.preview').'">'.fileIcon($event->object->content_type).' '.($event->object->{'description_' . app()->getLocale()}).' '.__('custom.version_short').' '.$event->object->version.'</button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="' . $event->object->id . '" data-url="' . route('admin.preview.file.modal', ['id' => $event->object->id]) . '" title="' . __('custom.preview') . '">' . fileIcon($event->object->content_type) . ' ' . ($event->object->{'description_' . app()->getLocale()}) . ' ' . __('custom.version_short') . ' ' . $event->object->version . '</button>
                                             </span></p>'
                                     ];
-                                    if($rss){
+                                    if ($rss) {
                                         $sortedTimeline[$index]['file'] = $event->object;
                                     }
                                 }
@@ -684,9 +702,9 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                 }
             }
 
-            if(!$found && $e != PublicConsultationTimelineEnum::FILE_CHANGE->value) {
-                $label = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($e));
-                $description = __('custom.timeline.'.\App\Enums\PublicConsultationTimelineEnum::keyByValue($e).'.description');
+            if (!$found && $e != PublicConsultationTimelineEnum::FILE_CHANGE->value) {
+                $label = __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue($e));
+                $description = __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue($e) . '.description');
                 $eData = [
                     'label' => $label,
                     'isActive' => false,
@@ -694,7 +712,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                 ];
                 switch ($e) {
                     case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
-                        if(!$this->old_id){
+                        if (!$this->old_id) {
                             $sortedTimeline['1'] = $eData;
                         }
                         break;
@@ -708,22 +726,22 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
         //Sort events
         $timestamps = [];
-        if(sizeof($sortedTimeline)) {
+        if (sizeof($sortedTimeline)) {
             //sort timestamps for multiple events
             foreach ($sortedTimeline as $key => $event) {
                 $explode = explode('_', $key);
-                if(sizeof($explode) == 2){
+                if (sizeof($explode) == 2) {
                     $timestamps[] = $explode[1];
                 }
                 usort($timestamps, "compareByTimeStamp");
             }
             //replace timestamp keys with sortable keys
             foreach ($sortedTimeline as $key => $event) {
-                if(sizeof($timestamps)) {
-                    foreach ($timestamps as $tkey => $t){
+                if (sizeof($timestamps)) {
+                    foreach ($timestamps as $tkey => $t) {
                         if (str_contains($key, $t)) {
-                            $newKey = str_replace('_'.$t, '', $key);
-                            $sortedTimeline[$newKey.'.'.$tkey] = $sortedTimeline[$key];
+                            $newKey = str_replace('_' . $t, '', $key);
+                            $sortedTimeline[$newKey . '.' . $tkey] = $sortedTimeline[$key];
                             unset($sortedTimeline[$key]);
                         }
                     }
@@ -737,8 +755,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
     public function connectedConsultationByProgram()
     {
-        return DB::table('public_consultation')
-            ->select([
+        return PublicConsultation::select([
                 'public_consultation.id',
                 'public_consultation_translations.title',
                 'public_consultation.open_from',
@@ -747,11 +764,11 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->join('public_consultation_translations', 'public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
             ->where('public_consultation_translations.locale', '=', app()->getLocale())
             ->where('public_consultation.id', '<>', $this->id)
-            ->where(function ($q){
-                $q->where(function ($q){
+            ->where(function ($q) {
+                $q->where(function ($q) {
                     $q->whereNotNull('public_consultation.operational_program_row_id')
                         ->where('public_consultation.operational_program_row_id', '=', $this->operational_program_row_id);
-                })->orWhere(function ($q){
+                })->orWhere(function ($q) {
                     $q->whereNotNull('public_consultation.legislative_program_row_id')
                         ->where('public_consultation.legislative_program_row_id', '=', $this->legislative_program_row_id);
                 });
@@ -775,27 +792,28 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
      * @param string $sortOrd
      * @param int $paginate
      */
-    public static function list(array $filter, string $sort = 'title', string $sortOrd = 'desc', int $paginate = self::PAGINATE){
+    public static function list(array $filter, string $sort = 'title', string $sortOrd = 'desc', int $paginate = self::PAGINATE)
+    {
         $q = self::select('public_consultation.*')
             ->Active()
             ->with(['translations', 'fieldOfAction', 'fieldOfAction.translations'])
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'public_consultation.field_of_actions_id')
-            ->leftJoin('field_of_action_translations', function ($j){
+            ->leftJoin('field_of_action_translations', function ($j) {
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
-            ->leftJoin('public_consultation_translations', function ($j){
+            ->leftJoin('public_consultation_translations', function ($j) {
                 $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
                     ->where('public_consultation_translations.locale', '=', app()->getLocale());
             })
             ->FilterBy($filter)
-            ->SortedBy($sort,$sortOrd);
-            //->GroupBy('strategic_document.id')
+            ->SortedBy($sort, $sortOrd);
+        //->GroupBy('strategic_document.id')
 
 
-        if($paginate){
+        if ($paginate) {
             return $q->paginate($paginate);
-        } else{
+        } else {
             return $q->get();
         }
     }

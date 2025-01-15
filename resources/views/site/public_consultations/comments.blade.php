@@ -20,8 +20,11 @@
                 @foreach($item->comments as $c)
                     <div class="obj-comment comment-background p-2 rounded mb-3">
                         <div class="info">
-                            <a class="obj-icon-info me-2 main-color fs-18 fw-600 text-decoration-none" @if($c->author) href="{{ route('user.profile.pc', $c->author) }}" @endif>
-                                <i class="fa fa-solid fa-circle-user me-2 main-color" title="{{ __('custom.author') }}"></i>{{ $c->author ? $c->author->fullName() : __('custom.anonymous') }}
+                            <a class="obj-icon-info me-2 main-color fs-18 fw-600 text-decoration-none"
+                               @if($c->author) href="{{ route('user.profile.pc', $c->author) }}" @endif
+                            >
+                                <i class="fa fa-solid fa-circle-user me-2 main-color" title="{{ __('custom.author') }}">
+                                </i>{{ $c->author ? $c->author->fullName() : __('custom.anonymous') }}
                             </a>
                             <span class="obj-icon-info me-2 text-muted">{{ displayDateTime($c->created_at) }}</span>
                         </div>
