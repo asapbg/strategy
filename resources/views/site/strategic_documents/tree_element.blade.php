@@ -74,7 +74,7 @@
                 @if($d->link_to_monitorstat)
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ trans_choice('custom.link_to_monitorstrat', 1) }}</h3>
-                        <a href="{{ $d->link_to_monitorstat }}" target="_blank" lass="main-color text-decoration-none fs-18">
+                        <a href="{{ $d->link_to_monitorstat }}" target="_blank" class="main-color text-decoration-none fs-18">
                         <span class="obj-icon-info me-2">
                             <i class="fas fa-link me-2 main-color fs-18"></i>{{ trans_choice('custom.link_to_monitorstrat', 1) }}</span>
                         </a>
@@ -87,23 +87,30 @@
                             $d->pris = \App\Models\Pris::find($d->pris_act_id);
                         }
                     @endphp
-                    @if($d->pris)
-                        <h3 class="mb-2 fs-18">{{ trans_choice('custom.acceptment_act', 1) }}</h3>
-                        <div class="fs-18">
-                            @if ($d->pris?->doc_num && $d->pris?->published_at)
-                                <a href="{{ $d->pris->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($d->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) }}"
-                                   class="main-color text-decoration-none">
-                                    {{ $d->pris?->actType?->name . ' №/' . $d->pris?->doc_num . '/' . $d->pris?->doc_date }}
-                                </a>
-                            @endif
-                            @if($d->accept_act_institution_name)
-                                <span>{{ trans_choice('custom.of', 1) }}</span>
-                                <a href="{{ route('strategy-documents.reports').'?acceptActInstitution[]='.$d->accept_act_institution_type_id }}" class="main-color text-decoration-none">
-                                    {{ $d->accept_act_institution_name }}
-                                </a>
-                            @endif
-                        </div>
-                    @endif
+                    <h3 class="mb-2 fs-18">{{ trans_choice('custom.acceptment_act', 1) }}</h3>
+                    <div class="fs-18">
+                        @if($d->pris)
+                            @php
+                                $route = $d->pris->in_archive
+                                    ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($d->pris?->actType->name), 'id' => $d->pris?->id])
+                                    : route('pris.view', ['category' => \Illuminate\Support\Str::slug($d->pris?->actType->name), 'id' => $d->pris?->id]);
+                            @endphp
+                            <a href="{{ $route }}" class="main-color text-decoration-none">
+                                {{ $d->pris?->actType?->name . ' №/' . $d->pris?->doc_num . '/' . $d->pris?->doc_date }}
+                            </a>
+                        @else
+                            <a href="{{ $d->strategic_act_link }}" class="main-color text-decoration-none">
+                                <span>{{ \App\Models\StrategicDocumentChildren::getStrategicActTypeName($d->strategic_act_type_id) }}</span>
+                                {{ $d->strategic_act_number }}
+                            </a>
+                        @endif
+                        @if($d->accept_act_institution_name)
+                            <span>{{ trans_choice('custom.of', 1) }}</span>
+                            <a href="{{ route('strategy-documents.reports').'?acceptActInstitution[]='.$d->accept_act_institution_type_id }}" class="main-color text-decoration-none">
+                                {{ $d->accept_act_institution_name }}
+                            </a>
+                        @endif
+                    </div>
             </div>
 
 

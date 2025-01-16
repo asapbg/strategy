@@ -139,12 +139,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Strategic Documents
     Route::controller(StrategicDocumentsController::class)->group(function () {
-        Route::get('/strategic-documents', 'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
-        Route::get('/strategic-documents/create-edit/{id?}/{section?}/{strategicFile?}', 'edit')->name('strategic_documents.edit');
-        Route::post('/strategic-documents/delete/{id}', 'delete')->name('strategic_documents.delete');
-        Route::post('/strategic-documents/{object_id}/{object_type}', 'uploadFileLanguagesSd')->name('strategic_documents.upload.file.languages');
+        Route::get('/strategic-documents',                                              'index')->name('strategic_documents.index')->middleware('can:viewAny,App\Models\StrategicDocument');
+        Route::get('/strategic-documents/create-edit/{id?}/{section?}/{strategicFile?}','edit')->name('strategic_documents.edit');
+        Route::post('/strategic-documents/delete/{id}',                                 'delete')->name('strategic_documents.delete');
+        Route::post('/strategic-documents/{object_id}/{object_type}',                   'uploadFileLanguagesSd')->name('strategic_documents.upload.file.languages');
         Route::post('/strategic-documents/update/{object_id}/{object_type}/{strategicFile?}', 'updateFileLanguage')->name('strategic_documents.update.file.languages');
-        Route::match(['post', 'put'], '/strategic-documents/store', 'store')->name('strategic_documents.store');
+        Route::match(['post', 'put'], '/strategic-documents/store',                     'store')->name('strategic_documents.store');
 //        Route::post('/strategic-documents/upload-file', 'uploadDcoFile')->name('strategic_documents.file.upload');
 //        Route::put('/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
 //        Route::get('/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
@@ -166,10 +166,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     Route::controller(\App\Http\Controllers\Admin\StrategicDocumentChildController::class)->group(function () {
         Route::get('/strategic-documents/documents/popup-form/{sd}/{doc?}', 'popupForm')->name('strategic_documents.document.popup');
-        Route::post('/ajax/strategic-documents/documents/create', 'create')->name('strategic_documents.document.create');
-        Route::get('/strategic-documents/documents/{item}/edit', 'edit')->name('strategic_documents.document.edit');
-        Route::post('/ajax/strategic-documents/documents/update', 'update')->name('strategic_documents.document.update');
-        Route::post('/strategic-documents/documents/delete/{id}', 'delete')->name('strategic_documents.document.delete');
+        Route::post('/ajax/strategic-documents/documents/create',       'create')->name('strategic_documents.document.create');
+        Route::get('/strategic-documents/documents/{item}/edit',        'edit')->name('strategic_documents.document.edit');
+        Route::post('/ajax/strategic-documents/documents/update',       'update')->name('strategic_documents.document.update');
+        Route::post('/strategic-documents/documents/delete/{id}',       'delete')->name('strategic_documents.document.delete');
     });
 
     // Static pages

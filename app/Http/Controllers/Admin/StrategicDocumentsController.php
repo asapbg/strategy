@@ -62,7 +62,7 @@ class StrategicDocumentsController extends AdminController
     public function index(Request $request)
     {
         $requestFilter = $request->all();
-        if(empty($requestFilter)){
+        if (empty($requestFilter)) {
             $requestFilter['status'] = 'active';
         }
         $filter = $this->filters($request);
@@ -72,9 +72,9 @@ class StrategicDocumentsController extends AdminController
             'documentType', 'documentType.translation',
             'acceptActInstitution', 'acceptActInstitution.translation',
             'files', 'files.translation', 'files.documentType', 'files.documentType.translation'])
-            ->leftJoin('field_of_actions', 'field_of_actions.id' ,'=', 'strategic_document.policy_area_id')
-            ->leftJoin('strategic_document_translations', function ($j){
-                $j->on('strategic_document_translations.strategic_document_id' ,'=', 'strategic_document.id')->where('strategic_document_translations.locale', '=', app()->getLocale());
+            ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
+            ->leftJoin('strategic_document_translations', function ($j) {
+                $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')->where('strategic_document_translations.locale', '=', app()->getLocale());
             })
             ->FilterBy($requestFilter)
             ->when(isset($requestFilter['only_deleted']), fn($q) => $q->onlyTrashed());
@@ -83,7 +83,7 @@ class StrategicDocumentsController extends AdminController
         if (!$request->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])) {
             $userPolicyAreas = $request->user()->institution ?
                 ($request->user()->institution->fieldsOfAction->count() ?
-                        $request->user()->institution->fieldsOfAction->pluck('id')->toArray() : [0])
+                    $request->user()->institution->fieldsOfAction->pluck('id')->toArray() : [0])
                 : [0];
             $q->whereIn('field_of_actions.id', $userPolicyAreas);
         }
@@ -115,9 +115,9 @@ class StrategicDocumentsController extends AdminController
     public function edit(Request $request, $id = 0, string $section = 'general', StrategicDocumentFile $strategicFile = NULL)
     {
         $user = auth()->user();
-        $item = $this->getRecord($id, ['documents', 'documents.translations', 'pris.actType','documentType.translations','translation']);
+        $item = $this->getRecord($id, ['documents', 'documents.translations', 'pris.actType', 'documentType.translations', 'translation']);
 
-        if( ($item && $item->id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class) ) {
+        if (($item && $item->id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', StrategicDocument::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -131,7 +131,7 @@ class StrategicDocumentsController extends AdminController
 
         $strategicDocumentTypes = StrategicDocumentType::with('translations')->orderByTranslation('name')->get();
 
-        if($section == self::SECTION_GENERAL){
+        if ($section == self::SECTION_GENERAL) {
             $storeRouteName = self::STORE_ROUTE;
             $listRouteName = self::LIST_ROUTE;
             $translatableFields = StrategicDocument::translationFieldsProperties();
@@ -139,10 +139,10 @@ class StrategicDocumentsController extends AdminController
             $strategicActTypes = StrategicActType::with('translations')->orderByTranslation('name')->get();
             $legalActTypes = LegalActType::StrategyCategories()->with('translations')->get();
             $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->whereNotNull('nomenclature_level_id')->get();
-            $adminUser = $user->hasAnyRole(['service_user','super-admin', 'moderator-strategics']);
+            $adminUser = $user->hasAnyRole(['service_user', 'super-admin', 'moderator-strategics']);
             if ($adminUser) {
                 //$authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
-                $strategicDocumentLevels =  enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', !$item->id, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]);
+                $strategicDocumentLevels = enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', !$item->id, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]);
 
                 //Field of actions split by parent categories
                 $ekateAreas = \App\Models\FieldOfAction::Active()->Area()->with(['translations'])->orderByTranslation('name')->get();
@@ -150,15 +150,15 @@ class StrategicDocumentsController extends AdminController
                 $policyAreas = \App\Models\FieldOfAction::Active()->Central()->with(['translations'])->orderByTranslation('name')->get();
             } else {
                 //$authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
-                if($item->id){
+                if ($item->id) {
                     $strategicDocumentLevels = array(['value' => $item->strategic_document_level_id, 'name' => __('custom.nomenclature_level.' . InstitutionCategoryLevelEnum::keyByValue($item->strategic_document_level_id))]);
-                } else{
+                } else {
                     $strategicDocumentLevels = !$user->institution ? []
                         : array(
                             ['value' => '', 'name' => ''],
                             [
-                                'value' => ($user->institution->level->nomenclature_level == InstitutionCategoryLevelEnum::CENTRAL_OTHER->value ? InstitutionCategoryLevelEnum::CENTRAL->value : $user->institution->level->nomenclature_level) ,
-                                'name' => __('custom.nomenclature_level.' . InstitutionCategoryLevelEnum::keyByValue($user->institution->level->nomenclature_level == InstitutionCategoryLevelEnum::CENTRAL_OTHER->value ? InstitutionCategoryLevelEnum::CENTRAL->value : $user->institution->level->nomenclature_level ))
+                                'value' => ($user->institution->level->nomenclature_level == InstitutionCategoryLevelEnum::CENTRAL_OTHER->value ? InstitutionCategoryLevelEnum::CENTRAL->value : $user->institution->level->nomenclature_level),
+                                'name' => __('custom.nomenclature_level.' . InstitutionCategoryLevelEnum::keyByValue($user->institution->level->nomenclature_level == InstitutionCategoryLevelEnum::CENTRAL_OTHER->value ? InstitutionCategoryLevelEnum::CENTRAL->value : $user->institution->level->nomenclature_level))
                             ]
                         );
                 }
@@ -171,10 +171,25 @@ class StrategicDocumentsController extends AdminController
                 $ekateMunicipalities = $user->institution ? \App\Models\FieldOfAction::Active(true)->Municipal()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
                 $policyAreas = $user->institution ? \App\Models\FieldOfAction::Active(true)->Central()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
             }
-            return $this->view(self::EDIT_VIEW, compact('section', 'item', 'storeRouteName', 'listRouteName', 'translatableFields',
-                'strategicDocumentLevels', 'strategicDocumentTypes', 'strategicActTypes', 'authoritiesAcceptingStrategic',
-                'policyAreas', 'legalActTypes', 'ekateAreas', 'ekateMunicipalities', 'adminUser'));
-        } else if($section == self::SECTION_FILES) {
+            return $this->view(self::EDIT_VIEW, compact(
+                    'section',
+                    'item',
+                    'storeRouteName',
+                    'listRouteName',
+                    'translatableFields',
+                    'strategicDocumentLevels',
+                    'strategicDocumentTypes',
+                    'strategicActTypes',
+                    'authoritiesAcceptingStrategic',
+                    'policyAreas',
+                    'legalActTypes',
+                    'ekateAreas',
+                    'ekateMunicipalities',
+                    'adminUser'
+                )
+            );
+
+        } else if ($section == self::SECTION_FILES) {
             return $this->view(self::EDIT_VIEW, compact('section', 'item', 'strategicDocumentTypes', 'strategicFile'));
         } else {
             return redirect(route('admin.strategic_documents.edit', [$item->id ?? 0, self::SECTION_GENERAL]));
@@ -188,7 +203,7 @@ class StrategicDocumentsController extends AdminController
         //$strategicDocumentsFileService = app(FileService::class);
         //$fileData = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesBg);
         //$fileDataEn = $strategicDocumentsFileService->prepareFileData($strategicDocumentFilesEn);
-       // $fileDataEn = [];
+        // $fileDataEn = [];
         //$documentDate = $item->pris?->document_date ? $item->pris?->document_date : $item->document_date;
         //$mainFile = $strategicDocumentFilesBg->where('is_main', true)->sortByDesc('version')->first();
         //$mainFiles = $item->files->where('is_main', true);
@@ -208,7 +223,8 @@ class StrategicDocumentsController extends AdminController
      * @param bool $redirect
      * @return Application|RedirectResponse|Redirector|void
      */
-    public function uploadFileLanguagesSd(StrategicDocumentFileUploadRequest $request, $objectId, $typeObject, $redirect = true) {
+    public function uploadFileLanguagesSd(StrategicDocumentFileUploadRequest $request, $objectId, $typeObject, $redirect = true)
+    {
         try {
             $validated = $request->all();
             // Upload File
@@ -223,24 +239,24 @@ class StrategicDocumentsController extends AdminController
                 //$default = $lang['default'];
                 $code = $lang['code'];
 
-                if (!isset($validated['file_'.$code])) {
+                if (!isset($validated['file_' . $code])) {
                     continue;
                 }
 
-                $file = $validated['file_'.$code];
+                $file = $validated['file_' . $code];
 //                $desc = $validated['description_'.$code];
-                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $fileNameToStore = round(microtime(true)) . '.' . $file->getClientOriginalExtension();
                 $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
                 $newFile = new StrategicDocumentFile([
                     'strategic_document_id' => $objectId,
                     'strategic_document_type_id' => $typeObject,
                     'filename' => $file->getClientOriginalName(),
                     'content_type' => $file->getClientMimeType(),
-                    'path' => $pDir.$fileNameToStore,
+                    'path' => $pDir . $fileNameToStore,
                     'sys_user' => auth()->user()->id,
                     'locale' => $code,
-                    'description' => $validated['description_'.$code] ?? NULL,
-                    'file_info' => $validated['file_info_'.$code] ?? NULL,
+                    'description' => $validated['description_' . $code] ?? NULL,
+                    'file_info' => $validated['file_info_' . $code] ?? NULL,
                     'version' => '1.0',
                     'visible_in_report' => isset($validated['is_visible_in_report'])
                 ]);
@@ -272,7 +288,8 @@ class StrategicDocumentsController extends AdminController
         }
     }
 
-    public function updateFileLanguage(Request $request, $objectId, $typeObject, StrategicDocumentFile $strategicFile = NULL) {
+    public function updateFileLanguage(Request $request, $objectId, $typeObject, StrategicDocumentFile $strategicFile = NULL)
+    {
         try {
             $validated = $request->all();
             // Upload File
@@ -290,8 +307,8 @@ class StrategicDocumentsController extends AdminController
                 'strategic_document_type_id' => $typeObject,
                 'sys_user' => auth()->user()->id,
                 'locale' => $code,
-                'description' => $validated['description_'.$code],
-                'file_info' => $validated['file_info_'.$code] ?? NULL,
+                'description' => $validated['description_' . $code],
+                'file_info' => $validated['file_info_' . $code] ?? NULL,
                 'version' => '1.0',
                 'visible_in_report' => isset($validated['is_visible_in_report'])
             ];
@@ -302,15 +319,15 @@ class StrategicDocumentsController extends AdminController
                  * we wouldn't be able to retrieve them if they're physically deleted.
                  * We can always get the old location of the file from the activity log.
                  */
-                $file = $validated['file_'.$code];
+                $file = $validated['file_' . $code];
 //                $desc = $validated['description_'.$code];
 
-                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $fileNameToStore = round(microtime(true)) . '.' . $file->getClientOriginalExtension();
                 $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
 
                 $data['filename'] = $fileNameToStore;
                 $data['content_type'] = $file->getClientMimeType();
-                $data['path'] = $pDir.$fileNameToStore;
+                $data['path'] = $pDir . $fileNameToStore;
             }
 
             $strategicFile->update($data);
@@ -349,7 +366,7 @@ class StrategicDocumentsController extends AdminController
                 $fileData = [];
 
                 // Prepare the data for each file by going through all the languages
-                foreach(config('available_languages') as $lang) {
+                foreach (config('available_languages') as $lang) {
                     $descriptionKey = 'description_' . $lang['code'];
                     $fileKey = 'file_' . $lang['code'];
 
@@ -377,8 +394,8 @@ class StrategicDocumentsController extends AdminController
         $stay = Arr::get($validated, 'stay') || null;
         $item = $id ? $this->getRecord($id) : new StrategicDocument();
 
-        if( ($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', StrategicDocument::class) ) {
+        if (($id && $request->user()->cannot('update', $item))
+            || $request->user()->cannot('create', StrategicDocument::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -386,23 +403,23 @@ class StrategicDocumentsController extends AdminController
             DB::beginTransaction();
             //START Ugly fix for wrong fields and connections
             //!!! DO not change
-            if($validated['strategic_document_level_id'] == InstitutionCategoryLevelEnum::AREA->value) {
+            if ($validated['strategic_document_level_id'] == InstitutionCategoryLevelEnum::AREA->value) {
                 $validated['policy_area_id'] = $validated['ekatte_area_id'] ?? null;
             }
-            if($validated['strategic_document_level_id'] == InstitutionCategoryLevelEnum::MUNICIPAL->value) {
+            if ($validated['strategic_document_level_id'] == InstitutionCategoryLevelEnum::MUNICIPAL->value) {
                 $validated['policy_area_id'] = $validated['ekatte_municipality_id'] ?? null;
             }
-            if(isset($validated['ekatte_area_id'])){
+            if (isset($validated['ekatte_area_id'])) {
                 unset($validated['ekatte_area_id']);
             }
-            if(isset($validated['ekatte_municipality_id'])){
+            if (isset($validated['ekatte_municipality_id'])) {
                 unset($validated['ekatte_municipality_id']);
             }
             if (isset($validated['date_expiring_indefinite']) && $validated['date_expiring_indefinite']) {
                 $validated['document_date_expiring'] = NULL;
             }
             //END Ugly fix for wrong fields and connections
-            if( $validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS ) {
+            if ($validated['accept_act_institution_type_id'] == AuthorityAcceptingStrategic::COUNCIL_MINISTERS) {
                 $validated['strategic_act_number'] = null;
                 $validated['strategic_act_type_id'] = null;
                 $validated['strategic_act_link'] = null;
@@ -426,7 +443,6 @@ class StrategicDocumentsController extends AdminController
             }
 
 
-
             $fillable = $this->getFillableValidated($validated, $item);
 
             $item->fill($fillable);
@@ -440,20 +456,18 @@ class StrategicDocumentsController extends AdminController
             }
 
             DB::commit();
-            if( $stay ) {
+            if ($stay) {
                 return redirect(route(self::EDIT_ROUTE, ['id' => $item->id]))
-                    ->with('success', trans_choice('custom.strategic_documents', 1)." ".($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
+                    ->with('success', trans_choice('custom.strategic_documents', 1) . " " . ($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
             }
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.strategic_documents', 1)." ".($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
-        }
-        catch (\Illuminate\Validation\ValidationException $e) {
+                ->with('success', trans_choice('custom.strategic_documents', 1) . " " . ($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
+        } catch (\Illuminate\Validation\ValidationException $e) {
             // This type of exception might get thrown from validating the files before we upload them
             throw $e;
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Create/Update strategic document ID('.$id.'): '.$e);
+            Log::error('Create/Update strategic document ID(' . $id . '): ' . $e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
@@ -471,8 +485,8 @@ class StrategicDocumentsController extends AdminController
                 return back()->with('warning', __('messages.unauthorized'));
             }
 
-            if($item->documents->count()){
-                foreach ($item->documents as $d){
+            if ($item->documents->count()) {
+                foreach ($item->documents as $d) {
                     $d->files->each->delete();
                     $d->delete();
                 }
@@ -482,15 +496,15 @@ class StrategicDocumentsController extends AdminController
             $item->delete();
             DB::commit();
 
-            if(url()->previous() == route('site.home')){
+            if (url()->previous() == route('site.home')) {
                 return redirect(route('site.home'))
-                    ->with('success', __('custom.the_record')." ".__('messages.deleted_successfully_m'));
-            } else{
+                    ->with('success', __('custom.the_record') . " " . __('messages.deleted_successfully_m'));
+            } else {
                 return redirect()->back()->with('success', __('custom.strategic_document_deleted'));
             }
         } catch (\Throwable $throwable) {
             DB::rollBack();
-            Log::error('Delete strategic document ID('.$id.'): '.$throwable);
+            Log::error('Delete strategic document ID(' . $id . '): ' . $throwable);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
@@ -504,8 +518,8 @@ class StrategicDocumentsController extends AdminController
                 return back()->with('warning', __('messages.unauthorized'));
             }
 
-            if($item->documents->count()){
-                foreach ($item->documents as $d){
+            if ($item->documents->count()) {
+                foreach ($item->documents as $d) {
                     $d->files->each->restore();
                     $d->restore();
                 }
@@ -516,10 +530,10 @@ class StrategicDocumentsController extends AdminController
             DB::commit();
 
             return redirect(route('admin.strategic_documents.edit', $id))
-                ->with('success', __('custom.the_record')." ".__('messages.restored_successfully_m'));
+                ->with('success', __('custom.the_record') . " " . __('messages.restored_successfully_m'));
         } catch (\Throwable $throwable) {
             DB::rollBack();
-            Log::error('Restore strategic document ID('.$id.'): '.$throwable);
+            Log::error('Restore strategic document ID(' . $id . '): ' . $throwable);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
@@ -529,7 +543,7 @@ class StrategicDocumentsController extends AdminController
         $validated = $request->validated();
         $strategicDoc = $this->getRecord($validated['id']);
         unset($validated['id']);
-        if( $request->user()->cannot('update', $strategicDoc)) {
+        if ($request->user()->cannot('update', $strategicDoc)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -544,7 +558,7 @@ class StrategicDocumentsController extends AdminController
             $fileService->uploadFiles($validated, $strategicDoc, null);
 
             return redirect(route(self::EDIT_ROUTE, ['id' => $strategicDoc->id]))
-                ->with('success', trans_choice('custom.strategic_document_files', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.strategic_document_files', 1) . " " . __('messages.created_successfully_m'));
         } catch (\Throwable $throwable) {
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
@@ -725,21 +739,21 @@ class StrategicDocumentsController extends AdminController
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
         $qItem = StrategicDocument::withTrashed();
-        if( sizeof($with) ) {
+        if (sizeof($with)) {
             $qItem->with($with);
         }
         $item = $qItem->find((int)$id);
-        if( !$item ) {
+        if (!$item) {
             return new StrategicDocument();
         }
         return $item;
     }
 
     /**
-     * @deprecated
      * @param Request $request
      * @return true
      * @throws \Exception
+     * @deprecated
      */
 //    public function saveFileTree(Request $request)
 //    {
@@ -768,11 +782,11 @@ class StrategicDocumentsController extends AdminController
 //    }
 
     /**
-     * @deprecated
      * @param $node
      * @param $strategicDocument
      * @param $parent
      * @return void
+     * @deprecated
      */
 //    protected function processChild($node, $strategicDocument, $parent)
 //    {
@@ -803,9 +817,9 @@ class StrategicDocumentsController extends AdminController
 //    }
 
     /**
-     * @deprecated
      * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @deprecated
      */
 //    public function prisActOptions($id)
 //    {
@@ -837,14 +851,13 @@ class StrategicDocumentsController extends AdminController
     public function acceptActInstitutionOptions(int $id)
     {
         $user = auth()->user();
-        if ($user->hasRole('service_user') || $user->hasRole('super-admin'))
-        {
+        if ($user->hasRole('service_user') || $user->hasRole('super-admin')) {
             try {
                 $documentsAcceptingInstitutionsOptions = [];
                 $strategicDocumentLevel = StrategicDocumentLevel::find($id);
 
                 if ($strategicDocumentLevel->id == 1) {
-                    $documentsAcceptingInstitutions = AuthorityAcceptingStrategic::whereIn('id', [1,2])->orderBy('id', 'desc')->get();
+                    $documentsAcceptingInstitutions = AuthorityAcceptingStrategic::whereIn('id', [1, 2])->orderBy('id', 'desc')->get();
                 }
                 if ($strategicDocumentLevel->id == 2) {
                     $documentsAcceptingInstitutions = AuthorityAcceptingStrategic::where('id', 3)->get();
@@ -903,7 +916,7 @@ class StrategicDocumentsController extends AdminController
                 ];
             }
 
-            return response()->json(['date' => $publicConsultation->pris?->doc_date, 'pris_options' => $prisOptions, '','legal_act_type_id' => $publicConsultation->pris?->legal_act_type_id]);
+            return response()->json(['date' => $publicConsultation->pris?->doc_date, 'pris_options' => $prisOptions, '', 'legal_act_type_id' => $publicConsultation->pris?->legal_act_type_id]);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => 'Resource not found.'], 404);
         }
@@ -927,7 +940,7 @@ class StrategicDocumentsController extends AdminController
     {
         $strategicDocument = StrategicDocument::findOrFail($id);
 
-        return $this->publishUnPublish($strategicDocument,true, $stay);
+        return $this->publishUnPublish($strategicDocument, true, $stay);
     }
 
     /**
@@ -938,7 +951,7 @@ class StrategicDocumentsController extends AdminController
     {
         $strategicDocument = StrategicDocument::findOrFail($id);
 
-        return $this->publishUnPublish($strategicDocument,false, $stay);
+        return $this->publishUnPublish($strategicDocument, false, $stay);
     }
 
     /**
@@ -954,7 +967,7 @@ class StrategicDocumentsController extends AdminController
         $redirectRoute = $stay == 'true' ? route(self::EDIT_ROUTE, ['id' => $strategicDocument->id]) : route(self::LIST_ROUTE);
 
         return redirect($redirectRoute)
-            ->with('success', trans_choice('custom.strategic_documents', 1)." ".($strategicDocument->id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
+            ->with('success', trans_choice('custom.strategic_documents', 1) . " " . ($strategicDocument->id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
     }
 
     public function loadPrisActs(Request $request)
@@ -1016,7 +1029,7 @@ class StrategicDocumentsController extends AdminController
             }
             $parentDocument = $strategicDocument?->parentDocument;
             if ($parentDocument) {
-                if (isset($policyAreaIdFilter) && $policyAreaIdFilter ==  $parentDocument->policy_area_id) {
+                if (isset($policyAreaIdFilter) && $policyAreaIdFilter == $parentDocument->policy_area_id) {
 
                     $documentOptions = $strategicDocumentsCommonService->parentStrategicDocumentSelectedOption($parentDocument, $documentOptions);
                 }
@@ -1029,7 +1042,8 @@ class StrategicDocumentsController extends AdminController
         return response()->json($documentOptions);
     }
 
-    public function nomenclatures() {
+    public function nomenclatures()
+    {
         return $this->view('admin.strategic_documents.nomenclatures.index');
     }
 }

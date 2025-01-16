@@ -29,16 +29,11 @@
                     </div>
                     <div class="col-md-12 text-start">
                         <a class="btn btn-primary  main-color" target="_blank" href="{{ route('strategy-document.export', ['id' => $strategicDocument->id]) }}">
-                            <i class="fa-solid fa-download main-color me-2"></i>{{ trans_choice('custom.export', 1) }}</a>
-{{--                        <button class="btn btn-primary  main-color">--}}
-{{--                            <i class="fa-solid fa-download main-color me-2"></i>{{ trans_choice('custom.export', 1) }}</button>--}}
+                            <i class="fa-solid fa-download main-color me-2"></i>{{ trans_choice('custom.export', 1) }}
+                        </a>
                         <input type="hidden" id="subscribe_model" value="App\Models\StrategicDocument">
                         <input type="hidden" id="subscribe_model_id" value="{{ $strategicDocument->id }}">
                         @includeIf('site.partial.subscribe-buttons', ['no_rss' => true])
-{{--                        <button class="btn rss-sub main-color">--}}
-{{--                            <i class="fas fa-square-rss text-warning me-2"></i>{{ trans_choice('custom.rss_subscribe', 1) }}</button>--}}
-{{--                        <button class="btn rss-sub main-color">--}}
-{{--                            <i class="fas fa-envelope me-2 main-color"></i>{{ trans_choice('custom.subscribe', 1) }}</button>--}}
                     </div>
                 </div>
                 @if($strategicDocument->policyArea)
@@ -97,6 +92,18 @@
                         </div>
                     @endif
 
+                    @if($strategicDocument->public_consultation_id)
+                        <div class="col-md-4 mb-4">
+                            <h3 class="mb-2 fs-18">{{ trans_choice('custom.public_consultation_link', 1) }}</h3>
+                            <a href="{{ route('public_consultation.view', [$strategicDocument->public_consultation_id]) }}"
+                               class="main-color text-decoration-none fs-18">
+                            <span class="obj-icon-info me-2">
+                                <i class="fas fa-link me-2 main-color fs-18"
+                                   title="Тип консултация"></i>{{ $strategicDocument->publicConsultation?->reg_num }}</span>
+                            </a>
+                        </div>
+                    @endif
+
                     @if($strategicDocument->parentDocument)
                         <div class="col-md-4 mb-4">
                             <h3 class="mb-2 fs-18">{{ trans_choice('custom.document_to', 1) }} </h3>
@@ -129,6 +136,7 @@
                                title="Тип консултация"></i>{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('d.m.Y') }}</span>
                         </a>
                     </div>
+
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ trans_choice('custom.date_expiring', 1) }}</h3>
 
@@ -146,24 +154,29 @@
                         </span>
                         </a>
                     </div>
+
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ trans_choice('custom.acceptment_act', 1) }}</h3>
                         <div class="fs-18">
-                            <span>{{ $strategicDocument->strategicActType?->name }}</span>
                             @if ($strategicDocument->pris?->doc_num && $strategicDocument->pris?->published_at)
-                                <a href="{{ $strategicDocument->pris->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]) }}"
-                                   class="main-color text-decoration-none">
+                                @php
+                                    $route = $strategicDocument->pris->in_archive
+                                        ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id])
+                                        : route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]);
+                                @endphp
+                                <a href="{{ $route }}" class="main-color text-decoration-none">
                                     {{ $strategicDocument->pris?->actType?->name . ' №/' . $strategicDocument->pris?->doc_num . '/' . $strategicDocument->pris?->doc_date }}
                                 </a>
                             @else
                                 <a href="{{ $strategicDocument->strategic_act_link }}" class="main-color text-decoration-none">
+                                    <span>{{ $strategicDocument->strategicActType?->name }}</span>
                                     {{ $strategicDocument->strategic_act_number }}
                                 </a>
                             @endif
                             @if($strategicDocument->acceptActInstitution)
                                 <span>{{ trans_choice('custom.of', 1) }}</span>
                                 <a href="{{ route('strategy-documents.reports').'?acceptActInstitution[]='.$strategicDocument->accept_act_institution_type_id }}" class="main-color text-decoration-none">
-                                    {{ $strategicDocument->acceptActInstitution?->name }}
+                                    {{ $strategicDocument->acceptActInstitution->name }}
                                 </a>
                             @endif
                         </div>
@@ -171,17 +184,6 @@
                 </div>
 
                 <div class="row">
-                    @if($strategicDocument->public_consultation_id)
-                        <div class="col-md-4 mb-4">
-                            <h3 class="mb-2 fs-18">{{ trans_choice('custom.public_consultation_link', 1) }}</h3>
-                            <a href="{{ route('public_consultation.view', [$strategicDocument->public_consultation_id]) }}"
-                               class="main-color text-decoration-none fs-18">
-                                <span class="obj-icon-info me-2">
-                                    <i class="fas fa-link me-2 main-color fs-18"
-                                       title="Тип консултация"></i>{{ $strategicDocument->publicConsultation?->reg_num }}</span>
-                            </a>
-                        </div>
-                    @endif
                     @isset($strategicDocument->link_to_monitorstat)
                         <div class="col-md-4 mb-4">
                             <h3 class="mb-2 fs-18">{{ trans_choice('custom.link_to_monitorstrat', 1) }}</h3>
@@ -215,7 +217,10 @@
                                 <ul class="list-group list-group-flush">
                                     @foreach ($strategicDocument->filesByLocale as $f)
                                         <li class="list-group-item">
-                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('strategy-document.preview.file_modal', ['id' => $f->id]) }}">
+                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)"
+                                               title="{{ __('custom.preview') }}" data-file="{{ $f->id }}"
+                                               data-url="{{ route('strategy-document.preview.file_modal', ['id' => $f->id]) }}"
+                                            >
                                                 {!! fileIcon($f->content_type) !!} {{ $f->description ?? $f->filename }}
                                             </a>
                                         </li>
@@ -243,7 +248,5 @@
         </div>
     </div>
 </div>
-
-
 
 @endsection

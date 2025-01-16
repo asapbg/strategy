@@ -124,7 +124,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Retiurn only fillable fields from validated request data
+     * Return only fillable fields from validated request data
      * @param $validated
      * @param $item
      * @return mixed

@@ -119,7 +119,7 @@ function populateModal(data, modal) {
     })
 }
 
-function isEmpty(arg){
+function isEmpty(arg) {
     return (
         arg == null || // Check for null or undefined
         arg.length === 0 || // Check for empty String (Bonus check for empty Array)
@@ -174,35 +174,33 @@ function TogglePermission(permission, entityId) {
     });
 }
 
-function ToggleCheckboxes(el,class_name) {
-    if($(el).hasClass('checked')) {
+function ToggleCheckboxes(el, class_name) {
+    if ($(el).hasClass('checked')) {
         $(el).removeClass('checked');
-        $('.'+class_name).prop('checked', false);
-    }
-    else {
+        $('.' + class_name).prop('checked', false);
+    } else {
         $(el).addClass('checked');
-        $('.'+class_name).prop('checked', true);
+        $('.' + class_name).prop('checked', true);
     }
 }
 
-function SelectCheckboxes(action,class_name) {
-    if(action == 'uncheck') {
-        $('.'+class_name).prop('checked', false);
-    }
-    else {
-        $('.'+class_name).prop('checked', true);
+function SelectCheckboxes(action, class_name) {
+    if (action == 'uncheck') {
+        $('.' + class_name).prop('checked', false);
+    } else {
+        $('.' + class_name).prop('checked', true);
     }
 }
 
 // Handling Cookies
-function createCookie(name,value,hours) {
+function createCookie(name, value, hours) {
     var expires = "";
     if (hours) {
         var date = new Date();
-        date.setTime(date.getTime()+(hours*60*60*1000));
-        expires = "; expires="+date.toGMTString();
+        date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
     }
-    document.cookie = name+"="+value+expires+"; path=/";
+    document.cookie = name + "=" + value + expires + "; path=/";
 }
 
 function formatBytes(bytes, decimals = 2) {
@@ -220,19 +218,19 @@ function formatBytes(bytes, decimals = 2) {
 function readCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
+    for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
 }
 
 function eraseCookie(name) {
-    createCookie(name,"",-3);
+    createCookie(name, "", -3);
 }
 
-function showModalAlert(message,title = false) {
+function showModalAlert(message, title = false) {
     if (title) {
         $("#modal-alert .modal-title").html(title);
     }
@@ -240,7 +238,7 @@ function showModalAlert(message,title = false) {
     $("#modal-alert").modal('show');
 }
 
-function showModalConfirm(url,message,title = false) {
+function showModalConfirm(url, message, title = false) {
     if (title) {
         $("#modal-confirm .modal-title").html(title);
     }
@@ -254,31 +252,31 @@ function ConfirmToggleBoolean(booleanType, entityId, message, title = false) {
         $("#modal-confirm .modal-title").html(title);
     }
     $("#modal-confirm .modal-body p").html(message);
-    $("#modal-confirm button.btn-success").attr('onclick', "ToggleBoolean('"+booleanType+"','"+entityId+"')");
+    $("#modal-confirm button.btn-success").attr('onclick', "ToggleBoolean('" + booleanType + "','" + entityId + "')");
     $("#modal-confirm button.btn-success").attr('data-dismiss', "modal");
     $("#modal-confirm").modal('show');
 }
 
 function adminModal(modalTitle, modalBody) {
     let adminModal = $('#adminModal');
-    if( typeof modalTitle != 'undefined' ) {
+    if (typeof modalTitle != 'undefined') {
         adminModal.find('#modal-title').html(modalTitle);
     }
-    if( typeof modalBody != 'undefined' ) {
+    if (typeof modalBody != 'undefined') {
         adminModal.find('#modal-body').html(modalBody);
     }
     adminModal.modal('show');
 }
 
-$.fn.appendAttr = function(attrName, suffix) {
-    this.attr(attrName, function(i, val) {
+$.fn.appendAttr = function (attrName, suffix) {
+    this.attr(attrName, function (i, val) {
         return val + suffix;
     });
     return this;
 };
 
-function submitNewSdChild(lForm){
-    if( canAjax ) {
+function submitNewSdChild(lForm) {
+    if (canAjax) {
         canAjax = false;
         $('#main_error').html('');
         $('.ajax-error').html('');
@@ -291,17 +289,17 @@ function submitNewSdChild(lForm){
             url: '/admin/ajax/strategic-documents/documents/create',
             data: formData,
             success: function (result) {
-                if(typeof result.errors != 'undefined'){
+                if (typeof result.errors != 'undefined') {
                     let errors = Object.entries(result.errors);
                     for (let i = 0; i < errors.length; i++) {
                         const search_class = '.error_' + errors[i][0];
                         $($(lForm).find(search_class)[0]).html(errors[i][1][0]);
                     }
                     canAjax = true;
-                } else if(typeof result.main_error != 'undefined'){
+                } else if (typeof result.main_error != 'undefined') {
                     $($(lForm).find('#main_error')[0]).html(result.main_error);
                     canAjax = true;
-                } else{
+                } else {
                     window.location = result.redirect_url;
                 }
 
@@ -329,7 +327,7 @@ $(document).on("select2:open", () => {
  * obj.anyValue (string|int) - If using option 'canReset', specify main select value when this happen
  * @constructor
  */
-var cainSelect = function (obj){
+var cainSelect = function (obj) {
     // Main select will change other by specific value
     let mainSelect = $('#' + (typeof obj.mainSelectId != 'undefined' ? obj.mainSelectId : ''));
     // We will search for this value in children data
@@ -339,22 +337,22 @@ var cainSelect = function (obj){
     let canReset = typeof obj.canReset != 'undefined' ? obj.canReset : false;
     let resetValue = typeof obj.resetValue != 'undefined' ? obj.resetValue : '';
 
-    mainSelect.on('change', function (){
-        childSelects.find('option').each(function(){
+    mainSelect.on('change', function () {
+        childSelects.find('option').each(function () {
             let isSelected = $(this).is(':selected');
             let childValue = $(this).data(childValueData);
             let parentValue = mainSelect.val();
-            if( valueToType == 'int' ) {
+            if (valueToType == 'int') {
                 childValue = parseInt(childValue);
                 parentValue = parseInt(parentValue);
             }
-            if( canReset && childValue == resetValue ) {
+            if (canReset && childValue == resetValue) {
                 $(this).prop('disabled', false);
             } else {
-                if( childValue == parentValue ) {
+                if (childValue == parentValue) {
                     $(this).prop('disabled', false);
                 } else {
-                    if( isSelected ) {
+                    if (isSelected) {
                         $(this).prop('selected', false);
                     }
                     $(this).prop('disabled', true);
@@ -366,49 +364,49 @@ var cainSelect = function (obj){
 
 
 // ;(function($, window, document, undefined){
-    // $("#days").on("change", function(){
-    //     var date = new Date($("#start_date").val()),
-    //         days = parseInt($("#days").val(), 10);
-    //
-    //     if(!isNaN(date.getTime())){
-    //         date.setDate(date.getDate() + days);
-    //
-    //         $("#end_date").val(date.toInputFormat());
-    //     } else {
-    //         alert("Invalid Date");
-    //     }
-    // });
+// $("#days").on("change", function(){
+//     var date = new Date($("#start_date").val()),
+//         days = parseInt($("#days").val(), 10);
+//
+//     if(!isNaN(date.getTime())){
+//         date.setDate(date.getDate() + days);
+//
+//         $("#end_date").val(date.toInputFormat());
+//     } else {
+//         alert("Invalid Date");
+//     }
+// });
 
 
-    //From: http://stackoverflow.com/questions/3066586/get-string-in-yyyymmdd-format-from-js-date-object
-    // Date.prototype.toInputFormat = function() {
-    //     var yyyy = this.getFullYear().toString();
-    //     var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
-    //     var dd  = this.getDate().toString();
-    //     return (dd[1]?dd:"0"+dd[0]) + "." + (mm[1]?mm:"0"+mm[0]) + "." + yyyy;
-    // };
+//From: http://stackoverflow.com/questions/3066586/get-string-in-yyyymmdd-format-from-js-date-object
+// Date.prototype.toInputFormat = function() {
+//     var yyyy = this.getFullYear().toString();
+//     var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+//     var dd  = this.getDate().toString();
+//     return (dd[1]?dd:"0"+dd[0]) + "." + (mm[1]?mm:"0"+mm[0]) + "." + yyyy;
+// };
 // })(jQuery, this, document);
 
 //Calculate date
-function addSubDays(currentDate, days = 0, addDays = true, returnObj = false){
+function addSubDays(currentDate, days = 0, addDays = true, returnObj = false) {
     baseDate = currentDate.split(".");
     var newDate = new Date(baseDate[2], baseDate[1] - 1, baseDate[0]);
-    if( addDays ) {
+    if (addDays) {
         newDate.setDate(newDate.getDate() + days);
-    } else{
+    } else {
         newDate.setDate(newDate.getDate() - days);
     }
 
-    if( returnObj ) {
+    if (returnObj) {
         return newDate;
-    } else{
+    } else {
         return newDate.getDate() + '.' + (newDate.getMonth() + 1) + '.' + newDate.getFullYear();
     }
 
 }
 
 function select2OptionFilter(option) {
-    if (typeof option.element != 'undefined' && option.element.className === 'd-none' ) {
+    if (typeof option.element != 'undefined' && option.element.className === 'd-none') {
         return false
     }
     return option.text;
@@ -434,7 +432,7 @@ var select2Options = {
  * @returns {*}
  * @constructor
  */
-function MyModal(obj){
+function MyModal(obj) {
     var _myModal = Object.create(MyModal.prototype)
     _myModal.id = (new Date()).getTime();
     _myModal.title = typeof obj.title != 'undefined' ? obj.title : '';
@@ -445,10 +443,10 @@ function MyModal(obj){
     _myModal.destroyListener = typeof obj.destroyListener != 'undefined' ? obj.destroyListener : false;
     _myModal.customClass = typeof obj.customClass != 'undefined' ? obj.customClass : '';
     _myModal.modalObj = _myModal.init(_myModal);
-    if( _myModal.destroyListener ) {
+    if (_myModal.destroyListener) {
         _myModal.setDestroyListener(_myModal);
     }
-    if( _myModal.bodyLoadUrl ) {
+    if (_myModal.bodyLoadUrl) {
         _myModal.loadModalBody(_myModal)
     } else {
         _myModal.showModal(_myModal);
@@ -457,7 +455,7 @@ function MyModal(obj){
 }
 
 MyModal.prototype.init = function (_myModal) {
-    let modalHtml = '<div id="' + _myModal.id + '" class="modal fade myModal '+ _myModal.customClass +'" role="dialog" style="display: none">\n' +
+    let modalHtml = '<div id="' + _myModal.id + '" class="modal fade myModal ' + _myModal.customClass + '" role="dialog" style="display: none">\n' +
         '  <div class="modal-dialog">\n' +
         '    <!-- Modal content-->\n' +
         '    <div class="modal-content">\n' +
@@ -467,30 +465,30 @@ MyModal.prototype.init = function (_myModal) {
         '      </div>\n' +
         '      <div class="modal-body" id="' + _myModal.id + '-body' + '">\n' + _myModal.body +
         '      </div>\n' +
-        (_myModal.footer ? '<div class="modal-footer">'+ _myModal.footer +'</div>' : '') +
+        (_myModal.footer ? '<div class="modal-footer">' + _myModal.footer + '</div>' : '') +
         '    </div>\n' +
         '  </div>\n' +
         '</div>';
     document.body.insertAdjacentHTML('beforeend', modalHtml);
-    return  new bootstrap.Modal(document.getElementById(_myModal.id), {
+    return new bootstrap.Modal(document.getElementById(_myModal.id), {
         keyboard: false,
         backdrop: 'static'
     })
 }
 
-MyModal.prototype.showModal = function (_myModal){
+MyModal.prototype.showModal = function (_myModal) {
     _myModal.modalObj.show();
 }
 
-MyModal.prototype.setDestroyListener = function (_myModal){
-    $('#' + _myModal.id).on('hidden.bs.modal', function(){
+MyModal.prototype.setDestroyListener = function (_myModal) {
+    $('#' + _myModal.id).on('hidden.bs.modal', function () {
         _myModal.modalObj.dispose();
         $('#' + _myModal.id).remove();
     });
 }
 
 MyModal.prototype.loadModalBody = function (_myModal) {
-    $('#' + _myModal.id + '-body').load(_myModal.bodyLoadUrl, function (){
+    $('#' + _myModal.id + '-body').load(_myModal.bodyLoadUrl, function () {
         _myModal.showModal(_myModal);
     });
 }
@@ -504,62 +502,64 @@ MyModal.prototype.loadModalBody = function (_myModal) {
 // available params:
 //
 //===============================
-function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
+function MyS2Ajax(selectDom, selectPlaceholder, selectUrl) {
     selectDom.select2({
         allowClear: true,
         templateResult: select2OptionFilter,
         language: "bg",
         placeholder: selectPlaceholder,
-        escapeMarkup: function (text) { return text; },
+        escapeMarkup: function (text) {
+            return text;
+        },
         ajax: {
             url: selectUrl,
             data: function (params) {
-                if($(this).data('types2ajax') == 'pris_doc') {
+                if ($(this).data('types2ajax') == 'pris_doc') {
+                    let legalActTypeFilterId = $("#legal_act_type_filter_new").length ? "#legal_act_type_filter_new" : "#legal_act_type_filter";
                     var query = {
-                        actType: typeof $(this).data('legalacttype') != 'undefined' ?
-                            parseInt($(this).data('legalacttype'))
-                            : (typeof $('#legal_act_type_filter') != 'undefined' ? $('#legal_act_type_filter').val() : null),
-                        consultationId: typeof $(this).data('consultationid') != 'undefined' ?
-                            parseInt($(this).data('consultationid'))
+                        actType: typeof $(this).data('legalacttype') != 'undefined'
+                            ? parseInt($(this).data('legalacttype'))
+                            : (typeof $(legalActTypeFilterId) != 'undefined' ? $(legalActTypeFilterId).val() : null),
+                        consultationId: typeof $(this).data('consultationid') != 'undefined'
+                            ? parseInt($(this).data('consultationid'))
                             : (typeof $('#public_consultation_id') != 'undefined' ? $('#public_consultation_id').val() : null),
                         search: params.term
                     }
-                }else if($(this).data('types2ajax') == 'lp_record') {
+                } else if ($(this).data('types2ajax') == 'lp_record') {
                     var query = {
                         programId: $('#legislative_program_id').val(),
                         search: params.term
                     }
-                }else if($(this).data('types2ajax') == 'lp_record_pc') {
+                } else if ($(this).data('types2ajax') == 'lp_record_pc') {
                     var query = {
                         institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
                         programId: $('#legislative_program_id select').val(),
                         search: params.term
                     }
-                }else if($(this).data('types2ajax') == 'op_record') {
+                } else if ($(this).data('types2ajax') == 'op_record') {
                     var query = {
                         programId: $('#operational_program_id').val(),
                         search: params.term
                     }
-                }else if($(this).data('types2ajax') == 'op_record_pc') {
+                } else if ($(this).data('types2ajax') == 'op_record_pc') {
                     var query = {
                         institution: typeof $(this).data('institution') != 'undefined' ? $(this).data('institution') : null,
                         programId: $('#operational_program_id select').val(),
                         search: params.term
                     }
-                }else if($(this).data('types2ajax') == 'pc') {
+                } else if ($(this).data('types2ajax') == 'pc') {
                     var query = {
                         connections: typeof $(this).data('connections') != 'undefined' ? $(this).data('connections') : null,
                         pris: $('#pris_act_id') != 'undefined' ? $('#pris_act_id').val() : 0,
                         exclude: $(this).data('current'),
                         search: params.term
                     }
-                }else if($(this).data('types2ajax') == 'adv_board') {
+                } else if ($(this).data('types2ajax') == 'adv_board') {
                     var query = {
                         byModerator: typeof $(this).data('bymoderator') != 'undefined' ? $(this).data('bymoderator') : false,
                         search: params.term
                     }
-                }
-                else if($(this).data('types2ajax') == 'sd_parent_documents') {
+                } else if ($(this).data('types2ajax') == 'sd_parent_documents') {
                     var query = {
                         level: $('#strategic_document_level_id') != 'undefined' ? $('#strategic_document_level_id').val() : 0,
                         policy: $('#policy_area_id') != 'undefined' ? $('#policy_area_id').val() : null,
@@ -579,7 +579,7 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
             delay: 250,
             processResults: function (data) {
                 return {
-                    results:  $.map(data, function (item) {
+                    results: $.map(data, function (item) {
                         return {
                             text: item.name,
                             id: item.id
@@ -599,17 +599,17 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl){
 // ===========================
 // START Custom File validation
 //==========================
-function myFileSize(lField){
+function myFileSize(lField) {
     let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
     $(fieldErrorEl).html('');
     $(fieldErrorEl).removeClass('is-invalid');
 
-    if(lField.files.length) {
-        if(lField.files.length && lField.files[0].size >= MaxUploadFileSize){
+    if (lField.files.length) {
+        if (lField.files.length && lField.files[0].size >= MaxUploadFileSize) {
             $(fieldErrorEl).html("Максималният размер на файла трябва да е по-малък от " + MaxUploadFileSize + " MB");
             $(lField).addClass('is-invalid');
             return false;
-        } else{
+        } else {
             $(fieldErrorEl).html('');
             $(lField).removeClass('is-invalid');
         }
@@ -617,17 +617,17 @@ function myFileSize(lField){
     return true;
 }
 
-function myExtension(lField, allowed_file_extensions){
+function myExtension(lField, allowed_file_extensions) {
     let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
     $(fieldErrorEl).html('');
     $(lField).removeClass('is-invalid');
 
-    if(lField.files.length) {
+    if (lField.files.length) {
         let explode = allowed_file_extensions.split(",");
 
         let check = false;
         if (explode.length > 0) {
-            $.each( explode, function( index, value ) {
+            $.each(explode, function (index, value) {
                 if ((lField.files[0].name).match(new RegExp(".(" + value + ")$", "i"))) {
                     check = true;
                 }
@@ -705,18 +705,19 @@ function attachCheckboxToForm(form, checkboxId, checkboxLabel, defaultChecked = 
     form.appendChild(row);
 }
 
-function fieldRequired(lField, isRequired){
+function fieldRequired(lField, isRequired) {
     let fieldErrorEl = $($(lField).closest('.sd-form-files')[0]).find('.error_' + lField.name)[0];
     $(fieldErrorEl).html('');
     $(lField).removeClass('is-invalid');
 
-    if(isRequired && !$(lField).val().length){
+    if (isRequired && !$(lField).val().length) {
         $(fieldErrorEl).html("Полето е задължително");
         $(lField).addClass('is-invalid');
         return false;
     }
     return true;
 }
+
 // ===========================
 // START Custom File validation
 //==========================
@@ -725,7 +726,7 @@ $(document).ready(function (e) {
 
     let hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
     if (hash) {
-        $('#'+hash+'-tab').trigger('click');
+        $('#' + hash + '-tab').trigger('click');
     }
 
     $('.nav-tabs a').on('shown.bs.tab', function (e) {
@@ -737,8 +738,8 @@ $(document).ready(function (e) {
             days: ["Неделя", "Понеделник", "Вторник", "Сряда", "Четвъртък", "Петък", "Събота", "Неделя"],
             daysShort: ["Нед", "Пон", "Вт", "Ср", "Чет", "Пет", "Съб", "Нед"],
             daysMin: ["Н", "П", "В", "С", "Ч", "П", "С", "н"],
-            months: ["Януари","Февруари","Март","Април","Май","Юни","Юли","Август","Септември","Октомври","Ноември","Декември"],
-            monthsShort: ["Ян","Фев","Мар","Апр","Май","Юн","Юл","Авг","Сеп","Окт","Ное","Дек"],
+            months: ["Януари", "Февруари", "Март", "Април", "Май", "Юни", "Юли", "Август", "Септември", "Октомври", "Ноември", "Декември"],
+            monthsShort: ["Ян", "Фев", "Мар", "Апр", "Май", "Юн", "Юл", "Авг", "Сеп", "Окт", "Ное", "Дек"],
             today: "Днес",
             clear: "Изчисти"
         },
@@ -755,7 +756,7 @@ $(document).ready(function (e) {
 
     };
 
-    $.datepicker.setDefaults( $.datepicker.regional[typeof GlobalLang != 'undefined' ? GlobalLang : ''] );
+    $.datepicker.setDefaults($.datepicker.regional[typeof GlobalLang != 'undefined' ? GlobalLang : '']);
 
     $('.table-bordered tbody tr:even').not($('.dataTable tbody tr, .table-with-toggle-content tr')).addClass('odd');
 
@@ -781,7 +782,7 @@ $(document).ready(function (e) {
             $(this).closest('tr').removeClass('opened');
             $(icon).removeClass('fa-minus-circle').addClass('fa-plus-circle');
         }
-        $('.'+toggle_class+'_'+class_id).toggle();
+        $('.' + toggle_class + '_' + class_id).toggle();
     });
 
     $('.show_confirm').on('click', function () {
@@ -805,7 +806,7 @@ $(document).ready(function (e) {
         })
     }
 
-    if($('input[type="text"]').length) {
+    if ($('input[type="text"]').length) {
         $('input[type="text"]').attr('autocomplete', 'off');
     }
 
@@ -828,7 +829,7 @@ $(document).ready(function (e) {
     //     });
     // }
 
-    if($('.summernote').length) {
+    if ($('.summernote').length) {
         $('.summernote').summernote({
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -855,7 +856,7 @@ $(document).ready(function (e) {
         });
     }
 
-    if($('.summernote-disabled').length) {
+    if ($('.summernote-disabled').length) {
         $('.summernote-disabled').summernote({
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -870,26 +871,25 @@ $(document).ready(function (e) {
         });
     }
 
-    $('.navbar .sidebar-toggle').bind('click', function() {
+    $('.navbar .sidebar-toggle').bind('click', function () {
         let body = $("body");
-        if(body.hasClass("sidebar-collapse")) {
+        if (body.hasClass("sidebar-collapse")) {
             eraseCookie('nav');
-        }
-        else {
-            createCookie('nav','sidebar-collapse',2);
+        } else {
+            createCookie('nav', 'sidebar-collapse', 2);
         }
     });
 
     if ($('.js-toggle-delete-resource-modal').length) {
-        $('.js-toggle-delete-resource-modal').on('click', function(e) {
+        $('.js-toggle-delete-resource-modal').on('click', function (e) {
             e.preventDefault();
 
             // If delete url specify in del.btn use that url
-            if($(this).data('resource-delete-url')) {
-                $( $(this).data('target')).find('form').attr('action', $(this).data('resource-delete-url'));
+            if ($(this).data('resource-delete-url')) {
+                $($(this).data('target')).find('form').attr('action', $(this).data('resource-delete-url'));
             }
 
-            if($(this).data('title_singular')) {
+            if ($(this).data('title_singular')) {
                 $('#modal_title_singular').html($(this).data('title_singular'));
                 $('#modal_btn_title_singular').html($(this).data('title_singular'));
             }
@@ -935,11 +935,11 @@ $(document).ready(function (e) {
     //     language: "bg"
     // };
 
-    if($('.select2').length) {
+    if ($('.select2').length) {
         $('.select2').select2(select2Options);
     }
 
-    if($('.select2-no-clear').length) {
+    if ($('.select2-no-clear').length) {
         $('.select2-no-clear').select2({
             allowClear: false,
             placeholder: true,
@@ -948,18 +948,17 @@ $(document).ready(function (e) {
         });
     }
 
-    if($('.select2-autocomplete-ajax').length) {
-        $('.select2-autocomplete-ajax').each(function (){
+    if ($('.select2-autocomplete-ajax').length) {
+        $('.select2-autocomplete-ajax').each(function () {
             MyS2Ajax($(this), $(this).data('placeholders2'), $(this).data('urls2'));
         });
     }
 
 
-
     //=================================
     //Datepicker
     //===============================
-    if($('.datepicker').length) {
+    if ($('.datepicker').length) {
         $('.datepicker').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'dd.mm.yyyy',
@@ -970,7 +969,7 @@ $(document).ready(function (e) {
         });
     }
 
-    if($('.datepicker-from-this-year').length) {
+    if ($('.datepicker-from-this-year').length) {
         $('.datepicker-from-this-year').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'yyyy',
@@ -980,13 +979,13 @@ $(document).ready(function (e) {
             orientation: "bottom left",
             startDate: new Date(new Date().getFullYear(), 0, 1),
             autoclose: true,
-            onClose: function(dateText, inst) {
+            onClose: function (dateText, inst) {
                 $(this).datepicker('setDate', new Date(inst.selectedYear, 1, 1));
             }
         });
     }
 
-    if($('.datepicker-today').length) {
+    if ($('.datepicker-today').length) {
         $('.datepicker-today').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'dd.mm.yyyy',
@@ -999,7 +998,7 @@ $(document).ready(function (e) {
         });
     }
 
-    if($('.datepicker-tomorrow').length) {
+    if ($('.datepicker-tomorrow').length) {
         $('.datepicker-tomorrow').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'dd.mm.yyyy',
@@ -1012,7 +1011,7 @@ $(document).ready(function (e) {
         });
     }
 
-    if($('.datepicker-month').length) {
+    if ($('.datepicker-month').length) {
         $('.datepicker-month').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'mm.yyyy',
@@ -1024,11 +1023,11 @@ $(document).ready(function (e) {
             orientation: "bottom left",
             autoclose: true,
             weekStart: 1,
-            onClose: function(dateText, inst) {
+            onClose: function (dateText, inst) {
                 $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
             }
-        }).on('show', function(e) {
-            if( typeof this.firstShow == 'undefined') {
+        }).on('show', function (e) {
+            if (typeof this.firstShow == 'undefined') {
                 let startDateStr = $('#' + e.target.id).data('start');
                 if (typeof startDateStr != 'undefined') {
                     $(this).datepicker('setStartDate', startDateStr.toString());
@@ -1042,7 +1041,7 @@ $(document).ready(function (e) {
         });
     }
 
-    if($('.datepicker-year').length) {
+    if ($('.datepicker-year').length) {
         $('.datepicker-year').datepicker({
             language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
             format: 'yyyy',
@@ -1052,13 +1051,13 @@ $(document).ready(function (e) {
             changeYear: true,
             orientation: "bottom left",
             autoclose: true,
-            onClose: function(dateText, inst) {
+            onClose: function (dateText, inst) {
                 $(this).datepicker('setDate', new Date(inst.selectedYear, 1, 1));
             }
         });
     }
 
-    if($('.timepicker').length) {
+    if ($('.timepicker').length) {
         $('.timepicker').timepicker({
             showSeconds: false,
             showMeridian: false,
@@ -1076,13 +1075,13 @@ $(document).ready(function (e) {
     //console.log(start_date, end_date);
 
     $('.date_range').daterangepicker({
-        ranges   : {
-            'Днес'              : [moment(), moment()],
-            'Вчера'             : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Последните 7 дена' : [moment().subtract(6, 'days'), moment()],
+        ranges: {
+            'Днес': [moment(), moment()],
+            'Вчера': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Последните 7 дена': [moment().subtract(6, 'days'), moment()],
             'Последните 30 дена': [moment().subtract(29, 'days'), moment()],
-            'Този месец'        : [moment().startOf('month'), moment().endOf('month')],
-            'Миналият месец'    : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            'Този месец': [moment().startOf('month'), moment().endOf('month')],
+            'Миналият месец': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
         startDate: start_date,
         endDate: end_date,
@@ -1098,7 +1097,7 @@ $(document).ready(function (e) {
         $(".end_date").val(end.format('dd.mm.yyyy'));
     });
 
-    if($('.simple-datatable').length) {
+    if ($('.simple-datatable').length) {
         $('.simple-datatable').DataTable({
             paging: false,
             // searching: false
@@ -1122,7 +1121,7 @@ $(document).ready(function (e) {
 
     // $('[data-toggle="tooltip"]').tooltip();
 
-    $(document).keyup(function(e) {
+    $(document).keyup(function (e) {
         if (e.key === "Escape") {
             $('.modal').modal('hide');
         }
@@ -1177,8 +1176,8 @@ $(document).ready(function (e) {
     //you can add to url get parameters to set tree as selectable or just view : select=1
     // and if you need more than one subject to be selected use parameter 'multiple=1'
     //======================================
-    if( $('.pick-institution').length ) {
-        $('.pick-institution').on('click', function (){
+    if ($('.pick-institution').length) {
+        $('.pick-institution').on('click', function () {
             let subjectModal = new MyModal({
                 title: $(this).data('title'),
                 destroyListener: true,
@@ -1186,15 +1185,15 @@ $(document).ready(function (e) {
                 customClass: 'no-footer'
             });
 
-            $(document).on('click', '#select-institution', function (){
+            $(document).on('click', '#select-institution', function () {
                 let subjectsFormSelect = $('#' + $(this).data('dom'));
-                let checked = $('#'+ subjectModal.id +' input[name="institutions-item"]:checked');
-                if( checked.length ) {
-                    if( checked.length === 1 ) {
+                let checked = $('#' + subjectModal.id + ' input[name="institutions-item"]:checked');
+                if (checked.length) {
+                    if (checked.length === 1) {
                         subjectsFormSelect.val(checked.val());
-                    } else if( checked.length > 1 ) {
+                    } else if (checked.length > 1) {
                         let subjectValues = [];
-                        checked.each(function(){
+                        checked.each(function () {
                             subjectValues.push($(this).val());
                         });
                         subjectsFormSelect.val(subjectValues);
@@ -1206,15 +1205,15 @@ $(document).ready(function (e) {
         });
     }
 
-    if( $('.preview-file-modal').length ) {
-        $('.preview-file-modal').on('click', function(){
+    if ($('.preview-file-modal').length) {
+        $('.preview-file-modal').on('click', function () {
             let cancelBtnTxt = GlobalLang == 'bg' ? 'Откажи' : 'Cancel';
             let titleTxt = GlobalLang == 'bg' ? 'Преглед на файл' : 'File preview';
-            if( canAjax ) {
+            if (canAjax) {
                 canAjax = false;
                 new MyModal({
                     title: titleTxt,
-                    footer: '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
+                    footer: '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
                     bodyLoadUrl: $(this).data('url'),
                     customClass: 'file-preview'
                 });
@@ -1225,58 +1224,58 @@ $(document).ready(function (e) {
     }
 
     //Approve modal
-    if($('.approveModal').length) {
-        $('.approveModal').on('click', function (event){
+    if ($('.approveModal').length) {
+        $('.approveModal').on('click', function (event) {
             let btn = $(this);
             let approveModal = new MyModal({
                 title: btn.data('title'),
                 destroyListener: true,
-                body: '<p class="m-0">' + btn.data('question') +'</p>',
+                body: '<p class="m-0">' + btn.data('question') + '</p>',
                 footer: '<button class="btn btn-sm btn-danger confirmApproveModal">Да</button>' +
                     '<button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="Не">Не</button>'
             });
-            $('#'+approveModal.id).on('click', '.confirmApproveModal', function (){
+            $('#' + approveModal.id).on('click', '.confirmApproveModal', function () {
                 $('#approveModalSubmit_' + btn.data('file'))[0].click();
             });
         });
     }
 
     //Hide/show comment
-    if($('.limit-length').length){
-        $('.limit-length').each(function (index, el){
+    if ($('.limit-length').length) {
+        $('.limit-length').each(function (index, el) {
             let text = $(this).text();
-            if( text.length > 1000 ){
+            if (text.length > 1000) {
                 $(this).html(text.substring(0, 1000) + ' <span class="show-more btn btn-primary px-2 py-0 ms-2">...</span>');
             }
             //full-length
         });
-        $(document).on('click', '.show-more', function (){
+        $(document).on('click', '.show-more', function () {
             $(this).parent().addClass('d-none');
             $(this).parent().parent().find('.full-length').removeClass('d-none');
         });
     }
 
-    if($('.add_sd_document').length){
-        $('.add_sd_document').each(function (index, el){
-            $(el).on('click', function (){
+    if ($('.add_sd_document').length) {
+        $('.add_sd_document').each(function (index, el) {
+            $(el).on('click', function () {
                 let url = $(this).data('url');
                 let cancelBtnTxt = GlobalLang == 'bg' ? 'Откажи' : 'Cancel';
                 let saveBtnTxt = GlobalLang == 'bg' ? 'Добави' : 'Add';
                 let titleTxt = GlobalLang == 'bg' ? 'Добавяне на дъщерен документ' : 'Add document';
                 new MyModal({
                     title: titleTxt,
-                    footer: '<button class="btn btn-sm btn-success ms-3 me-2" type="button" onclick="submitNewSdChild($(\'#new_sd_child_form\'));">'+ saveBtnTxt +'</button><button class="btn btn-sm btn-danger closeModal" data-dismiss="modal" aria-label="'+ cancelBtnTxt +'">'+ cancelBtnTxt +'</button>',
+                    footer: '<button class="btn btn-sm btn-success ms-3 me-2" type="button" onclick="submitNewSdChild($(\'#new_sd_child_form\'));">' + saveBtnTxt + '</button><button class="btn btn-sm btn-danger closeModal" data-dismiss="modal" aria-label="' + cancelBtnTxt + '">' + cancelBtnTxt + '</button>',
                     bodyLoadUrl: url,
                     customClass: 'w-70p',
-                    destroyListener:true
+                    destroyListener: true
                 });
             });
         });
     }
 
-    if($('.edit-sd-document').length){
-        $('.edit-sd-document').on('click', function (){
-            if( canAjax ) {
+    if ($('.edit-sd-document').length) {
+        $('.edit-sd-document').on('click', function () {
+            if (canAjax) {
                 canAjax = false;
                 let lForm = $(this).closest('form');
                 let lUrl = $(lForm).data('url');
@@ -1295,7 +1294,7 @@ $(document).ready(function (e) {
                     url: lUrl,
                     data: formData,
                     success: function (result) {
-                        if(typeof result.errors != 'undefined'){
+                        if (typeof result.errors != 'undefined') {
                             let errors = Object.entries(result.errors);
                             for (let i = 0; i < errors.length; i++) {
                                 const search_class = '.error_' + errors[i][0];
@@ -1303,10 +1302,10 @@ $(document).ready(function (e) {
                                 $(errDiv[0]).html(errors[i][1][0]);
                             }
                             canAjax = true;
-                        } else if(typeof result.main_error != 'undefined'){
+                        } else if (typeof result.main_error != 'undefined') {
                             $(lMainError).html(result.main_error);
                             canAjax = true;
-                        } else{
+                        } else {
                             $(lMainSuccess).html(result.success_message);
                             canAjax = true;
                         }
@@ -1320,13 +1319,13 @@ $(document).ready(function (e) {
         });
     }
 
-    if($('.included-file-form-submit').length){
-        $('.included-file-form').on('click', function (){
+    if ($('.included-file-form-submit').length) {
+        $('.included-file-form').on('click', function () {
 
         });
     }
 
-    function validateFileForm(lForm, submit = true){
+    function validateFileForm(lForm, submit = true) {
         let bgDescField = $(lForm).find('input[name="description_bg"]')[0];
         let bgDesc = $(bgDescField).val().length;
         let enDescField = $(lForm).find('input[name="description_en"]')[0];
@@ -1343,60 +1342,60 @@ $(document).ready(function (e) {
         let enFileRequired = enDesc > 0;
 
         let allowed_file_extensions = $(lForm).data('extension');
-        if(!fieldRequired(bgDescField, bgRequired)) {
+        if (!fieldRequired(bgDescField, bgRequired)) {
             return false;
-        } else if(!fieldRequired(enDescField, enRequired)) {
+        } else if (!fieldRequired(enDescField, enRequired)) {
             return false;
-        } else if(!fieldRequired(bgFileField, bgFileRequired)){
+        } else if (!fieldRequired(bgFileField, bgFileRequired)) {
             return false;
-        } else if(!fieldRequired(enFileField, enFileRequired)) {
+        } else if (!fieldRequired(enFileField, enFileRequired)) {
             return false;
-        } else if(!myExtension(bgFileField, allowed_file_extensions)) {
+        } else if (!myExtension(bgFileField, allowed_file_extensions)) {
             return false;
-        } else if(!myExtension(enFileField, allowed_file_extensions)) {
+        } else if (!myExtension(enFileField, allowed_file_extensions)) {
             return false;
-        } else if(!myFileSize(bgFileField)) {
+        } else if (!myFileSize(bgFileField)) {
             return false;
-        } else if(!myFileSize(enFileField)) {
+        } else if (!myFileSize(enFileField)) {
             return false;
         }
 
-        if(submit) {
+        if (submit) {
             $(lForm).submit();
-        } else{
+        } else {
             return true;
         }
 
     }
 
-    if($('.sd-submit-files').length){
-        $('.sd-submit-files').on('click', function (){
+    if ($('.sd-submit-files').length) {
+        $('.sd-submit-files').on('click', function () {
             let lForm = $(this).closest('form')[0];
             validateFileForm(lForm);
         });
     }
 
-    if($('.included-file-form-submit').length){
-        $('.included-file-form-submit').on('click', function (){
+    if ($('.included-file-form-submit').length) {
+        $('.included-file-form-submit').on('click', function () {
             let lForm = $(this).closest('div.sd-form-files')[0];
 
-            if(validateFileForm(lForm, false)){
+            if (validateFileForm(lForm, false)) {
                 var lData = new FormData();
-                if($($(lForm).find("input[name=description_bg]")[0]).val().length){
+                if ($($(lForm).find("input[name=description_bg]")[0]).val().length) {
                     lData.append('description_bg', $($(lForm).find("input[name=description_bg]")[0]).val());
                 }
-                if($($(lForm).find("input[name=description_en]")[0]).val().length){
+                if ($($(lForm).find("input[name=description_en]")[0]).val().length) {
                     lData.append('description_en', $($(lForm).find("input[name=description_en]")[0]).val());
                 }
-                if($(lForm).find("input[name=file_bg]")[0].files.length){
+                if ($(lForm).find("input[name=file_bg]")[0].files.length) {
                     lData.append('file_bg', $(lForm).find("input[name=file_bg]")[0].files[0]);
                 }
-                if($(lForm).find("input[name=file_en]")[0].files.length){
+                if ($(lForm).find("input[name=file_en]")[0].files.length) {
                     lData.append('file_en', $(lForm).find("input[name=file_en]")[0].files[0]);
                 }
                 lData.append('formats', $($(lForm).find("input[name=formats]")[0]).val());
 
-                if( canAjax ) {
+                if (canAjax) {
                     canAjax = false;
                     let lUrl = $(lForm).data('url');
                     let lMainError = $(lForm).find('.main-error')[0];
@@ -1415,7 +1414,7 @@ $(document).ready(function (e) {
                         contentType: false,
                         processData: false,
                         success: function (result) {
-                            if(typeof result.errors != 'undefined'){
+                            if (typeof result.errors != 'undefined') {
                                 let errors = Object.entries(result.errors);
                                 for (let i = 0; i < errors.length; i++) {
                                     const search_class = '.error_' + errors[i][0];
@@ -1423,10 +1422,10 @@ $(document).ready(function (e) {
                                     $(errDiv[0]).html(errors[i][1][0]);
                                 }
                                 canAjax = true;
-                            } else if(typeof result.main_error != 'undefined'){
+                            } else if (typeof result.main_error != 'undefined') {
                                 $(lMainError).html(result.main_error);
                                 canAjax = true;
-                            } else{
+                            } else {
                                 window.location = result.redirect_url;
                             }
 

@@ -49,6 +49,7 @@ class StorePublicConsultationRequest extends FormRequest
             'law_id' => ['nullable', 'numeric'],
             'pris_id' => ['nullable', 'numeric'],
         ];
+        //dd($rules);
 
         if (request()->isMethod('put') ) {
             $rules['id'] = ['required', 'numeric', 'exists:public_consultation'];

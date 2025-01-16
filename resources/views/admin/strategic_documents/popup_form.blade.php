@@ -59,9 +59,9 @@
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="col-sm-12 control-label"
-                       for="accept_act_institution_type_id">{{ trans_choice('custom.authority_accepting_strategic', 1) }}
-                    <span class="required">*</span></label>
+                <label class="col-sm-12 control-label" for="accept_act_institution_type_id_new">
+                    {{ trans_choice('custom.authority_accepting_strategic', 1) }}<span class="required">*</span>
+                </label>
                 <div class="col-12">
                     <select name="accept_act_institution_type_id" id="accept_act_institution_type_id_new"
                             class="form-control form-control-sm select2 @error('accept_act_institution_type_id'){{ 'is-invalid' }}@enderror">
@@ -97,8 +97,12 @@
                 <label class="col-sm-12 control-label"
                        for="active">{{ trans_choice('custom.public_consultations', 1) }}</label>
                 <div class="col-12">
-                    <select id="public_consultation_id" name="public_consultation_id" data-types2ajax="pc" data-urls2="{{ route('admin.select2.ajax', 'pc') }}" data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}"
-                            class="form-control form-control-sm select2-autocomplete-ajax @error('public_consultation_id'){{ 'is-invalid' }}@enderror">
+                    <select id="public_consultation_id" name="public_consultation_id"
+                            data-types2ajax="pc"
+                            data-urls2="{{ route('admin.select2.ajax', 'pc') }}"
+                            data-placeholders2="{{ __('custom.search_pc_record_js_placeholder') }}"
+                            class="form-control form-control-sm select2-autocomplete-ajax @error('public_consultation_id'){{ 'is-invalid' }}@enderror"
+                    >
                     </select>
                     @error('public_consultation_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -108,8 +112,9 @@
             </div>
         </div>
     </div>
+
     <div class="row mb-4 d-none" id="prisSection_new">
-        <div class="col-md-12" id="pris-act">
+        <div class="col-md-12" id="pris-act-new">
             <div class="col-12">
                 <div class="form-group">
                     <label class="col-sm-12 control-label">
@@ -117,7 +122,9 @@
                     </label>
 
                     <span class="text-danger" id="connect-doc-error"></span>
-                    <select id="legal_act_type_filter_new" name="legal_act_type_filter" class="form-control form-control-sm select2 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror">
+                    <select id="legal_act_type_filter_new" name="legal_act_type_filter"
+                            class="form-control form-control-sm select2 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror"
+                    >
                         <option value="" @if(old('legal_act_type_filter', '') == '') selected @endif>--</option>
                         @if(isset($legalActTypes) && $legalActTypes->count())
                             @foreach($legalActTypes as $row)
@@ -135,8 +142,12 @@
                 <div class="form-group">
                     <label class="col-sm-12 control-label"
                            for="pris_act_id">Акт за приемане от раздел „Актове на МС“</label>
-                    <select id="pris_act_id_new" name="pris_act_id" data-types2ajax="pris_doc" data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}"
-                            class="form-control form-control-sm select2-autocomplete-ajax @error('pris_act_id'){{ 'is-invalid' }}@enderror">
+                    <select id="pris_act_id_new" name="pris_act_id"
+                            data-types2ajax="pris_doc"
+                            data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}"
+                            data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}"
+                            class="form-control form-control-sm select2-autocomplete-ajax @error('pris_act_id'){{ 'is-invalid' }}@enderror"
+                    >
                     </select>
                     @error('pris_act_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -147,14 +158,87 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-3 act-custom-fields d-none">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="strategic_act_type_id_new">
+                    {{ __('validation.attributes.strategic_act_type_id') }}
+                </label>
+                <div class="col-12">
+                    <select id="strategic_act_type_id_new" name="strategic_act_type_id"
+                            class="form-control form-control-sm select2 @error('strategic_act_type_id'){{ 'is-invalid' }}@enderror"
+                    >
+                        <option value="" @if(old('strategic_act_type_id', '') == '') selected @endif>
+                            ---
+                        </option>
+                        @if(isset($strategicActTypes) && $strategicActTypes->count())
+                            @foreach($strategicActTypes as $row)
+                                <option value="{{ $row->id }}" @if(old('strategic_act_type_id', 0) == $row->id) selected @endif data-id="{{ $row->id }}">
+                                    {{ $row->name }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                    @error('strategic_act_type_id')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 act-custom-fields d-none" id="strategic_act_number_field">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="strategic_act_number_new">{{ __('validation.attributes.strategic_act_number') }}</label>
+                <div class="col-12">
+                    <input type="text" id="strategic_act_number_new" name="strategic_act_number"
+                           class="form-control form-control-sm @error('strategic_act_number'){{ 'is-invalid' }}@enderror"
+                           value="{{ old('strategic_act_number') }}">
+                    @error('strategic_act_number')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <!-- Document date -->
+        <div class="col-md-3 act-custom-fields d-none">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="document_date_new">{{ __('custom.document_act') }}</label>
+                <div class="col-12">
+                    <input type="text" id="document_date_new" name="document_date"
+                           class="form-control form-control-sm datepicker @error('document_date'){{ 'is-invalid' }}@enderror"
+                           value="{{ old('document_date') }}"
+                    >
+                    @error('document_date')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 act-custom-fields d-none">
+            <div class="form-group">
+                <label class="col-sm-12 control-label" for="strategic_act_link_new">{{ __('validation.attributes.strategic_act_link') }}</label>
+                <div class="col-12">
+                    <input type="text" id="strategic_act_link_new" name="strategic_act_link"
+                           class="form-control form-control-sm @error('strategic_act_link'){{ 'is-invalid' }}@enderror"
+                           value="{{ old('strategic_act_link') }}"
+                    >
+                    @error('strategic_act_link')
+                    <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="form-group">
-                <label class="col-sm-12 control-label"
-                       for="document_date_accepted">
+                <label class="col-sm-12 control-label" for="document_date_accepted_new">
                     <i class="fas fa-info-circle text-info mr-2" data-toggle="tooltip" title="Когато документът е свързан с Акт за приемане от раздел „Актове на МС“, дата на приемане се взима автоматично от акта. Когато Дата на приемане остане празно, автоматично се взима днешна дата."></i>
-                    {{ __('custom.date_accepted') }}
-                    <span class="required">*</span></label>
+                    {{ __('custom.date_accepted') }}<span class="required">*</span>
+                </label>
                 <div class="col-12">
                     <input type="text" id="document_date_accepted_new" name="document_date_accepted"
                            class="form-control form-control-sm datepicker @error('document_date_accepted'){{ 'is-invalid' }}@enderror"
@@ -168,9 +252,9 @@
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label class="col-sm-12 control-label"
-                       for="document_date_pris">{{ __('custom.date_expiring') }}
-                    <span class="required">*</span></label>
+                <label class="col-sm-12 control-label" for="document_date_expiring_new">
+                    {{ __('custom.date_expiring') }}<span class="required">*</span>
+                </label>
                 <div class="col-12">
                     <input type="text" id="document_date_expiring_new" name="document_date_expiring"
                            class="form-control form-control-sm datepicker @error('document_date_expiring'){{ 'is-invalid' }}@enderror"
@@ -184,16 +268,16 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label class="col-sm-12 control-label"
-                       for="document_date_pris">{{ __('custom.date_indefinite') }}
-                    <span class="required">*</span></label>
+                <label class="col-sm-12 control-label">
+                    {{ __('custom.date_indefinite') }}<span class="required">*</span>
+                </label>
                 <div class="col-12">
                     <div class="form-check">
                         <input type="checkbox" id="date_expiring_indefinite_new"
                                name="date_expiring_indefinite"
                                class="form-check-input"
                                value="1" @if(is_null(old('document_date_expiring'))) checked @endif>
-                        <label class="form-check-label" for="date_valid_indefinite_main">
+                        <label class="form-check-label" for="date_expiring_indefinite_new">
                             {{ __('custom.date_expring_indefinite') }}
                         </label>
                     </div>
@@ -204,12 +288,12 @@
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="col-sm-12 control-label"
-                       for="strategic_act_link">{{ __('validation.attributes.link_to_monitorstat') }}</label>
+                <label class="col-sm-12 control-label" for="strategic_act_link">{{ __('validation.attributes.link_to_monitorstat') }}</label>
                 <div class="col-12">
                     <input type="text" name="link_to_monitorstat"
                            class="form-control form-control-sm @error('link_to_monitorstat'){{ 'is-invalid' }}@enderror"
-                           value="{{ old('link_to_monitorstat', '') }}">
+                           value="{{ old('link_to_monitorstat', '') }}"
+                    >
                     @error('link_to_monitorstat')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
@@ -223,6 +307,39 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        let strategicActTypeNew = $('#strategic_act_type_id_new');
+        let acceptActInstitutionTypeNew = $('#accept_act_institution_type_id_new');
+        let prisActContainerNew = $('#pris-act-new');
+
+        function controlCustomActFieldsNew() {
+            let acceptActInstitutionTypeVal = parseInt(acceptActInstitutionTypeNew.val());
+
+            if ([1].indexOf(acceptActInstitutionTypeVal) != -1) {
+                $('.act-custom-fields').addClass('d-none');
+                prisActContainerNew.removeClass('d-none');
+            } else if (acceptActInstitutionTypeVal > 0 && [1].indexOf(acceptActInstitutionTypeVal) == -1) {
+                prisActContainerNew.addClass('d-none');
+                $('.act-custom-fields').removeClass('d-none');
+
+                if (acceptActInstitutionTypeVal == '{{ \App\Models\AuthorityAcceptingStrategic::NATIONAL_ASSEMBLY }}') {
+                    $('#strategic_act_number_field').hide();
+                } else {
+                    $('#strategic_act_number_field').show();
+                }
+            } else {
+                $('.act-custom-fields').addClass('d-none');
+                prisActContainerNew.addClass('d-none');
+            }
+        }
+
+        [strategicActTypeNew, acceptActInstitutionTypeNew].forEach(function () {
+            $(this).on('change', function () {
+                controlCustomActFieldsNew();
+            });
+        });
+
+        controlCustomActFieldsNew();
+
         const centralLevelNew = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value; ?>';
         const counsilMinistersNew = '<?php echo \App\Models\AuthorityAcceptingStrategic::COUNCIL_MINISTERS; ?>';
 
@@ -285,6 +402,22 @@
 
         $('#accept_act_institution_type_id_new').on('change', function (){
             controlPrisSectionNew();
+            let selectedValue = $(this).val();
+            if (selectedValue == parseInt('<?php echo \App\Models\AuthorityAcceptingStrategic::COUNCIL_MINISTERS; ?>')) {
+                $('#strategic_act_link_new').val('');
+                $('#strategic_act_number_new').val('');
+                $('#strategic_act_type_id_new').val('').trigger('change');
+                $('#document_date_new').val('');
+            } else {
+                $('#document_date_pris_new').val('');
+                $('#pris_act_id_new').val('').trigger('change');
+
+                if (selectedValue == '{{ \App\Models\AuthorityAcceptingStrategic::NATIONAL_ASSEMBLY }}') {
+                    $('#strategic_act_type_id_new').val('{{ \App\Models\StrategicActType::DECISION }}').trigger('change');
+                } else {
+                    $('#strategic_act_type_id_new').val('').trigger('change');
+                }
+            }
         });
 
         function clearStartDate(init = false){

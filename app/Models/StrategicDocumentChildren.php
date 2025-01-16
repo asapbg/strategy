@@ -30,8 +30,21 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
     //activity
     protected string $logName = "strategic_document_children";
 
-    protected $fillable = ['strategic_document_id', 'strategic_document_level_id', 'accept_act_institution_type_id', 'strategic_document_type_id',
-        'policy_area_id', 'pris_act_id', 'public_consultation_id', 'document_date_accepted', 'document_date_expiring', 'link_to_monitorstat'];
+    protected $fillable = [
+        'strategic_document_id',
+        'strategic_document_level_id',
+        'strategic_act_type_id',
+        'strategic_act_number',
+        'strategic_act_link',
+        'document_date',
+        'accept_act_institution_type_id',
+        'strategic_document_type_id',
+        'policy_area_id', 'pris_act_id',
+        'public_consultation_id',
+        'document_date_accepted',
+        'document_date_expiring',
+        'link_to_monitorstat'
+    ];
 
     /**
      * Get the model name
@@ -129,6 +142,13 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
         return $this->hasOne(Pris::class, 'id', 'pris_act_id');
     }
 
+    public static function getStrategicActTypeName($strategic_act_type_id)
+    {
+        $actType = StrategicActTypeTranslation::where('strategic_act_type_id', $strategic_act_type_id)->first();
+
+        return $actType ? $actType->name : '';
+    }
+
     /**
      * We use this to draw documents tree
      * If $id is 0 then we get full tree
@@ -142,6 +162,10 @@ class StrategicDocumentChildren extends ModelActivityExtend implements Translata
                         strategic_document_children.id,
                         strategic_document_children.strategic_document_id as sd_id,
                         strategic_document_children.strategic_document_level_id,
+                        strategic_document_children.strategic_act_type_id,
+                        strategic_document_children.strategic_act_number,
+                        strategic_document_children.strategic_act_link,
+                        strategic_document_children.document_date,
                         strategic_document_children.accept_act_institution_type_id,
                         strategic_document_children.strategic_document_type_id,
                         max(strategic_document_type_translations.name) as strategic_document_type_name,

@@ -136,20 +136,19 @@ use Illuminate\Support\Facades\Storage;
     });
 
     Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->group(function() {
-        Route::get('/strategy-documents/{id}', 'show')->name('strategy-document.view')->where('id', '([1-9]+[0-9]*)');
-        Route::get('/strategy-documents/{id}/export', 'export')->name('strategy-document.export')->where('id', '([1-9]+[0-9]*)');
-        Route::get('/strategy-documents', 'index')->name('strategy-documents.index');
-        Route::get('/strategy-documents/tree', 'tree')->name('strategy-documents.tree');
-        Route::get('/strategy-documents/reports', 'reports')->name('strategy-documents.reports');
-//    Route::get('/strategy-document/list/{search?}', 'listStrategicDocuments')->name('strategy-document.list');
-
-//        Route::get('/strategy-document/download-file/{id}', 'downloadDocFile')->name('strategy-document.download-file');
+        Route::get('/strategy-documents/{id}',              'show')->name('strategy-document.view')->where('id', '([1-9]+[0-9]*)');
+        Route::get('/strategy-documents/{id}/export',       'export')->name('strategy-document.export')->where('id', '([1-9]+[0-9]*)');
+        Route::get('/strategy-documents',                   'index')->name('strategy-documents.index');
+        Route::get('/strategy-documents/tree',              'tree')->name('strategy-documents.tree');
+        Route::get('/strategy-documents/reports',           'reports')->name('strategy-documents.reports');
         Route::get('/strategy-document/file-preview-modal/{id}', 'previewModalFile')->name('strategy-document.preview.file_modal');
-//    Route::get('/strategy-document-institution/{documentLevelIds?}', 'getInstitutions')->name('strategy-document.institutions');
-//    Route::get('/strategy-document/load-pris-acts', 'loadPrisOptions')->name('strategy-document.load-pris-acts');
-        Route::get('/strategy-documents/information', 'info')->name('strategy-document.info');
-        Route::get('/strategy-documents/documents', 'documents')->name('strategy-document.documents');
-        Route::get('/strategy-documents/contacts/{item?}', 'contacts')->name('strategy-document.contacts');
+        Route::get('/strategy-documents/information',       'info')->name('strategy-document.info');
+        Route::get('/strategy-documents/documents',         'documents')->name('strategy-document.documents');
+        Route::get('/strategy-documents/contacts/{item?}',  'contacts')->name('strategy-document.contacts');
+//        Route::get('/strategy-document/list/{search?}', 'listStrategicDocuments')->name('strategy-document.list');
+//        Route::get('/strategy-document/download-file/{id}', 'downloadDocFile')->name('strategy-document.download-file');
+//        Route::get('/strategy-document-institution/{documentLevelIds?}', 'getInstitutions')->name('strategy-document.institutions');
+//        Route::get('/strategy-document/load-pris-acts', 'loadPrisOptions')->name('strategy-document.load-pris-acts');
     });
 
     Route::controller(\App\Http\Controllers\ImpactAssessmentCalculatorsController::class)->group(function () {

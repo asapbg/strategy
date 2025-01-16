@@ -222,8 +222,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
 
     public static function optionsListWithAttr(): \Illuminate\Support\Collection
     {
-        return DB::table('institution')
-            ->select(['institution.id as value', 'institution_translations.name',
+        return Institution::select(['institution.id as value', 'institution_translations.name',
                 DB::raw('json_agg(institution_field_of_action.field_of_action_id) as foa'),
                 DB::raw('case when max(law_institution.law_id) is null then \'[]\' else json_agg(distinct(law_institution.law_id)) end as laws'),
                 DB::raw('max(institution_level.nomenclature_level) as level')])

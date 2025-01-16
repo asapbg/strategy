@@ -36,7 +36,9 @@
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
             <div id="front-timer">
-                @include('partials.count-down-timer')
+                @if(env('APP_ENV' != 'local'))
+                    @include('partials.count-down-timer')
+                @endif
             </div>
         </li>
         <li class="nav-item">
