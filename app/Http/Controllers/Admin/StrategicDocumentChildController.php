@@ -138,6 +138,7 @@ class StrategicDocumentChildController extends AdminController
                 $validated['document_date'] = null;
             } else {
                 $validated['pris_act_id'] = null;
+                $validated['document_date'] = databaseDate($validated['document_date']);
             }
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);

@@ -170,6 +170,9 @@
                             @else
                                 <a href="{{ $strategicDocument->strategic_act_link }}" class="main-color text-decoration-none">
                                     <span>{{ $strategicDocument->strategicActType?->name }}</span>
+                                    @if ($strategicDocument->document_date)
+                                        от дата <span>{{ displayDate($strategicDocument->document_date) }}</span>
+                                    @endif
                                     {{ $strategicDocument->strategic_act_number }}
                                 </a>
                             @endif
