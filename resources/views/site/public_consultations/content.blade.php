@@ -139,19 +139,29 @@
             </div>
         </div>
 
+        @if($item->consultations->count() > 0)
+            <div class="row mb-4 mt-4">
+                <h3 class="mb-3">{{ __('custom.consultation_links')  }}</h3>
+                <div class="col-md-12">
+                    <ul class="list-group list-group-flush">
+                        @foreach($item->consultations as $consultation)
+                            <li class="list-group-item">
+                                <a href="{{ route('public_consultation.view', $consultation->id) }}" target="_blank" class="main-color text-decoration-none">
+                                    <i class="fas fa-regular fa-link main-color me-1 fs-6"></i>
+                                    {{ $consultation->title.' ('.displayDate($consultation->open_from).' - '.displayDate($consultation->open_to).')' }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
+
         @if($item->importerInstitution && $item->importerInstitution->links->count())
         <div class="row mb-4 mt-4">
             <h3 class="mb-3">{{ trans_choice('custom.useful_links', 2)  }}</h3>
             <div class="col-md-12">
                 <ul class="list-group list-group-flush">
-                    @foreach($item->consultations as $consultation)
-                        <li class="list-group-item">
-                             <a href="{{ route('public_consultation.view', $consultation->id) }}" target="_blank" class="main-color text-decoration-none">
-                                 <i class="fas fa-regular fa-link main-color me-1 fs-6"></i>
-                                 {{ $consultation->title.' ('.displayDate($consultation->open_from).' - '.displayDate($consultation->open_to).')' }}
-                             </a>
-                        </li>
-                    @endforeach
                     @foreach($item->importerInstitution->links as $l)
                         <li class="list-group-item">
                              <a href="{{ $l->link }}" target="_blank" class="main-color text-decoration-none"><i class="fas fa-regular fa-link  main-color me-1 fs-6"></i> {{ $l->title }}</a>
