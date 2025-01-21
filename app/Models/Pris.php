@@ -22,7 +22,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     use FilterSort, Translatable;
 
     const PAGINATE = 20;
-    const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
+    const DEFAULT_IMG = 'images' . DIRECTORY_SEPARATOR . 'ms-2023.jpg';
     const TRANSLATABLE_FIELDS = ['about', 'legal_reason', 'importer'];
     const MODULE_NAME = ('custom.pris_documents');
 //
@@ -76,43 +76,45 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             ->LastVersion()
             ->where('pris.active', '=', 1)
             ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
-            ->leftJoin('pris_translations', function ($j){
+            ->leftJoin('pris_translations', function ($j) {
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
-            ->leftJoin('institution_translations', function ($j){
+            ->leftJoin('institution_translations', function ($j) {
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
                     ->where('institution_translations.locale', '=', app()->getLocale());
             })
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
-            ->join('legal_act_type_translations', function ($j){
+            ->join('legal_act_type_translations', function ($j) {
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->orderByRaw("pris.doc_date desc")
             ->limit(config('feed.items_per_page'), 20)
             ->FilterBy($requestFilter)
-            ->SortedBy($sort,$sortOrd)
+            ->SortedBy($sort, $sortOrd)
             ->get();
     }
 
     /**
      * Get the model name
      */
-    public function getModelName() {
+    public function getModelName()
+    {
         return $this->mcDisplayName;
     }
 
     protected function docDate(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
-            set: fn ($value) => !empty($value) ?  Carbon::parse($value)->format('Y-m-d') : null
+            get: fn($value) => !empty($value) ? Carbon::parse($value)->format('d.m.Y') : null,
+            set: fn($value) => !empty($value) ? Carbon::parse($value)->format('Y-m-d') : null
         );
     }
 
-    public function scopeInPris($query){
+    public function scopeInPris($query)
+    {
         $query->whereIn('pris.legal_act_type_id', [
             LegalActType::TYPE_DECREES,
             LegalActType::TYPE_DECISION,
@@ -124,37 +126,42 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         ]);
     }
 
-    public function scopeInArchive($query){
+    public function scopeInArchive($query)
+    {
         $query->where('pris.in_archive', 1);
     }
 
-    public function scopeNotInArchive($query){
+    public function scopeNotInArchive($query)
+    {
         $query->where('pris.in_archive', 0);
     }
 
-    public function scopeLastVersion($query){
+    public function scopeLastVersion($query)
+    {
         $query->where('pris.asap_last_version', '=', 1);
     }
 
-    public function scopePublished($query){
+    public function scopePublished($query)
+    {
         $query->whereNotNull('pris.published_at');
     }
 
-    public function scopeDecrees($query){
+    public function scopeDecrees($query)
+    {
         $query->where('pris.legal_act_type_id', '=', LegalActType::TYPE_DECREES);
     }
 
     protected function regNum(): Attribute
     {
         return Attribute::make(
-            get: fn () => (__('custom.number_symbol').$this->doc_num.'/'.Carbon::parse($this->doc_date)->format('Y')),
+            get: fn() => (__('custom.number_symbol') . $this->doc_num . '/' . Carbon::parse($this->doc_date)->format('Y')),
         );
     }
 
     protected function oldConnectionsHtml(): Attribute
     {
         return Attribute::make(
-            get: fn () => !empty($this->old_connections) ? implode('<br>', explode('|', $this->old_connections)) : '',
+            get: fn() => !empty($this->old_connections) ? implode('<br>', explode('|', $this->old_connections)) : '',
         );
     }
 
@@ -163,7 +170,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         $actName = $this->actType ? $this->actType->name_single : '';
 //        $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
         return Attribute::make(
-            get: fn () => ($actName.' '.__('custom.number_symbol').$this->doc_num.'/'.Carbon::parse($this->doc_date)->format('Y').' '.__('custom.of').' '.($this->institution ? $this->institution->name : '---')),
+            get: fn() => ($actName . ' ' . __('custom.number_symbol') . $this->doc_num . '/' . Carbon::parse($this->doc_date)->format('Y') . ' ' . __('custom.of') . ' ' . ($this->institution ? $this->institution->name : '---')),
         );
     }
 
@@ -172,28 +179,28 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         $actName = $this->actType ? $this->actType->name_single : '';
 //        $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
         return Attribute::make(
-            get: fn () => __('custom.pris_program_title', ['actType' => $actName, 'number' => __('custom.number_symbol').$this->doc_num, 'year' => Carbon::parse($this->doc_date)->format('Y')])
+            get: fn() => __('custom.pris_program_title', ['actType' => $actName, 'number' => __('custom.number_symbol') . $this->doc_num, 'year' => Carbon::parse($this->doc_date)->format('Y')])
         );
     }
 
     protected function docYear(): Attribute
     {
         return Attribute::make(
-            get: fn () => Carbon::parse($this->doc_date)->format('Y'),
+            get: fn() => Carbon::parse($this->doc_date)->format('Y'),
         );
     }
 
     protected function protocolPoint(): Attribute
     {
         return Attribute::make(
-            set: fn (string|null $value) => (int)$value > 0 ?  (int)$value : null,
+            set: fn(string|null $value) => (int)$value > 0 ? (int)$value : null,
         );
     }
 
     protected function newspaper(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->newspaper_number ? __('custom.newspaper', ['number' => $this->newspaper_number , 'year' => $this->newspaper_year ?? '---']) : (!empty($this->old_newspaper_full) ? $this->old_newspaper_full : null)
+            get: fn() => $this->newspaper_number ? __('custom.newspaper', ['number' => $this->newspaper_number, 'year' => $this->newspaper_year ?? '---']) : (!empty($this->old_newspaper_full) ? $this->old_newspaper_full : null)
         );
     }
 
@@ -239,8 +246,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     }
 
     /**
-     * @deprecated
      * @return HasOne
+     * @deprecated
      */
     public function institution(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
@@ -260,7 +267,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     public function changedDocs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(self::class, 'pris_change_pris', 'pris_id', 'changed_pris_id')
-            ->withPivot(['connect_type','connect_text', 'old_connect_type'])
+            ->withPivot(['connect_type', 'connect_text', 'old_connect_type'])
             ->withTrashed();
     }
 
@@ -294,52 +301,52 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
 
     public static function select2AjaxOptions($filters)
     {
-        $q = DB::table('pris')
-            ->select(['pris.id', DB::raw('legal_act_type_translations.name_single || \' №\' || pris.doc_num || \' от \' || DATE_PART(\'year\', doc_date) || \' г.\' as name')])
+        $q = Pris::select(['pris.id', DB::raw("legal_act_type_translations.name_single || ' №' || pris.doc_num || ' от ' || DATE_PART('year', doc_date) || ' г.' as name")])
+            ->with('translations')
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
-            ->join('legal_act_type_translations', function ($j){
+            ->join('legal_act_type_translations', function ($j) {
                 $j->on('legal_act_type.id', '=', 'legal_act_type_translations.legal_act_type_id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER)
             ->whereIn('pris.legal_act_type_id', LegalActType::IN_PRIS);
-            if(isset($filters['doc_num'])) {
-                $q->where('pris.doc_num', 'ilike', '%'.$filters['doc_num'].'%');
-            }
-            if(isset($filters['year']) && !empty($filters['year'])) {
-                $yearLength = strlen($filters['year']);
-                $year = $filters['year'];
-                if($yearLength < 4) {
-                    while(strlen($year) < 4) {
-                        $year .= '0';
-                    }
+        if (isset($filters['doc_num'])) {
+            $q->where('pris.doc_num', 'ilike', '%' . $filters['doc_num'] . '%');
+        }
+        if (isset($filters['year']) && !empty($filters['year'])) {
+            $yearLength = strlen($filters['year']);
+            $year = $filters['year'];
+            if ($yearLength < 4) {
+                while (strlen($year) < 4) {
+                    $year .= '0';
                 }
-                $from = Carbon::parse('01-01-'.$year)->format('Y-m-d');
-
-                $to = $yearLength < 4 ? Carbon::now()->format('Y-m-d') : Carbon::parse($from)->endOfYear()->format('Y-m-d');
-                $q->where(function ($q) use($from, $to){
-                    $q->where('doc_date', '>=', $from)->where('doc_date', '<=', $to);
-                });
             }
+            $from = Carbon::parse('01-01-' . $year)->format('Y-m-d');
 
-            if(isset($filters['actType']) && (int)$filters['actType'] > 0) {
-                $q->where('pris.legal_act_type_id', '=', (int)$filters['actType']);
-            }
+            $to = $yearLength < 4 ? Carbon::now()->format('Y-m-d') : Carbon::parse($from)->endOfYear()->format('Y-m-d');
+            $q->where(function ($q) use ($from, $to) {
+                $q->where('doc_date', '>=', $from)->where('doc_date', '<=', $to);
+            });
+        }
 
-            if(isset($filters['consultationId']) && $filters['consultationId'] > 0) {
-                $q->where(function ($query) use ($filters) {
-                    $query->where('public_consultation_id', (int)$filters['consultationId'])->orWhereNull('public_consultation_id');
-                });
-            }
+        if (isset($filters['actType']) && (int)$filters['actType'] > 0) {
+            $q->where('pris.legal_act_type_id', '=', (int)$filters['actType']);
+        }
 
-            $q->whereNull('pris.deleted_at');
-            $q->where('pris.asap_last_version', '=', 1);
+        if (isset($filters['consultationId']) && $filters['consultationId'] > 0) {
+            $q->where(function ($query) use ($filters) {
+                $query->where('public_consultation_id', (int)$filters['consultationId'])->orWhereNull('public_consultation_id');
+            });
+        }
 
-            $q->orderBy('legal_act_type_translations.name', 'asc')
-                ->orderBy('pris.doc_num', 'asc')
-                ->orderBy('pris.doc_date');
+        $q->whereNull('pris.deleted_at');
+        $q->where('pris.asap_last_version', '=', 1);
 
-        return $q->paginate(20)->items();
+        $q->orderBy('legal_act_type_translations.name', 'asc')
+            ->orderBy('pris.doc_num', 'asc')
+            ->orderBy('pris.doc_date');
+
+        return (isset($filters['doc_num']) && !empty($filters['doc_num'])) ? $q->get() : $q->paginate(20)->items();
     }
 
     /**
@@ -354,29 +361,30 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
      * Use in public list page and subscription check
      * @param array $filter
      */
-    public static function list(array $filter){
+    public static function list(array $filter)
+    {
         return self::select('pris.*')
             ->LastVersion()
             ->Published()
             ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
             ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
-            ->leftJoin('pris_translations', function ($j){
+            ->leftJoin('pris_translations', function ($j) {
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
-            ->leftJoin('institution_translations', function ($j){
+            ->leftJoin('institution_translations', function ($j) {
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
                     ->where('institution_translations.locale', '=', app()->getLocale());
             })
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
-            ->join('legal_act_type_translations', function ($j){
+            ->join('legal_act_type_translations', function ($j) {
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
             ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
-            ->leftJoin('tag_translations', function ($j){
+            ->leftJoin('tag_translations', function ($j) {
                 $j->on('tag_translations.tag_id', '=', 'tag.id')
                     ->where('tag_translations.locale', '=', app()->getLocale());
             })
@@ -386,29 +394,30 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             ->get();
     }
 
-    public static function listIds(array $filter){
+    public static function listIds(array $filter)
+    {
         return self::select('pris.id')
             ->LastVersion()
             ->Published()
 //            ->with(['translations', 'actType', 'actType.translations', 'institutions', 'institutions.translation'])
             ->leftJoin('pris_institution', 'pris_institution.pris_id', '=', 'pris.id')
-            ->leftJoin('pris_translations', function ($j){
+            ->leftJoin('pris_translations', function ($j) {
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('institution', 'institution.id', '=', 'pris_institution.institution_id')
-            ->leftJoin('institution_translations', function ($j){
+            ->leftJoin('institution_translations', function ($j) {
                 $j->on('institution_translations.institution_id', '=', 'institution.id')
                     ->where('institution_translations.locale', '=', app()->getLocale());
             })
             ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
-            ->join('legal_act_type_translations', function ($j){
+            ->join('legal_act_type_translations', function ($j) {
                 $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('pris_tag', 'pris_tag.pris_id', '=', 'pris.id')
             ->leftJoin('tag', 'pris_tag.tag_id', '=', 'tag.id')
-            ->leftJoin('tag_translations', function ($j){
+            ->leftJoin('tag_translations', function ($j) {
                 $j->on('tag_translations.tag_id', '=', 'tag.id')
                     ->where('tag_translations.locale', '=', app()->getLocale());
             })

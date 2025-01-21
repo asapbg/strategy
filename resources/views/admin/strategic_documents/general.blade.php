@@ -330,8 +330,13 @@
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="active">{{ trans_choice('custom.parent_strategic_document', 1) }}</label>
                                 <div class="col-12">
-                                    <select id="parent_document_id" name="parent_document_id" data-types2ajax="sd_parent_documents" data-urls2="{{ route('admin.select2.ajax', 'sd_parent_documents') }}"
-                                            @if($item->id) data-documentid="{{ $item->id }}" @endif class="form-control form-control-sm select2-autocomplete-ajax @error('parent_document_id'){{ 'is-invalid' }}@enderror">
+                                    <select id="parent_document_id" name="parent_document_id"
+                                            data-types2ajax="sd_parent_documents"
+                                            data-urls2="{{ route('admin.select2.ajax', 'sd_parent_documents') }}"
+                                            @if($item->id) data-documentid="{{ $item->id }}" @endif
+                                            class="form-control form-control-sm select2-autocomplete-ajax
+                                            @error('parent_document_id'){{ 'is-invalid' }}@enderror"
+                                    >
                                         <option value=""
                                                 @if(old('parent_document_id', '') == '') selected @endif>
                                             ---
@@ -341,9 +346,7 @@
                                                 {{ old('pris_act_id', $item->parentDocument->id) == $item->parentDocument->id ? 'selected' : '' }}>
                                                 {{ $item->parentDocument->title }}
                                             </option>
-
                                         @endif
-
                                     </select>
                                     @error('parent_document_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
