@@ -187,3 +187,8 @@ form.sd-form-files .error{
     width: 100% !important;
     z-index: 9999;
 }
+
+.note-editor a {
+    color: #0d6efd !important;
+    text-decoration: underline !important;
+}
