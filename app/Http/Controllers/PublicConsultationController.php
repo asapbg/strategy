@@ -188,9 +188,8 @@ class PublicConsultationController extends Controller
 
         $q = PublicConsultation::select(['public_consultation.*', DB::raw('json_agg(distinct(files.doc_type)) filter (where files.doc_type is not null) as doc_types')])
             ->Active()
-            ->with(['translation', 'comments', 'fieldOfAction', 'fieldOfAction.translations',
-                'actType', 'actType.translations',
-                'importerInstitution', 'importerInstitution.translations', 'comments', 'proposalReport'])
+            ->with(['translation', 'comments', 'fieldOfAction.translations', 'actType.translations',
+                'importerInstitution.translations', 'proposalReport'])
             ->leftJoin('institution', 'institution.id', '=', 'public_consultation.importer_institution_id')
             ->join('public_consultation_translations', function ($j) {
                 $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')

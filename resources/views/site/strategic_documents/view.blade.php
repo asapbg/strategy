@@ -165,7 +165,7 @@
                                         : route('pris.view', ['category' => \Illuminate\Support\Str::slug($strategicDocument->pris?->actType->name), 'id' => $strategicDocument->pris?->id]);
                                 @endphp
                                 <a href="{{ $route }}" class="main-color text-decoration-none">
-                                    {{ $strategicDocument->pris?->actType?->name . ' №/' . $strategicDocument->pris?->doc_num . '/' . $strategicDocument->pris?->doc_date }}
+                                    {{ $strategicDocument->pris?->actType?->name_single . ' №/' . $strategicDocument->pris?->doc_num . '/' . $strategicDocument->pris?->doc_date }}
                                 </a>
                             @else
                                 <a href="{{ $strategicDocument->strategic_act_link }}" class="main-color text-decoration-none">
@@ -184,6 +184,7 @@
                             @endif
                         </div>
                     </div>
+
                 </div>
 
                 <div class="row">
