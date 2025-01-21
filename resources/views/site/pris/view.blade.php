@@ -105,7 +105,7 @@
 {{--                    </div>--}}
 {{--                @endif--}}
 
-                @if($item->actType->id != App\Models\LegalActType::TYPE_PROTOCOL)
+                @if(!in_array($item->actType->id, [App\Models\LegalActType::TYPE_PROTOCOL,App\Models\LegalActType::TYPE_TRANSCRIPTS]))
                 <div class="row pris-row pb-2 mb-2">
                     <div class="col-md-3 pris-left-column">
                         <i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('site.public_consultation.importer') }}
