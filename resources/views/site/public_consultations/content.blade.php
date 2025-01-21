@@ -102,7 +102,8 @@
         @if($item->responsibleInstitution && $item->responsibleInstitution->id != config('app.default_institution_id'))
             <div class="row mb-4 mt-4">
                 <h3 class="mb-3">{{ __('site.public_consultation.responsible_institution') }}</h3>
-                <p> <strong>{{ $item->responsibleInstitution->getHistorycalName($item->open_from) }} </strong>
+                <p>
+                    <strong class="obj-icon-info">{!! $item->responsibleInstitution->getHistorycalName($item->open_from) !!} </strong>
                     <br> {{ __('custom.address') }}: {{ ($item->responsibleInstitution->settlement ? $item->responsibleInstitution->settlement->ime.', ' : '').$item->responsibleInstitution->address }}
                     <br> {{ __('custom.email') }}: @if($item->responsibleInstitution->email) <a href="mailto:{{ $item->responsibleInstitution->email }}" class="main-color">{{ $item->responsibleInstitution->email }}</a>@else ---@endif
                 </p>

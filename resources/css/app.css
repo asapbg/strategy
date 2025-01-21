@@ -2983,7 +2983,7 @@ html #slider-range .ui-button.ui-state-disabled:active {
 }
 .obj-icon-info { position: relative }
 .obj-icon-info .historical-name {
-    color: black;
+    color: #2b76b5;
     position: absolute;
     top: -10px;
     right: -22px;
