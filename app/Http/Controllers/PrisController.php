@@ -262,6 +262,11 @@ class PrisController extends Controller
             abort(Response::HTTP_NOT_FOUND);
         }
 
+        if ($item->legal_act_type_id == LegalActType::TYPE_TRANSCRIPTS) {
+            $item->files = $item->files->sortByDesc('filename');
+        }
+
+        //dd($item->files->toArray());
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS . '_' . app()->getLocale())->first();
 
         $menuCategories = [];
