@@ -105,7 +105,8 @@ class Institution extends ModelActivityExtend implements TranslatableContract
             return $item->valid_from <= $date && (is_null($item->valid_till) || $item->valid_till > $date);
         });
         if ($hName->count() > 0) {
-            $name = $hName->first()->name;
+            $text = __('The name of the institution has been changed.');
+            $name = "{$hName->first()->name} <i class='far fa-edit historical-name' data-bs-toggle='tooltip' title='$text'></i>";
         }
         return $name;
     }

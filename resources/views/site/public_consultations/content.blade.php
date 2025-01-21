@@ -66,7 +66,7 @@
                     <a class="main-color text-decoration-none" href="{{ route('institution.profile', $item->importer_institution_id) }}" target="_blank">
                       <span class="obj-icon-info">
                         <i class="fa-solid fa-arrow-right-from-bracket me-2 main-color" title="{{ __('site.public_consultation.importer') }}"></i>
-                          {{ $item->importerInstitution->getHistorycalName($item->open_from) }} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif
+                          {!! $item->importerInstitution->getHistorycalName($item->open_from) !!} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif
                       </span>
                     </a>
                 </div>
