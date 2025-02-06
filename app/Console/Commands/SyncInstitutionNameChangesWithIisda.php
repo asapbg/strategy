@@ -4,8 +4,10 @@ namespace App\Console\Commands;
 
 use App\Models\InstitutionHistoryName;
 use App\Models\InstitutionLevel;
+use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class SyncInstitutionNameChangesWithIisda extends Command
@@ -15,7 +17,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
      *
      * @var string
      */
-    protected $signature = 'sync:institution-name-changes';
+    protected $signature = 'sync:institution-name-changes {date?}';
 
     /**
      * The console command description.
@@ -31,22 +33,100 @@ class SyncInstitutionNameChangesWithIisda extends Command
      */
     public function handle()
     {
-        Log::info("Cron run sync:iisda.");
+        Log::info("Command sync:institution-name-changes run at ". date("Y-m-d H:i:s"));
         activity()->disableLogging();
 
-        $institutions = Institution::select('institution.id', 'eik', 'batch_id', 'names.id as history_id', 'names.name as h_name')
-            ->join('institution_history_names as names', 'names.institution_id', '=', 'institution.id')
+        $settings = Setting::Editable()->orderBy('id')->where('section', '=', 'sync')->first();
+        $settings->custom_value = null;
+        $settings->value = json_encode([]);
+        $settings->save();
+
+        $date = $this->argument('date');
+
+        $institutions = Institution::select('institution.id', 'eik', 'batch_id',
+            DB::raw('(select name from institution_history_names as names where names.institution_id = institution.id order by valid_from desc limit 1) as h_name')
+        )
             ->without('translations')
-//            ->where('names.valid_from', '<=', '2015-05-15')
             ->where('eik', '<>', 'N/A')
-            ->whereIn('institution.id', [138])
-//            ->whereNotIn('institution.id', [143,137])
             ->orderBy('institution.id')
+            //->where('names.valid_from', '<=', '2015-05-15')
+            ->whereIn('institution.id', [98, 133])
+            //->whereNotIn('institution.id', [143,137])
             //->skip(113)
             //->take(100)
             ->get();
-        //dd($institutions->first());
+        //dd($institutions->toArray());
 
+        if (!$date) {
+            $date = '2023-05-15';
+        }
+        $date_from = new \DateTime($date);
+        $end = new \DateTime(now());
+        $interval = new \DateInterval('P1M');
+        $period = new \DatePeriod($date_from, $interval, $end);
+
+        Log::info("Start date: $date");
+
+        $changes = [];
+        foreach ($institutions as $institution) {
+
+//            if (InstitutionHistoryName::where('institution_id', $institution->id)->exists()) {
+//                continue;
+//            }
+            $current_name = $institution->h_name;
+            $currentName = null;
+
+            foreach ($period as $dt) {
+                $dateAt = $dt->format("Y-m-d");
+
+                //$this->info("Проверка за $dateAt на $current_name");
+                $dataSoap = $this->searchBatchVersions($institution->batch_id, $dateAt);
+
+                $responseArray = $this->getSoapResponse($dataSoap);
+
+                if (!$responseArray) {
+                    Log::error('Sync Institution: Unable to parse soap xml response');
+                    return Command::FAILURE;
+                }
+                if (isset($responseArray['error']) && $responseArray['error']) {
+                    return Command::FAILURE;
+                }
+                if (!isset($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'])) {
+                    continue;
+                }
+
+                $institutionIisda = $responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'];
+                if ($current_name != $institutionIisda['Name']) {
+
+                    $valid_from = $dt->format("Y-m-d");
+                    $changes[] = "Името на $current_name е променено на {$institutionIisda['Name']} на $valid_from";
+                    //dump("Запис валиден от $valid_from на $current_name != {$institutionIisda['Name']}");
+
+                    if ($currentName) {
+                        $currentName->valid_till = $valid_from;
+                        $currentName->current = false;
+                        $currentName->save();
+                    }
+                    $currentName = $institution->historyNames()->create([
+                        'name' => $institutionIisda['Name'],
+                        'valid_from' => $valid_from
+                    ]);
+
+                    $current_name = $institutionIisda['Name'];
+                }
+            }
+            sleep(5);
+        }
+
+        $settings->custom_value = date("Y-m-d");
+        $settings->value = json_encode($changes);
+        $settings->save();
+
+        return Command::SUCCESS;
+
+        /**
+         * This commented part was used once to get the names backwards from date 2010-04-15 back to 2001-01-01
+         */
 //        $dataSoap = $this->searchBatchVersions('1091', '2013-04-15');
 //        $responseArray = $this->getSoapResponse($dataSoap);
 //        if (isset($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType'])) {
@@ -107,61 +187,6 @@ class SyncInstitutionNameChangesWithIisda extends Command
 //        }
 //
 //        return Command::SUCCESS;
-
-        $date_from = new \DateTime('2000-01-01');
-        $end = new \DateTime(now());
-        $interval = new \DateInterval('P1M');
-        $period = new \DatePeriod($date_from, $interval, $end);
-
-        foreach ($institutions as $institution) {
-
-//            if (InstitutionHistoryName::where('institution_id', $institution->id)->exists()) {
-//                continue;
-//            }
-            $current_name = $institution->h_name;
-            $currentName = null;
-
-            foreach ($period as $dt) {
-                $dateAt = $dt->format("Y-m-d");
-
-                $dataSoap = $this->searchBatchVersions($institution->batch_id, $dateAt);
-
-                $responseArray = $this->getSoapResponse($dataSoap);
-
-                if (!$responseArray) {
-                    Log::error('Sync Institution: Unable to parse soap xml response');
-                    return Command::FAILURE;
-                }
-                if (isset($responseArray['error']) && $responseArray['error']) {
-                    return Command::FAILURE;
-                }
-                if (!isset($responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'])) {
-                    continue;
-                }
-
-                $institutionIisda = $responseArray['sBody']['GetBatchDetailedInfoResponse']['GetBatchDetailedInfoResult']['BatchType']['@attributes'];
-                if ($current_name != $institutionIisda['Name']) {
-
-                    $valid_from = $dt->format("Y-m-d");
-                    dump("Запис валиден от $valid_from на $current_name != {$institutionIisda['Name']}");
-
-                    if ($currentName) {
-                        $currentName->valid_till = $valid_from;
-                        $currentName->current = false;
-                        $currentName->save();
-                    }
-                    $currentName = $institution->historyNames()->create([
-                        'name' => $institutionIisda['Name'],
-                        'valid_from' => $valid_from
-                    ]);
-
-                    $current_name = $institutionIisda['Name'];
-                }
-            }
-            sleep(15);
-        }
-
-        return Command::SUCCESS;
     }
 
     /**

@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SettingsStoreRequest;
 use App\Library\Facebook;
 use App\Models\Setting;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 
 class SettingsController extends Controller
@@ -94,5 +96,21 @@ class SettingsController extends Controller
         } else {
             return redirect(route('admin.settings', ['section' => Setting::FACEBOOK_SECTION]))->with('success', 'Данните са обновени успешно');
         }
+    }
+
+    /**
+     * Start the command sync:institution-name-changes with the last
+     * sync date as argument, so it will sync the institution names from that date till now
+     *
+     * @return JsonResponse
+     */
+    public function syncInstitutions()
+    {
+        $last_sync_date = request('last_sync_date');
+        if (!$last_sync_date) {
+            return response()->json(['success' => false, 'msg' => "Липсва дата на последна синхронизация"], 200);
+        }
+        Artisan::call('sync:institution-name-changes', ['date' => $last_sync_date]);
+        return response()->json(['success' => true, 'msg' => __('custom.sync_started')], 200);
     }
 }

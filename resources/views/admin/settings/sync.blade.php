@@ -2,10 +2,27 @@
     $show_button    = $show_button  ?? false;
     $title          = $title        ?? __('custom.sync_all_institutions');
     $question       = $question     ?? __('custom.are_you_sure_sync_all');
+    $last_sync_data = json_decode($row->value, true);
 @endphp
 
 <!-- Button trigger modal -->
 @if($show_button)
+    @if (!$row->custom_value)
+        <p>В процес на синхронизация ..</p>
+    @else
+        <p>Последната синхронизация е била извършена на <b>{{ displayDate($row->custom_value) }}</b></p>
+        @if(!empty($last_sync_data))
+            <p>Следните промени са били направени: </p>
+            <ol>
+                @foreach($last_sync_data as $data)
+                    <li>{{ $data }}</li>
+                @endforeach
+            </ol>
+        @else
+            <p>Няма направени промени</p>
+        @endif
+    @endif
+    <input type="hidden" id="last_sync_date" value="{{ $row->custom_value }}">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sync-institutions-modal">
         {{ __('custom.sync_all_institutions') }}
     </button>
@@ -46,7 +63,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="sync-close" data-dismiss="modal">{{ __('custom.cancel') }}</button>
-                <button type="button" class="btn btn-primary" id="sync-button" onclick="startSync();">{{ __('custom.start_syncing') }}</button>
+                <button type="button" class="btn btn-primary" id="sync-button" onclick="sync();">{{ __('custom.start_syncing') }}</button>
             </div>
         </div>
     </div>
@@ -54,6 +71,19 @@
 
 @push('scripts')
     <script>
+        function sync() {
+            $last_sync_date = $("#last_sync_date").val();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+            $.ajax({
+                type: 'GET',
+                url: @json(route('admin.settings.sync.institutions')),
+                data: {
+                    last_sync_date: $last_sync_date
+                }
+            });
+        }
         function startSync() {
             const modal = $('#sync-institutions-modal');
             const progressTitle = modal.find('.progress-title');

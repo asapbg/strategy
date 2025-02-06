@@ -8,17 +8,13 @@ use App\Http\Requests\CloseLegislativeInitiativeRequest;
 use App\Http\Requests\StoreLegislativeInitiativeRequest;
 use App\Http\Requests\UpdateLegislativeInitiativeRequest;
 use App\Library\Facebook;
-use App\Models\Consultations\OperationalProgramRow;
 use App\Models\Law;
 use App\Models\LegislativeInitiative;
-use App\Models\LegislativeInitiativeVote;
 use App\Models\Page;
-use App\Models\Publication;
 use App\Models\RegulatoryAct;
 use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
-use App\Models\UserSubscribe;
 use App\Notifications\LegislativeInitiativeClosed;
 use App\Notifications\LegislativeInitiativeSuccessful;
 use Carbon\Carbon;
@@ -228,6 +224,7 @@ class LegislativeInitiativeController extends AdminController
                 ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
                 ->get()
                 ->first();
+
             if ($activeFB->value) {
                 $facebookApi = new Facebook();
                 $facebookApi->postOnPage(array(
