@@ -49,11 +49,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
             ->without('translations')
             ->where('eik', '<>', 'N/A')
             ->orderBy('institution.id')
-            //->where('names.valid_from', '<=', '2015-05-15')
-            ->whereIn('institution.id', [98, 133])
-            //->whereNotIn('institution.id', [143,137])
-            //->skip(113)
-            //->take(100)
+            //->whereIn('institution.id', [98, 133])
             ->get();
         //dd($institutions->toArray());
 
@@ -99,8 +95,8 @@ class SyncInstitutionNameChangesWithIisda extends Command
                 if ($current_name != $institutionIisda['Name']) {
 
                     $valid_from = $dt->format("Y-m-d");
-                    $changes[] = "Името на $current_name е променено на {$institutionIisda['Name']} на $valid_from";
-                    //dump("Запис валиден от $valid_from на $current_name != {$institutionIisda['Name']}");
+                    $changes[] = "Името на \"$current_name\" е променено на {$institutionIisda['Name']} на \"$valid_from\"";
+                    //$this->info("Запис валиден от $valid_from на $current_name != {$institutionIisda['Name']}");
 
                     if ($currentName) {
                         $currentName->valid_till = $valid_from;
