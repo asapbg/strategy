@@ -18,13 +18,7 @@ Route::get('/', function(){
 
 Route::feeds();
 
-Route::get('/locale', function (Request $request) {
-    if ($request->has('locale')) {
-        session(['locale' => $request->offsetGet('locale')]);
-        app()->setLocale($request->offsetGet('locale'));
-    }
-    return back();
-})->name('change-locale');
+Route::get('/locale', \App\Http\Controllers\LocaleController::class)->name('change-locale');
 
 Route::get('/download/{file}', [\App\Http\Controllers\CommonController::class, 'downloadFile'])->whereNumber('file')->name('download.file');
 Route::get('/strategy-document/download-file/{id}', [\App\Http\Controllers\StrategicDocumentsController::class, 'downloadDocFile'])->name('strategy-document.download-file');
