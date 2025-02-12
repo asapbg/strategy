@@ -95,7 +95,7 @@ class SyncInstitutionNameChangesWithIisda extends Command
                 if ($current_name != $institutionIisda['Name']) {
 
                     $valid_from = $dt->format("Y-m-d");
-                    $changes[] = "Името на \"$current_name\" е променено на {$institutionIisda['Name']} на \"$valid_from\"";
+                    $changes[] = "Името на \"$current_name\" е променено на \"{$institutionIisda['Name']}\" на $valid_from";
                     //$this->info("Запис валиден от $valid_from на $current_name != {$institutionIisda['Name']}");
 
                     if ($currentName) {
