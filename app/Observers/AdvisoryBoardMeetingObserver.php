@@ -29,7 +29,7 @@ class AdvisoryBoardMeetingObserver
                     $facebookApi->postToFacebook($advisoryBoardMeeting);
                 }
 
-                $this->sendEmails($advisoryBoardMeeting, 'created');
+                //$this->sendEmails($advisoryBoardMeeting, 'created');
                 Log::info('Send subscribe email on creation');
             }
         }

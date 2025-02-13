@@ -26,7 +26,7 @@ class AdvisoryBoardObserver
                     $facebookApi->postToFacebook($advisoryBoard);
                 }
 
-                $this->sendEmails($advisoryBoard, 'created');
+                //$this->sendEmails($advisoryBoard, 'created');
                 Log::info('Send subscribe email on creation');
             }
         }
@@ -58,7 +58,7 @@ class AdvisoryBoardObserver
                 }
 
                 if (sizeof($dirty)) {
-                    $this->sendEmails($advisoryBoard, 'updated');
+                    //$this->sendEmails($advisoryBoard, 'updated');
                     Log::info('Send subscribe email on update');
                 }
 

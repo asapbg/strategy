@@ -51,7 +51,7 @@ class PublicConsultationObserver
             }
 
             if (sizeof($dirty)) {
-                $this->sendEmails($publicConsultation, 'updated');
+                //$this->sendEmails($publicConsultation, 'updated');
                 Log::info('Send subscribe email on update');
             }
         }

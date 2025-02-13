@@ -51,7 +51,7 @@ class StrategicDocumentObserver
             }
 
             if (sizeof($dirty)) {
-                $this->sendEmails($strategicDocument, 'updated');
+                //$this->sendEmails($strategicDocument, 'updated');
                 Log::info('Send subscribe email on update');
             }
         }

@@ -30,7 +30,7 @@ class PublicConsultationTranslationObserver
                     $facebookApi->postToFacebook($publicConsultation);
                 }
 
-                $this->sendEmails($publicConsultationTranslation, 'created');
+                //$this->sendEmails($publicConsultationTranslation, 'created');
 
                 Log::info('Send subscribe email on creation');
             }
@@ -51,7 +51,7 @@ class PublicConsultationTranslationObserver
             //skip some fields in specific cases
             unset($dirty['updated_at']);
             if (sizeof($dirty)) {
-                $this->sendEmails($publicConsultationTranslation, 'updated');
+                //$this->sendEmails($publicConsultationTranslation, 'updated');
                 Log::info('Send subscribe email on update');
             }
         }

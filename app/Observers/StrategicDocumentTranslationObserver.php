@@ -33,7 +33,7 @@ class StrategicDocumentTranslationObserver
                     }
                 }
 
-                $this->sendEmails($strategicDocumentTranslation, 'created');
+                //$this->sendEmails($strategicDocumentTranslation, 'created');
 
                 Log::info('Send subscribe email on creation');
             }

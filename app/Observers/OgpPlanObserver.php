@@ -91,7 +91,7 @@ class OgpPlanObserver
                 && $ogpPlan->active && $ogpPlan->national_plan
                 && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
             ) {
-                $this->sendEmails($ogpPlan, 'updated');
+                //$this->sendEmails($ogpPlan, 'updated');
                 Log::info('Send subscribe email on creation');
             }
         }
