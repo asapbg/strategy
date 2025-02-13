@@ -21,9 +21,9 @@ class AdvisoryBoardMeetingObserver
      */
     public function created(AdvisoryBoardMeeting $advisoryBoardMeeting)
     {
-        $advBoard = $advisoryBoardMeeting->advBoard;
-        if ($advBoard && $advBoard->public && $advisoryBoardMeeting->next_meeting >= Carbon::now()->format('Y-m-d H:i:s')) {
-            if (!env('DISABLE_OBSERVERS', false)) {
+        if (!env('DISABLE_OBSERVERS', false)) {
+            $advBoard = $advisoryBoardMeeting->advBoard;
+            if ($advBoard && $advBoard->public && $advisoryBoardMeeting->next_meeting >= Carbon::now()->format('Y-m-d H:i:s')) {
                 if (Setting::allowPostingToFacebook()) {
                     $facebookApi = new Facebook();
                     $facebookApi->postToFacebook($advisoryBoardMeeting);

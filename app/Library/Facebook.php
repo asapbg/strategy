@@ -160,11 +160,9 @@ class Facebook
                 return array('error' => 1, 'message' => 'Missing parameter: ' . $k);
             }
         }
-        $media_id = $this->getMediaId();
+        //$media_id = $this->getMediaId();
         //$media_id = 122096182418725207;
-        if ($media_id) {
-            $data['attached_media'] = [json_encode(['media_fbid' => $media_id])];
-        }
+        //$data['attached_media'] = [json_encode(['media_fbid' => $media_id])];
 
         $result = $this->curlRequest($this->pageId . '/feed?access_token=' . $this->pageTokenLongLived, 'post', $data, ["Content-Type: application/json"]);
 

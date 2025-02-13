@@ -21,4 +21,9 @@ class AdvisoryBoardTranslation extends ModelTranslatableActivityExtend
     {
         return $this->name;
     }
+
+    public function parent(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(AdvisoryBoard::class, 'id', 'advisory_board_id');
+    }
 }
