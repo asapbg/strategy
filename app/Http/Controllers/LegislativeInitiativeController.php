@@ -217,21 +217,9 @@ class LegislativeInitiativeController extends AdminController
                 'is_like' => 1
             ]);
 
-            /**
-             * Post to Facebook
-             */
-            $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                ->get()
-                ->first();
-
-            if ($activeFB->value) {
+            if (Setting::allowPostingToFacebook()) {
                 $facebookApi = new Facebook();
-                $facebookApi->postOnPage(array(
-                    'message' => "На Портала за обществени консултации е направено предложение за промяна на {$legislativeInitiative->law?->name} и ако събере подкрепа от $legislativeInitiative->cap регистрирани потребители, ще бъде изпратена автоматично на компетентната институция. Срокът за коментари и подкрепа е: " . displayDate($legislativeInitiative->active_support) . ". Вижте повече на линка.",
-                    'link' => route('legislative_initiatives.view', $legislativeInitiative),
-                    'published' => true
-                ));
+                $facebookApi->postToFacebook($legislativeInitiative);
             }
 
             $legislativeInitiative->refresh();

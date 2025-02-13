@@ -10,15 +10,12 @@ use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMeeting;
 use App\Services\Notifications;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\AnonymousNotifiable;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Log;
 
 class AdvisoryBoardMeetingsController extends AdminController
 {
@@ -27,8 +24,8 @@ class AdvisoryBoardMeetingsController extends AdminController
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @param AdvisoryBoard                     $item
-     * @param AdvisoryBoardMeeting              $meeting
+     * @param AdvisoryBoard $item
+     * @param AdvisoryBoardMeeting $meeting
      *
      * @return JsonResponse
      */
@@ -36,7 +33,7 @@ class AdvisoryBoardMeetingsController extends AdminController
     {
         $req = new StoreAdvisoryBoardMeetingsRequest();
         $validator = Validator::make($request->all(), $req->rules());
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
         }
         $validated = $validator->validated();
@@ -56,7 +53,7 @@ class AdvisoryBoardMeetingsController extends AdminController
             DB::commit();
 
             //alert adb board modeRATOR
-            if(sizeof($changes)){
+            if (sizeof($changes)) {
                 $notifyService = new Notifications();
                 $notifyService->advChanges($item, request()->user(), 'Заседания', $changes);
             }
@@ -72,7 +69,7 @@ class AdvisoryBoardMeetingsController extends AdminController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param AdvisoryBoard        $item
+     * @param AdvisoryBoard $item
      * @param AdvisoryBoardMeeting $meeting
      *
      * @return JsonResponse
@@ -86,7 +83,7 @@ class AdvisoryBoardMeetingsController extends AdminController
      * Update the specified resource in storage.
      *
      * @param UpdateAdvisoryBoardMeetingsRequest $request
-     * @param AdvisoryBoard                      $item
+     * @param AdvisoryBoard $item
      *
      * @return JsonResponse
      */
@@ -110,7 +107,7 @@ class AdvisoryBoardMeetingsController extends AdminController
             DB::commit();
 
             //alert adb board modeRATOR
-            if(sizeof($changes)){
+            if (sizeof($changes)) {
                 $notifyService = new Notifications();
                 $notifyService->advChanges($item, request()->user(), 'Заседания', $changes);
             }
@@ -127,7 +124,7 @@ class AdvisoryBoardMeetingsController extends AdminController
      * Send notification to all members.
      *
      * @param NotifyAdvisoryBoardMeetingRequest $request
-     * @param AdvisoryBoard                     $item
+     * @param AdvisoryBoard $item
      *
      * @return JsonResponse
      */
@@ -163,7 +160,7 @@ class AdvisoryBoardMeetingsController extends AdminController
     /**
      * Remove the specified resource from storage.
      *
-     * @param AdvisoryBoard        $item
+     * @param AdvisoryBoard $item
      * @param AdvisoryBoardMeeting $meeting
      *
      * @return RedirectResponse
@@ -188,7 +185,7 @@ class AdvisoryBoardMeetingsController extends AdminController
     /**
      * Restore the specified resource from storage.
      *
-     * @param AdvisoryBoard        $item
+     * @param AdvisoryBoard $item
      * @param AdvisoryBoardMeeting $meeting
      *
      * @return RedirectResponse

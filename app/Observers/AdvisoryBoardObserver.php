@@ -14,33 +14,16 @@ class AdvisoryBoardObserver
     /**
      * Handle the AdvisoryBoard "created" event.
      *
-     * @param  \App\Models\AdvisoryBoard  $advisoryBoard
+     * @param \App\Models\AdvisoryBoard $advisoryBoard
      * @return void
      */
     public function created(AdvisoryBoard $advisoryBoard)
     {
-        if(!env('DISABLE_OBSERVERS', false)){
-            if($advisoryBoard->public) {
-                //post on facebook
-                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                    ->get()->first();
-                if($activeFB->value){
-                    $chairmens = [];
-                    if($advisoryBoard->chairmen->count()){
-                        foreach ($advisoryBoard->chairmen as $c){
-                           if(!empty($c->member_name)){
-                               $chairmens[] = $c->member_name;
-                           }
-                        }
-                    }
+        if (!env('DISABLE_OBSERVERS', false)) {
+            if ($advisoryBoard->public) {
+                if (Setting::allowPostingToFacebook()) {
                     $facebookApi = new Facebook();
-                    $facebookApi->postOnPage(array(
-                        'message' => 'Създаден е нов консултативен съвет: '.(sizeof($chairmens) ? $advisoryBoard->name.', с председател: '.implode(', ', $chairmens) : '').'. Можете да следите дейността на съвета на Портала за обществени консултации тук',
-//                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
-                        'link' => route('advisory-boards.view', $advisoryBoard),
-                        'published' => true
-                    ));
+                    $facebookApi->postToFacebook($advisoryBoard);
                 }
 
                 $this->sendEmails($advisoryBoard, 'created');
@@ -52,49 +35,29 @@ class AdvisoryBoardObserver
     /**
      * Handle the AdvisoryBoard "updated" event.
      *
-     * @param  \App\Models\AdvisoryBoard  $advisoryBoard
+     * @param \App\Models\AdvisoryBoard $advisoryBoard
      * @return void
      */
     public function updated(AdvisoryBoard $advisoryBoard)
     {
-        if(!env('DISABLE_OBSERVERS', false)){
+        if (!env('DISABLE_OBSERVERS', false)) {
             $old_active = $advisoryBoard->getOriginal('active');
             $old_public = $advisoryBoard->getOriginal('public');
 
-            //Check for real changes
-            $dirty = $advisoryBoard->getDirty(); //return all changed fields
-            //skip some fields in specific cases
+            $dirty = $advisoryBoard->getDirty();
             unset($dirty['updated_at']);
 
-            if(!$old_public && $advisoryBoard->public) {
-                //post on facebook
-                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                    ->get()->first();
-                if($activeFB->value){
-                    $chairmens = [];
-                    if($advisoryBoard->chairmen->count()){
-                        foreach ($advisoryBoard->chairmen as $c){
-                            if(!empty($c->member_name)){
-                                $chairmens[] = $c->member_name;
-                            }
-                        }
-                    }
-
+            if (!$old_public && $advisoryBoard->public) {
+                if (Setting::allowPostingToFacebook()) {
                     $facebookApi = new Facebook();
-                    $facebookApi->postOnPage(array(
-                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name.(sizeof($chairmens) ? ', с председател: '.implode(', ', $chairmens) : '').'. Можете да следите дейността на съвета на Портала за обществени консултации тук',
-//                        'message' => 'Създаден е нов консултативен съвет: '.$advisoryBoard->name,
-                        'link' => route('advisory-boards.view', $advisoryBoard),
-                        'published' => true
-                    ));
+                    $facebookApi->postToFacebook($advisoryBoard);
                 }
 
-                if( (boolval($old_active) )== (boolval($advisoryBoard->active))) {
+                if (boolval($old_active) == boolval($advisoryBoard->active)) {
                     unset($dirty['active']);
                 }
 
-                if(sizeof($dirty)){
+                if (sizeof($dirty)) {
                     $this->sendEmails($advisoryBoard, 'updated');
                     Log::info('Send subscribe email on update');
                 }
@@ -106,7 +69,7 @@ class AdvisoryBoardObserver
     /**
      * Handle the AdvisoryBoard "deleted" event.
      *
-     * @param  \App\Models\AdvisoryBoard  $advisoryBoard
+     * @param \App\Models\AdvisoryBoard $advisoryBoard
      * @return void
      */
     public function deleted(AdvisoryBoard $advisoryBoard)
@@ -117,7 +80,7 @@ class AdvisoryBoardObserver
     /**
      * Handle the AdvisoryBoard "restored" event.
      *
-     * @param  \App\Models\AdvisoryBoard  $advisoryBoard
+     * @param \App\Models\AdvisoryBoard $advisoryBoard
      * @return void
      */
     public function restored(AdvisoryBoard $advisoryBoard)
@@ -128,7 +91,7 @@ class AdvisoryBoardObserver
     /**
      * Handle the AdvisoryBoard "force deleted" event.
      *
-     * @param  \App\Models\AdvisoryBoard  $advisoryBoard
+     * @param \App\Models\AdvisoryBoard $advisoryBoard
      * @return void
      */
     public function forceDeleted(AdvisoryBoard $advisoryBoard)
@@ -149,7 +112,7 @@ class AdvisoryBoardObserver
         $moderators = null;
 
 
-        if($event == 'updated'){
+        if ($event == 'updated') {
             //get users by model ID
             $subscribedUsers = UserSubscribe::where('subscribable_type', AdvisoryBoard::class)
                 ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
@@ -157,7 +120,7 @@ class AdvisoryBoardObserver
                 ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
                 ->where('subscribable_id', '=', $advisoryBoard->id)
                 ->get();
-        } else{
+        } else {
             $subscribedUsers = UserSubscribe::where('id', 0)->get();
             //get users by model filter
             $filterSubscribtions = UserSubscribe::where('subscribable_type', AdvisoryBoard::class)
@@ -167,11 +130,11 @@ class AdvisoryBoardObserver
                 ->whereNull('subscribable_id')
                 ->get();
 
-            if($filterSubscribtions->count()){
-                foreach ($filterSubscribtions as $fSubscribe){
+            if ($filterSubscribtions->count()) {
+                foreach ($filterSubscribtions as $fSubscribe) {
                     $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
                     $modelIds = AdvisoryBoard::list($filterArray)->pluck('id')->toArray();
-                    if(in_array($advisoryBoard->id, $modelIds)){
+                    if (in_array($advisoryBoard->id, $modelIds)) {
                         $subscribedUsers->add($fSubscribe);
                     }
                 }

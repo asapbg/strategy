@@ -44,18 +44,20 @@ class EDelivery extends Command
             return Command::FAILURE;
         }
 
-        $timestamp = date('Y-m-d H:i:s', (strtotime(date('Y-m-d H:i:s')) - (60 * 60)));
+        $one_month_ago = date('Y-m-d H:i:s', strtotime('-1 MONTH'));
         $notifications = DB::select("
             SELECT id, data, cnt_send, type
               FROM notifications
              WHERE cnt_send <= $this->max_send_retry
                AND type_channel = $deliveryMethodId
                AND is_send = 0
-               AND (updated_at <= '$timestamp' OR created_at >= '$timestamp')
+               --AND created_at <= '$one_month_ago'
              LIMIT 10
         ");
+
         if (!count($notifications)) {
             $this->info("No notifications found to be send to SSEV");
+            return Command::SUCCESS;
         }
 
         $eDeliveryAuthService = new EDeliveryAuth('/ed2*');

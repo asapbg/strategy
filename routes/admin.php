@@ -145,23 +145,23 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/strategic-documents/{object_id}/{object_type}',                   'uploadFileLanguagesSd')->name('strategic_documents.upload.file.languages');
         Route::post('/strategic-documents/update/{object_id}/{object_type}/{strategicFile?}', 'updateFileLanguage')->name('strategic_documents.update.file.languages');
         Route::match(['post', 'put'], '/strategic-documents/store',                     'store')->name('strategic_documents.store');
+        Route::get('strategic-documents/pris-option/{id?}',                             'prisActOptions')->name('strategic_documents.pris.options');
+        Route::get('strategic-documents/publish/{id?}/{stay?}',                         'publish')->name('strategic_documents.publish');
+        Route::get('strategic-documents/unpublish/{id?}/{stay?}',                       'unPublish')->name('strategic_documents.unpublish');
+        Route::get('strategic-documents/accept-act-institution-options/{id?}',          'acceptActInstitutionOptions')->name('strategic_documents.accept-act-institution-options');
+        Route::get('strategic-documents/nomenclatures',                                 'nomenclatures')->name('strategic_documents.nomenclatures');
+        Route::get('strategic-documents/restore/{id}',                                  'restore')->name('strategic_documents.restore');
 //        Route::post('/strategic-documents/upload-file', 'uploadDcoFile')->name('strategic_documents.file.upload');
 //        Route::put('/strategic-documents/update-file/{id}', 'updateDcoFile')->name('strategic_documents.file.update');
 //        Route::get('/strategic-documents/download-file/{file}', 'downloadDocFile')->name('strategic_documents.file.download');
 //        Route::any('/strategic-documents/delete-file/{file?}', 'deleteDocFile')->name('strategic_documents.file.delete');
 
 //        Route::post('strategic-documents/save-tree', 'saveFileTree')->name('strategic_documents.save.file.tree');
-        Route::get('strategic-documents/pris-option/{id?}', 'prisActOptions')->name('strategic_documents.pris.options');
 //        Route::get('strategic-documents/pris-details/{id?}', 'prisDetails')->name('strategic_documents.pris.date');
 //        Route::get('strategic-documents/public-consultation-details/{id?}', 'publicConsultationDetails')->name('strategic_documents.public_consultation_details');
 //        Route::get('strategic-documents/same-policy-area/{id?}', 'strategicDocumentsFromSamePolicyArea')->name('strategic_documents.same-policy-area');
-        Route::get('strategic-documents/publish/{id?}/{stay?}', 'publish')->name('strategic_documents.publish');
-        Route::get('strategic-documents/unpublish/{id?}/{stay?}', 'unPublish')->name('strategic_documents.unpublish');
-        Route::get('strategic-documents/accept-act-institution-options/{id?}', 'acceptActInstitutionOptions')->name('strategic_documents.accept-act-institution-options');
 //        Route::get('strategic-documents/load-pris-acts', 'loadPrisActs')->name('strategic_documents.load-pris-acts');
 //        Route::get('strategic-documents/load-parents', 'loadParentStrategicDocuments')->name('strategic_documents.load-parents');
-        Route::get('strategic-documents/nomenclatures', 'nomenclatures')->name('strategic_documents.nomenclatures');
-        Route::get('strategic-documents/restore/{id}', 'restore')->name('strategic_documents.restore');
     });
 
     Route::controller(\App\Http\Controllers\Admin\StrategicDocumentChildController::class)->group(function () {
@@ -694,19 +694,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Publications
     Route::controller(\App\Http\Controllers\Admin\Ogp\OgpNewsController::class)->prefix('/ogp/news')->group(function () {
-        Route::get('/', 'index')->name('ogp.news.index')->middleware('can:viewAnyOgp,App\Models\Publication');
-        Route::get('/edit/{item?}', 'edit')->name('ogp.news.edit');
+        Route::get('/',                                 'index')->name('ogp.news.index')->middleware('can:viewAnyOgp,App\Models\Publication');
+        Route::get('/edit/{item?}',                     'edit')->name('ogp.news.edit');
         Route::match(['post', 'put'], '/store/{item?}', 'store')->name('ogp.news.store');
-        Route::post('/{item}/delete', 'destroy')->name('ogp.news.delete');
+        Route::post('/{item}/delete',                   'destroy')->name('ogp.news.delete');
     });
 
     Route::controller(Areas::class)->prefix('/ogp/areas')->group(function () {
-        Route::get('', 'index')->name('ogp.area.index');
-        Route::get('create', 'create')->name('ogp.area.create');
-        Route::get('edit/{id}', 'edit')->name('ogp.area.edit');
-        Route::post('edit/store', 'store')->name('ogp.area.create_store');
-        Route::put('edit/store', 'store')->name('ogp.area.edit_store');
-        Route::post('delete/{area}', 'destroy')->name('ogp.area.delete');
+        Route::get('',              'index')->name('ogp.area.index');
+        Route::get('create',        'create')->name('ogp.area.create');
+        Route::get('edit/{id}',     'edit')->name('ogp.area.edit');
+        Route::post('edit/store',   'store')->name('ogp.area.create_store');
+        Route::put('edit/store',    'store')->name('ogp.area.edit_store');
+        Route::post('delete/{area}','destroy')->name('ogp.area.delete');
     });
 
     // Settings
@@ -716,31 +716,31 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(\App\Http\Controllers\Admin\Ogp\Plans::class)->prefix('/ogp/plans')->group(function () {
-        Route::get('', 'index')->name('ogp.plan.index');
-        Route::get('create', 'create')->name('ogp.plan.create');
-        Route::get('edit/{id}', 'edit')->name('ogp.plan.edit');
-        Route::post('edit/store', 'store')->name('ogp.plan.create_store');
-        Route::put('edit/store', 'store')->name('ogp.plan.edit_store');
-        Route::post('delete/{plan}', 'destroy')->name('ogp.plan.delete');
-        Route::post('edit/area/{area}/order', 'orderArea')->name('ogp.plan.order_area');
-        Route::post('add-area/{plan}', 'addArea')->name('ogp.plan.add_area');
-        Route::post('area/delete/{area}', 'deleteArea')->name('ogp.plan.delete_area');
+        Route::get('',                      'index')->name('ogp.plan.index');
+        Route::get('create',                'create')->name('ogp.plan.create');
+        Route::get('edit/{id}',             'edit')->name('ogp.plan.edit');
+        Route::post('edit/store',           'store')->name('ogp.plan.create_store');
+        Route::put('edit/store',            'store')->name('ogp.plan.edit_store');
+        Route::post('delete/{plan}',        'destroy')->name('ogp.plan.delete');
+        Route::post('edit/area/{area}/order','orderArea')->name('ogp.plan.order_area');
+        Route::post('add-area/{plan}',      'addArea')->name('ogp.plan.add_area');
+        Route::post('area/delete/{area}',   'deleteArea')->name('ogp.plan.delete_area');
 
-        Route::get('arrangement/{ogpPlanArea}/{id?}', 'editArrangement')->name('ogp.plan.arrangement.edit');
-        Route::post('arrangement/{ogpPlanArea}', 'editArrangementStore')->name('ogp.plan.arrangement.edit_store');
+        Route::get('arrangement/{ogpPlanArea}/{id?}',   'editArrangement')->name('ogp.plan.arrangement.edit');
+        Route::post('arrangement/{ogpPlanArea}',        'editArrangementStore')->name('ogp.plan.arrangement.edit_store');
         Route::post('arrangement/delete/{arrangement}', 'deleteArrangement')->name('ogp.plan.arrangement.delete');
 
 
-        Route::get('arrangement/{ogpPlanArea}/{id?}/evaluation', 'editArrangementEvaluation')->name('ogp.plan.arrangement.edit.evaluation');
-        Route::post('arrangement/{ogpPlanArea}/evaluation', 'editArrangementEvaluationStore')->name('ogp.plan.arrangement.edit.evaluation_store');
+        Route::get('arrangement/{ogpPlanArea}/{id?}/evaluation','editArrangementEvaluation')->name('ogp.plan.arrangement.edit.evaluation');
+        Route::post('arrangement/{ogpPlanArea}/evaluation',     'editArrangementEvaluationStore')->name('ogp.plan.arrangement.edit.evaluation_store');
 
         Route::post('edit/report/store', 'storeReport')->name('ogp.plan.report.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\Ogp\OgpPlanArrangementActionController::class)->prefix('/ogp/plan/actions')->group(function () {
-        Route::post('edit/store', 'store')->name('ogp.plan.action.store');
-        Route::post('ajax/edit/store', 'update')->name('ogp.plan.action.store_ajax');
-        Route::post('delete', 'destroy')->name('ogp.plan.action.delete');
+        Route::post('edit/store',       'store')->name('ogp.plan.action.store');
+        Route::post('ajax/edit/store',  'update')->name('ogp.plan.action.store_ajax');
+        Route::post('delete',           'destroy')->name('ogp.plan.action.delete');
     });
 
     Route::controller(\App\Http\Controllers\Admin\Ogp\DevelopNewPlanController::class)->prefix('/ogp/develop-plan')->group(function () {

@@ -17,26 +17,17 @@ class PublicConsultationTranslationObserver
     /**
      * Handle the PublicConsultationTranslation "created" event.
      *
-     * @param  \App\Models\Consultations\PublicConsultationTranslation  $publicConsultationTranslation
+     * @param \App\Models\Consultations\PublicConsultationTranslation $publicConsultationTranslation
      * @return void
      */
     public function created(PublicConsultationTranslation $publicConsultationTranslation)
     {
         $publicConsultation = $publicConsultationTranslation->parent;
-        if(!env('DISABLE_OBSERVERS', false) && $publicConsultationTranslation->locale == config('app.default_lang')) {
+        if (!env('DISABLE_OBSERVERS', false) && $publicConsultationTranslation->locale == config('app.default_lang')) {
             if ($publicConsultation->active) {
-                //post on facebook
-                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                    ->get()->first();
-                if ($activeFB->value) {
+                if (Setting::allowPostingToFacebook()) {
                     $facebookApi = new Facebook();
-                    $facebookApi->postOnPage(array(
-                        'message' => 'На Портала за обществени консултации е публикувана нова консултация. Срокът за коментари е: '.displayDate($publicConsultation->open_to).'. Вижте повече тук.',
-//                        'message' => 'Публикувана е Обществена консултация: ' . $publicConsultation->title,
-                        'link' => route('public_consultation.view', $publicConsultation->id),
-                        'published' => true
-                    ));
+                    $facebookApi->postToFacebook($publicConsultation);
                 }
 
                 $this->sendEmails($publicConsultationTranslation, 'created');
@@ -49,12 +40,12 @@ class PublicConsultationTranslationObserver
     /**
      * Handle the PublicConsultationTranslation "updated" event.
      *
-     * @param  \App\Models\Consultations\PublicConsultationTranslation  $publicConsultationTranslation
+     * @param \App\Models\Consultations\PublicConsultationTranslation $publicConsultationTranslation
      * @return void
      */
     public function updated(PublicConsultationTranslation $publicConsultationTranslation)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if (!env('DISABLE_OBSERVERS', false)) {
             //Check for real changes
             $dirty = $publicConsultationTranslation->getDirty(); //return all changed fields
             //skip some fields in specific cases
@@ -69,7 +60,7 @@ class PublicConsultationTranslationObserver
     /**
      * Handle the PublicConsultationTranslation "deleted" event.
      *
-     * @param  \App\Models\Consultations\PublicConsultationTranslation  $publicConsultationTranslation
+     * @param \App\Models\Consultations\PublicConsultationTranslation $publicConsultationTranslation
      * @return void
      */
     public function deleted(PublicConsultationTranslation $publicConsultationTranslation)
@@ -80,7 +71,7 @@ class PublicConsultationTranslationObserver
     /**
      * Handle the PublicConsultationTranslation "restored" event.
      *
-     * @param  \App\Models\Consultations\PublicConsultationTranslation  $publicConsultationTranslation
+     * @param \App\Models\Consultations\PublicConsultationTranslation $publicConsultationTranslation
      * @return void
      */
     public function restored(PublicConsultationTranslation $publicConsultationTranslation)
@@ -91,7 +82,7 @@ class PublicConsultationTranslationObserver
     /**
      * Handle the PublicConsultationTranslation "force deleted" event.
      *
-     * @param  \App\Models\Consultations\PublicConsultationTranslation  $publicConsultationTranslation
+     * @param \App\Models\Consultations\PublicConsultationTranslation $publicConsultationTranslation
      * @return void
      */
     public function forceDeleted(PublicConsultationTranslation $publicConsultationTranslation)
@@ -102,11 +93,11 @@ class PublicConsultationTranslationObserver
     /**
      * Send emails to all administrators, moderators and subscribed users
      *
-     * @param PublicConsultationTranslation  $publicConsultationTranslation
+     * @param PublicConsultationTranslation $publicConsultationTranslation
      * @param $event
      * @return void
      */
-    private function sendEmails(PublicConsultationTranslation  $publicConsultationTranslation, $event): void
+    private function sendEmails(PublicConsultationTranslation $publicConsultationTranslation, $event): void
     {
         $publicConsultation = $publicConsultationTranslation->parent;
         Log::error($publicConsultation);
@@ -133,16 +124,16 @@ class PublicConsultationTranslationObserver
                 ->whereNull('subscribable_id')
                 ->get();
 
-            if($filterSubscribtions->count()){
-                foreach ($filterSubscribtions as $fSubscribe){
+            if ($filterSubscribtions->count()) {
+                foreach ($filterSubscribtions as $fSubscribe) {
                     $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
                     $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
-                    if(in_array($publicConsultation->id, $modelIds)){
+                    if (in_array($publicConsultation->id, $modelIds)) {
                         $subscribedUsers->add($fSubscribe);
                     }
                 }
             }
-        } else{
+        } else {
             //get users by model ID
             $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
                 ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)

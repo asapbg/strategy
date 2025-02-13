@@ -16,12 +16,12 @@ class OgpPlanObserver
     /**
      * Handle the OgpPlan "created" event.
      *
-     * @param  \App\Models\OgpPlan  $ogpPlan
+     * @param \App\Models\OgpPlan $ogpPlan
      * @return void
      */
     public function created(OgpPlan $ogpPlan)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if (!env('DISABLE_OBSERVERS', false)) {
             if ($ogpPlan->active && $ogpPlan->national_plan && $ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id) {
                 $this->sendEmails($ogpPlan, 'created');
                 Log::info('Send subscribe email on creation');
@@ -32,12 +32,12 @@ class OgpPlanObserver
     /**
      * Handle the OgpPlan "updated" event.
      *
-     * @param  \App\Models\OgpPlan  $ogpPlan
+     * @param \App\Models\OgpPlan $ogpPlan
      * @return void
      */
     public function updated(OgpPlan $ogpPlan)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if (!env('DISABLE_OBSERVERS', false)) {
             $old_ogp_status = $ogpPlan->getOriginal('ogp_status_id');
             $old_active = $ogpPlan->getOriginal('active');
             $report_evaluation_published_at = $ogpPlan->getOriginal('report_evaluation_published_at');
@@ -47,9 +47,9 @@ class OgpPlanObserver
                 $ogpPlan->active && !$ogpPlan->national_plan
                 && $old_ogp_status != $ogpPlan->ogp_status_id
                 && ($ogpPlan->ogp_status_id == OgpStatus::InDevelopment()->first()->id)
-            ){
+            ) {
                 $fbPost = array(
-                    'message' => 'Започва изготвянето на план по Партньорството за отворено управление: '.$ogpPlan->name.'. Приемат се коментари до '.displayDate($ogpPlan->to_date_develop).'. За повече информация тук.',
+                    'message' => 'Започва изготвянето на план по Партньорството за отворено управление: ' . $ogpPlan->name . '. Приемат се коментари до ' . displayDate($ogpPlan->to_date_develop) . '. За повече информация тук.',
                     'link' => route('ogp.develop_new_action_plans', $ogpPlan->id),
                     'published' => true
                 );
@@ -59,12 +59,31 @@ class OgpPlanObserver
                 $ogpPlan->active && $ogpPlan->national_plan
                 && $old_ogp_status != $ogpPlan->ogp_status_id
                 && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
-            ){
+            ) {
                 $fbPost = array(
-                    'message' => 'Приключи изготвянето на план по Партньорството за отворено управление: '.$ogpPlan->name.'. За повече информация тук.',
+                    'message' => 'Приключи изготвянето на план по Партньорството за отворено управление: ' . $ogpPlan->name . '. За повече информация тук.',
                     'link' => route('ogp.national_action_plans.show', $ogpPlan->id),
                     'published' => true
                 );
+            }
+
+            if (
+                (is_null($report_evaluation_published_at) && $report_evaluation_published_at != $ogpPlan->report_evaluation_published_at)
+                && $ogpPlan->active && $ogpPlan->national_plan
+                && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
+            ) {
+                $fbPost = array(
+                    'message' => 'Публикуван е доклад по ' . $ogpPlan->name . ' в рамките на Партньорство за отворено управление. За повече информация тук.',
+                    'link' => route('ogp.national_action_plans.show', $ogpPlan->id),
+                    'published' => true
+                );
+                $this->sendEmails($ogpPlan, 'created_report');
+                Log::info('Send subscribe email on creation');
+            }
+
+            if (sizeof($fbPost) && Setting::allowPostingToFacebook()) {
+                $facebookApi = new Facebook();
+                $facebookApi->postOnPage($fbPost);
             }
 
             if (
@@ -75,38 +94,13 @@ class OgpPlanObserver
                 $this->sendEmails($ogpPlan, 'updated');
                 Log::info('Send subscribe email on creation');
             }
-
-            if (
-                (is_null($report_evaluation_published_at) && $report_evaluation_published_at != $ogpPlan->report_evaluation_published_at)
-                && $ogpPlan->active && $ogpPlan->national_plan
-                && ($ogpPlan->ogp_status_id == OgpStatus::activeStatus()->first()->id || $ogpPlan->ogp_status_id == OgpStatus::Final()->first()->id)
-            ) {
-                $fbPost = array(
-                    'message' => 'Публикуван е доклад по '.$ogpPlan->name.' в рамките на Партньорство за отворено управление. За повече информация тук.',
-                    'link' => route('ogp.national_action_plans.show', $ogpPlan->id),
-                    'published' => true
-                );
-                $this->sendEmails($ogpPlan, 'created_report');
-                Log::info('Send subscribe email on creation');
-            }
-
-            if(sizeof($fbPost)){
-                //post on facebook
-                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                    ->get()->first();
-                if ($activeFB->value) {
-                    $facebookApi = new Facebook();
-                    $facebookApi->postOnPage($fbPost);
-                }
-            }
         }
     }
 
     /**
      * Handle the OgpPlan "deleted" event.
      *
-     * @param  \App\Models\OgpPlan  $ogpPlan
+     * @param \App\Models\OgpPlan $ogpPlan
      * @return void
      */
     public function deleted(OgpPlan $ogpPlan)
@@ -117,7 +111,7 @@ class OgpPlanObserver
     /**
      * Handle the OgpPlan "restored" event.
      *
-     * @param  \App\Models\OgpPlan  $ogpPlan
+     * @param \App\Models\OgpPlan $ogpPlan
      * @return void
      */
     public function restored(OgpPlan $ogpPlan)
@@ -128,7 +122,7 @@ class OgpPlanObserver
     /**
      * Handle the OgpPlan "force deleted" event.
      *
-     * @param  \App\Models\OgpPlan  $ogpPlan
+     * @param \App\Models\OgpPlan $ogpPlan
      * @return void
      */
     public function forceDeleted(OgpPlan $ogpPlan)
@@ -148,7 +142,7 @@ class OgpPlanObserver
         $administrators = null;
         $moderators = null;
 
-        if($event == 'updated') {
+        if ($event == 'updated') {
             //get users by model ID
             $subscribedUsers = UserSubscribe::where('subscribable_type', OgpPlan::class)
                 ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
@@ -156,7 +150,7 @@ class OgpPlanObserver
                 ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
                 ->where('subscribable_id', '=', $ogpPlan->id)
                 ->get();
-        } else{
+        } else {
             $subscribedUsers = UserSubscribe::where('id', 0)->get();
             //get users by model filter
             $filterSubscribtions = UserSubscribe::where('subscribable_type', OgpPlan::class)
@@ -166,11 +160,11 @@ class OgpPlanObserver
                 ->whereNull('subscribable_id')
                 ->get();
 
-            if($filterSubscribtions->count()){
-                foreach ($filterSubscribtions as $fSubscribe){
+            if ($filterSubscribtions->count()) {
+                foreach ($filterSubscribtions as $fSubscribe) {
                     $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true) ?? [];
                     $modelIds = OgpPlan::list($filterArray)->pluck('id')->toArray();
-                    if(in_array($ogpPlan->id, $modelIds)){
+                    if (in_array($ogpPlan->id, $modelIds)) {
                         $subscribedUsers->add($fSubscribe);
                     }
                 }

@@ -2,7 +2,13 @@
 
 namespace App\Library;
 
+use App\Models\AdvisoryBoard;
+use App\Models\AdvisoryBoardMeeting;
+use App\Models\Consultations\PublicConsultation;
+use App\Models\LegislativeInitiative;
+use App\Models\OgpPlan;
 use App\Models\Setting;
+use App\Models\StrategicDocument;
 use Illuminate\Support\Facades\Log;
 
 class Facebook
@@ -22,7 +28,7 @@ class Facebook
 
     public function __construct()
     {
-        $this->apiVersion = 'v21.0';
+        $this->apiVersion = 'v22.0';
         $this->endpoint = 'https://graph.facebook.com';
         $this->initTokens();
     }
@@ -131,12 +137,33 @@ class Facebook
         return $result;
     }
 
+    public function getMediaId()
+    {
+        $image_url = 'https://scontent.fsof10-1.fna.fbcdn.net/v/t39.30808-6/472558592_122096182424725207_7205765901782650598_n.png?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=n7sM56bq-vMQ7kNvgHXkJ99&_nc_oc=Adg8ORGxcTPql4vKROdBpw2LI053IuCI5CZcLosNlBB-UQd2D1k5TajCkJm1txlzPlQ&_nc_zt=23&_nc_ht=scontent.fsof10-1.fna&_nc_gid=Aarvk9ii23NCQvvCbCSBOfv&oh=00_AYCHjqMQNLiy7aqmIDbW7qFMK-mctkUQ0CaFhduheux0vg&oe=67B3A12B';
+        $result = $this->curlRequest($this->pageId . '/photos?access_token=' . $this->pageTokenLongLived, 'post', [
+            'url' => $image_url,
+            'published' => false
+        ]);
+        //$result = $this->curlRequest($this->pageId . '/photos?type=profile&access_token=' . $this->pageTokenLongLived, 'get');
+        //dd($result);
+        if (isset($result['response']['id'])) {
+            return $result['response']['id'];
+        }
+
+        return null;
+    }
+
     public function postOnPage(array $data): array
     {
         foreach (['message', 'link', 'published'] as $k) {
             if (!isset($data[$k]) || empty($data[$k])) {
                 return array('error' => 1, 'message' => 'Missing parameter: ' . $k);
             }
+        }
+        $media_id = $this->getMediaId();
+        //$media_id = 122096182418725207;
+        if ($media_id) {
+            $data['attached_media'] = [json_encode(['media_fbid' => $media_id])];
         }
 
         $result = $this->curlRequest($this->pageId . '/feed?access_token=' . $this->pageTokenLongLived, 'post', $data, ["Content-Type: application/json"]);
@@ -213,6 +240,57 @@ class Facebook
         }
 
         return $result;
+    }
+
+    public function postToFacebook($entity)
+    {
+        if ($entity instanceof LegislativeInitiative) {
+            $message = "На Портала за обществени консултации е направено предложение за промяна на {$entity->law?->name} и ако събере подкрепа от $entity->cap регистрирани потребители, ще бъде изпратена автоматично на компетентната институция. Срокът за коментари и подкрепа е: " . displayDate($entity->active_support) . ". Вижте повече на линка.";
+            $link = route('legislative_initiatives.view', $entity->id);
+        }
+
+        if ($entity instanceof PublicConsultation) {
+            $open_to = displayDate($entity->open_to);
+            $message = "На Портала за обществени консултации е публикувана нова консултация: $entity->title. Срокът за коментари е: $open_to. Вижте повече тук";
+            $link = route('public_consultation.view', $entity->id);
+        }
+
+        if ($entity instanceof AdvisoryBoard) {
+            $chairmen = [];
+            if ($entity->chairmen->count()) {
+                foreach ($entity->chairmen as $c) {
+                    if (!empty($c->member_name)) {
+                        $chairmen[] = $c->member_name;
+                    }
+                }
+            }
+            $chairmen_text = "";
+            if (count($chairmen)) {
+                $chairmen_text = count($chairmen) == 1 ? ", с председател: " : ", с председатели: ";
+                $chairmen_text .= implode(', ', $chairmen);
+            }
+            $message = "Създаден е нов консултативен съвет: $entity->name $chairmen_text. Можете да следите дейността на съвета на Портала за обществени консултации тук.";
+            $link = route('advisory-boards.view', $entity->id);
+        }
+
+        if ($entity instanceof AdvisoryBoardMeeting) {
+            $advBoard = $entity->advBoard;
+            $date = displayDate($entity->next_meeting);
+            $message = "Предстоящо заседание на $advBoard->name на $date. За повече информация тук.";
+            $link = route('advisory-boards.view', $entity->id);
+        }
+
+        if ($entity instanceof StrategicDocument) {
+            $message = "На Портала за обществени консултации е публикуван нов стратегически документ: $entity->title. Запознайте се с документа тук.";
+            $link = route('strategy-document.view', $entity->id);
+        }
+
+        if ($entity instanceof OgpPlan) {
+            $message = "На Портала за обществени консултации беше финализиран национален план: $entity->name. Вижте повече на линка.";
+            $link = route('ogp.national_action_plans.show', $entity->id);
+        }
+
+        $this->postOnPage(['message' => $message, 'link' => $link, 'published' => true]);
     }
 
 }

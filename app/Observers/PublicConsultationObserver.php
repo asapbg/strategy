@@ -16,64 +16,33 @@ class PublicConsultationObserver
     /**
      * Handle the PublicConsultation "created" event.
      *
-     * @param  PublicConsultation  $publicConsultation
+     * @param PublicConsultation $publicConsultation
      * @return void
      */
     public function created(PublicConsultation $publicConsultation)
     {
-//        if(!env('DISABLE_OBSERVERS', false)) {
-//            if ($publicConsultation->active) {
-//                //post on facebook
-//                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-//                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-//                    ->get()->first();
-//                if ($activeFB->value) {
-//                    $facebookApi = new Facebook();
-//                    $facebookApi->postOnPage(array(
-//                        'message' => 'На Портала за обществени консултации е публикувана нова консултация. Срокът за коментари е: '.displayDate($publicConsultation->open_to).'. Вижте повече тук.',
-////                        'message' => 'Публикувана е Обществена консултация: ' . $publicConsultation->title,
-//                        'link' => route('public_consultation.view', $publicConsultation->id),
-//                        'published' => true
-//                    ));
-//                }
-//
-//                $this->sendEmails($publicConsultation, 'created');
-//
-//                Log::info('Send subscribe email on creation');
-//            }
-//        }
+
     }
 
     /**
      * Handle the PublicConsultation "updated" event.
      *
-     * @param  PublicConsultation  $publicConsultation
+     * @param PublicConsultation $publicConsultation
      * @return void
      */
     public function updated(PublicConsultation $publicConsultation)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if (!env('DISABLE_OBSERVERS', false)) {
             $old_active = (int)$publicConsultation->getOriginal('active');
 
-            //Check for real changes
-            $dirty = $publicConsultation->getDirty(); //return all changed fields
-            //skip some fields in specific cases
+            $dirty = $publicConsultation->getDirty();
             unset($dirty['updated_at']);
             unset($dirty['end_notify']);
 
             if (!$old_active && $publicConsultation->active) {
-                //post on facebook
-                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                    ->get()->first();
-                if ($activeFB->value) {
+                if (Setting::allowPostingToFacebook()) {
                     $facebookApi = new Facebook();
-                    $facebookApi->postOnPage(array(
-                        'message' => 'На Портала за обществени консултации е публикувана нова консултация: "'.$publicConsultation->title.'". Срокът за коментари е: '.displayDate($publicConsultation->open_to).'. Вижте повече тук.',
-//                        'message' => 'Публикувана е Обществена консултация: ' . $publicConsultation->title,
-                        'link' => route('public_consultation.view', $publicConsultation->id),
-                        'published' => true
-                    ));
+                    $facebookApi->postToFacebook($publicConsultation);
                 }
             }
 
@@ -119,16 +88,16 @@ class PublicConsultationObserver
                 ->whereNull('subscribable_id')
                 ->get();
 
-            if($filterSubscribtions->count()){
-                foreach ($filterSubscribtions as $fSubscribe){
+            if ($filterSubscribtions->count()) {
+                foreach ($filterSubscribtions as $fSubscribe) {
                     $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
                     $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
-                    if(in_array($publicConsultation->id, $modelIds)){
+                    if (in_array($publicConsultation->id, $modelIds)) {
                         $subscribedUsers->add($fSubscribe);
                     }
                 }
             }
-        } else{
+        } else {
             //get users by model ID
             $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
                 ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
@@ -155,7 +124,7 @@ class PublicConsultationObserver
     /**
      * Handle the PublicConsultation "deleted" event.
      *
-     * @param  PublicConsultation  $publicConsultation
+     * @param PublicConsultation $publicConsultation
      * @return void
      */
     public function deleted(PublicConsultation $publicConsultation)
@@ -166,7 +135,7 @@ class PublicConsultationObserver
     /**
      * Handle the PublicConsultation "restored" event.
      *
-     * @param  PublicConsultation  $publicConsultation
+     * @param PublicConsultation $publicConsultation
      * @return void
      */
     public function restored(PublicConsultation $publicConsultation)
@@ -177,7 +146,7 @@ class PublicConsultationObserver
     /**
      * Handle the PublicConsultation "force deleted" event.
      *
-     * @param  PublicConsultation  $publicConsultation
+     * @param PublicConsultation $publicConsultation
      * @return void
      */
     public function forceDeleted(PublicConsultation $publicConsultation)

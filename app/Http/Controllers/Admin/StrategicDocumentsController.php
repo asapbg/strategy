@@ -3,18 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\InstitutionCategoryLevelEnum;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\StoreStrategicDocumentRequest;
 use App\Http\Requests\StrategicDocumentFileUploadRequest;
-use App\Http\Requests\StrategicDocumentUploadFileRequest;
+use App\Library\Facebook;
 use App\Models\Consultations\PublicConsultation;
-use App\Models\EkatteArea;
-use App\Models\EkatteAreaTranslation;
-use App\Models\EkatteMunicipality;
 use App\Models\LegalActType;
-use App\Models\PolicyArea;
 use App\Models\Pris;
+use App\Models\Setting;
 use App\Models\StrategicDocument;
 use App\Models\AuthorityAcceptingStrategic;
 use App\Models\CustomRole;
@@ -25,7 +20,6 @@ use App\Models\StrategicDocumentType;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\CommonService;
 use App\Services\StrategicDocuments\FileService;
-use App\Sorter\AdvisoryBoard\FieldOfAction;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
@@ -33,11 +27,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use App\Models\File as FileModel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class StrategicDocumentsController extends AdminController
@@ -964,7 +955,9 @@ class StrategicDocumentsController extends AdminController
     {
         $strategicDocument->active = $publish;
         $strategicDocument->save();
-        $redirectRoute = $stay == 'true' ? route(self::EDIT_ROUTE, ['id' => $strategicDocument->id]) : route(self::LIST_ROUTE);
+        $redirectRoute = $stay == 'true'
+            ? route(self::EDIT_ROUTE, ['id' => $strategicDocument->id])
+            : route(self::LIST_ROUTE);
 
         return redirect($redirectRoute)
             ->with('success', trans_choice('custom.strategic_documents', 1) . " " . ($strategicDocument->id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));

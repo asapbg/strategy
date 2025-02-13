@@ -18,27 +18,18 @@ class StrategicDocumentTranslationObserver
     /**
      * Handle the StrategicDocumentTranslation "created" event.
      *
-     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
+     * @param StrategicDocumentTranslation $strategicDocumentTranslation
      * @return void
      */
-    public function created(StrategicDocumentTranslation  $strategicDocumentTranslation)
+    public function created(StrategicDocumentTranslation $strategicDocumentTranslation)
     {
         $strategicDocument = $strategicDocumentTranslation->parent;
-        if(!env('DISABLE_OBSERVERS', false)  && $strategicDocumentTranslation->locale == config('app.default_lang')) {
+        if (!env('DISABLE_OBSERVERS', false) && $strategicDocumentTranslation->locale == config('app.default_lang')) {
             if ($strategicDocument->active) {
                 if (!$strategicDocument->parent_document_id) {
-                    //post on facebook
-                    $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                        ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                        ->get()->first();
-                    if ($activeFB->value) {
+                    if (Setting::allowPostingToFacebook()) {
                         $facebookApi = new Facebook();
-                        $facebookApi->postOnPage(array(
-                            'message' => 'На Портала за обществени консултации е публикуван нов стратегически документ. Запознайте се с документа тук.',
-//                            'message' => 'Публикуван е нов Стратегически документ: ' . $strategicDocument->title,
-                            'link' => route('strategy-document.view', $strategicDocument->id),
-                            'published' => true
-                        ));
+                        $facebookApi->postToFacebook($strategicDocument);
                     }
                 }
 
@@ -52,12 +43,12 @@ class StrategicDocumentTranslationObserver
     /**
      * Handle the StrategicDocumentTranslation "updated" event.
      *
-     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
+     * @param StrategicDocumentTranslation $strategicDocumentTranslation
      * @return void
      */
-    public function updated(StrategicDocumentTranslation  $strategicDocumentTranslation)
+    public function updated(StrategicDocumentTranslation $strategicDocumentTranslation)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if (!env('DISABLE_OBSERVERS', false)) {
             //Check for real changes
             $dirty = $strategicDocumentTranslation->getDirty(); //return all changed fields
             //skip some fields in specific cases
@@ -74,11 +65,11 @@ class StrategicDocumentTranslationObserver
     /**
      * Send emails to all administrators, moderators and subscribed users
      *
-     * @param StrategicDocumentTranslation  $strategicDocumentTranslation
+     * @param StrategicDocumentTranslation $strategicDocumentTranslation
      * @param $event
      * @return void
      */
-    private function sendEmails(StrategicDocumentTranslation  $strategicDocumentTranslation, $event): void
+    private function sendEmails(StrategicDocumentTranslation $strategicDocumentTranslation, $event): void
     {
         $strategicDocument = $strategicDocumentTranslation->parent;
         $administrators = null;
@@ -98,21 +89,21 @@ class StrategicDocumentTranslationObserver
                 join field_of_actions on field_of_actions.id = institution_field_of_action.field_of_action_id and field_of_actions.deleted_at is null
                 where
                     users.active = true
-                    and users.user_type = '.User::USER_TYPE_INTERNAL.'
+                    and users.user_type = ' . User::USER_TYPE_INTERNAL . '
                     and users.deleted_at is null
                     and (
-                        roles.name = \''.CustomRole::MODERATOR_STRATEGIC_DOCUMENTS.'\'
+                        roles.name = \'' . CustomRole::MODERATOR_STRATEGIC_DOCUMENTS . '\'
                         or (
-                            roles.name = \''.CustomRole::MODERATOR_STRATEGIC_DOCUMENT.'\'
-                            and field_of_actions.id = '.$strategicDocumentTranslation->parent->policy_area_id.'
+                            roles.name = \'' . CustomRole::MODERATOR_STRATEGIC_DOCUMENT . '\'
+                            and field_of_actions.id = ' . $strategicDocumentTranslation->parent->policy_area_id . '
                         )
                     )
                 group by users.id
             ');
 
-            if(sizeof($moderators)) {
+            if (sizeof($moderators)) {
                 $moderators = User::wherein('id', array_column($moderators, 'id'))->get();
-            } else{
+            } else {
                 $moderators = null;
             }
 
@@ -132,18 +123,18 @@ class StrategicDocumentTranslationObserver
                 ->whereNull('subscribable_id')
                 ->get();
 
-            if($filterSubscribtions->count()){
-                foreach ($filterSubscribtions as $fSubscribe){
+            if ($filterSubscribtions->count()) {
+                foreach ($filterSubscribtions as $fSubscribe) {
                     $filterArray = json_decode($fSubscribe->search_filters, true);
-                    if($filterArray){
+                    if ($filterArray) {
                         $modelIds = StrategicDocument::list($filterArray)->pluck('id')->toArray();
-                        if(in_array($strategicDocument->id, $modelIds)){
+                        if (in_array($strategicDocument->id, $modelIds)) {
                             $subscribedUsers->add($fSubscribe);
                         }
                     }
                 }
             }
-        } else{
+        } else {
             //get users by model ID
             $subscribedUsers = UserSubscribe::where('subscribable_type', StrategicDocument::class)
                 ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
@@ -171,10 +162,10 @@ class StrategicDocumentTranslationObserver
     /**
      * Handle the StrategicDocumentTranslation "deleted" event.
      *
-     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
+     * @param StrategicDocumentTranslation $strategicDocumentTranslation
      * @return void
      */
-    public function deleted(StrategicDocumentTranslation  $strategicDocumentTranslation)
+    public function deleted(StrategicDocumentTranslation $strategicDocumentTranslation)
     {
         //
     }
@@ -182,10 +173,10 @@ class StrategicDocumentTranslationObserver
     /**
      * Handle the StrategicDocumentTranslation "restored" event.
      *
-     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
+     * @param StrategicDocumentTranslation $strategicDocumentTranslation
      * @return void
      */
-    public function restored(StrategicDocumentTranslation  $strategicDocumentTranslation)
+    public function restored(StrategicDocumentTranslation $strategicDocumentTranslation)
     {
         //
     }
@@ -193,10 +184,10 @@ class StrategicDocumentTranslationObserver
     /**
      * Handle the StrategicDocumentTranslation "force deleted" event.
      *
-     * @param  StrategicDocumentTranslation  $strategicDocumentTranslation
+     * @param StrategicDocumentTranslation $strategicDocumentTranslation
      * @return void
      */
-    public function forceDeleted(StrategicDocumentTranslation  $strategicDocumentTranslation)
+    public function forceDeleted(StrategicDocumentTranslation $strategicDocumentTranslation)
     {
         //
     }

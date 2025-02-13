@@ -32,8 +32,8 @@ class DevelopNewPlanController extends AdminController
 
         $items = OgpPlan::select('ogp_plan.*')->with(['translations', 'status'])
             ->join('ogp_status', 'ogp_status.id', '=', 'ogp_plan.ogp_status_id')
-            ->leftJoin('ogp_plan_translations', function ($j){
-                $j->on('ogp_plan_translations.ogp_plan_id' ,'=', 'ogp_plan.id')->where('ogp_plan_translations.locale', '=', app()->getLocale());
+            ->leftJoin('ogp_plan_translations', function ($j) {
+                $j->on('ogp_plan_translations.ogp_plan_id', '=', 'ogp_plan.id')->where('ogp_plan_translations.locale', '=', app()->getLocale());
             })
             ->whereIn('ogp_status.type', [OgpStatusEnum::IN_DEVELOPMENT->value, OgpStatusEnum::DRAFT->value, OgpStatusEnum::FINAL->value])
             ->where('ogp_plan.active', $active)
@@ -56,7 +56,7 @@ class DevelopNewPlanController extends AdminController
     {
         $item = $id ? OgpPlan::find($id) : new OgpPlan();
 
-        if($request->user()->cannot($id ? 'updateDevelopPlan' : 'createDevelopPlan', $item)) {
+        if ($request->user()->cannot($id ? 'updateDevelopPlan' : 'createDevelopPlan', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -65,13 +65,13 @@ class DevelopNewPlanController extends AdminController
         $ogpArea = OgpArea::Active()->get();
         $areas = $item->areas;
 
-        return $this->view('admin.ogp_develop_plan.'.($id ? 'edit' : "create"), compact('item', 'id', 'translatableFields', 'ogpArea', 'areas'));
+        return $this->view('admin.ogp_develop_plan.' . ($id ? 'edit' : "create"), compact('item', 'id', 'translatableFields', 'ogpArea', 'areas'));
     }
 
     public function show(Request $request, OgpPlan $plan): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
         $item = $plan;
-        if($request->user()->cannot('viewDevelopPlan', $item)) {
+        if ($request->user()->cannot('viewDevelopPlan', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $translatableFields = \App\Models\OgpPlan::translationFieldsProperties();
@@ -87,28 +87,30 @@ class DevelopNewPlanController extends AdminController
         $id = $request->get('id');
         $item = $id ? OgpPlan::find($id) : new OgpPlan();
 
-        if($request->user()->cannot($id ? 'updateDevelopPlan' : 'createDevelopPlan', $item)) {
+        if ($request->user()->cannot($id ? 'updateDevelopPlan' : 'createDevelopPlan', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         DB::beginTransaction();
 
         try {
-            if($id) {
-                if($validated['ogp_status_id'] != OgpStatus::Final()->first()->id){
-                    if(dateBetween($validated['from_date_develop'], $validated['to_date_develop'])){
+            $final_status_id = OgpStatus::Final()->first()->id;
+
+            if ($id) {
+                if ($validated['ogp_status_id'] != $final_status_id) {
+                    if (dateBetween($validated['from_date_develop'], $validated['to_date_develop'])) {
                         $validated['ogp_status_id'] = OgpStatus::InDevelopment()->first()->id;
-                    } elseif(dateAfter($validated['from_date_develop'])) {
+                    } elseif (dateAfter($validated['from_date_develop'])) {
                         $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
                     }
-                } else{
+                } else {
                     unset($validated['from_date_develop'], $validated['to_date_develop']);
                 }
 
-                if($item->ogp_status_id != $validated['ogp_status_id'] && $validated['ogp_status_id'] == OgpStatus::Final()->first()->id){
+                if ($item->ogp_status_id != $validated['ogp_status_id'] && $validated['ogp_status_id'] == $final_status_id) {
                     $needToGeneratePdf = true;
                 }
-            } else{
-                if(dateBetween($validated['from_date_develop'], $validated['to_date_develop'])){
+            } else {
+                if (dateBetween($validated['from_date_develop'], $validated['to_date_develop'])) {
                     $validated['ogp_status_id'] = OgpStatus::InDevelopment()->first()->id;
                 } else {
                     $validated['ogp_status_id'] = OgpStatus::Draft()->first()->id;
@@ -122,7 +124,7 @@ class DevelopNewPlanController extends AdminController
             $this->storeTranslateOrNew(OgpPlan::TRANSLATABLE_FIELDS, $item, $validated);
 
             //add new area
-            if(isset($validated['ogp_area']) && $validated['ogp_area']){
+            if (isset($validated['ogp_area']) && $validated['ogp_area']) {
                 $item->areas()->create([
                     'ogp_plan_id' => $item->id,
                     'ogp_area_id' => $validated['ogp_area']
@@ -130,17 +132,17 @@ class DevelopNewPlanController extends AdminController
             }
 
             $route = route('admin.ogp.plan.develop.edit', ['id' => $item->id]);
-            if($needToGeneratePdf) {
+            if ($needToGeneratePdf) {
                 $exportData = [
                     'title' => $item->name,
                     'content' => $item->content,
                     'rows' => $item->areas
                 ];
-                $path = File::OGP_PLAN_UPLOAD_DIR.$item->id.DIRECTORY_SEPARATOR;
-                $fileName = 'version_after_consultation_'.$item->id;
+                $path = File::OGP_PLAN_UPLOAD_DIR . $item->id . DIRECTORY_SEPARATOR;
+                $fileName = 'version_after_consultation_' . $item->id;
 
                 $pdf = PDF::loadView('exports.ogp_plan', ['data' => $exportData, 'isPdf' => true]);
-                Storage::disk('public_uploads')->put($path.$fileName.'.pdf', $pdf->output());
+                Storage::disk('public_uploads')->put($path . $fileName . '.pdf', $pdf->output());
 
                 //Attach files to public consultation
                 foreach (config('available_languages') as $lang) {
@@ -148,10 +150,10 @@ class DevelopNewPlanController extends AdminController
                         'id_object' => $item->id,
                         'code_object' => File::CODE_OBJ_OGP,
                         'doc_type' => DocTypesEnum::OGP_VERSION_AFTER_CONSULTATION,
-                        'filename' => $fileName.'.pdf',
+                        'filename' => $fileName . '.pdf',
                         'content_type' => 'application/pdf',
-                        'path' => $path.$fileName.'.pdf',
-                        'description_'.$lang['code'] => __('custom.ogp.doc_type.'.DocTypesEnum::OGP_VERSION_AFTER_CONSULTATION->value),
+                        'path' => $path . $fileName . '.pdf',
+                        'description_' . $lang['code'] => __('custom.ogp.doc_type.' . DocTypesEnum::OGP_VERSION_AFTER_CONSULTATION->value),
                         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                         'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
                         'locale' => $lang['code'],
@@ -166,7 +168,7 @@ class DevelopNewPlanController extends AdminController
 
             DB::commit();
             return redirect($route)
-                ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+                ->with('success', trans_choice('custom.plans', 1) . " " . __('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             DB::rollBack();
@@ -178,22 +180,21 @@ class DevelopNewPlanController extends AdminController
     public function delete(Request $request, OgpPlan $plan)
     {
         $user = $request->user();
-        if($user->cannot('deleteDevelopPlan', $plan)) {
+        if ($user->cannot('deleteDevelopPlan', $plan)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
         try {
-            if($plan->areas->count()){
-                foreach ($plan->areas as $a){
+            if ($plan->areas->count()) {
+                foreach ($plan->areas as $a) {
                     $a->offers()->delete();
                 }
             }
             $plan->areas();
             $plan->schedules();
             $plan->delete();
-            return redirect(route('admin.ogp.plan.develop.index'))->with('success', __('custom.the_record').' '.__('messages.deleted_successfully_m'));
-        }
-        catch (\Exception $e) {
+            return redirect(route('admin.ogp.plan.develop.index'))->with('success', __('custom.the_record') . ' ' . __('messages.deleted_successfully_m'));
+        } catch (\Exception $e) {
             Log::error($e);
             return back()->with('warning', __('messages.system_error'));
         }
@@ -202,20 +203,19 @@ class DevelopNewPlanController extends AdminController
     public function deleteArea(Request $request, OgpPlanArea $area)
     {
         $user = $request->user();
-        if(!$area || !$area->id) {
+        if (!$area || !$area->id) {
             return back()->with('warning', __('messages.record_not_found'));
         }
 
-        if($user->cannot('deleteDevelopArea', $area->plan)) {
+        if ($user->cannot('deleteDevelopArea', $area->plan)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
         try {
             $area->arrangements()->delete();
             $area->delete();
-            return redirect(route('admin.ogp.plan.develop.edit', ['id' => $area->plan->id]))->with('success', __('custom.the_record').' '.__('messages.deleted_successfully_m'));
-        }
-        catch (\Exception $e) {
+            return redirect(route('admin.ogp.plan.develop.edit', ['id' => $area->plan->id]))->with('success', __('custom.the_record') . ' ' . __('messages.deleted_successfully_m'));
+        } catch (\Exception $e) {
             Log::error($e);
             return back()->with('warning', __('messages.system_error'));
         }
@@ -223,7 +223,7 @@ class DevelopNewPlanController extends AdminController
 
     public function orderArea(Request $request, OgpPlanArea $area)
     {
-        if(!$area || !$area->id) {
+        if (!$area || !$area->id) {
             return back()->with('warning', __('messages.record_not_found'));
         }
 
@@ -232,12 +232,12 @@ class DevelopNewPlanController extends AdminController
         ]);
 
         if ($validator->fails()) {
-            return redirect(route('admin.ogp.plan.develop.edit', $area->ogp_plan_id). '#area-tab-'. $area->id)
+            return redirect(route('admin.ogp.plan.develop.edit', $area->ogp_plan_id) . '#area-tab-' . $area->id)
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        if($request->user()->cannot('updateDevelopPlan', $area->plan)) {
+        if ($request->user()->cannot('updateDevelopPlan', $area->plan)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -248,8 +248,8 @@ class DevelopNewPlanController extends AdminController
             $area->ord = $validated['ord'];
             $area->save();
             DB::commit();
-            return redirect(route('admin.ogp.plan.develop.edit', $area->ogp_plan_id). '#area-tab-'. $area->id)
-                ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+            return redirect(route('admin.ogp.plan.develop.edit', $area->ogp_plan_id) . '#area-tab-' . $area->id)
+                ->with('success', trans_choice('custom.plans', 1) . " " . __('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             DB::rollBack();
@@ -296,7 +296,7 @@ class DevelopNewPlanController extends AdminController
                 ->withInput();;
         }
 
-        if($request->user()->cannot('updateDevelopPlan', $plan)) {
+        if ($request->user()->cannot('updateDevelopPlan', $plan)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         DB::beginTransaction();
@@ -311,7 +311,7 @@ class DevelopNewPlanController extends AdminController
 
             DB::commit();
             return to_route('admin.ogp.plan.develop.edit', ['id' => $plan->id])
-                ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+                ->with('success', trans_choice('custom.plans', 1) . " " . __('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             DB::rollBack();
@@ -341,9 +341,9 @@ class DevelopNewPlanController extends AdminController
 
         try {
 
-            if($id) {
+            if ($id) {
                 $opa = OgpPlanArrangement::find($id);
-            } else{
+            } else {
                 $opa = new OgpPlanArrangement();
                 $opa->ogp_plan_area_id = $ogpPlanArea->id;
             }
@@ -356,8 +356,8 @@ class DevelopNewPlanController extends AdminController
             $this->storeTranslateOrNew(OgpPlanArrangement::TRANSLATABLE_FIELDS, $opa, $validated);
 
             DB::commit();
-            return redirect( route('admin.ogp.plan.develop.edit', $ogpPlanArea->ogp_plan_id). '#area-tab-'. $ogpPlanArea->id)
-                ->with('success', trans_choice('custom.plans', 1)." ".__('messages.updated_successfully_m'));
+            return redirect(route('admin.ogp.plan.develop.edit', $ogpPlanArea->ogp_plan_id) . '#area-tab-' . $ogpPlanArea->id)
+                ->with('success', trans_choice('custom.plans', 1) . " " . __('messages.updated_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             DB::rollBack();

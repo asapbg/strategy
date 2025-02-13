@@ -7,7 +7,6 @@ use App\Enums\DynamicStructureTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\PublicConsultationTimelineEnum;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\LanguageFileUploadRequest;
 use App\Http\Requests\PublicConsultationContactStoreRequest;
 use App\Http\Requests\PublicConsultationContactsUpdateRequest;
 use App\Http\Requests\PublicConsultationDocStoreRequest;
@@ -16,6 +15,7 @@ use App\Http\Requests\PublicConsultationSubDocUploadRequest;
 use App\Http\Requests\StorePublicConsultationProposalReport;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Jobs\SendSubscribedUserEmailJob;
+use App\Library\Facebook;
 use App\Models\ActType;
 use App\Models\Comments;
 use App\Models\ConsultationLevel;
@@ -25,7 +25,6 @@ use App\Models\Consultations\LegislativeProgramRow;
 use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\OperationalProgramRow;
 use App\Models\Consultations\PublicConsultation;
-use App\Models\ConsultationType;
 use App\Models\CustomRole;
 use App\Models\DynamicStructure;
 use App\Models\DynamicStructureColumn;
@@ -34,10 +33,9 @@ use App\Models\File;
 use App\Models\Law;
 use App\Models\LinkCategory;
 use App\Models\Poll;
-use App\Models\Pris;
 use App\Models\ProgramProject;
 use App\Models\PublicConsultationContact;
-use App\Models\RegulatoryAct;
+use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Timeline;
 use App\Models\UserSubscribe;
@@ -51,7 +49,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
-use phpDocumentor\Reflection\DocBlock\Tags\Reference\Url;
 use Symfony\Component\HttpFoundation\Response;
 
 class PublicConsultationController extends AdminController
@@ -319,7 +316,7 @@ class PublicConsultationController extends AdminController
             }
             //END Timeline
 
-            //Update polls if need to
+            //Update polls if necessary
             if ((displayDate($oldOpenFrom) != displayDate($item->open_from)) || (displayDate($oldOpenTo) != displayDate($item->open_from))) {
                 $item->polls()->update(['start_date' => databaseDate($item->open_from), 'end_date' => databaseDate($item->open_to)]);
             }
@@ -957,15 +954,18 @@ class PublicConsultationController extends AdminController
             abort(Response::HTTP_FORBIDDEN);
         }
 
-        DB::beginTransaction();
         try {
+
+            if (Setting::allowPostingToFacebook()) {
+                $facebookApi = new Facebook();
+                $facebookApi->postToFacebook($item);
+            }
+
             $item->active = 1;
             $item->save();
-            DB::commit();
             return redirect(route(self::LIST_ROUTE))
                 ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {
-            DB::rollBack();
             logError('Publish consultation program (ID ' . $item->id . ')', $e);
             return back()->with('danger', __('messages.system_error'));
         }

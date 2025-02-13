@@ -16,26 +16,17 @@ class AdvisoryBoardMeetingObserver
     /**
      * Handle the AdvisoryBoardMeeting "created" event.
      *
-     * @param  \App\Models\AdvisoryBoardMeeting  $advisoryBoardMeeting
+     * @param \App\Models\AdvisoryBoardMeeting $advisoryBoardMeeting
      * @return void
      */
     public function created(AdvisoryBoardMeeting $advisoryBoardMeeting)
     {
         $advBoard = $advisoryBoardMeeting->advBoard;
-        if($advBoard && $advBoard->public && $advisoryBoardMeeting->next_meeting >= Carbon::now()->format('Y-m-d H:i:s')) {
-            if(!env('DISABLE_OBSERVERS', false)){
-
-                //post on facebook
-                $activeFB = Setting::where('section', '=', Setting::FACEBOOK_SECTION)
-                    ->where('name', '=', Setting::FACEBOOK_IS_ACTIVE)
-                    ->get()->first();
-                if($activeFB->value){
+        if ($advBoard && $advBoard->public && $advisoryBoardMeeting->next_meeting >= Carbon::now()->format('Y-m-d H:i:s')) {
+            if (!env('DISABLE_OBSERVERS', false)) {
+                if (Setting::allowPostingToFacebook()) {
                     $facebookApi = new Facebook();
-                    $facebookApi->postOnPage(array(
-                        'message' =>'Предстоящо заседание на '.$advBoard->name.' на '.displayDate($advisoryBoardMeeting->next_meeting).'. За повече информация тук.',
-                        'link' => route('advisory-boards.view', $advBoard),
-                        'published' => true
-                    ));
+                    $facebookApi->postToFacebook($advisoryBoardMeeting);
                 }
 
                 $this->sendEmails($advisoryBoardMeeting, 'created');
@@ -47,7 +38,7 @@ class AdvisoryBoardMeetingObserver
     /**
      * Handle the AdvisoryBoardMeeting "updated" event.
      *
-     * @param  \App\Models\AdvisoryBoardMeeting  $advisoryBoardMeeting
+     * @param \App\Models\AdvisoryBoardMeeting $advisoryBoardMeeting
      * @return void
      */
     public function updated(AdvisoryBoardMeeting $advisoryBoardMeeting)
@@ -58,7 +49,7 @@ class AdvisoryBoardMeetingObserver
     /**
      * Handle the AdvisoryBoardMeeting "deleted" event.
      *
-     * @param  \App\Models\AdvisoryBoardMeeting  $advisoryBoardMeeting
+     * @param \App\Models\AdvisoryBoardMeeting $advisoryBoardMeeting
      * @return void
      */
     public function deleted(AdvisoryBoardMeeting $advisoryBoardMeeting)
@@ -69,7 +60,7 @@ class AdvisoryBoardMeetingObserver
     /**
      * Handle the AdvisoryBoardMeeting "restored" event.
      *
-     * @param  \App\Models\AdvisoryBoardMeeting  $advisoryBoardMeeting
+     * @param \App\Models\AdvisoryBoardMeeting $advisoryBoardMeeting
      * @return void
      */
     public function restored(AdvisoryBoardMeeting $advisoryBoardMeeting)
@@ -80,7 +71,7 @@ class AdvisoryBoardMeetingObserver
     /**
      * Handle the AdvisoryBoardMeeting "force deleted" event.
      *
-     * @param  \App\Models\AdvisoryBoardMeeting  $advisoryBoardMeeting
+     * @param \App\Models\AdvisoryBoardMeeting $advisoryBoardMeeting
      * @return void
      */
     public function forceDeleted(AdvisoryBoardMeeting $advisoryBoardMeeting)

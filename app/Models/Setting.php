@@ -62,4 +62,13 @@ class Setting extends ModelActivityExtend
     {
         $query->where('settings.editable', 0);
     }
+
+    public static function allowPostingToFacebook()
+    {
+        return self::where('section', '=', self::FACEBOOK_SECTION)
+            ->where('name', '=', self::FACEBOOK_IS_ACTIVE)
+            ->get()
+            ->first()
+            ->value;
+    }
 }
