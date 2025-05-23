@@ -40,7 +40,11 @@ class PrisController extends AdminController
     public function index(Request $request)
     {
         $requestFilter = $request->all();
-        $filter = $this->filters($request);
+
+        $is_in_ip_range = env('COUNCIL_OF_MINSTERS_IP_RANGE')
+            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'));
+
+        $filter = $this->filters($request, $is_in_ip_range);
         if (!$request->filled('search') && !$request->filled('active')) {
             $requestFilter['active'] = 1;
         }
@@ -95,6 +99,9 @@ class PrisController extends AdminController
                 $query->where(function ($q) use ($whereImporter) {
                     $q->where('pris.id', '=', 0)->orWhereRaw($whereImporter);
                 });
+            })
+            ->when(!$is_in_ip_range, function ($query) {
+                $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
             })
             ->FilterBy($requestFilter)
             ->orderBy('pris.doc_date', 'desc')
@@ -308,12 +315,20 @@ class PrisController extends AdminController
         }
     }
 
-    private function filters($request)
+    private function filters($request, $is_in_ip_range)
     {
         return array(
             'legalActTypes' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(LegalActType::with(['translations'])->Pris()->get(), true),
+                'options' => optionsFromModel(
+                    LegalActType::with(['translations'])
+                        ->Pris()
+                        ->when(!$is_in_ip_range, function ($query) {
+                            $query->where('id', '<>', LegalActType::TYPE_ORDER);
+                        })
+                        ->get(),
+                    true
+                ),
                 'multiple' => true,
                 'default' => '',
                 'placeholder' => trans_choice('custom.legal_act_types', 1),

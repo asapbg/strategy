@@ -15,6 +15,10 @@ class PrisController extends Controller
     {
         $rssUrl = config('feed.feeds.pris.url');
 
+        $is_in_ip_range = env('COUNCIL_OF_MINSTERS_IP_RANGE')
+            && $request->user()
+            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'));
+
         //Filter
         $rf = $request->all();
         $requestFilter = $request->all();
@@ -25,7 +29,7 @@ class PrisController extends Controller
             }
         }
 
-        $filter = $this->filters($request);
+        $filter = $this->filters($request, $is_in_ip_range);
         $filter['fullSearch']['label'] .= "/" . __('custom.search_in_archive');
         $filter['formGroup']['fields']['in_archive'] = [
             'type' => 'checkbox',
@@ -64,6 +68,9 @@ class PrisController extends Controller
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->when(!$is_in_ip_range, function ($query) {
+                $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
+            })
             ->FilterBy($requestFilter)
             ->SortedBy($sort, $sortOrd)
             //->GroupBy('pris.id', 'institution_translations.name', 'legal_act_type_translations.name')
@@ -85,7 +92,9 @@ class PrisController extends Controller
         $menuCategoriesArchive = [];
         $actTypes = LegalActType::with(['translations'])
             //->Pris()
-            ->where('id', '<>', LegalActType::TYPE_ORDER)
+            ->when(!$is_in_ip_range, function ($query) {
+                $query->where('id', '<>', LegalActType::TYPE_ORDER);
+            })
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
         if ($actTypes->count()) {
@@ -145,7 +154,11 @@ class PrisController extends Controller
             }
         }
 
-        $filter = $this->filters($request);
+        $is_in_ip_range = env('COUNCIL_OF_MINSTERS_IP_RANGE')
+            && $request->user()
+            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'));
+
+        $filter = $this->filters($request, $is_in_ip_range);
         $filter['fullSearch']['label'] .= "/" . __('custom.pris_actual_acts');
         $filter['formGroup']['fields']['in_current'] = [
             'type' => 'checkbox',
@@ -196,6 +209,9 @@ class PrisController extends Controller
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->when(!$is_in_ip_range, function ($query) {
+                $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
+            })
             ->FilterBy($requestFilter)
             ->SortedBy($sort, $sortOrd)
             ->paginate($paginate);
@@ -215,7 +231,9 @@ class PrisController extends Controller
         $menuCategoriesArchive = [];
         $actTypes = LegalActType::with(['translations'])
             ->Pris()
-            ->where('id', '<>', LegalActType::TYPE_ORDER)
+            ->when(!$is_in_ip_range, function ($query) {
+                $query->where('id', '<>', LegalActType::TYPE_ORDER);
+            })
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
         if ($actTypes->count()) {
@@ -322,12 +340,12 @@ class PrisController extends Controller
         );
     }
 
-    private function filters($request)
+    private function filters($request, $is_in_ip_range)
     {
         return array(
             'legalActTypes' => array(
                 'type' => 'select',
-                'options' => optionsFromModel(LegalActType::optionsListForPrisSearch(true), true),
+                'options' => optionsFromModel(LegalActType::optionsListForPrisSearch(!$is_in_ip_range), true),
                 'multiple' => true,
                 'default' => '',
                 'label' => trans_choice('custom.legal_act_types', 1),
