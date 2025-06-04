@@ -59,13 +59,6 @@ class EAuthController extends Controller
             $certInfo = DigitalSignature::getContents($userInfo['certificate']);
             $details = DigitalSignature::getSubjectIdentifier($certInfo);
 
-            // Hardcode company identity for my email for testing purposes
-            // I know that it's an embarrassing email :(
-            if (strtolower($certInfo['subject']['emailAddress']) == 'taurena51@gmail.com') {
-                $certInfo['subject']['organizationIdentifier'] = 'BG-' . User::COUNCIL_OF_MINSTERS_EIK;
-            }
-            //
-
             if (empty($certInfo) || !isset($certInfo['subject']) && !isset($certInfo['serialNumber'])) {
                 return $this->showMessage($this->homeRouteName, 'Невалиден електронен подпис');
             }
