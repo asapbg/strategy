@@ -15,9 +15,7 @@ class PrisController extends Controller
     {
         $rssUrl = config('feed.feeds.pris.url');
 
-        $is_in_ip_range = env('COUNCIL_OF_MINSTERS_IP_RANGE')
-            && $request->user()
-            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'));
+        $can_access_orders = $this->canAccessOrders($request);
 
         //Filter
         $rf = $request->all();
@@ -29,7 +27,7 @@ class PrisController extends Controller
             }
         }
 
-        $filter = $this->filters($request, $is_in_ip_range);
+        $filter = $this->filters($request, $can_access_orders);
         $filter['fullSearch']['label'] .= "/" . __('custom.search_in_archive');
         $filter['formGroup']['fields']['in_archive'] = [
             'type' => 'checkbox',
@@ -68,7 +66,7 @@ class PrisController extends Controller
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
-            ->when(!$is_in_ip_range, function ($query) {
+            ->when(!$can_access_orders, function ($query) {
                 $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
             })
             ->FilterBy($requestFilter)
@@ -92,7 +90,7 @@ class PrisController extends Controller
         $menuCategoriesArchive = [];
         $actTypes = LegalActType::with(['translations'])
             //->Pris()
-            ->when(!$is_in_ip_range, function ($query) {
+            ->when(!$can_access_orders, function ($query) {
                 $query->where('id', '<>', LegalActType::TYPE_ORDER);
             })
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
@@ -154,11 +152,9 @@ class PrisController extends Controller
             }
         }
 
-        $is_in_ip_range = env('COUNCIL_OF_MINSTERS_IP_RANGE')
-            && $request->user()
-            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'));
+        $can_access_orders = $this->canAccessOrders($request);
 
-        $filter = $this->filters($request, $is_in_ip_range);
+        $filter = $this->filters($request, $can_access_orders);
         $filter['fullSearch']['label'] .= "/" . __('custom.pris_actual_acts');
         $filter['formGroup']['fields']['in_current'] = [
             'type' => 'checkbox',
@@ -209,7 +205,7 @@ class PrisController extends Controller
                     ->where('legal_act_type_translations.locale', '=', app()->getLocale());
             })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
-            ->when(!$is_in_ip_range, function ($query) {
+            ->when(!$can_access_orders, function ($query) {
                 $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
             })
             ->FilterBy($requestFilter)
@@ -231,7 +227,7 @@ class PrisController extends Controller
         $menuCategoriesArchive = [];
         $actTypes = LegalActType::with(['translations'])
             ->Pris()
-            ->when(!$is_in_ip_range, function ($query) {
+            ->when(!$can_access_orders, function ($query) {
                 $query->where('id', '<>', LegalActType::TYPE_ORDER);
             })
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)

@@ -41,10 +41,9 @@ class PrisController extends AdminController
     {
         $requestFilter = $request->all();
 
-        $is_in_ip_range = env('COUNCIL_OF_MINSTERS_IP_RANGE')
-            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'));
+        $can_access_orders = $this->canAccessOrders($request);
 
-        $filter = $this->filters($request, $is_in_ip_range);
+        $filter = $this->filters($request, $can_access_orders);
         if (!$request->filled('search') && !$request->filled('active')) {
             $requestFilter['active'] = 1;
         }
@@ -100,7 +99,7 @@ class PrisController extends AdminController
                     $q->where('pris.id', '=', 0)->orWhereRaw($whereImporter);
                 });
             })
-            ->when(!$is_in_ip_range, function ($query) {
+            ->when(!$can_access_orders, function ($query) {
                 $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
             })
             ->FilterBy($requestFilter)
@@ -125,8 +124,7 @@ class PrisController extends AdminController
     public function edit(Request $request, int $id)
     {
         $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType', 'changedDocsWithoutRelation']) : new Pris();
-        $is_in_ip_range = env('COUNCIL_OF_MINSTERS_IP_RANGE')
-            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'));
+        $can_access_orders = $this->canAccessOrders($request);
 
         if (($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Pris::class)) {
             return back()->with('warning', __('messages.unauthorized'));
@@ -134,7 +132,7 @@ class PrisController extends AdminController
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
         $legalActTypes = LegalActType::with(['translation'])->Pris()
-            ->when(!$is_in_ip_range, function ($query) {
+            ->when(!$can_access_orders, function ($query) {
                 $query->where('id', '<>', LegalActType::TYPE_ORDER);
             })
             ->get();

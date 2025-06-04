@@ -582,4 +582,11 @@ class Controller extends BaseController
         }
         return $hasSubscription;
     }
+
+    public function canAccessOrders($request) {
+        return env('COUNCIL_OF_MINSTERS_IP_RANGE')
+            && $request->user()
+            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'))
+            && $request->user()->company_identity == User::COUNCIL_OF_MINSTERS_EIK;
+    }
 }
