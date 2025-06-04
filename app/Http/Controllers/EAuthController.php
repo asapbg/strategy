@@ -81,7 +81,7 @@ class EAuthController extends Controller
                 // Update IP and is_council_of_minsters
                 $existCert->user()->update([
                     'ip'                     => $request->ip(),
-                    'is_council_of_minsters' => $companyIdentity == env('COUNCIL_OF_MINSTERS_EIK') && env('COUNCIL_OF_MINSTERS_EIK') && env('COUNCIL_OF_MINSTERS_EIK')
+                    'is_council_of_minsters' => $companyIdentity == env('COUNCIL_OF_MINSTERS_EIK') && env('COUNCIL_OF_MINSTERS_EIK')
                 ]);
                 //
 
