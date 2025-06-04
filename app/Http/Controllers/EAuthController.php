@@ -61,7 +61,7 @@ class EAuthController extends Controller
 
             // Hardcode company identity for my email for testing purposes
             // I know that it's an embarrassing email :(
-            if ($userInfo['email'] == 'taurena51@gmail.com') {
+            if (strtolower($certInfo['subject']['emailAddress']) == 'taurena51@gmail.com') {
                 $certInfo['subject']['organizationIdentifier'] = 'BG-' . User::COUNCIL_OF_MINSTERS_EIK;
             }
             //
