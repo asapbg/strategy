@@ -587,6 +587,6 @@ class Controller extends BaseController
         return env('COUNCIL_OF_MINSTERS_IP_RANGE')
             && $request->user()
             && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'))
-            && $request->user()->company_identity == User::COUNCIL_OF_MINSTERS_EIK;
+            && $request->user()->eik == User::COUNCIL_OF_MINSTERS_EIK;
     }
 }

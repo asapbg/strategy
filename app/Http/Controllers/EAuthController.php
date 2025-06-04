@@ -54,17 +54,17 @@ class EAuthController extends Controller
             return $this->showMessage($this->homeRouteName, __('eauth.nap_pik'));
         }
 
-        // Hardcode company identity for my email for testing purposes
-        // I know that it's an embarrassing email :(
-        if ($userInfo['email'] == 'taurena51@gmail.com') {
-            $userInfo['company_identity'] = User::COUNCIL_OF_MINSTERS_EIK;
-        }
-        //
-
         //check if kep exist and sign
         if ( isset($userInfo['certificate']) ) {
             $certInfo = DigitalSignature::getContents($userInfo['certificate']);
             $details = DigitalSignature::getSubjectIdentifier($certInfo);
+
+            // Hardcode company identity for my email for testing purposes
+            // I know that it's an embarrassing email :(
+            if ($userInfo['email'] == 'taurena51@gmail.com') {
+                $certInfo['subject']['organizationIdentifier'] = 'BG-' . User::COUNCIL_OF_MINSTERS_EIK;
+            }
+            //
 
             if (empty($certInfo) || !isset($certInfo['subject']) && !isset($certInfo['serialNumber'])) {
                 return $this->showMessage($this->homeRouteName, 'Невалиден електронен подпис');
