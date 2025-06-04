@@ -103,6 +103,13 @@ class EAuthController extends Controller
 
             $existUser = User::where('person_identity', '=', $userInfo['person_identity'])->first();
             if ($existUser) {
+                // Update IP and is_council_of_minsters
+                $existUser->update([
+                    'ip'                     => $request->ip(),
+                    'is_council_of_minsters' => $userInfo['company_identity'] == User::COUNCIL_OF_MINSTERS_EIK
+                ]);
+                //
+
                 $this->addUserCertificate($existUser, $userInfo['certificate']);
                 return $this->redirectExistingUser($existUser);
             }

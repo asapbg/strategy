@@ -584,9 +584,12 @@ class Controller extends BaseController
     }
 
     public function canAccessOrders($request) {
-        return env('COUNCIL_OF_MINSTERS_IP_RANGE')
-            && $request->user()
-            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE'))
-            && $request->user()->eik == User::COUNCIL_OF_MINSTERS_EIK;
+        return env('COUNCIL_OF_MINSTERS_IP_RANGE') // If the environment variable is set
+            && $request->user() // And a user has logged in
+            && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE')) // And the user is in the ip ranges
+            && (
+                $request->user()->is_council_of_minsters
+                || $request->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL
+            ); // And the user's eik is the same as the council of minsters or the user is an admin
     }
 }
