@@ -85,6 +85,13 @@ class EAuthController extends Controller
                 ->first();
 
             if ( $existCert ) {
+                // Update IP and is_council_of_minsters
+                $existCert->user()->update([
+                    'ip'                     => $request->ip(),
+                    'is_council_of_minsters' => $userInfo['company_identity'] == User::COUNCIL_OF_MINSTERS_EIK
+                ]);
+                //
+
                 return $this->redirectExistingUser($existCert->user);
             }
 
@@ -118,6 +125,13 @@ class EAuthController extends Controller
 
         $existUser = User::where('person_identity', '=', $userInfo['identity_number'])->first();
         if(isset($existUser) && $existUser) {
+            // Update IP and is_council_of_minsters
+            $existUser->update([
+                'ip'                     => $request->ip(),
+                'is_council_of_minsters' => $userInfo['company_identity'] == User::COUNCIL_OF_MINSTERS_EIK
+            ]);
+            //
+
             return $this->redirectExistingUser($existUser, $source);
         }
 
