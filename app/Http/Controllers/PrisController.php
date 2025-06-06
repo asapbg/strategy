@@ -264,14 +264,20 @@ class PrisController extends Controller
 
     public function show(Request $request, $category, int $id = 0)
     {
+        $can_access_orders = $this->canAccessOrders($request);
+
         $item = Pris::LastVersion()
             //->InPris()
+            ->when(!$can_access_orders, function ($query) {
+                $query->where('legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
+            })
             ->Published()
             ->with([
                 'translation', 'actType', 'actType.translation', 'tags', 'tags.translation', 'changedDocsWithoutRelation',
                 'changedDocs.actType.translation', 'changedDocs.institution.translation', 'files'
             ])
             ->find($id);
+
         if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
@@ -285,7 +291,9 @@ class PrisController extends Controller
 
         $menuCategories = [];
         $menuCategoriesArchive = [];
-        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+        $actTypes = LegalActType::when(!$can_access_orders, function ($query) {
+                $query->where('id', '<>', LegalActType::TYPE_ORDER);
+            })
             //->Pris()
             ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
             ->get();
