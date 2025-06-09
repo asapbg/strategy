@@ -10,13 +10,13 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('eauth.user.create') }}">
                         @csrf
-    {{--                    <input type="hidden" name="person_identity" value="{{ $userInfo['person_identity'] ?? '' }}">--}}
+                        <input type="hidden" name="person_identity" value="{{ $userInfo['person_identity'] ?? '' }}">
                         <input type="hidden" name="company_identity" value="{{ $userInfo['company_identity'] ?? '' }}">
                         <input type="hidden" name="org_name" value="{{ $userInfo['org_name'] ?? '' }}">
     {{--                    <input type="hidden" name="first_name" value="{{ $userInfo['first_name'] ?? '' }}">--}}
     {{--                    <input type="hidden" name="middle_name" value="{{ $userInfo['middle_name'] ?? '' }}">--}}
     {{--                    <input type="hidden" name="last_name" value="{{ $userInfo['last_name'] ?? '' }}">--}}
-    {{--                    <input type="hidden" name="phone" value="{{ $userInfo['phone'] ?? '' }}">--}}
+                        <input type="hidden" name="phone" value="{{ $userInfo['phone'] ?? '' }}">
                         <div class="row">
                             @if(isset($validationErrors) && sizeof($validationErrors))
                                 <p class="text-danger fs-6">
@@ -26,7 +26,7 @@
                                 </p>
                             @endif
                         </div>
-                        @foreach(['first_name', 'middle_name', 'last_name', 'phone', 'person_identity', 'email'] as $v)
+                        @foreach(['first_name', 'middle_name', 'last_name', 'email'] as $v)
                             @php
                                 $defaultValue = old($v, $userInfo[$v] ?? '');
                                 if($v == 'email') {
