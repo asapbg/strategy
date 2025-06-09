@@ -102,6 +102,20 @@ class EAuthController extends Controller
             $userInfo['email'] = $certInfo['subject']['emailAddress'] ? strtolower($certInfo['subject']['emailAddress']) : '';
 
             $existUser = User::where('person_identity', '=', $userInfo['person_identity'])->first();
+
+            // If the user doesn't exist, check for a user by e-mail with no person_identity
+            if (!$existUser && $userInfo['email']) {
+                $existUser = User::whereNull('person_identity')->where('email', $userInfo['email'])->first();
+
+                // If a user with no person_identity is found by the e-mail, update the person identity
+                if ($existUser) {
+                    $existUser->update([
+                        'person_identity' => $userInfo['person_identity']
+                    ]);
+                }
+            }
+            //
+
             if ($existUser) {
                 // Update IP and is_council_of_minsters
                 $existUser->update([
