@@ -46,6 +46,7 @@ class  UsersController extends Controller
         $role_id = ($request->filled('role_id')) ? $request->get('role_id') : null;
         $active = $request->filled('active') ? $request->get('active') : 1;
         $paginate = $request->filled('paginate') ? $request->get('paginate') : User::PAGINATE;
+        $show_deleted = $request->filled('show_deleted') ? true : false;
 
         $roles = Role::whereActive(true)
             ->orderBy('display_name', 'asc')
@@ -53,6 +54,9 @@ class  UsersController extends Controller
 
         //\DB::enableQueryLog();
         $users = User::with(['roles', 'institution', 'institution.translation'])
+            ->when($show_deleted, function ($query) {
+                $query->onlyTrashed();
+            })
             ->when($role_id, function ($query, $role_id) {
                 return $query->whereHas('roles', function ($q) use ($role_id) {
                     $q->where('id', $role_id);
@@ -72,7 +76,6 @@ class  UsersController extends Controller
 //            ->orderBy('last_name', 'asc')
             ->paginate($paginate);
         //dd(\DB::getQueryLog());
-
 
         return $this->view('admin.users.index',
             compact('users', 'roles', 'email')
@@ -339,6 +342,18 @@ class  UsersController extends Controller
             return to_route('admin.users')->with('danger', __('messages.system_error'));
 
         }
+    }
+
+    public function restore(User $user) {
+        $user->restore();
+
+        if (!$user->hasAnyRole(CustomRole::all())) {
+            $role = Role::whereName(User::EXTERNAL_USER_DEFAULT_ROLE)->first();
+            $user->assignRole($role);
+        }
+
+        return to_route('admin.users')
+            ->with('success', trans_choice('custom.users', 1)." ".__('messages.restored_successfully_m'));
     }
 
     public function subscribeForm(Request $request){

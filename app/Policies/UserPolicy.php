@@ -76,7 +76,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return $user->hasRole([CustomRole::SUPER_USER_ROLE]) || ($user->hasRole([CustomRole::ADMIN_USER_ROLE]) && !$model->hasRole([CustomRole::SUPER_USER_ROLE]));
+        return ($user->hasRole([CustomRole::SUPER_USER_ROLE]) || ($user->hasRole([CustomRole::ADMIN_USER_ROLE]) && !$model->hasRole([CustomRole::SUPER_USER_ROLE]))) && is_null($model->deleted_at);
     }
 
     /**
@@ -88,7 +88,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        return false;
+        return $user->hasRole([CustomRole::SUPER_USER_ROLE]) || ($user->hasRole([CustomRole::ADMIN_USER_ROLE]) && !$model->hasRole([CustomRole::SUPER_USER_ROLE]));
     }
 
     /**

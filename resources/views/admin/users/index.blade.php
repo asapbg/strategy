@@ -65,6 +65,17 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="col-xs-12 col-md-3 mb-2">
+                                <div class="icheck-primary col-12">
+                                    <input class="form-check-input" type="checkbox" name="show_deleted"
+                                           id="show_deleted" {{ request('show_deleted') ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="show_deleted">
+                                        {{ __('validation.attributes.show_deleted') }}
+                                    </label>
+                                </div>
+                            </div>
+
                             <div class="col-xs-12 col-md-3 col-sm-4 mb-2">
                                 <button type="submit" class="btn btn-success">
                                     <i class="fa fa-search"></i> {{__('custom.search')}}
@@ -143,6 +154,18 @@
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                         @endcan
+                                        @can('restore', $user)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-success js-toggle-restore-resource-modal hidden"
+                                               data-target="#modal-restore-resource"
+                                               data-resource-id="{{ $user->id }}"
+                                               data-resource-name="{{ "$user->first_name $user->last_name" }}"
+                                               data-resource-restore-url="{{route('admin.users.restore',$user->id)}}"
+                                               data-toggle="tooltip"
+                                               title="{{__('custom.restore')}}">
+                                                <i class="fa fa-trash-restore"></i>
+                                            </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
@@ -159,6 +182,7 @@
             </div>
 
             @includeIf('modals.delete-resource', ['resource' => $title_singular])
+            @includeIf('modals.restore-resource', ['resource' => $title_singular])
         </div>
     </section>
 
