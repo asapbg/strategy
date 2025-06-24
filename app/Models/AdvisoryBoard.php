@@ -99,6 +99,13 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
         $requestFilter = $request->all();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'active';
         $sortOrd = $request->filled('direction') ? $request->input('direction') : (!$request->filled('order_by') ? 'desc' : 'asc');
+
+        $groupByColumns = ['advisory_boards.id'];
+
+        if ($sort == 'actOfCreation') {
+            $groupByColumns[] = 'advisory_act_type_translations.name';
+        }
+
         return static::select('advisory_boards.*')
             ->leftJoin('advisory_board_translations', function ($j){
                 $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
@@ -137,7 +144,7 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
             ->ActivePublic()
             ->FilterBy($requestFilter)
             ->SortedBy($sort,$sortOrd)
-            ->groupBy('advisory_boards.id')
+            ->groupBy($groupByColumns)
             ->orderByRaw("advisory_boards.created_at desc")
             ->limit(config('feed.items_per_page'), 20)
             ->get();

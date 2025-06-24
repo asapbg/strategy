@@ -79,6 +79,10 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
                 $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
                     ->where('strategic_document_translations.locale', '=', app()->getLocale());
             })
+            ->leftJoin('strategic_document_type_translations', function ($j){
+                $j->on('strategic_document_type_translations.strategic_document_type_id', '=', 'strategic_document.strategic_document_type_id')
+                    ->where('strategic_document_type_translations.locale', '=', app()->getLocale());
+            })
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
             ->leftJoin('field_of_action_translations', function ($j){
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
