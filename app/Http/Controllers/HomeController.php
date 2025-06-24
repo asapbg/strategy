@@ -264,7 +264,7 @@ class HomeController extends Controller
                 $sectionName = $section == 'publications' ? trans_choice('custom.publications', 2) :
                     ($section == 'news' ? trans_choice('custom.news', 2) : trans_choice('custom.ogp_news', 2));
 
-                $items = PublicConsultation::select(['publication.id', \DB::raw('publication_translations.title as name')])
+                $items = Publication::select(['publication.id', \DB::raw('publication_translations.title as name')])
                     ->join('publication_translations', function ($j) use($locale){
                         $j->on('publication_translations.publication_id', '=', 'publication.id')
                             ->where('publication_translations.locale', '=', $locale);
