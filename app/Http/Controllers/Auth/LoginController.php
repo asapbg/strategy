@@ -99,7 +99,7 @@ class LoginController extends Controller
             ]);
         }
 
-        if(env('DISABLE_LOGIN_FOR_EXTERNAL_USER') && $user->user_type == User::USER_TYPE_EXTERNAL){
+        if(env('DISABLE_LOGIN_FOR_EXTERNAL_USER') && $user->user_type == User::USER_TYPE_EXTERNAL) {
             throw ValidationException::withMessages([
                 'error' => [__('site.login_disabled')],
             ]);
@@ -153,6 +153,7 @@ class LoginController extends Controller
             $user->eauth = 0;
             $user->last_login_at = Carbon::now();
             $user->ip = $request->ip();
+            $user->is_council_of_minsters = false;
             $user->save();
 
             $subscriptionsColl = $user->subscriptions()
