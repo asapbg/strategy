@@ -33,18 +33,18 @@ class PublicConsultationEnd extends Mailable
         $commentsPdf = $this->pc->commentsDocumentPdf();
         $commentsCsv = $this->pc->commentsDocumentCsv();
         $pollsPdf = $this->pc->pollsDocumentPdf();
-        if($commentsPdf){
-            $this->attach(asset('files'.$commentsPdf->path));
+        if ($commentsPdf && file_exists(public_path('files' . DIRECTORY_SEPARATOR . $commentsPdf->path))) {
+            $this->attach(asset('files' . DIRECTORY_SEPARATOR . $commentsPdf->path));
         }
-        if($commentsCsv){
-            $this->attach(asset('files'.$commentsCsv->path));
+        if ($commentsCsv && file_exists(public_path('files' . DIRECTORY_SEPARATOR . $commentsCsv->path))) {
+            $this->attach(asset('files' . DIRECTORY_SEPARATOR . $commentsCsv->path));
         }
-        if($pollsPdf){
-            $this->attach(asset('files'.$pollsPdf->path));
+        if ($pollsPdf && file_exists(public_path('files' . DIRECTORY_SEPARATOR . $pollsPdf->path))) {
+            $this->attach(asset('files' . DIRECTORY_SEPARATOR . $pollsPdf->path));
         }
         return $this->from($from, config('mail.from.name'))
-                    ->subject('Изтекъл срок на Обществена консултация')
-                    ->markdown('emails.end_pc', ['url' => $url, 'pc' => $this->pc, 'user' => $this->user ]);
+            ->subject('Изтекъл срок на Обществена консултация')
+            ->markdown('emails.end_pc', ['url' => $url, 'pc' => $this->pc, 'user' => $this->user]);
     }
 
 
