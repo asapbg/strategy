@@ -106,6 +106,22 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
             $groupByColumns[] = 'advisory_act_type_translations.name';
         }
 
+        if ($sort == 'authority') {
+            $groupByColumns[] = 'authority_advisory_board_translations.name';
+        }
+
+        if ($sort == 'chairmanType') {
+            $groupByColumns[] = 'advisory_chairman_type_translations.name';
+        }
+
+        if ($sort == 'fieldOfAction') {
+            $groupByColumns[] = 'field_of_action_translations.name';
+        }
+
+        if ($sort == 'advisory_board_translations.name') {
+            $groupByColumns[] = 'advisory_board_translations.name';
+        }
+
         return static::select('advisory_boards.*')
             ->leftJoin('advisory_board_translations', function ($j){
                 $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
