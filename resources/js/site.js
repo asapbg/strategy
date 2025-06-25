@@ -224,6 +224,20 @@ function initInputs() {
         $(".datepicker").css("top", top);
     });
 
+    $('.datepicker-year').datepicker({
+        language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+        format: 'yyyy',
+        viewMode: "years",
+        minViewMode: "years",
+        changeMonth: false,
+        changeYear: true,
+        orientation: "bottom left",
+        autoclose: true,
+        onClose: function (dateText, inst) {
+            $(this).datepicker('setDate', new Date(inst.selectedYear, 1, 1));
+        }
+    });
+
     $('.pick-institution').on('click', function (){
         let subjectModal = new MyModal({
             title: $(this).data('title'),
@@ -705,6 +719,20 @@ $(document).ready(function () {
         }).on("show", function(e) {
             let top = $("#header-wrapper").height() + parseInt($(".datepicker").css("top"));
             $(".datepicker").css("top", top);
+        });
+
+        $('.datepicker-year').datepicker({
+            language: typeof GlobalLang != 'undefined' ? GlobalLang : 'en',
+            format: 'yyyy',
+            viewMode: "years",
+            minViewMode: "years",
+            changeMonth: false,
+            changeYear: true,
+            orientation: "bottom left",
+            autoclose: true,
+            onClose: function (dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, 1, 1));
+            }
         });
 
         // $('.datepicker-btn').datepicker({

@@ -437,7 +437,7 @@ class PrisController extends Controller
                 'col' => 'col-md-3'
             ),
             'year' => array(
-                'type' => 'text',
+                'type' => 'datepicker-year',
                 'label' => __('custom.year'),
                 'value' => $request->input('year'),
                 'col' => 'col-md-3'
