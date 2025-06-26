@@ -1405,5 +1405,8 @@ return [
     'start_syncing' => 'Започни синхронизация',
     'sync_started' => 'Синхронизиране... Моля изчакайте!',
     'are_you_sure_start' => 'Сигурни ли сте, че искате да стартирате',
-    'person_identity' => 'ЕГН'
+    'person_identity' => 'ЕГН',
+    'laravel_logs'                     => 'Лог за Laravel|Логове за Laravel',
+    'error_logs'                       => 'лог за грешка|Логове за грешки',
+    'eauth_logs'                       => 'Лог за ЕАвтентикация|Логове за ЕАвтентикация',
 ];

@@ -611,6 +611,23 @@
                         </a>
                     </li>
                 @endif
+                @if($user->hasRole('super-admin'))
+                    <li class="nav-header">{{ trans_choice('custom.laravel_logs', 2) }}</li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laravel-logs', [ 'log' => 'laravel' ]) }}"
+                           class="nav-link @if(strstr(url()->current(), 'laravel-logs/laravel')) active @endif">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>{{ trans_choice('custom.laravel_logs', 2) }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laravel-logs', [ 'log' => 'eauth' ]) }}"
+                           class="nav-link @if(strstr(url()->current(), 'laravel-logs/eauth')) active @endif">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>{{ trans_choice('custom.eauth_logs', 2) }}</p>
+                        </a>
+                    </li>
+                @endif
                 @canany(['manage.*', 'manage.settings'])
                     <li class="nav-item">
                         <a href="{{ route('admin.settings') }}"

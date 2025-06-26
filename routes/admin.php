@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentLevelController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicDocumentTypeController;
 use App\Http\Controllers\Admin\NomenclatureController;
 use App\Http\Controllers\Admin\NotificationsController;
+use App\Http\Controllers\Admin\LaravelLogController;
 use App\Http\Controllers\Admin\Ogp\Areas;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PCSubjectController;
@@ -97,6 +98,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/operational-programs/unpublish/{item}', 'unPublish')->name('consultations.operational_programs.unpublish');
         Route::get('/operational-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.operational_programs.delete.file');
         Route::post('/operational-programs/{item}/delete', 'destroy')->name('consultations.operational_programs.delete');
+    });
+
+    Route::controller(LaravelLogController::class)->group(function () {
+        Route::get('/laravel-logs/{log?}',                 'index')->name('laravel-logs');
     });
 
     Route::controller(\App\Http\Controllers\Admin\Consultations\ConsultationsPageController::class)->group(function () {
