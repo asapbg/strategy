@@ -1,6 +1,7 @@
 <?php
 
 use App\Library\DigitalSignature;
+use App\Library\EAuthentication;
 use App\Http\Controllers\{Auth\LoginController, CommonController};
 // Admin
 use App\Http\Controllers\Admin\{HomeController as AdminHomeController,
@@ -42,7 +43,15 @@ Route::get('/sitemap.xml', [\App\Http\Controllers\HomeController::class, 'sitema
 Route::get('/sitemap/base', [\App\Http\Controllers\HomeController::class, 'sitemapBase'])->name('sitemap.base');
 Route::get('/sitemap/sub/{page}', [\App\Http\Controllers\HomeController::class, 'sitemapSub'])->name('sitemap.sub');
 
+Route::get('/test-123123', function () {
+    $eAuth = new EAuthentication();
+    $saml = 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHNhbWwycDpSZXNwb25zZSBEZXN0aW5hdGlvbj0iaHR0cHM6Ly9zdHJhdGVneS5hc2FwYmcuY29tL2VhdXRoL2xvZ2luLWNhbGxiYWNrIiBJRD0iX2U1ZGFjMzMxLTg1YzUtNDhiMy04ZTIzLWI5YjQ5YWVhZjczNyIgSW5SZXNwb25zZVRvPSJBUlExYTFkZDZhLTM1OTItNDdhYi1hZTI1LTVjMzJkZmQ5MTcyMCIgSXNzdWVJbnN0YW50PSIyMDI1LTA2LTMwVDEyOjExOjExLjc1NloiIFZlcnNpb249IjIuMCIgeG1sbnM6c2FtbDJwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJvdG9jb2wiPjxzYW1sMjpJc3N1ZXIgRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6bmFtZWlkLWZvcm1hdDplbnRpdHkiIHhtbG5zOnNhbWwyPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIj5odHRwczovL2VhdXRoLmVnb3YuYmc8L3NhbWwyOklzc3Vlcj48c2FtbDJwOlN0YXR1cz48c2FtbDJwOlN0YXR1c0NvZGUgVmFsdWU9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpzdGF0dXM6U3VjY2VzcyIvPjwvc2FtbDJwOlN0YXR1cz48c2FtbDI6RW5jcnlwdGVkQXNzZXJ0aW9uIHhtbG5zOnNhbWwyPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIj48eGVuYzpFbmNyeXB0ZWREYXRhIElkPSJfMjBjZDkwMWFjZTE1OTc5MTJlMTNmYjcwMjQ2YmIzYjAiIFR5cGU9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZW5jI0VsZW1lbnQiIHhtbG5zOnhlbmM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZW5jIyI';
 
+    $userInfo = $eAuth->userData($saml);
+
+    $certInfo = DigitalSignature::getContents($userInfo['certificate']);
+    dd($userInfo, $certInfo);
+});
 
 Route::get('/admin/login', function (){
     return redirect(route('login'));
