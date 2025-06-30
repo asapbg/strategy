@@ -25,57 +25,54 @@
         </div>
 
         @if($profile->is_org)
-            <div class="row mb-3">
-                <label for="org_name" class="col-md-2 col-form-label">{{ __('validation.attributes.org_name') }}</label>
-
-                <div class="col-md-10">
-                    <input id="org_name" type="text" class="form-control @error('org_name') is-invalid @enderror" name="org_name" value="{{ $profile->org_name }}" autocomplete="off">
-
+            <div class="row pris-row pb-2 mb-2">
+                <label for="org_name" class="col-md-3 pris-left-column"><i class="fa-solid fa-building main-color me-1"></i> {{ __('validation.attributes.org_name') }}</label>
+                <div class="col-md-9 pris-left-column">
+                    <input id="org_name" type="text" class="form-control @error('org_name') is-invalid @enderror" name="org_name" value="{{ old('org_name', $profile->org_name) }}" autocomplete="off">
                     @error('org_name')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-            </div>
-        @else
-
-            <div class="row pris-row pb-2 mb-2">
-                <label for="first_name" class="col-md-3 pris-left-column"><i class="fa-solid fa-user main-color me-1"></i> {{ __('custom.first_name') }}</label>
-                <div class="col-md-9 pris-left-column">
-                    <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $profile->first_name) }}" autocomplete="off">
-                    @error('first_name')
                     <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="row pris-row pb-2 mb-2">
-                <label for="middle_name" class="col-md-3 pris-left-column"><i class="fa-solid fa-user main-color me-1"></i> {{ __('custom.middle_name') }}</label>
-                <div class="col-md-9 pris-left-column">
-                    <input id="middle_name" type="text" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name', $profile->middle_name) }}" autocomplete="off">
-                    @error('middle_name')
-                    <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="row pris-row pb-2 mb-2">
-                <label for="last_name" class="col-md-3 pris-left-column"><i class="fa-solid fa-user main-color me-1"></i> {{ __('custom.last_name') }}</label>
-                <div class="col-md-9 pris-left-column">
-                    <input id="last_name" type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $profile->last_name) }}" autocomplete="off">
-                    @error('last_name')
-                    <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @enderror
                 </div>
             </div>
         @endif
+
+        <div class="row pris-row pb-2 mb-2">
+            <label for="first_name" class="col-md-3 pris-left-column"><i class="fa-solid fa-user main-color me-1"></i> {{ __('custom.first_name') }}</label>
+            <div class="col-md-9 pris-left-column">
+                <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $profile->first_name) }}" autocomplete="off">
+                @error('first_name')
+                <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="row pris-row pb-2 mb-2">
+            <label for="middle_name" class="col-md-3 pris-left-column"><i class="fa-solid fa-user main-color me-1"></i> {{ __('custom.middle_name') }}</label>
+            <div class="col-md-9 pris-left-column">
+                <input id="middle_name" type="text" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name', $profile->middle_name) }}" autocomplete="off">
+                @error('middle_name')
+                <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="row pris-row pb-2 mb-2">
+            <label for="last_name" class="col-md-3 pris-left-column"><i class="fa-solid fa-user main-color me-1"></i> {{ __('custom.last_name') }}</label>
+            <div class="col-md-9 pris-left-column">
+                <input id="last_name" type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $profile->last_name) }}" autocomplete="off">
+                @error('last_name')
+                <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+        </div>
 
         <div class="row pris-row pb-2 mb-2">
             <label for="email" class="col-md-3 pris-left-column"><i class="fa-solid fa-envelope main-color me-1"></i> {{ __('custom.email') }}</label>
