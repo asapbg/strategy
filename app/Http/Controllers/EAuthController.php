@@ -147,8 +147,8 @@ class EAuthController extends Controller
         $userInfo['middle_name'] = $fullNameExplode['middle_name'];
         $userInfo['last_name'] = $fullNameExplode['last_name'];
         $userInfo['person_identity'] = $userInfo['legal_form'] == self::LEGAL_FORM_PERSON ? $userInfo['identity_number'] : null;
-        $userInfo['company_identity'] = null;
-        $userInfo['org_name'] = null;
+//        $userInfo['company_identity'] = null;
+//        $userInfo['org_name'] = null;
         $userInfo['source'] = $source;
 
         return view('eauth.create_user', compact('userInfo'));
@@ -182,7 +182,9 @@ class EAuthController extends Controller
                 'last_login_at' => Carbon::now(),
                 'person_identity' => $data['person_identity'] ?? null,
                 'company_identity' => $data['company_identity'] ?? null,
-                'eauth' => 1
+                'eauth' => 1,
+                'is_council_of_minsters' => $data['company_identity'] == env('COUNCIL_OF_MINSTERS_EIK') && env('COUNCIL_OF_MINSTERS_EIK'),
+                'ip' => $data['ip'] ?? null
             ]);
 
             if( $user ) {
@@ -244,6 +246,7 @@ class EAuthController extends Controller
 
         $validated = $validator->validated();
         $validated['email'] = !empty($validated['email']) ? strtolower($validated['email']) : $validated['email'];
+        $validated['ip'] = $request->ip();
         return $this->saveNewUser($validated);
     }
 
