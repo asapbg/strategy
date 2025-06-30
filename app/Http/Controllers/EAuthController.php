@@ -70,6 +70,7 @@ class EAuthController extends Controller
             $personIdentity = $personIdentity[1];
             $companyIdentity = !isset($certInfo['subject']) || !isset($certInfo['subject']['organizationIdentifier']) ? [] : explode('-', $certInfo['subject']['organizationIdentifier']);
             $companyIdentity = sizeof($companyIdentity) != 2 || empty($companyIdentity[1]) ? null : $companyIdentity[1];
+            $organization = isset($certInfo['subject']) && isset($certInfo['subject']['O']) ? $certInfo['subject']['O'] : null;
 
             //Check if user with certificate exist and login
             $existCert = UserCertificate::with(['user'])
@@ -96,7 +97,7 @@ class EAuthController extends Controller
             $userInfo['last_name'] = $fullNameExplode['last_name'];
             $userInfo['person_identity'] = $personIdentity;
             $userInfo['company_identity'] = $companyIdentity;
-            $userInfo['org_name'] = null;
+            $userInfo['org_name'] = $organization;
 
             //Check if user with this email exist
             $userInfo['email'] = $certInfo['subject']['emailAddress'] ? strtolower($certInfo['subject']['emailAddress']) : '';
@@ -147,8 +148,8 @@ class EAuthController extends Controller
         $userInfo['middle_name'] = $fullNameExplode['middle_name'];
         $userInfo['last_name'] = $fullNameExplode['last_name'];
         $userInfo['person_identity'] = $userInfo['legal_form'] == self::LEGAL_FORM_PERSON ? $userInfo['identity_number'] : null;
-//        $userInfo['company_identity'] = null;
-//        $userInfo['org_name'] = null;
+        $userInfo['company_identity'] = isset($userInfo['certificate']) ? $userInfo['company_identity'] : null;
+        $userInfo['org_name'] = isset($userInfo['certificate']) ? $userInfo['org_name'] : null;
         $userInfo['source'] = $source;
 
         return view('eauth.create_user', compact('userInfo'));
