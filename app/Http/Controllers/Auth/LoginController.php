@@ -154,6 +154,9 @@ class LoginController extends Controller
             $user->last_login_at = Carbon::now();
             $user->ip = $request->ip();
             $user->is_council_of_minsters = false;
+            $user->is_org = false;
+            $user->company_identity = NULL;
+            $user->org_name = NULL;
             $user->save();
 
             $subscriptionsColl = $user->subscriptions()

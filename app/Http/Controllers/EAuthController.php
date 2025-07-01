@@ -80,10 +80,7 @@ class EAuthController extends Controller
 
             if ( $existCert ) {
                 // Update IP and is_council_of_minsters
-                $existCert->user()->update([
-                    'ip'                     => $request->ip(),
-                    'is_council_of_minsters' => $companyIdentity == env('COUNCIL_OF_MINSTERS_EIK') && env('COUNCIL_OF_MINSTERS_EIK')
-                ]);
+                $this->syncEauthUserData($existCert->user(), $request->ip(), [ 'company_identity' => $companyIdentity, 'org_name' => $organization ]);
                 //
 
                 return $this->redirectExistingUser($existCert->user);
@@ -119,10 +116,7 @@ class EAuthController extends Controller
 
             if ($existUser) {
                 // Update IP and is_council_of_minsters
-                $existUser->update([
-                    'ip'                     => $request->ip(),
-                    'is_council_of_minsters' => $userInfo['company_identity'] == env('COUNCIL_OF_MINSTERS_EIK') && env('COUNCIL_OF_MINSTERS_EIK')
-                ]);
+                $this->syncEauthUserData($existUser, $request->ip(), $userInfo);
                 //
 
                 $this->addUserCertificate($existUser, $userInfo['certificate']);
@@ -134,10 +128,7 @@ class EAuthController extends Controller
         $existUser = User::where('person_identity', '=', $userInfo['identity_number'])->first();
         if(isset($existUser) && $existUser) {
             // Update IP and is_council_of_minsters
-            $existUser->update([
-                'ip'                     => $request->ip(),
-                'is_council_of_minsters' => $userInfo['company_identity'] == env('COUNCIL_OF_MINSTERS_EIK') && env('COUNCIL_OF_MINSTERS_EIK')
-            ]);
+            $this->syncEauthUserData($existUser, $request->ip(), $userInfo);
             //
 
             return $this->redirectExistingUser($existUser, $source);
@@ -217,6 +208,35 @@ class EAuthController extends Controller
             Log::error('['.Carbon::now().'] : eAuth Integration save user error. Data ('.json_encode($data).'). Error: '.$e->getMessage());
             return $this->showMessage($this->homeRouteName, __('eauth.unknown_error'));
         }
+    }
+
+    /**
+     * @param $user
+     * @param $ip
+     * @param array{
+     *     org_name: string|null,
+     *     company_identity: string|null
+     * } $userInfo
+     * @return void
+     */
+    private function syncEauthUserData($user, $ip, $userInfo) {
+        // These checks are mostly in case the certificate is missing from the SAML response
+        if (!isset($userInfo['org_name'])) {
+            $userInfo['org_name'] = NULL;
+        }
+
+        if (!isset($userInfo['company_identity'])) {
+            $userInfo['company_identity'] = NULL;
+        }
+        //
+
+        $user->update([
+            'ip' => $ip,
+            'is_council_of_minsters' => $userInfo['company_identity'] == env('COUNCIL_OF_MINSTERS_EIK') && env('COUNCIL_OF_MINSTERS_EIK'),
+            'company_identity' => $userInfo['company_identity'],
+            'org_name' => $userInfo['org_name'],
+            'is_org' => !is_null($userInfo['company_identity'])
+        ]);
     }
 
     /**

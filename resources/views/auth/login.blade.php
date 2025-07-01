@@ -106,6 +106,43 @@
         </div>
     </section>
 </form>
+
+@if(env('APP_ENV') == 'local' && env('APP_DEBUG'))
+    <form method="POST" action="{{ route('eauth.login.callback') }}">
+        @csrf
+        <section class="login-page-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="login-form p-4">
+                            <h2 class="fs-3 mb-3 text-center">Вход със SAML</h2>
+                            <div class="input-group">
+                                <div class="flex-grow-1 form-floating">
+
+                                    <input type="text" name="SAMLResponse" class="form-control" value="{{ old('username') }}"  placeholder="">
+
+                                    <label for="floatingInput">
+                                        SAML
+                                    </label>
+                                </div>
+                                <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+
+                            </div>
+                            <div class="row mt-2">
+                                <button type="submit" class="col-md-6 offset-md-3 cstm-btn btn btn-primary btn-lg">
+                                    <span class="btn-label"><i
+                                            class="fa-solid fa-signature main-color "
+                                        ></i></span>
+                                    {{ __('eauth.with_e_auth') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+@endif
 @endsection
 
 @push('scripts')
