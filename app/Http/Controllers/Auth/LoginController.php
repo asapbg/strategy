@@ -105,6 +105,12 @@ class LoginController extends Controller
             ]);
         }
 
+        if($user->user_type == User::USER_TYPE_INTERNAL && !in_array($user->email, [ 'admin@asap.bg', 'service-user@asap.bg', 'system@asap.bg' ])) {
+            throw ValidationException::withMessages([
+                'error' => [__('site.internal_login_disabled')],
+            ]);
+        }
+
         if ($user->activity_status == User::STATUS_REG_IN_PROCESS) {
             return redirect()->route('verification.notice')->with('danger', trans('auth.verify_email'));
 //            throw ValidationException::withMessages([

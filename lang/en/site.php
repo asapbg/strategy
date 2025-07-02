@@ -280,4 +280,5 @@ return [
     'store_subscription_missing_name' => 'Title is missing',
     'support' => 'Support',
     'meeting' => 'Meeting',
+    'internal_login_disabled' => 'The login with email and password has been deactivated for internal users. Please use eAuth as the login method.'
 ];
