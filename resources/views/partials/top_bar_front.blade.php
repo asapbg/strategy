@@ -26,11 +26,11 @@
                 <div class="auth d-flex justify-content-end top-bar-left-side-desktop">
                     @if(app('auth')->check())
                         @php($user = app('auth')->user())
-                        @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)
+{{--                        @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)--}}
                             <div id="front-timer me-2">
                                 @include('partials.count-down-timer')
                             </div>
-                        @endif
+{{--                        @endif--}}
                         @if(auth()->user()->user_type == \App\Models\User::USER_TYPE_INTERNAL)
                         <a href="{{ route('admin.home') }}" class="btn btn-success text-success me-2"
                             id="back-to-admin"><i class="fas fa-arrow-left me-1"></i>{{ __('site.to_administration') }}</a>

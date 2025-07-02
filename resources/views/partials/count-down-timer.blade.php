@@ -1,7 +1,7 @@
 <input type="hidden" id="sess_check" value="{{ auth()->user() ? '1' : '0'}}">
 
 @if(auth()->user())
-  <div class="session-timer text-md-left text-center main-color" style="transition: all 0.4s ease-in; padding: 4px 8px 5px 8px; border-radius: 4px; cursor: default;">
+  <div class="session-timer text-md-left text-center main-color" style="transition: all 0.4s ease-in; padding: 4px 8px 5px 8px; border-radius: 4px; cursor: default; margin-top: 4px;">
     <span style="" class="d-inline-block mr-2"><i class="far fa-clock"></i></span>
     <div id="timer" data-bs-toggle="tooltip" title="Оставащо време от тази сесия" class="d-inline-block main-color">
       <span id="timer-hours" class="d-inline-block text-center" style="width: 16px;"></span>
