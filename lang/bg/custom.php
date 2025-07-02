@@ -1409,4 +1409,6 @@ return [
     'laravel_logs'                     => 'Лог за Laravel|Логове за Laravel',
     'error_logs'                       => 'лог за грешка|Логове за грешки',
     'eauth_logs'                       => 'Лог за ЕАвтентикация|Логове за ЕАвтентикация',
+    'login_users'                      => 'Вход за потребители',
+    'login_administrators'             => 'Вход за администрации'
 ];

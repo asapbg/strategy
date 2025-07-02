@@ -73,9 +73,26 @@
                                 </form> -->
                             <a class="main-color me-3" id="register-link"
                                 href="{{ route('register') }}">{{ __('custom.register') }}</a>
-                            <a class="btn btn-primary me-3" id="login-btn" href="{{ route('login') }}"><i
-                                    class="login-icon fa-solid fa-right-to-bracket main-color"></i>
-                                {{ __('custom.login') }}</a>
+                            <div class="dropdown">
+                                <button class="btn btn-primary me-3 dropdown-toggle" id="login-btn" data-toggle="dropdown">
+    {{--                                <i class="login-icon fa-solid fa-right-to-bracket main-color"></i>--}}
+                                    {{ __('custom.login') }}
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="login-btn">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('login') }}">
+                                            <i class="login-icon fa-solid fa-right-to-bracket main-color"></i>
+                                            {{ __('custom.login_users') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('eauth.login') }}">
+                                            <i class="fa-solid fa-signature main-color"></i>
+                                            {{ __('custom.login_administrators') }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                             <a href="" class="cstm-btn btn btn-primary login-search d-flex align-items-center "
                                 id="search-btn" style="height: 40px;" data-toggle="modal" data-target="#searchModal">
                                 <i class="login-icon fas fa-search main-color"><span class="d-none">Search</span></i>
