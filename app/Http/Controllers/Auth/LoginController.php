@@ -105,7 +105,7 @@ class LoginController extends Controller
             ]);
         }
 
-        if($user->user_type == User::USER_TYPE_INTERNAL && !in_array($user->email, [ 'admin@asap.bg', 'service-user@asap.bg', 'system@asap.bg' ])) {
+        if($user->user_type == User::USER_TYPE_INTERNAL && !in_array($user->email, [ 'admin@asap.bg', 'service-user@asap.bg', 'system@asap.bg', 'service@asap.bg' ])) {
             throw ValidationException::withMessages([
                 'error' => [__('site.internal_login_disabled')],
             ]);
