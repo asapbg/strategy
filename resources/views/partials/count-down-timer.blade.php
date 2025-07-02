@@ -22,7 +22,7 @@
 @push('scripts')
   <script type="text/javascript"  nonce="2726c7f26c">
       $(document).ready(function (){
-          var last_login = "{{ \Carbon\Carbon::now() }}";
+          var last_login = "{{ auth()->user() ? auth()->user()->last_login_at : \Carbon\Carbon::now() }}";
           var session_lifetime = "{{ \Session::get('user_session_time_limit') }}";
           session_lifetime = session_lifetime * 60;
 
