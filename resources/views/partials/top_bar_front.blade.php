@@ -81,13 +81,13 @@
                                 <ul class="dropdown-menu" aria-labelledby="login-btn">
                                     <li>
                                         <a class="dropdown-item" href="{{ route('login') }}">
-                                            <i class="login-icon fa-solid fa-right-to-bracket main-color"></i>
+                                            <i class="login-icon fa-solid fa-right-to-bracket main-color" style="width: 22px;"></i>
                                             {{ __('custom.login_users') }}
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="{{ route('eauth.login') }}">
-                                            <i class="fa-solid fa-signature main-color"></i>
+                                            <i class="fa-solid fa-signature main-color" style="width: 22px;"></i>
                                             {{ __('custom.login_administrators') }}
                                         </a>
                                     </li>
