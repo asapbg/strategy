@@ -35,10 +35,10 @@
 
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <div id="front-timer">
-                @if(env('APP_ENV') != 'local')
+            <div id="front-timer" style="margin-top: 4px;">
+{{--                @if(env('APP_ENV') != 'local')--}}
                     @include('partials.count-down-timer')
-                @endif
+{{--                @endif--}}
             </div>
         </li>
         <li class="nav-item">
