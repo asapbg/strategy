@@ -71,11 +71,18 @@ class EAuthController extends Controller
             $companyIdentity = !isset($certInfo['subject']) || !isset($certInfo['subject']['organizationIdentifier']) ? [] : explode('-', $certInfo['subject']['organizationIdentifier']);
             $companyIdentity = sizeof($companyIdentity) != 2 || empty($companyIdentity[1]) ? null : $companyIdentity[1];
             $organization = isset($certInfo['subject']) && isset($certInfo['subject']['O']) ? $certInfo['subject']['O'] : null;
+            $email = $certInfo['subject']['emailAddress'] ? strtolower($certInfo['subject']['emailAddress']) : '';
 
             //Check if user with certificate exist and login
             $existCert = UserCertificate::with(['user'])
                 ->where('user_type', User::class)
                 ->where('certificate_number', '=', $certInfo['serialNumber'])
+                ->whereHasMorph('user', [User::class], function ($query) use ($personIdentity, $email) {
+                    $query->where('person_identity', $personIdentity)
+                        ->when($email, function ($query, $email) {
+                            $query->where('email', $email);
+                        });
+                })
                 ->first();
 
             if ( $existCert ) {
@@ -97,9 +104,13 @@ class EAuthController extends Controller
             $userInfo['org_name'] = $organization;
 
             //Check if user with this email exist
-            $userInfo['email'] = $certInfo['subject']['emailAddress'] ? strtolower($certInfo['subject']['emailAddress']) : '';
+            $userInfo['email'] = $email;
 
-            $existUser = User::where('person_identity', '=', $userInfo['person_identity'])->first();
+            $existUser = User::where('person_identity', '=', $userInfo['person_identity'])
+                ->when($userInfo['email'], function ($query, $email) {
+                    $query->where('email', $email);
+                })
+                ->first();
 
             // If the user doesn't exist, check for a user by e-mail with no person_identity
             if (!$existUser && $userInfo['email']) {
