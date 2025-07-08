@@ -142,7 +142,7 @@
                                            title="{{__('custom.edit')}}">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                        @can('delete', $user)
+                                        @if(auth()->user()->can('delete', $user) && is_null($user->deleted_at))
                                             <a href="javascript:;"
                                                class="btn btn-sm btn-danger js-toggle-delete-resource-modal hidden"
                                                data-target="#modal-delete-resource"
@@ -153,8 +153,8 @@
                                                title="{{__('custom.deletion')}}">
                                                 <i class="fa fa-trash"></i>
                                             </a>
-                                        @endcan
-                                        @can('restore', $user)
+                                        @endif
+                                        @if(auth()->user()->can('restore', $user) && !is_null($user->deleted_at))
                                             <a href="javascript:;"
                                                class="btn btn-sm btn-success js-toggle-restore-resource-modal hidden"
                                                data-target="#modal-restore-resource"
@@ -165,7 +165,7 @@
                                                title="{{__('custom.restore')}}">
                                                 <i class="fa fa-trash-restore"></i>
                                             </a>
-                                        @endcan
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

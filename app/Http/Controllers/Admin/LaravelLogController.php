@@ -10,6 +10,16 @@ class LaravelLogController extends Controller
 {
     public function index(Request $request, $log = 'laravel')
     {
+        switch ($log) {
+            case 'laravel':
+                $this->setTitles(trans_choice('custom.laravel_logs', 2));
+                break;
+
+            case 'eauth':
+                $this->setTitles(trans_choice('custom.eauth_logs', 2));
+                break;
+        }
+
         $log .= '.log';
 
         if (!Storage::disk('logs')->exists($log)) {

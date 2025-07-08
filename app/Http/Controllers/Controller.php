@@ -196,6 +196,7 @@ class Controller extends BaseController
                 || ($segment == "profile" && in_array("users", $segments))
                 || $segment == "users" && in_array("profile", $segments)
                 || (is_numeric($segment) && !in_array('publications', $segments))
+                || $segment == 'eauth'
             ) {
                 continue;
             }
