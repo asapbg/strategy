@@ -153,6 +153,12 @@ class  UsersController extends Controller
         $data = $request->except(['_token','password_confirmation','roles']);
         $roles = $request->offsetGet('roles');
         $rolesNames = sizeof($roles) ? rolesNames($roles) : [];
+
+        // An internal user cannot have the external user role
+        if (in_array(User::EXTERNAL_USER_DEFAULT_ROLE, $rolesNames) && $data['user_type'] == User::USER_TYPE_INTERNAL) {
+            return $this->backWithError('danger', __('User type cannot be "Internal" when assigning the "External User" role. Please change the type or the role.'));
+        }
+
         if(count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0) {
             unset($data['institution_id']);
         }
@@ -226,6 +232,11 @@ class  UsersController extends Controller
 //        $data = $request->except(['_token','roles']);
 //        $roles = $request->offsetGet('roles');
         $rolesNames = rolesNames($data['roles']);
+
+        // An internal user cannot have the external user role
+        if (in_array(User::EXTERNAL_USER_DEFAULT_ROLE, $rolesNames) && $data['user_type'] == User::USER_TYPE_INTERNAL) {
+            return $this->backWithError('danger', __('User type cannot be "Internal" when assigning the "External User" role. Please change the type or the role.'));
+        }
 
         DB::beginTransaction();
 
