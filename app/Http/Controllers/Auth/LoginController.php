@@ -194,7 +194,7 @@ class LoginController extends Controller
             $message = trans('auth.failed');
 
             if ($this->limiter()->attempts($this->throttleKey($request)) == $this->maxAttempts) {
-                $message .= [trans('auth.last_attempt')];
+                $message .= trans('auth.last_attempt');
             }
             throw ValidationException::withMessages([
                 'error' => [$message],
