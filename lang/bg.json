@@ -115,5 +115,6 @@
     "Ogp plan report": "Нов доклад (OGP)",
     "New poll to pc user text": "На Портала за обществени е публикувана анкета във връзка с обществена консултация, за която сте абониран/а.",
     "New poll to pc": "Нова Анкета към Обществена аконсултация",
-    "User type cannot be \"Internal\" when assigning the \"External User\" role. Please change the type or the role.": "Типът на потребителя не може да бъде \"Вътрешен\", когато се задава роля \"Външен потребител\". Моля, променете типа потребител или ролята."
+    "User type cannot be \"Internal\" when assigning the \"External User\" role. Please change the type or the role.": "Типът на потребителя не може да бъде \"Вътрешен\", когато се задава роля \"Външен потребител\". Моля, променете типа потребител или ролята.",
+    "A user of type \"External\" can only have the role \"External User\".": "Потребител тип \"Външен\" може да има само ролята \"Външен потребител\"."
 }
