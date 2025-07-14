@@ -590,4 +590,29 @@ class Controller extends BaseController
             && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE')) // And the user is in the ip ranges
             && $request->user()->is_council_of_minsters; // And the user's eik is the same as the council of minsters
     }
+
+    /**
+     * @param mixed $name
+     * @param $query
+     * @param string $table
+     * @return mixed $query
+     */
+    protected function searchByName(mixed $name, $query, string $table = '')
+    {
+        if (!empty($table)) {
+            $table .= ".";
+        }
+        $names_count = count(explode(" ", $name));
+        if ($names_count != 2) {
+            $query->whereRaw("CONCAT_WS(' ', {$table}first_name, {$table}middle_name, {$table}last_name) ILIKE '%$name%'");
+        } else {
+            $query->whereRaw("(
+                CONCAT_WS(' ', {$table}first_name, {$table}middle_name) ILIKE '%$name%'
+                OR CONCAT_WS(' ', {$table}middle_name, {$table}last_name) ILIKE '%$name%'
+                OR CONCAT_WS(' ', {$table}first_name, {$table}last_name) ILIKE '%$name%'
+            )");
+        }
+
+        return $query;
+    }
 }

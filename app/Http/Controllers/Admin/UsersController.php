@@ -63,7 +63,7 @@ class  UsersController extends Controller
                 });
             })
             ->when($name, function ($query, $name) {
-                return $query->where('first_name', 'ILIKE', "%$name%")->orWhere('last_name', 'ILIKE', "%$name%");
+                $this->searchByName($name, $query);
             })
 //            ->when($username, function ($query, $username) {
 //                return $query->where('username', 'ILIKE', "%$username%");
