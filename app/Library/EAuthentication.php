@@ -48,6 +48,8 @@ class EAuthentication
             $params = array_merge($params, $requestParams);
         }
 
+        Log::channel('eauth')->info('EAuthController::SAMLRequest: ' . base64_encode($xml));
+
         //load and auto submit form
         return view('eauth.login', compact('params'));
     }
