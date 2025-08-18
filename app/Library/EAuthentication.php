@@ -123,6 +123,7 @@ class EAuthentication
 
         $glob = new CkGlobal();
         $success = $glob->UnlockBundle('ASAPBG.CB4092025_GvUzdfJg0H2z');
+        $glob->put_DefaultUtf8(true);
         if ($success != true) {
             Log::error('[' . Carbon::now() . '] Chilkat License error: ' . $glob->lastErrorText());
             return null;
