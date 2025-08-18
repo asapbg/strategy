@@ -147,10 +147,11 @@ class EAuthentication
         if ($message && empty($message)) {
             return redirect(route('home'))->with('danger', __('custom.system_error'));
         }
-dd($message, 'asdf');
+
         if (config('eauth.decrypt')) {
             $xml = new CkXml();
             $xml->LoadXml2($message, true);
+            dd($xml->getXml());
 
             //  Load the RSA private key..
             $privkey = new CkPrivateKey();
