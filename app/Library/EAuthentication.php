@@ -279,7 +279,11 @@ class EAuthentication
                 Log::error('['.Carbon::now().'] eAuthentication Not successful received message: '.$message);
 
                 if (isset($fullMsg['saml2pStatus']['saml2pStatusMessage'])) {
-                    $error_message = utf8_decode($fullMsg['saml2pStatus']['saml2pStatusMessage']);
+                    if (config('eauth.decrypt')) {
+                        $error_message = mb_convert_encoding($fullMsg['saml2pStatus']['saml2pStatusMessage'], 'iso-8859-1', 'UTF-8');
+                    } else {
+                        $error_message = $fullMsg['saml2pStatus']['saml2pStatusMessage'];
+                    }
 
                     return [ 'error' => $error_message ];
                 }
