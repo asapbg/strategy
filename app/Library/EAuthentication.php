@@ -142,12 +142,12 @@ class EAuthentication
             'legal_form' => null,
             'identity_number' => null,
         );
-dd($samlResponse, 'test');
+
         $message = $samlResponse ? base64_decode($samlResponse, true) : '';
         if ($message && empty($message)) {
             return redirect(route('home'))->with('danger', __('custom.system_error'));
         }
-
+dd($message, 'asdf');
         if (config('eauth.decrypt')) {
             $xml = new CkXml();
             $xml->LoadXml2($message, true);
