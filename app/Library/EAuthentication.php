@@ -244,7 +244,7 @@ class EAuthentication
             //  Examine the fully decrypted XML document:
 
             $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $xml->getXml());
-            $xml = simplexml_load_string(utf8_encode($response));
+            $xml = simplexml_load_string($response);
 
         } else {
             $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $message);
@@ -279,11 +279,7 @@ class EAuthentication
                 Log::error('['.Carbon::now().'] eAuthentication Not successful received message: '.$message);
 
                 if (isset($fullMsg['saml2pStatus']['saml2pStatusMessage'])) {
-                    if (config('eauth.decrypt')) {
-                        $error_message = mb_convert_encoding($fullMsg['saml2pStatus']['saml2pStatusMessage'], 'iso-8859-1', 'UTF-8');
-                    } else {
-                        $error_message = $fullMsg['saml2pStatus']['saml2pStatusMessage'];
-                    }
+                    $error_message = $fullMsg['saml2pStatus']['saml2pStatusMessage'];
 
                     return [ 'error' => $error_message ];
                 }
