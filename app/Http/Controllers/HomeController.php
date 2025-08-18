@@ -303,6 +303,11 @@ class HomeController extends Controller
                     ->paginate($paginate);
                 break;
         }
+
+        if (!isset($sectionName)) {
+            abort(404);
+        }
+
         $pageTitle = __('site.search_in_platform_page_title').' '.__('custom.in').' '.__('custom.section_search').' '.$sectionName;
         $this->setBreadcrumbsFull(array(
             ['name' => $pageTitle, 'url' => ''],
