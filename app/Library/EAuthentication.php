@@ -244,7 +244,7 @@ class EAuthentication
             //  Examine the fully decrypted XML document:
 
             $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $xml->getXml());
-            $xml = simplexml_load_string($response);
+            $xml = simplexml_load_string(mb_convert_encoding($response, 'UTF-8'));
 
         } else {
             $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $message);
