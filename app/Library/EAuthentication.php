@@ -142,7 +142,7 @@ class EAuthentication
             'legal_form' => null,
             'identity_number' => null,
         );
-
+dd($samlResponse, 'test');
         $message = $samlResponse ? base64_decode($samlResponse, true) : '';
         if ($message && empty($message)) {
             return redirect(route('home'))->with('danger', __('custom.system_error'));
