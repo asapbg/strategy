@@ -152,7 +152,6 @@ class EAuthentication
         if (config('eauth.decrypt')) {
             $xml = new CkXml();
             $xml->LoadXml2($message, true);
-            dd($xml->getXml());
 
             //  Load the RSA private key..
             $privkey = new CkPrivateKey();
@@ -246,7 +245,6 @@ class EAuthentication
             //  Examine the fully decrypted XML document:
 
             $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $xml->getXml());
-            dd($response);
             $xml = simplexml_load_string($response);
 
         } else {
