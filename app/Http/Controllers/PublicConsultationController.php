@@ -221,8 +221,7 @@ class PublicConsultationController extends Controller
             ->groupBy('public_consultation.id');
 
         if ($request->input('export_excel') || $request->input('export_pdf')) {
-//            $items = $q->get();
-            $items = collect();
+            $items = $request->input('export_excel') ? $q : $q->get();
             $exportData = [
                 'title' => __('custom.pc_report_title'),
                 'rows' => $items

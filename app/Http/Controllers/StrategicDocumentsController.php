@@ -371,8 +371,7 @@ class StrategicDocumentsController extends Controller
             //->GroupBy('strategic_document.id');
 
         if($request->input('export_excel') || $request->input('export_pdf') || $request->input('export_word')){
-//            $items = $q->get();
-            $items = collect();
+            $items = $q->get();
             $exportData = [
                 'title' => __('custom.strategic_documents_report_title'),
                 'rows' => $items
