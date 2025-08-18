@@ -50,6 +50,10 @@ class EAuthController extends Controller
         Log::channel('eauth')->info('EAuthController::SAMLResponse: ' . $request->input('SAMLResponse'));
         $userInfo = $eAuth->userData($request->input('SAMLResponse'));
 
+        if (isset($userInfo['error'])) {
+            return $this->showMessage($this->homeRouteName, __('eauth.known_error', ['error' => $userInfo['error']]));
+        }
+
         if (isset($userInfo['login_source']) && ($userInfo['login_source'] == "nap_pik" || $userInfo['login_source'] == "noi_pik")) {
             return $this->showMessage($this->homeRouteName, __('eauth.nap_pik'));
         }
