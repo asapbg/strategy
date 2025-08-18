@@ -31,6 +31,12 @@ class Templates extends Controller
 
     public function show($slug)
     {
-        return view('templates.'.$slug);
+        $view_name = 'templates.'.$slug;
+
+        if (!view()->exists($view_name)) {
+            abort(404);
+        }
+
+        return view($view_name);
     }
 }
