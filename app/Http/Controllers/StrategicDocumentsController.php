@@ -370,7 +370,7 @@ class StrategicDocumentsController extends Controller
             });
             //->GroupBy('strategic_document.id');
 
-        if($request->input('export_excel') || $request->input('export_word')){ // || $request->input('export_pdf')
+        if($request->input('export_excel') || $request->input('export_word')){
             $items = $q->get();
             $exportData = [
                 'title' => __('custom.strategic_documents_report_title'),
@@ -378,13 +378,7 @@ class StrategicDocumentsController extends Controller
             ];
 
             $fileName = 'sd_report_'.Carbon::now()->format('Y_m_d_H_i_s');
-            if($request->input('export_pdf')){
-//                dd($exportData);
-                ini_set('max_execution_time', 60);
-                $pdf = PDF::loadView('exports.sd_report', ['data' => $exportData, 'isPdf' => true]);
-//                dd('ready loading');
-                return $pdf->download($fileName.'.pdf');
-            } else if ($request->input('export_excel')) {
+            if ($request->input('export_excel')) {
                 return Excel::download(new StrategicDocumentsExport($exportData), $fileName.'.xlsx');
             } else {
                 $fileName .= '.docx';

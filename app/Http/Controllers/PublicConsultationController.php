@@ -220,7 +220,7 @@ class PublicConsultationController extends Controller
             ->SortedBy($sort, $sortOrd)
             ->groupBy('public_consultation.id');
 
-        if ($request->input('export_excel') || $request->input('export_pdf')) {
+        if ($request->input('export_excel')) {
             $items = $request->input('export_excel') ? $q : $q->get();
             $exportData = [
                 'title' => __('custom.pc_report_title'),
@@ -228,12 +228,8 @@ class PublicConsultationController extends Controller
             ];
 
             $fileName = 'pc_report_' . Carbon::now()->format('Y_m_d_H_i_s');
-            if ($request->input('export_pdf')) {
-                $pdf = PDF::loadView('exports.pc_report', ['data' => $exportData, 'isPdf' => true])->setPaper('a4', 'landscape');
-                return $pdf->download($fileName . '.pdf');
-            } else {
-                return Excel::download(new PublicConsultationReportExport($exportData), $fileName . '.xlsx');
-            }
+
+            return Excel::download(new PublicConsultationReportExport($exportData), $fileName . '.xlsx');
         } else {
             $items = $q->paginate($paginate);
         }
