@@ -1672,7 +1672,7 @@ class seedOldLastPris extends Command
             $maxOldId = (int)$maxOldId[0]->max;
             try {
                 while ($currentStep <= $maxOldId && !$stop) {
-                    echo "FromId: " . $currentStep . PHP_EOL;
+                    //$this->comment("Current step: $currentStep");
                     $oldDbResult = DB::connection('pris')->select("
                         SELECT pris.id as old_id,
                                pris.number as doc_num,
@@ -1688,7 +1688,7 @@ class seedOldLastPris extends Command
                                pris.datepublished as published_at,
                                pris.datecreated as created_at,
                                pris.datemodified as updated_at,
-                               sum(case when att.attachid is not null then 1 else 0 end) as has_files
+                               case when att.attachid is not null then 1 else 0 end as has_files
                           FROM archimed.e_items pris
                      LEFT JOIN edocs.attachments att on att.documentid = pris.id
                          WHERE true
@@ -1697,7 +1697,7 @@ class seedOldLastPris extends Command
                            AND pris.itemtypeid <> 5017 -- skip law records
                            -- and pris.itemtypeid <> 5030 -- skip law records
                            -- and documents.lastrevision = \'Y\' -- get final versions
-                     GROUP BY pris.id
+                     --GROUP BY pris.id
                      ORDER BY pris.id asc
                     ");
 
@@ -2151,7 +2151,7 @@ class seedOldLastPris extends Command
 //                                    }
 //                                }
                             }
-                            $this->comment('PRIS with old id (' . $item->old_id . ') is created');
+                            $this->info("PRIS with old id ($item->old_id) is created");
                         }
                     }
 
@@ -2165,7 +2165,8 @@ class seedOldLastPris extends Command
                     }
                 }
             } catch (\Exception $e) {
-                Log::error('Migration old pris: ' . $e);
+                $this->error("Error: ". $e->getMessage());
+                Log::error('Migration old pris: ' . $e->getMessage());
             }
         }
         $this->info('End at ' . date('Y-m-d H:i:s'));

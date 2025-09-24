@@ -186,11 +186,11 @@ class seedOldStrategicDocuments extends Command
 
                     $strategicDoc->update($data);
 
-                    $this->info('Updated data with ID: ' . $strategicDoc->id);
+                    $this->comment('Updated data for record with ID: ' . $strategicDoc->id);
                 } else {
                     $strategicDoc = StrategicDocument::create($data);
 
-                    $this->info('Inserted data with ID: ' . $strategicDoc->id);
+                    $this->info("New strategic document with ID: $strategicDoc->id inserted");
                 }
 
                 foreach ($locales as $locale) {

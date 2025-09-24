@@ -313,12 +313,10 @@ class seedOldUsers extends Command
             $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
             while ($currentStep <= $maxOldId && !$stop) {
-                echo "FromId: " . $currentStep . PHP_EOL;
+                //$this->comment("Current step: $currentStep");
                 $oldDbResult = DB::connection('old_strategy_app')
                     ->select('
                         select
-                            -- usercategoryaccess table ?????
-                            -- institution_id ??????????????
                             u.userid as old_id,
                             u.username as username,
                             case when profile.organization is not null then 1 else 0 end as is_org,
@@ -337,18 +335,18 @@ class seedOldUsers extends Command
                             u.lastactivitydate as last_login_at,
                             1 as active,
                             m.createdate  as created_at,
-                            -- updated_at
-                            -- person_identity
-                            -- company_identity
+                            -- updated_at, person_identity, company_identity
                             json_agg(json_build_object(\'id\', roles.roleid , \'name\', roles.rolename, \'description\', roles.description)) as roles
                         from dbo.users u
                         join dbo.membership m on m.userid = u.userid
                         join dbo.usersinroles uroles on uroles.userid = u.userid
                         join dbo.roles roles on roles.roleid = uroles.roleid
                         left join dbo.profile profile on profile.userid = u.userid
-                        where u.userid >= ' . (int)$currentStep . '
+                        where u.userid >= ' . $currentStep . '
                         and u.userid < ' . ($currentStep + $step) . '
-                        group by u.userid, m.userid, profile.userid
+                        group by u.userid, u.username, profile.organization, profile.firstname, profile.lastname,
+                            m.email, m.islockedout, profile.phone, m."password", m.lastpasswordchangeddate,
+                            u.lastactivitydate, m.createdate
                         order by u.userid asc
                     ');
 
@@ -423,7 +421,8 @@ class seedOldUsers extends Command
                                 $this->comment('User with old id (' . $newUser->old_id . ') is created');
                                 DB::commit();
                             } catch (\Exception $e) {
-                                Log::error('Migration old startegy users: ' . $e);
+                                $this->error('Error: '. $e->getMessage());
+                                Log::error('Migration old strategy users: ' . $e->getMessage());
                                 DB::rollBack();
                             }
                         } else {

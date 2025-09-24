@@ -2,20 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\DocTypesEnum;
-use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
-use App\Models\CustomRole;
 use App\Models\File;
-use App\Models\InstitutionLevel;
-use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
-use App\Services\FileOcr;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -67,8 +59,9 @@ class seedOldPublicConsultationFiles extends Command
 
         $stop = false;
         $maxOldId = (int)$maxOldId[0]->max;
+        $maxOldId = 0;
         while ($currentStep <= $maxOldId && !$stop) {
-            echo "FromId: " . $currentStep . PHP_EOL;
+            //$this->comment("Current step: $currentStep");
             $oldDbFiles = DB::connection('old_strategy_app')
                 ->select('
                     select
@@ -90,21 +83,29 @@ class seedOldPublicConsultationFiles extends Command
                     left join dbo.filefolders folders on folders.id = f.folderid
                     where true
                         and p.id >= ' . $currentStep . '
-                        and p.id < ' . ($currentStep + $step) . '
+                        --and p.id < ' . ($currentStep + $step) . '
                         and p.languageid = 1
                         and f.id is not null
                         and folders.id is not null
                         and uf.tabletype = 3
-                        --and p.id = 8215
+                        and p.id = 7942
                         -- check if uf.tabletype should be 3
                     order by p.id asc
                 ');
 
             if (!sizeof($oldDbFiles)) {
-                $this->error('No files was found');
-                return COMMAND::FAILURE;
+                $this->comment("No files was found for Current step: $currentStep");
+                if ($currentStep == $maxOldId) {
+                    $stop = true;
+                } else {
+                    $currentStep += $step;
+                    if ($currentStep > $maxOldId) {
+                        $currentStep = $maxOldId;
+                    }
+                }
+                continue;
             }
-            //dd($oldDbFiles);
+
             foreach ($oldDbFiles as $item) {
 
                 if (isset($ourFiles[(int)$item->file_old_id])) {
@@ -117,7 +118,6 @@ class seedOldPublicConsultationFiles extends Command
                     continue;
                 }
 
-//                        DB::beginTransaction();
                 try {
                     $info = pathinfo($item->name);
                     if (isset($info['extension'])) {
@@ -127,8 +127,9 @@ class seedOldPublicConsultationFiles extends Command
                     }
 
                     $copy_from = base_path('oldfiles' . DIRECTORY_SEPARATOR . 'Folder_' . $item->folder_id . DIRECTORY_SEPARATOR . $item->name);
-                    //dd($copy_from);
-                    $to = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $directory . $newName);
+
+                    $path = $directory . $ourPc[$item->id] . DIRECTORY_SEPARATOR;
+                    $to = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $path . $newName);
 
 //                            if(!file_exists($copy_from)) {
 //                                $this->comment('File '.$copy_from. 'do not exist!');
@@ -137,12 +138,18 @@ class seedOldPublicConsultationFiles extends Command
                     if (!file_exists($copy_from)) {
                         file_put_contents('missing_pc_files_in_old_files.txt', 'oldfiles' . DIRECTORY_SEPARATOR . 'Folder_' . $item->folder_id . DIRECTORY_SEPARATOR . $item->name . PHP_EOL, FILE_APPEND);
                     }
+
+                    if (!Storage::disk('public_uploads')->exists($path)) {
+                        Storage::disk('public_uploads')->makeDirectory($path);
+                    }
+
                     $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
 
                     if (!$copied_file) {
                         $this->comment('Can\'t copy file');
                     }
-                    $contentType = Storage::disk('public_uploads')->mimeType($directory . $newName);
+                    $contentType = Storage::disk('public_uploads')->mimeType($path . $newName);
+
                     $fileIds = [];
                     foreach (['bg', 'en'] as $code) {
                         //TODO catch file version
@@ -153,7 +160,7 @@ class seedOldPublicConsultationFiles extends Command
                             'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
                             'filename' => $newName,
                             'content_type' => $contentType,
-                            'path' => $directory . $newName,
+                            'path' => $path . $newName,
                             'description_' . $code => !empty($item->description) ? $item->description : $item->name,
                             'sys_user' => $ourUsers[(int)$item->old_user_id] ?? null,
                             'locale' => $code,
@@ -172,11 +179,9 @@ class seedOldPublicConsultationFiles extends Command
                     File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
                     $this->comment('File ID ' . $newFile->id . ' Successfully saved for PC ID ' . $ourPc[$item->id] . ' Old ID: ' . $item->id);
 
-//                            DB::commit();
-
                 } catch (\Exception $e) {
-                    Log::error('Migration old strategy public consultations, comment and files: ' . $e);
-//                            DB::rollBack();
+                    Log::error('Migration old strategy public consultations, comment and files: ' . $e->getMessage());
+                    $this->error("Error: ". $e->getMessage());
                 }
             }
 

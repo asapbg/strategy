@@ -23,7 +23,11 @@ class PublicConsultationTranslationObserver
     public function created(PublicConsultationTranslation $publicConsultationTranslation)
     {
         $publicConsultation = $publicConsultationTranslation->parent;
-        if (!env('DISABLE_OBSERVERS', false) && $publicConsultationTranslation->locale == config('app.default_lang')) {
+        if (
+            !env('DISABLE_OBSERVERS', false)
+            && $publicConsultationTranslation->locale == config('app.default_lang')
+            && $publicConsultation
+        ) {
             if ($publicConsultation->active) {
                 if (Setting::allowPostingToFacebook()) {
                     $facebookApi = new Facebook();

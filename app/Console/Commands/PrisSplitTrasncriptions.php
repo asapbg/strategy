@@ -30,18 +30,18 @@ class PrisSplitTrasncriptions extends Command
      */
     public function handle()
     {
-        $this->info('Start at: '. date('Y-m-d H:i:s'));
+        $this->info('Start at: ' . date('Y-m-d H:i:s'));
         //Search for transcripts category
         $dbTranscripts = Pris::where('pris.legal_act_type_id', '=', LegalActType::TYPE_TRANSCRIPTS)
             ->where('asap_last_version', 1)
             ->orderBy('id', 'desc')
             ->get();
 
-        if(!$dbTranscripts->count()){
+        if (!$dbTranscripts->count()) {
             return Command::SUCCESS;
         }
 
-        foreach ($dbTranscripts as $transcript){
+        foreach ($dbTranscripts as $transcript) {
 
             //Check if there is protocol already
             $dbProtocol = Pris::where('doc_num', $transcript->doc_num)
@@ -52,19 +52,19 @@ class PrisSplitTrasncriptions extends Command
                 ->get()
                 ->first();
 
-            if($dbProtocol) {
+            if ($dbProtocol) {
                 //$this->info('Protocol exist');
                 continue;
             }
 
-            if(!$transcript->filesByLocale->count()){
+            if (!$transcript->filesByLocale->count()) {
                 //$this->info('Transcription do not have files');
                 continue;
             }
 
-            foreach ($transcript->filesByLocale as $f){
+            foreach ($transcript->filesByLocale as $f) {
                 //If there is protocol file in it
-                if(str_contains($f->filename, 'ротокол') || $f->filename == $transcript->doc_num.'.doc'){
+                if (str_contains($f->filename, 'ротокол') || $f->filename == $transcript->doc_num . '.doc') {
                     try {
                         //$this->info('File: '.$f->filename.' | Стенограма дата: '.$transcript->doc_date.' | Стенограма номер: '.$transcript->doc_num);
                         //Create protocol with this file and flag 'from_transcripts'
@@ -84,15 +84,15 @@ class PrisSplitTrasncriptions extends Command
                         $institutions = $transcript->institutions->pluck('id')->toArray();
                         $newProtocol->institutions()->sync($institutions);
 
-                        foreach ($transcript->translations as $translation){
+                        foreach ($transcript->translations as $translation) {
                             $cloneLang = $translation->replicate();
                             $newProtocol->translations()->save($cloneLang);
                         }
 
-                        foreach (config('available_languages') as $lang){
+                        foreach (config('available_languages') as $lang) {
                             $newProtocolFile = $f->replicate(['file_text_ts_bg']);
                             $newProtocolFile->id_object = $newProtocol->id;
-                            if($lang['code'] == 'en'){
+                            if ($lang['code'] == 'en') {
                                 $newProtocolFile->description_en = $f->description_bg;
                                 $newProtocolFile->description_bg = null;
                                 $newProtocolFile->locale = 'en';
@@ -105,7 +105,7 @@ class PrisSplitTrasncriptions extends Command
                 }
             }
         }
-        $this->info('End at: '. date('Y-m-d H:i:s'));
+        $this->info('End at: ' . date('Y-m-d H:i:s'));
         return Command::SUCCESS;
     }
 }

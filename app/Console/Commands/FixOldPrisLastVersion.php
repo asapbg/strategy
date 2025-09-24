@@ -34,9 +34,9 @@ class FixOldPrisLastVersion extends Command
     public function handle()
     {
         activity()->disableLogging();
-        $this->comment('Start at '.date('Y-m-d H:i:s'));
+        $this->comment('Start at ' . date('Y-m-d H:i:s'));
         $maxLocalOldPrisId = Pris::max('old_id');
-        if(!$maxLocalOldPrisId){
+        if (!$maxLocalOldPrisId) {
             $this->error('Missing max pris id for update');
         }
 
@@ -44,86 +44,89 @@ class FixOldPrisLastVersion extends Command
         $currentStep = 0;
         $stop = false;
         while ($currentStep <= $maxLocalOldPrisId && !$stop) {
-            $this->comment('FromId:'. $currentStep);
-            $records = DB::select(
-                'select
-                        p.legal_act_type_id || \' - \' || p.doc_num as duplicated,
+            //$this->comment("Current step: $currentStep");
+            $records = DB::select('
+                select p.legal_act_type_id || \' - \' || p.doc_num as duplicated,
                         count(p.id) as cnt,
                         json_agg(json_build_object(\'id\', p.id, \'old_id\', p.old_id, \'created_at\', p.created_at, \'last_version\', p.last_version)) as records
-                    from pris p
-                    where p.old_id <= '.(int)$maxLocalOldPrisId.'
-                        and p.old_id is not null
-                        and p.deleted_at is null
-                    group by p.legal_act_type_id , p.doc_num, p.doc_date'
-            );
+                  from pris p
+                 where p.old_id <= ' . (int)$maxLocalOldPrisId . '
+                   and p.old_id is not null
+                   and p.deleted_at is null
+              group by p.legal_act_type_id , p.doc_num, p.doc_date
+            ');
 
-            if(sizeof($records)){
+            if (sizeof($records)) {
                 $lastV = array();
                 $notLastV = array();
 
-                foreach ($records as $row){
+                foreach ($records as $row) {
                     $duplicated = json_decode($row->records, true);
-                    if(!is_array($duplicated) || !sizeof($duplicated)){
+                    if (!is_array($duplicated) || !sizeof($duplicated)) {
                         continue;
                     }
 
-                    if((int)$row->cnt > 1){
+                    if ((int)$row->cnt > 1) {
                         //if only one has last vesrion
                         $foundLastV = array_sum(array_column($duplicated, 'last_version'));
-                        if($foundLastV == 1){
+                        if ($foundLastV == 1) {
 //                            $this->comment('Found only one last version');
-                            foreach ($duplicated as $r){
-                                if($r['last_version']){
+                            foreach ($duplicated as $r) {
+                                if ($r['last_version']) {
                                     $lastV[(int)$r['id']] = (int)$r['id'];
-                                } else{
+                                } else {
                                     $notLastV[(int)$r['id']] = (int)$r['id'];
                                 }
                             }
-                        } else{
+                        } else {
                             //Many or missing last version
 //                            $this->comment('Many or missing last version');
-                            usort($duplicated, function ($a, $b) { return $b['id'] > $a['id']; });
+                            usort($duplicated, function ($a, $b) {
+                                return $b['id'] > $a['id'];
+                            });
                             $first = true;
-                            foreach ($duplicated as $r){
-                                if($first){
+                            foreach ($duplicated as $r) {
+                                if ($first) {
                                     $first = false;
                                     $lastV[(int)$r['id']] = (int)$r['id'];
-                                } else{
+                                } else {
                                     $notLastV[(int)$r['id']] = (int)$r['id'];
                                 }
                             }
                         }
-                    } else{
-                        //Only one recor
+                    } else {
+                        //Only one record
 //                        $this->comment('Only one record');
                         $lastV[(int)$duplicated[0]['id']] = (int)$duplicated[0]['id'];
                     }
                 }
 
-                if(sizeof($lastV)){
+                if (sizeof($lastV)) {
                     $lastVChunk = array_chunk($lastV, 50);
-                    foreach ($lastVChunk as $ids){
+                    foreach ($lastVChunk as $ids) {
                         Pris::whereIn('id', $ids)->update(['asap_last_version' => 1]);
                     }
                 }
-                if(sizeof($notLastV)){
+                if (sizeof($notLastV)) {
                     $lastVChunk = array_chunk($notLastV, 50);
 //                    $this->comment('Found not last versions');
-                    foreach ($lastVChunk as $ids){
+                    foreach ($lastVChunk as $ids) {
                         Pris::whereIn('id', $ids)->update(['asap_last_version' => 0]);
                     }
                 }
             }
 
-            if($currentStep == $maxLocalOldPrisId){
+            if ($currentStep == $maxLocalOldPrisId) {
                 $stop = true;
-            } else{
+            } else {
                 $currentStep += $step;
-                if($currentStep > $maxLocalOldPrisId){
+                if ($currentStep > $maxLocalOldPrisId) {
                     $currentStep = $maxLocalOldPrisId;
                 }
             }
         }
+
+        $this->comment('Ended at ' . date('Y-m-d H:i:s'));
 
         return Command::SUCCESS;
     }

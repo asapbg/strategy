@@ -36,25 +36,13 @@ class seedOldLastPrisFiles extends Command
         $this->info('Start at ' . date('Y-m-d H:i:s'));
         activity()->disableLogging();
         $clearBeforeStart = (bool)$this->argument('clear');
-        $now = Carbon::now()->format('Y-m-d H:i:s');
         try {
             if ($clearBeforeStart) {
-                $cntFiles = 1;
-                while ($cntFiles > 0) {
-                    $files = File::where('code_object', '=', File::CODE_OBJ_PRIS)->limit(1000)->get();
-                    $cntFiles = $files->count();
-                    if ($cntFiles) {
-                        File::whereIn('id', $files->pluck('id')->toArray())->update([
-                            'deleted_at' => $now,
-                            'old_pris_bloburi' => null
-                        ]);
-                    }
-                }
+                //$this->clearFiles();
             }
         } catch (\Exception $e) {
             Log::error('Migration old pris files Can\'t clear files before start: ' . $e);
         }
-
 
         file_put_contents('pris_files_without_content.txt', '');
         $path = File::PAGE_UPLOAD_PRIS;
@@ -62,6 +50,7 @@ class seedOldLastPrisFiles extends Command
         $ourLastVersionPris = Pris::withTrashed()
             ->where('asap_last_version', '=', 1)
             ->whereNotNull('old_id')
+            ->where('id', '>', 5000)
             //->where('legal_act_type_id', LegalActType::TYPE_TRANSCRIPTS)
             ->orderBy('old_id')
             ->get()
@@ -106,11 +95,11 @@ class seedOldLastPrisFiles extends Command
                     continue;
                 }
                 $this->comment('Found files for pris with ID ' . $ourPrisId);
-                $pris = Pris::withTrashed()->find((int)$ourPrisId);
-                if (!$pris) {
-                    $this->error('Found files but can\'t find pris with ID ' . $ourPrisId);
-                    continue;
-                }
+//                $pris = Pris::withTrashed()->find((int)$ourPrisId);
+//                if (!$pris) {
+//                    $this->error('Found files but can\'t find pris with ID ' . $ourPrisId);
+//                    continue;
+//                }
 
                 foreach ($prisFiles as $f) {
                     if (isset($ourLastVersionFiles[$f->old_pris_bloburi])) {
@@ -130,7 +119,7 @@ class seedOldLastPrisFiles extends Command
 
                     foreach (['bg', 'en'] as $code) {
                         $newFile = new File([
-                            'id_object' => $pris->id,
+                            'id_object' => $ourPrisId,
                             'code_object' => File::CODE_OBJ_PRIS,
                             'filename' => $fileNameToStore,
                             'file_text' => $f->file_text,
@@ -151,12 +140,32 @@ class seedOldLastPrisFiles extends Command
                         //$ocr = new FileOcr($newFile->refresh());
                         //$ocr->extractText();
                     }
-                    $this->comment('File inserted for pris with ID ' . $pris->id);
+                    $this->comment("File inserted for pris with ID $ourPrisId");
                 }
             }
         } catch (\Exception $e) {
-            Log::error('Migration old pris files: ' . $e);
+            $this->error('Error: '. $e->getMessage());
+            Log::error('Migration old pris files: ' . $e->getMessage());
         }
         $this->info('End at ' . date('Y-m-d H:i:s'));
+    }
+
+    /**
+     * @return void
+     */
+    private function clearFiles(): void
+    {
+        $now = Carbon::now()->format('Y-m-d H:i:s');
+        $cntFiles = 1;
+        while ($cntFiles > 0) {
+            $files = File::where('code_object', '=', File::CODE_OBJ_PRIS)->limit(1000)->get();
+            $cntFiles = $files->count();
+            if ($cntFiles) {
+                File::whereIn('id', $files->pluck('id')->toArray())->update([
+                    'deleted_at' => $now,
+                    'old_pris_bloburi' => null
+                ]);
+            }
+        }
     }
 }

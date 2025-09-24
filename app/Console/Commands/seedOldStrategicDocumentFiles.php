@@ -53,34 +53,34 @@ class seedOldStrategicDocumentFiles extends Command
 
         $oldDbFiles = DB::connection('old_strategy_app')
             ->select("
-        SELECT
-            sd.id as sd_old_id,
-            uf.fileid as file_old_id,
-            uf.recordid as id,
-            f.\"name\" as name,
-            f.description,
-            case when f.isdeleted = true then 1 else 0 end as deleted,
-            case when f.isactive = true then 1 else 0 end as active,
-            f.createdbyuserid as old_user_id,
-            f.datecreated as created_at,
-            f.datemodified as updated_at,
-            f.dateexparing as valid_until,
-            f.isreportvisible,
-            folders.id as folder_id,
-            folders.\"name\" as folder_name,
-            folders.description as folder_description
-        from dbo.strategicdocuments sd
-        left join dbo.used_files uf on uf.recordid = sd.id
-        left join dbo.files f on f.id = uf.fileid
-        left join dbo.filefolders folders on folders.id = f.folderid
-        where true
-            and sd.languageid = 1
-            and f.id is not null
-            and folders.id is not null
-            and uf.tabletype = 4
-            -- check if uf.tabletype should be 4
-        order by sd.datecreated desc
-        ");
+                SELECT
+                    sd.id as sd_old_id,
+                    uf.fileid as file_old_id,
+                    uf.recordid as id,
+                    f.\"name\" as name,
+                    f.description,
+                    case when f.isdeleted = true then 1 else 0 end as deleted,
+                    case when f.isactive = true then 1 else 0 end as active,
+                    f.createdbyuserid as old_user_id,
+                    f.datecreated as created_at,
+                    f.datemodified as updated_at,
+                    f.dateexparing as valid_until,
+                    f.isreportvisible,
+                    folders.id as folder_id,
+                    folders.\"name\" as folder_name,
+                    folders.description as folder_description
+                from dbo.strategicdocuments sd
+                left join dbo.used_files uf on uf.recordid = sd.id
+                left join dbo.files f on f.id = uf.fileid
+                left join dbo.filefolders folders on folders.id = f.folderid
+                where true
+                    and sd.languageid = 1
+                    and f.id is not null
+                    and folders.id is not null
+                    and uf.tabletype = 4
+                    -- check if uf.tabletype should be 4
+                order by sd.datecreated desc
+            ");
 
         $this->directory = StrategicDocumentFile::DIR_PATH;
         $this->inserted = [];
@@ -101,7 +101,7 @@ class seedOldStrategicDocumentFiles extends Command
                 $to = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $this->directory . $newName);
 
                 if (!file_exists($copy_from)) {
-                    $this->comment('File ' . $copy_from . 'do not exist!');
+                    $this->comment('File ' . $copy_from . ' do not exist!');
                     continue;
                 }
 

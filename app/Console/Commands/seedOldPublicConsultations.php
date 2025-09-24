@@ -125,7 +125,7 @@ class seedOldPublicConsultations extends Command
             $maxOldId = (int)$maxOldId[0]->max;
             //$maxOldId = 50;
             while ($currentStep <= $maxOldId && !$stop) {
-                //echo "FromId: " . $currentStep . PHP_EOL;
+                //$this->comment("Current step: $currentStep");
                 $central = InstitutionCategoryLevelEnum::CENTRAL->value;
                 $area = InstitutionCategoryLevelEnum::AREA->value;
                 $municipal = InstitutionCategoryLevelEnum::MUNICIPAL->value;
@@ -230,6 +230,9 @@ class seedOldPublicConsultations extends Command
 
                         $actType = $this->getActType($result);
 
+                        if ($result->old_id == 120) {
+                            //dd($result,$currentStep);
+                        }
                         if (isset($ourPc[(int)$result->old_id])) {
                             $this->comment('Consultation with old id ' . $result->old_id . ' already exist');
                             $existPc = PublicConsultation::withTrashed()->find($ourPc[(int)$result->old_id]);
@@ -344,7 +347,8 @@ class seedOldPublicConsultations extends Command
             }
             DB::commit();
         } catch (\Exception $e) {
-            Log::error('Migration old startegy public consultations, comment and files: ' . $e);
+            $this->comment("Error while migrating consultation with old ID $result->old_id. Error: "  . $e->getMessage());
+            Log::error('Migration of old strategy public consultations, comment and files: ' . $e->getMessage());
             DB::rollBack();
         }
         $this->info('End at ' . date('Y-m-d H:i:s'));
@@ -352,9 +356,9 @@ class seedOldPublicConsultations extends Command
 
     /**
      * @param $result
-     * @return int
+     * @return int|null
      */
-    private function getActType($result): int
+    private function getActType($result): int|null
     {
         $actType = null;
         if (!empty($result->title)) {

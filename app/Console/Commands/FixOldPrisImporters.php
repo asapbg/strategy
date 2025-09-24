@@ -1464,7 +1464,7 @@ class FixOldPrisImporters extends Command
                         pris.datepublished as published_at,
                         pris.datecreated as created_at,
                         pris.datemodified as updated_at,
-                        sum(case when att.attachid is not null then 1 else 0 end) as has_files
+                        case when att.attachid is not null then 1 else 0 end as has_files
                     FROM archimed.e_items pris
                     left join edocs.attachments att on att.documentid = pris.id
                     where true
@@ -1473,7 +1473,7 @@ class FixOldPrisImporters extends Command
                         and pris.itemtypeid <> 5017 -- skip law records
                         --and pris.id = 101460
                         -- and documents.lastrevision = \'Y\' -- get final versions
-                    group by pris.id
+                    --group by pris.id
                     order by pris.id asc');
 
                 if (!sizeof($oldDbResult)) {
@@ -1615,7 +1615,8 @@ class FixOldPrisImporters extends Command
 
                         //DB::commit();
                     } catch (\Exception $e) {
-                        Log::error('Migration update old pris importers error: ' . $e);
+                        $this->error('Error: '. $e->getMessage());
+                        Log::error('Migration update old pris importers error: ' . $e->getMessage());
                         //DB::rollBack();
                     }
                 }
