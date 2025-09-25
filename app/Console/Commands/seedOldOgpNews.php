@@ -48,11 +48,11 @@ class seedOldOgpNews extends Command
         $ourNews = Publication::withTrashed()->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
         $ourUsers = User::withTrashed()->where('email', 'not like', '%duplicated-%')->get()->whereNotNull('old_id')->pluck('id', 'old_id')->toArray();
 
-        if( (int)$maxOldId[0]->max ) {
+        if ((int)$maxOldId[0]->max) {
             $stop = false;
             $maxOldId = (int)$maxOldId[0]->max;
-            while ($currentStep  <= $maxOldId  && !$stop) {
-                echo "FromId: ".$currentStep.PHP_EOL;
+            while ($currentStep <= $maxOldId && !$stop) {
+                echo "FromId: " . $currentStep . PHP_EOL;
                 $oldDbResult = DB::connection('old_strategy_app')
                     ->select('select
                         a.id as old_id,
@@ -75,7 +75,7 @@ class seedOldOgpNews extends Command
                     foreach ($oldDbResult as $item) {
 //                        DB::beginTransaction();
                         try {
-                            if(isset($ourNews[$item->old_id])){
+                            if (isset($ourNews[$item->old_id])) {
                                 //update
                                 $oldItem = Publication::withTrashed()->find((int)$ourNews[$item->old_id]);
                                 $oldItem->active = $item->isactive && !$item->isdeleted;
@@ -89,9 +89,9 @@ class seedOldOgpNews extends Command
                                 $oldItem->save();
 
                                 //TODO migrate files
-                                $this->comment('Finish update of old OGP publication with old ID '.$oldItem->old_id);
+                                $this->comment('Finish update of old OGP publication with old ID ' . $oldItem->old_id);
 
-                            } else{
+                            } else {
                                 //create
                                 $prepareNewItem = [
                                     'old_id' => $item->old_id,
@@ -116,7 +116,7 @@ class seedOldOgpNews extends Command
                                 $newItem->save();
 
                                 //TODO migrate files
-                                $this->comment('Finish import of old OGP publication with old ID '.$item->old_id);
+                                $this->comment('Finish import of old OGP publication with old ID ' . $item->old_id);
                             }
 //                            DB::commit();
                         } catch (\Exception $e) {
@@ -126,11 +126,11 @@ class seedOldOgpNews extends Command
                     }
                 }
 
-                if($currentStep == $maxOldId){
+                if ($currentStep == $maxOldId) {
                     $stop = true;
-                } else{
+                } else {
                     $currentStep += $step;
-                    if($currentStep > $maxOldId){
+                    if ($currentStep > $maxOldId) {
                         $currentStep = $maxOldId;
                     }
                 }

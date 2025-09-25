@@ -18,7 +18,7 @@ class LibraryController extends Controller
     /**
      * @var string
      */
-    protected $default_img = "files".DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR."news-default.jpg";
+    protected $default_img = "files" . DIRECTORY_SEPARATOR . File::PUBLICATION_UPLOAD_DIR . "news-default.jpg";
 
     /**
      * @var int
@@ -26,7 +26,7 @@ class LibraryController extends Controller
     protected $paginate = 50;
 
     /**
-     * @param Request  $request
+     * @param Request $request
      * @param int|null $type
      *
      * @return View
@@ -65,7 +65,7 @@ class LibraryController extends Controller
         }
 
         return $this->view('site.publications.index',
-            compact('publications','type', 'publicationCategories', 'pageTitle','paginate', 'default_img', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm'));
+            compact('publications', 'type', 'publicationCategories', 'pageTitle', 'paginate', 'default_img', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm'));
     }
 
     /**
@@ -100,7 +100,7 @@ class LibraryController extends Controller
         $publicationCategories = PublicationCategory::optionsList(true);
 
         return $this->view('site.publications.index',
-            compact('news','type', 'publicationCategories', 'pageTitle','paginate', 'default_img', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
+            compact('news', 'type', 'publicationCategories', 'pageTitle', 'paginate', 'default_img', 'requestFilter', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl'));
     }
 
     /**
@@ -113,7 +113,7 @@ class LibraryController extends Controller
     public function details($type, $id)
     {
         $publication = Publication::select('publication.*')
-            ->with(['translation','mainImg','category.translation'])
+            ->with(['translation', 'mainImg', 'category.translation'])
             ->joinTranslation(Publication::class)
             ->whereLocale(currentLocale())
             ->find($id);
@@ -124,9 +124,8 @@ class LibraryController extends Controller
         $this->setBreadcrumbsTitle($publication->title);
         $this->setSeo($publication->meta_title ?? $publication->title, $publication->meta_description ?? $publication->short_content, $publication->meta_keyword, array('title' => $publication->meta_title ?? $publication->title, 'img' => $publication->mainImg ? $publication->mainImg->path : Publication::DEFAULT_IMG_LIBRARY));
 
-        return $this->view('site.publications.details', compact('publication','type', 'pageTitle', 'default_img'));
+        return $this->view('site.publications.details', compact('publication', 'type', 'pageTitle', 'default_img'));
     }
-
 
 
     /**
@@ -141,7 +140,7 @@ class LibraryController extends Controller
             : "DESC";
         $order_by = ($request->offsetGet('order_by'))
             ? $request->offsetGet('order_by')
-            : "created_at";
+            : "published_at";
         $sort_table = (in_array($order_by, Publication::TRANSLATABLE_FIELDS))
             ? "publication_translations"
             : "publication";
@@ -152,7 +151,7 @@ class LibraryController extends Controller
         $published_till = $request->get('published_till');
         $keywords = $request->get('keywords');
         $categories = $request->get('categories');
-        if($categories){
+        if ($categories) {
             $categories = array_filter($categories, fn($m) => $m > 0);
         }
 

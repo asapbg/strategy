@@ -4,17 +4,14 @@ namespace App\Console\Commands;
 
 use App\Enums\PublicationTypesEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LanguageFileUploadRequest;
 use App\Models\File;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
 use App\Models\User;
-use App\Services\FileOcr;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class MigrateNewsAndPublications extends Command
@@ -54,14 +51,13 @@ class MigrateNewsAndPublications extends Command
 //        DB::beginTransaction();
 
         // News
-        $this->info("Migrating of news begins at ". date("H:i"));
+        $this->info("Migrating of news begins at " . date("H:i"));
         $type = PublicationTypesEnum::TYPE_NEWS->value;
 
         $cat_inserts = 0;
         $news_inserts = 0;
 
         try {
-//        $newsCategories = [];
             $newsCategories = DB::connection('old_strategy_app')
                 ->select("
                 SELECT id,name,datecreated,datemodified
@@ -74,11 +70,11 @@ class MigrateNewsAndPublications extends Command
 
                 $newscategoryid = $newsCategory->id;
 
-                $existCategory = PublicationCategory::whereHas('translation', function ($q) use($newsCategory){
+                $existCategory = PublicationCategory::whereHas('translation', function ($q) use ($newsCategory) {
                     $q->where('name', '=', $newsCategory->name);
                 })->get()->first();
 
-                if(!$existCategory){
+                if (!$existCategory) {
                     $cat_inserts++;
 
                     $cat_array = [
@@ -94,19 +90,20 @@ class MigrateNewsAndPublications extends Command
                         $category->translateOrNew($lang['code'])->name = $newsCategory->name;
                     }
                     $category->save();
-                } else{
+                } else {
                     $category = $existCategory;
                 }
 
+                $this->comment("Start migrating news for category with ID: $newsCategory->id");
 
-                $oldNews = [];
                 $oldNews = DB::connection('old_strategy_app')
                     ->select("
                     SELECT id,title,text,imagepath,date as published_at,datecreated as created_at,datemodified as updated_at, createdbyuserid
                       FROM news
                      WHERE isdeleted = FALSE AND isactive = TRUE AND isapproved = TRUE AND languageid = '1'
                        AND newscategoryid = '$newscategoryid'
-                     --LIMIT 1
+                  --ORDER BY published_at DESC
+                     --LIMIT 10
                 ");
 
                 if (count($oldNews) == 0) {
@@ -115,8 +112,9 @@ class MigrateNewsAndPublications extends Command
 
                 foreach ($oldNews as $row) {
                     $title = $row->title;
-                    $existPublication = Publication::where('slug', '=', Str::slug($title))->first();
-                    if($existPublication){
+                    $existPublication = Publication::where('slug', '=', Str::slug($title))->whereRaw("DATE(published_at) = '$row->published_at'")->first();
+                    if ($existPublication) {
+                        $this->comment("News with ID $row->id existing");
                         foreach ($languages as $lang) {
                             $existPublication->translateOrNew($lang['code'])->short_content = (!empty($row->text)) ? Str::limit(clearAfterStripTag(strip_tags(html_entity_decode($row->text))), 400) : null;
                             $existPublication->translateOrNew($lang['code'])->content = html_entity_decode($row->text);
@@ -143,10 +141,12 @@ class MigrateNewsAndPublications extends Command
                     $news->fill($news_row);
                     $news->save();
 
+                    $this->info("News with ID $row->id was created");
+
                     //dump($row->imagepath);
                     if (!empty($row->imagepath)) {
-                        $copy_from = base_path('oldimages'.DIRECTORY_SEPARATOR.'News'.DIRECTORY_SEPARATOR.$row->imagepath);
-                        $to = base_path('public' .DIRECTORY_SEPARATOR. 'files'.DIRECTORY_SEPARATOR .$upload_dir. $row->imagepath);
+                        $copy_from = base_path('oldimages' . DIRECTORY_SEPARATOR . 'News' . DIRECTORY_SEPARATOR . $row->imagepath);
+                        $to = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $upload_dir . $row->imagepath);
 
                         //dd($copy_from);
                         if (file_exists($copy_from)) {
@@ -162,7 +162,7 @@ class MigrateNewsAndPublications extends Command
                                     'code_object' => File::CODE_OBJ_PUBLICATION,
                                     'filename' => $row->imagepath,
                                     'content_type' => $mime_type,
-                                    'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$row->imagepath,
+                                    'path' => 'files' . DIRECTORY_SEPARATOR . $upload_dir . $row->imagepath,
                                     'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
                                 ]);
                                 $file->save();
@@ -197,8 +197,8 @@ class MigrateNewsAndPublications extends Command
 
                         foreach ($old_files as $old_file) {
 
-                            $copy_from = base_path('oldfiles'.DIRECTORY_SEPARATOR.'Folder_'. $old_file->folderid.DIRECTORY_SEPARATOR.$old_file->name);
-                            $to = base_path('public' . DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR .$upload_dir.$old_file->name);
+                            $copy_from = base_path('oldfiles' . DIRECTORY_SEPARATOR . 'Folder_' . $old_file->folderid . DIRECTORY_SEPARATOR . $old_file->name);
+                            $to = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $upload_dir . $old_file->name);
 
                             if (file_exists($copy_from)) {
                                 $copied_file = true;
@@ -218,11 +218,11 @@ class MigrateNewsAndPublications extends Command
                                             'code_object' => File::CODE_OBJ_PUBLICATION,
                                             'filename' => $old_file->name,
                                             'content_type' => $mime_type,
-                                            'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$old_file->name,
-                                            'description_'.$code => $old_file->description,
+                                            'path' => 'files' . DIRECTORY_SEPARATOR . $upload_dir . $old_file->name,
+                                            'description_' . $code => $old_file->description,
                                             'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
                                             'locale' => $code,
-                                            'version' => ($version + 1).'.0'
+                                            'version' => ($version + 1) . '.0'
                                         ]);
                                         $newFile->save();
                                         $fileIds[] = $newFile->id;
@@ -242,10 +242,10 @@ class MigrateNewsAndPublications extends Command
                 }
             }
 
-            $this->info("$cat_inserts news categories and $news_inserts news was migrated successfully at ". date("H:i"));
+            $this->info("$cat_inserts news categories and $news_inserts news was migrated successfully at " . date("H:i"));
 
             //Publications
-            $this->info("Migrating of publications begins at ". date("H:i"));
+            $this->info("Migrating of publications begins at " . date("H:i"));
 
             $controller = new Controller(new Request());
             $type = PublicationTypesEnum::TYPE_LIBRARY->value;
@@ -265,11 +265,11 @@ class MigrateNewsAndPublications extends Command
 
                 $publicationcategoryid = $publicationsCategory->id;
 
-                $existCategory = PublicationCategory::whereHas('translation', function ($q) use($publicationsCategory){
+                $existCategory = PublicationCategory::whereHas('translation', function ($q) use ($publicationsCategory) {
                     $q->where('name', '=', $publicationsCategory->name);
                 })->get()->first();
 
-                if(!$existCategory){
+                if (!$existCategory) {
                     $cat_inserts++;
 
                     $cat_array = [
@@ -285,11 +285,12 @@ class MigrateNewsAndPublications extends Command
                         $category->translateOrNew($lang['code'])->name = $publicationsCategory->name;
                     }
                     $category->save();
-                } else{
+                } else {
                     $category = $existCategory;
                 }
 
-                $oldPublications = [];
+                $this->comment("Start migrating publications for category with ID: $newsCategory->id");
+
                 $oldPublications = DB::connection('old_strategy_app')
                     ->select("
                     SELECT id,title,text,image,date as published_at,datecreated as created_at,datemodified as updated_at, createdbyuserid
@@ -306,8 +307,9 @@ class MigrateNewsAndPublications extends Command
 
                 foreach ($oldPublications as $row) {
                     $title = $row->title;
-                    $existPublication = Publication::where('slug', '=', Str::slug($title))->first();
-                    if($existPublication){
+                    $existPublication = Publication::where('slug', '=', Str::slug($title))->whereRaw("DATE(published_at) = '$row->published_at'")->first();
+                    if ($existPublication) {
+                        $this->comment("Publication with ID $row->id existing");
                         foreach ($languages as $lang) {
                             $existPublication->translateOrNew($lang['code'])->short_content = (!empty($row->text)) ? Str::limit(clearAfterStripTag(strip_tags(html_entity_decode($row->text))), 400) : null;
                             $existPublication->translateOrNew($lang['code'])->content = html_entity_decode($row->text);
@@ -333,10 +335,12 @@ class MigrateNewsAndPublications extends Command
                     $publication->fill($publications_row);
                     $publication->save();
 
+                    $this->info("Publication with ID $row->id was created");
+
                     //dump($row->image);
                     if (!empty($row->image)) {
-                        $copy_from = base_path('oldimages'.DIRECTORY_SEPARATOR.'Publications'.DIRECTORY_SEPARATOR.$row->image);
-                        $to = base_path('public' .DIRECTORY_SEPARATOR. 'files'.DIRECTORY_SEPARATOR .$upload_dir. $row->image);
+                        $copy_from = base_path('oldimages' . DIRECTORY_SEPARATOR . 'Publications' . DIRECTORY_SEPARATOR . $row->image);
+                        $to = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $upload_dir . $row->image);
 
                         //dd($copy_from);
                         if (file_exists($copy_from)) {
@@ -352,7 +356,7 @@ class MigrateNewsAndPublications extends Command
                                     'code_object' => File::CODE_OBJ_PUBLICATION,
                                     'filename' => $row->image,
                                     'content_type' => $mime_type,
-                                    'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$row->image,
+                                    'path' => 'files' . DIRECTORY_SEPARATOR . $upload_dir . $row->image,
                                     'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
                                 ]);
                                 $file->save();
@@ -387,8 +391,8 @@ class MigrateNewsAndPublications extends Command
 
                         foreach ($old_files as $old_file) {
 
-                            $copy_from = base_path('oldfiles'.DIRECTORY_SEPARATOR.'Folder_'. $old_file->folderid.DIRECTORY_SEPARATOR.$old_file->name);
-                            $to = base_path('public' . DIRECTORY_SEPARATOR . 'files'. DIRECTORY_SEPARATOR .$upload_dir.$old_file->name);
+                            $copy_from = base_path('oldfiles' . DIRECTORY_SEPARATOR . 'Folder_' . $old_file->folderid . DIRECTORY_SEPARATOR . $old_file->name);
+                            $to = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $upload_dir . $old_file->name);
 
                             if (file_exists($copy_from)) {
                                 $copied_file = true;
@@ -408,11 +412,11 @@ class MigrateNewsAndPublications extends Command
                                             'code_object' => File::CODE_OBJ_PUBLICATION,
                                             'filename' => $old_file->name,
                                             'content_type' => $mime_type,
-                                            'path' => 'files'.DIRECTORY_SEPARATOR.$upload_dir.$old_file->name,
-                                            'description_'.$code => $old_file->description,
+                                            'path' => 'files' . DIRECTORY_SEPARATOR . $upload_dir . $old_file->name,
+                                            'description_' . $code => $old_file->description,
                                             'sys_user' => $users[(int)$row->createdbyuserid] ?? null,
                                             'locale' => $code,
-                                            'version' => ($version + 1).'.0'
+                                            'version' => ($version + 1) . '.0'
                                         ]);
                                         $newFile->save();
                                         $fileIds[] = $newFile->id;
@@ -432,8 +436,9 @@ class MigrateNewsAndPublications extends Command
                 }
             }
 
-            $this->info("$cat_inserts publications categories and $publications_inserts publications was migrated successfully at ". date("H:i"));
+            $this->info("$cat_inserts publications categories and $publications_inserts publications was migrated successfully at " . date("H:i"));
         } catch (\Exception $e) {
+            $this->error('Error: '. $e->getMessage());
             Log::error('Migration new and publications: ' . $e);
         }
 
