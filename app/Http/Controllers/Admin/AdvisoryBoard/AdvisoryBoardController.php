@@ -49,8 +49,9 @@ class AdvisoryBoardController extends AdminController
 
         $keywords = request()->offsetGet('keywords');
         $status = request()->offsetGet('status');
+        $only_deleted = request()->offsetGet('only_deleted');
 
-        $items = AdvisoryBoard::withTrashed();
+        $items = AdvisoryBoard::query();
 
         $limitItems = false;
         if (!(auth()->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE,CustomRole::MODERATOR_ADVISORY_BOARDS]))) {
@@ -69,6 +70,9 @@ class AdvisoryBoardController extends AdminController
             })
             ->when($status != '' && $status > -1, function ($query) use ($status) {
                 $query->where('active', $status == '0' ? 'false' : 'true');
+            })
+            ->when($only_deleted, function ($query) {
+                $query->onlyTrashed();
             })
             ->when($limitItems, function ($query){
                 $query->whereHas('moderators', function ($query) {

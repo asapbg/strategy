@@ -21,6 +21,7 @@ class AdvisoryBoardArchiveController extends AdminController
         $this->authorize('viewAny', AdvisoryBoard::class);
 
         $keywords = request()->offsetGet('keywords');
+        $only_deleted = request()->offsetGet('only_deleted');
 
         $limitItems = false;
         if (!(auth()->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE,CustomRole::MODERATOR_ADVISORY_BOARDS]))) {
@@ -38,6 +39,8 @@ class AdvisoryBoardArchiveController extends AdminController
                 $query->whereHas('moderators', function ($query) {
                     $query->where('user_id', '=', auth()->user()->id);
                 });
+            })->when($only_deleted, function ($query) {
+                $query->onlyTrashed();
             })
             ->where('active', false)
             ->orderByTranslation('name')

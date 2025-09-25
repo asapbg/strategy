@@ -37,6 +37,17 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-md-12 col-12 mb-2  ">
+                                <div class="icheck-primary fw-normal">
+                                    <input type="checkbox" class="form-check-input" name="only_deleted" id="only_deleted" value="1" @if(request('only_deleted')) checked @endif>
+                                    <label class="form-check-label" for="only_deleted">
+                                        {{ __('custom.all_deleted') }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-12">
                                 <button type="submit" class="btn btn-sm btn-success">
                                     <i class="fa fa-search"></i> {{ __('custom.search') }}

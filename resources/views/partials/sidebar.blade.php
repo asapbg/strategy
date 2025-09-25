@@ -369,7 +369,7 @@
 
                             <li class="nav-item">
                                 <a href="{{ route('admin.advisory-boards.archive.index') }}"
-                                   class="nav-link @if(Str::endsWith(url()->current(), 'archive')) active @endif">
+                                   class="nav-link @if(Str::endsWith(url()->current(), 'inactive')) active @endif">
                                     <i class="fas fa-circle nav-item-sub-icon"></i>
                                     <p>{{ __('custom.inactive_adv_board') }}</p>
                                 </a>
