@@ -2,18 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Models\CustomActivity;
-use App\Models\File;
 use App\Models\InstitutionLevel;
 use App\Models\Pris;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
-use App\Services\FileOcr;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class seedOldLastPris extends Command
 {
@@ -1688,13 +1684,13 @@ class seedOldLastPris extends Command
                                pris.datepublished as published_at,
                                pris.datecreated as created_at,
                                pris.datemodified as updated_at,
-                               case when att.attachid is not null then 1 else 0 end as has_files
+                               --case when att.attachid is not null then 1 else 0 end as has_files
                           FROM archimed.e_items pris
-                     LEFT JOIN edocs.attachments att on att.documentid = pris.id
+                     --LEFT JOIN edocs.attachments att on att.documentid = pris.id
                          WHERE true
                            AND pris.id >= $currentStep
                            AND pris.id < " . ($currentStep + $step) . "
-                           AND pris.itemtypeid <> 5017 -- skip law records
+                           -- AND pris.itemtypeid = 5017 -- skip law records
                            -- and pris.itemtypeid <> 5030 -- skip law records
                            -- and documents.lastrevision = \'Y\' -- get final versions
                      --GROUP BY pris.id

@@ -1457,20 +1457,20 @@ class FixOldPrisImporters extends Command
                         pris.masterid,
                         pris.state,
                         pris.xstate,
-                        case when pris.islatestrevision = false then 0 else 1 end as last_version,
+                        --case when pris.islatestrevision = false then 0 else 1 end as last_version,
                         pris.itemtypeid as old_doc_type_id,
                         pris."xml" as to_parse_xml_details,
                         pris.activestate as active, -- check with distinct if only 0 and 1 // check also pris.state
                         pris.datepublished as published_at,
                         pris.datecreated as created_at,
                         pris.datemodified as updated_at,
-                        case when att.attachid is not null then 1 else 0 end as has_files
+                        --case when att.attachid is not null then 1 else 0 end as has_files
                     FROM archimed.e_items pris
-                    left join edocs.attachments att on att.documentid = pris.id
+                    --left join edocs.attachments att on att.documentid = pris.id
                     where true
                         and pris.id >= ' . $currentStep . '
                         and pris.id < ' . ($currentStep + $step) . '
-                        and pris.itemtypeid <> 5017 -- skip law records
+                        --and pris.itemtypeid <> 5017 -- skip law records
                         --and pris.id = 101460
                         -- and documents.lastrevision = \'Y\' -- get final versions
                     --group by pris.id

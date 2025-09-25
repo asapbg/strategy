@@ -59,7 +59,7 @@ class seedOldPublicConsultationFiles extends Command
 
         $stop = false;
         $maxOldId = (int)$maxOldId[0]->max;
-        $maxOldId = 0;
+        //$maxOldId = 0;
         while ($currentStep <= $maxOldId && !$stop) {
             //$this->comment("Current step: $currentStep");
             $oldDbFiles = DB::connection('old_strategy_app')
@@ -83,12 +83,12 @@ class seedOldPublicConsultationFiles extends Command
                     left join dbo.filefolders folders on folders.id = f.folderid
                     where true
                         and p.id >= ' . $currentStep . '
-                        --and p.id < ' . ($currentStep + $step) . '
+                        and p.id < ' . ($currentStep + $step) . '
                         and p.languageid = 1
                         and f.id is not null
                         and folders.id is not null
                         and uf.tabletype = 3
-                        and p.id = 7942
+                        --and p.id = 1926
                         -- check if uf.tabletype should be 3
                     order by p.id asc
                 ');
@@ -106,38 +106,51 @@ class seedOldPublicConsultationFiles extends Command
                 continue;
             }
 
-            foreach ($oldDbFiles as $item) {
+            foreach ($oldDbFiles as $oldDbFile) {
 
-                if (isset($ourFiles[(int)$item->file_old_id])) {
-                    $this->comment('File with old id ' . $item->file_old_id . ' already exist');
+                if (isset($ourFiles[(int)$oldDbFile->file_old_id])) {
+                    $this->comment('File with old id ' . $oldDbFile->file_old_id . ' already exist');
                     continue;
                 }
 
-                if (!isset($ourPc[$item->id])) {
-                    $this->comment('Missing public consultation with old ID (' . $item->id . ') for file with old id ' . $item->file_old_id);
+                if (!isset($ourPc[$oldDbFile->id])) {
+                    $this->comment('Missing public consultation with old ID (' . $oldDbFile->file_old_id . ') for file with old id ' . $oldDbFile->file_old_id);
                     continue;
                 }
 
                 try {
-                    $info = pathinfo($item->name);
+                    $info = pathinfo($oldDbFile->name);
+                    $filename = $info['filename'];
+                    $extension = $info['extension'];
                     if (isset($info['extension'])) {
-                        $newName = str_replace('-', '_', Str::slug(str_replace(' ', '_', $info['filename']), '_')) . '.' . $info['extension'];
+                        $newName = str_replace('-', '_', Str::slug(str_replace(' ', '_', $filename), '_')) . '.' . $extension;
                     } else {
-                        $newName = str_replace('-', '_', Str::slug(str_replace(' ', '_', $info['filename']), '_'));
+                        $newName = str_replace('-', '_', Str::slug(str_replace(' ', '_', $filename), '_'));
                     }
+                    $folder_path = 'oldfiles' . DIRECTORY_SEPARATOR . 'Folder_' . $oldDbFile->folder_id . DIRECTORY_SEPARATOR;
+                    $copy_from = base_path($folder_path . $oldDbFile->name);
 
-                    $copy_from = base_path('oldfiles' . DIRECTORY_SEPARATOR . 'Folder_' . $item->folder_id . DIRECTORY_SEPARATOR . $item->name);
-
-                    $path = $directory . $ourPc[$item->id] . DIRECTORY_SEPARATOR;
-                    $to = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $path . $newName);
-
-//                            if(!file_exists($copy_from)) {
-//                                $this->comment('File '.$copy_from. 'do not exist!');
-//                                continue;
-//                            }
+                    /**
+                     * As the name of the files are case-sensitive, if the file is not found with the name in the
+                     * database, we are going to check with all upper and lower case letters, and finally with capitalized first letter
+                     */
                     if (!file_exists($copy_from)) {
-                        file_put_contents('missing_pc_files_in_old_files.txt', 'oldfiles' . DIRECTORY_SEPARATOR . 'Folder_' . $item->folder_id . DIRECTORY_SEPARATOR . $item->name . PHP_EOL, FILE_APPEND);
+                        $copy_from = base_path($folder_path .mb_strtoupper($filename).".".$extension);
+                        if (!file_exists($copy_from)) {
+                            $copy_from = base_path($folder_path .mb_strtolower($filename).".".$extension);
+                        }
+                        if (!file_exists($copy_from)) {
+                            $copy_from = base_path($folder_path .capitalize(mb_strtolower($filename)).".".$extension);
+                        }
+                        if (!file_exists($copy_from)) {
+                            $this->error('File '.$copy_from. ' do not exist!');
+                            file_put_contents('missing_pc_files_in_old_files.txt', $folder_path . $oldDbFile->name . PHP_EOL, FILE_APPEND);
+                            continue;
+                        }
                     }
+
+                    $path = $directory . $ourPc[$oldDbFile->id] . DIRECTORY_SEPARATOR;
+                    $to = base_path('public' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $path . $newName);
 
                     if (!Storage::disk('public_uploads')->exists($path)) {
                         Storage::disk('public_uploads')->makeDirectory($path);
@@ -146,7 +159,7 @@ class seedOldPublicConsultationFiles extends Command
                     $copied_file = \Illuminate\Support\Facades\File::copy($copy_from, $to);
 
                     if (!$copied_file) {
-                        $this->comment('Can\'t copy file');
+                        $this->error('Can\'t copy file');
                     }
                     $contentType = Storage::disk('public_uploads')->mimeType($path . $newName);
 
@@ -156,18 +169,18 @@ class seedOldPublicConsultationFiles extends Command
                         //$version = File::where('locale', '=', $code)->where('id_object', '=', $newItem->id)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
                         $version = 0;
                         $newFile = new File([
-                            'id_object' => $ourPc[$item->id],
+                            'id_object' => $ourPc[$oldDbFile->id],
                             'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
                             'filename' => $newName,
                             'content_type' => $contentType,
                             'path' => $path . $newName,
-                            'description_' . $code => !empty($item->description) ? $item->description : $item->name,
-                            'sys_user' => $ourUsers[(int)$item->old_user_id] ?? null,
+                            'description_' . $code => !empty($oldDbFile->description) ? $oldDbFile->description : $oldDbFile->name,
+                            'sys_user' => $ourUsers[(int)$oldDbFile->old_user_id] ?? null,
                             'locale' => $code,
                             'version' => ($version + 1) . '.0',
-                            'created_at' => Carbon::parse($item->created_at)->format($formatTimestamp),
-                            'updated_at' => Carbon::parse($item->updated_at)->format($formatTimestamp),
-                            'import_old_id' => $item->file_old_id
+                            'created_at' => Carbon::parse($oldDbFile->created_at)->format($formatTimestamp),
+                            'updated_at' => Carbon::parse($oldDbFile->updated_at)->format($formatTimestamp),
+                            'import_old_id' => $oldDbFile->file_old_id
                         ]);
                         $newFile->save();
                         $fileIds[] = $newFile->id;
@@ -177,7 +190,7 @@ class seedOldPublicConsultationFiles extends Command
 
                     File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
                     File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
-                    $this->comment('File ID ' . $newFile->id . ' Successfully saved for PC ID ' . $ourPc[$item->id] . ' Old ID: ' . $item->id);
+                    $this->info('File ID ' . $newFile->id . ' successfully saved for PC ID ' . $ourPc[$oldDbFile->id] . ' Old ID: ' . $oldDbFile->file_old_id);
 
                 } catch (\Exception $e) {
                     Log::error('Migration old strategy public consultations, comment and files: ' . $e->getMessage());

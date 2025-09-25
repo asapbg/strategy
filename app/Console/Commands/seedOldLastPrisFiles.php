@@ -51,7 +51,7 @@ class seedOldLastPrisFiles extends Command
             ->where('asap_last_version', '=', 1)
             ->whereNotNull('old_id')
             ->where('id', '>', 5000)
-            //->where('legal_act_type_id', LegalActType::TYPE_TRANSCRIPTS)
+            //->where('legal_act_type_id', LegalActType::TYPE_ORDER)
             ->orderBy('old_id')
             ->get()
             ->pluck('id', 'old_id')
@@ -94,27 +94,28 @@ class seedOldLastPrisFiles extends Command
                 if (!sizeof($prisFiles)) {
                     continue;
                 }
-                $this->comment('Found files for pris with ID ' . $ourPrisId);
+                //$this->comment('Found files for pris with ID ' . $ourPrisId);
 //                $pris = Pris::withTrashed()->find((int)$ourPrisId);
 //                if (!$pris) {
 //                    $this->error('Found files but can\'t find pris with ID ' . $ourPrisId);
 //                    continue;
 //                }
 
-                foreach ($prisFiles as $f) {
-                    if (isset($ourLastVersionFiles[$f->old_pris_bloburi])) {
+                foreach ($prisFiles as $prisFile) {
+                    if (isset($ourLastVersionFiles[$prisFile->old_pris_bloburi])) {
+                        $this->comment('File with old id ' . $ourPrisId . ' already exist');
                         continue;
                     }
-                    if (empty($f->file_content)) {
-                        file_put_contents('pris_files_without_content.txt', 'File Blob ID (' . $f->old_pris_bloburi . ')' . PHP_EOL, FILE_APPEND);
+                    if (empty($prisFile->file_content)) {
+                        file_put_contents('pris_files_without_content.txt', 'File Blob ID (' . $prisFile->old_pris_bloburi . ')' . PHP_EOL, FILE_APPEND);
                         continue;
                     }
 
                     //create file
-                    $fileNameToStore = trim($f->filename);
+                    $fileNameToStore = trim($prisFile->filename);
                     $fullPath = $path . $ourPrisId . DIRECTORY_SEPARATOR .$fileNameToStore;
                     if (!Storage::disk('public_uploads')->exists($fullPath)) {
-                        Storage::disk('public_uploads')->put($fullPath, $f->file_content);
+                        Storage::disk('public_uploads')->put($fullPath, $prisFile->file_content);
                     }
 
                     foreach (['bg', 'en'] as $code) {
@@ -122,25 +123,25 @@ class seedOldLastPrisFiles extends Command
                             'id_object' => $ourPrisId,
                             'code_object' => File::CODE_OBJ_PRIS,
                             'filename' => $fileNameToStore,
-                            'file_text' => $f->file_text,
+                            'file_text' => $prisFile->file_text,
                             'content_type' => Storage::disk('public_uploads')->mimeType($fullPath),
                             'path' => $fullPath,
-                            'description_' . $code => $f->filename,
+                            'description_' . $code => $prisFile->filename,
                             'sys_user' => null,
                             'locale' => $code,
                             'version' => '1.0',
-                            'created_at' => Carbon::parse($f->created_at)->format($formatTimestamp),
-                            'updated_at' => Carbon::parse($f->updated_at)->format($formatTimestamp),
-                            'old_pris_bloburi' => $f->old_pris_bloburi
+                            'created_at' => Carbon::parse($prisFile->created_at)->format($formatTimestamp),
+                            'updated_at' => Carbon::parse($prisFile->updated_at)->format($formatTimestamp),
+                            'old_pris_bloburi' => $prisFile->old_pris_bloburi
                         ]);
                         $newFile->save();
                         if ($code == 'bg') {
-                            $ourLastVersionFiles[$f->old_pris_bloburi] = $newFile->id;
+                            $ourLastVersionFiles[$prisFile->old_pris_bloburi] = $newFile->id;
                         }
                         //$ocr = new FileOcr($newFile->refresh());
                         //$ocr->extractText();
                     }
-                    $this->comment("File inserted for pris with ID $ourPrisId");
+                    $this->info("File inserted for pris with ID $ourPrisId");
                 }
             }
         } catch (\Exception $e) {
