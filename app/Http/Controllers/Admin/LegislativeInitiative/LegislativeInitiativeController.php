@@ -32,7 +32,9 @@ class LegislativeInitiativeController extends AdminController
         $keywords = $request->offsetGet('keywords');
         $institution = $request->offsetGet('institution');
         $status = $request->offsetGet('status');
-        $items = LegislativeInitiative::select('legislative_initiative.*')->withTrashed()
+        $only_deleted = $request->offsetGet('only_deleted');
+        $items = LegislativeInitiative::select('legislative_initiative.*')
+            ->when($only_deleted, fn($q) => $q->onlyTrashed())
             ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
             ->when(!empty($institution), function ($query) use ($institution) {
                 $query->join('law_institution', function ($query) use ($institution) {
