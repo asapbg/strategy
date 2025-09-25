@@ -34,6 +34,7 @@ class PrisSplitTrasncriptions extends Command
         //Search for transcripts category
         $dbTranscripts = Pris::where('pris.legal_act_type_id', '=', LegalActType::TYPE_TRANSCRIPTS)
             ->where('asap_last_version', 1)
+            ->with('filesByLocale')
             ->orderBy('id', 'desc')
             ->get();
 
@@ -53,20 +54,21 @@ class PrisSplitTrasncriptions extends Command
                 ->first();
 
             if ($dbProtocol) {
-                //$this->info('Protocol exist');
+                $this->comment("Protocol with id $dbProtocol->id exist");
                 continue;
             }
 
             if (!$transcript->filesByLocale->count()) {
-                //$this->info('Transcription do not have files');
+                $this->comment('Transcription do not have files');
                 continue;
             }
 
-            foreach ($transcript->filesByLocale as $f) {
+            foreach ($transcript->filesByLocale as $file) {
+
                 //If there is protocol file in it
-                if (str_contains($f->filename, 'ротокол') || $f->filename == $transcript->doc_num . '.doc') {
+                if (str_contains($file->filename, 'ротокол') || $file->filename == $transcript->doc_num . '.doc') {
                     try {
-                        //$this->info('File: '.$f->filename.' | Стенограма дата: '.$transcript->doc_date.' | Стенограма номер: '.$transcript->doc_num);
+                        $this->info('File: '.$file->filename.' | Стенограма дата: '.$transcript->doc_date.' | Стенограма номер: '.$transcript->doc_num);
                         //Create protocol with this file and flag 'from_transcripts'
                         $newProtocol = $transcript->replicate();
                         $newProtocol->legal_act_type_id = LegalActType::TYPE_PROTOCOL;
@@ -90,17 +92,18 @@ class PrisSplitTrasncriptions extends Command
                         }
 
                         foreach (config('available_languages') as $lang) {
-                            $newProtocolFile = $f->replicate(['file_text_ts_bg']);
+                            $newProtocolFile = $file->replicate(['file_text_ts_bg']);
                             $newProtocolFile->id_object = $newProtocol->id;
                             if ($lang['code'] == 'en') {
-                                $newProtocolFile->description_en = $f->description_bg;
+                                $newProtocolFile->description_en = $file->description_bg;
                                 $newProtocolFile->description_bg = null;
                                 $newProtocolFile->locale = 'en';
                             }
                             $newProtocol->files()->save($newProtocolFile);
                         }
                     } catch (\Exception $e) {
-                        \Log::error('Command PrisSplitTrasncriptions error: ' . $e);
+                        $this->error('Error: '. $e->getMessage());
+                        \Log::error('Command PrisSplitTrasncriptions error: ' . $e->getMessage());
                     }
                 }
             }

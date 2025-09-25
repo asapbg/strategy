@@ -40,20 +40,20 @@ class FixOldPrisChangePris extends Command
         $maxId = Pris::max('id');
         $currentStep = 0;
         while ($currentStep < $maxId) {
-            $prisItems = Pris::withTrashed()
+            $prisDocuments = Pris::withTrashed()
                 ->where('id', '>=', $currentStep)
                 ->where('id', '<', ($currentStep + $step))
                 ->where('asap_last_version', '=', 1)
                 ->whereNotNull('old_connections')
                 ->get();
-            if ($prisItems->count()) {
-                foreach ($prisItems as $item) {
-                    echo 'Start pris doc ID: ' . $item->id . PHP_EOL;
+            if ($prisDocuments->count()) {
+                foreach ($prisDocuments as $prisDocument) {
+                    //echo 'Start fixing connections of pris doc with ID: ' . $prisDocument->id . PHP_EOL;
 
                     try {
-                        $oldConnections = explode(';', $item->old_connections);
+                        $oldConnections = explode(';', $prisDocument->old_connections);
                         if (sizeof($oldConnections)) {
-                            foreach ($oldConnections as $key => $oldC) {
+                            foreach ($oldConnections as $oldC) {
 
                                 $connection = $this->parseConnection($oldC);
                                 if (sizeof($connection) == 5) {
@@ -62,38 +62,38 @@ class FixOldPrisChangePris extends Command
                                     {
                                         case 'изменя':
                                             $newConnection = PrisDocChangeTypeEnum::CHANGE->value;
-                                            $prisId = $item->id;
+                                            $prisId = $prisDocument->id;
                                             $changedPrisId = $this->findPris($connection);
                                             break;
                                         case 'отменя':
                                             $newConnection = PrisDocChangeTypeEnum::CANCEL->value;
-                                            $prisId = $item->id;
+                                            $prisId = $prisDocument->id;
                                             $changedPrisId = $this->findPris($connection);
                                             break;
                                         case 'допълва':
                                             $newConnection = PrisDocChangeTypeEnum::COMPLEMENTS->value;
-                                            $prisId = $item->id;
+                                            $prisId = $prisDocument->id;
                                             $changedPrisId = $this->findPris($connection);
                                             break;
                                         case 'изменен от':
                                             $newConnection = PrisDocChangeTypeEnum::CHANGE->value;
                                             $prisId = $this->findPris($connection);
-                                            $changedPrisId = $item->id;
+                                            $changedPrisId = $prisDocument->id;
                                             break;
                                         case 'отменен от':
                                             $newConnection = PrisDocChangeTypeEnum::CANCEL->value;
                                             $prisId = $this->findPris($connection);
-                                            $changedPrisId = $item->id;
+                                            $changedPrisId = $prisDocument->id;
                                             break;
                                         case 'допълнен от':
                                             $newConnection = PrisDocChangeTypeEnum::COMPLEMENTS->value;
                                             $prisId = $this->findPris($connection);
-                                            $changedPrisId = $item->id;
+                                            $changedPrisId = $prisDocument->id;
                                             break;
                                         case 'виж':
                                             $newConnection = PrisDocChangeTypeEnum::SEE_IN->value;
                                             $prisId = $this->findPris($connection);
-                                            $changedPrisId = $item->id;
+                                            $changedPrisId = $prisDocument->id;
                                             break;
                                     }
 
@@ -113,9 +113,11 @@ class FixOldPrisChangePris extends Command
                                                                 select pris_change_pris.pris_id from pris_change_pris where (pris_id = ? and changed_pris_id = ? and connect_type = ?) or (pris_id = ? and changed_pris_id = ? and connect_type = ?))'
                                                 , [$prisId, $changedPrisId, $newConnection, $oldConnection, $prisId, $changedPrisId, $newConnection, $changedPrisId, $prisId, $newConnection]);
                                         }
+                                        $this->info("Connections fixed for pris doc with ID $changedPrisId");
                                     }
                                 } else {
-                                    file_put_contents('old_pris_missing_connections.txt', 'Pris ID:' . $item->id . ' - ' . $oldC . ' | ' . json_encode($connection) . PHP_EOL, FILE_APPEND);
+                                    $this->error("Missing connections for pris with ID $prisDocument->id". ' - ' . $oldC . ' | ' . json_encode($connection));
+                                    file_put_contents('old_pris_missing_connections.txt', 'Pris ID:' . $prisDocument->id . ' - ' . $oldC . ' | ' . json_encode($connection) . PHP_EOL, FILE_APPEND);
                                 }
 
 
