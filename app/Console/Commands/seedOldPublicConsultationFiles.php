@@ -143,6 +143,9 @@ class seedOldPublicConsultationFiles extends Command
                             $copy_from = base_path($folder_path .capitalize(mb_strtolower($filename)).".".$extension);
                         }
                         if (!file_exists($copy_from)) {
+                            $copy_from = base_path($folder_path .capitalize($filename).".".$extension);
+                        }
+                        if (!file_exists($copy_from)) {
                             $this->error('File '.$copy_from. ' do not exist!');
                             file_put_contents('missing_pc_files_in_old_files.txt', $folder_path . $oldDbFile->name . PHP_EOL, FILE_APPEND);
                             continue;

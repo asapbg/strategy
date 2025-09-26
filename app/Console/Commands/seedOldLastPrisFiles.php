@@ -51,7 +51,8 @@ class seedOldLastPrisFiles extends Command
             ->where('asap_last_version', '=', 1)
             ->whereNotNull('old_id')
             ->where('id', '>', 5000)
-            //->where('legal_act_type_id', LegalActType::TYPE_ORDER)
+            //->where('id', '=', 137452)
+            //->where('legal_act_type_id', LegalActType::TYPE_DECISION)
             ->orderBy('old_id')
             ->get()
             ->pluck('id', 'old_id')
@@ -65,7 +66,7 @@ class seedOldLastPrisFiles extends Command
             ->whereNotNull('old_pris_bloburi')
             ->where('locale', '=', 'bg')
             ->get()
-            ->pluck('id', 'old_pris_bloburi')
+            ->pluck('id_object', 'old_pris_bloburi')
             ->toArray();
 
         $formatTimestamp = 'Y-m-d H:i:s';
@@ -102,7 +103,7 @@ class seedOldLastPrisFiles extends Command
 //                }
 
                 foreach ($prisFiles as $prisFile) {
-                    if (isset($ourLastVersionFiles[$prisFile->old_pris_bloburi])) {
+                    if (isset($ourLastVersionFiles[$prisFile->old_pris_bloburi]) && $ourLastVersionFiles[$prisFile->old_pris_bloburi] == $oldPrisId) {
                         $this->comment('File with old id ' . $ourPrisId . ' already exist');
                         continue;
                     }
