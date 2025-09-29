@@ -1683,7 +1683,7 @@ class seedOldLastPris extends Command
                                pris.activestate as active, -- check with distinct if only 0 and 1 // check also pris.state
                                pris.datepublished as published_at,
                                pris.datecreated as created_at,
-                               pris.datemodified as updated_at,
+                               pris.datemodified as updated_at
                                --case when att.attachid is not null then 1 else 0 end as has_files
                           FROM archimed.e_items pris
                      --LEFT JOIN edocs.attachments att on att.documentid = pris.id

@@ -103,8 +103,8 @@ class seedOldLastPrisFiles extends Command
 //                }
 
                 foreach ($prisFiles as $prisFile) {
-                    if (isset($ourLastVersionFiles[$prisFile->old_pris_bloburi]) && $ourLastVersionFiles[$prisFile->old_pris_bloburi] == $oldPrisId) {
-                        $this->comment('File with old id ' . $ourPrisId . ' already exist');
+                    if (isset($ourLastVersionFiles[$prisFile->old_pris_bloburi]) && $ourLastVersionFiles[$prisFile->old_pris_bloburi] == $ourPrisId) {
+                        $this->comment('File for pris id ' . $ourPrisId . ' already exist');
                         continue;
                     }
                     if (empty($prisFile->file_content)) {

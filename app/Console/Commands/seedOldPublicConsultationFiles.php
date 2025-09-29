@@ -88,7 +88,8 @@ class seedOldPublicConsultationFiles extends Command
                         and f.id is not null
                         and folders.id is not null
                         and uf.tabletype = 3
-                        --and p.id = 1926
+                        --and LENGTH(f."name") > 100
+                        --and p.id = 5740
                         -- check if uf.tabletype should be 3
                     order by p.id asc
                 ');
@@ -144,6 +145,13 @@ class seedOldPublicConsultationFiles extends Command
                         }
                         if (!file_exists($copy_from)) {
                             $copy_from = base_path($folder_path .capitalize($filename).".".$extension);
+                        }
+                        if (!file_exists($copy_from)) {
+                            if (mb_strlen($filename) > 100) {
+                                $first100Chars = rtrim(mb_substr($filename, 0, 100));
+                                $copy_from = base_path($folder_path .$first100Chars.".".$extension);
+                                //dd($copy_from);
+                            }
                         }
                         if (!file_exists($copy_from)) {
                             $this->error('File '.$copy_from. ' do not exist!');
