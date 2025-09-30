@@ -208,16 +208,21 @@
                             @endforeach
                         </ul>
                     @endif
+                    @php($import_docs_for_report = [])
                     @if($documentsImport->count())
                         @if(!$foundBaseDoc)
                             <div class="col-12">
                                 <ul class="list-group list-group-flush">
                         @endif
-                            @foreach($documentsImport as $doc)
+                        @foreach($documentsImport as $doc)
+                            @if(str_contains(mb_strtolower($doc->description), "справка"))
+                                @php($import_docs_for_report[] = $doc)
+                            @else
                                 <li class="list-group-item">
                                     @include('site.partial.file_preview_or_download', ['f' => $doc])
                                 </li>
-                            @endforeach
+                            @endif
+                        @endforeach
                         @if(!$foundBaseDoc)
                                 </ul>
                             </div>
@@ -273,6 +278,18 @@
                     @endif
                     <ul class="list-group list-group-flush">
                         @php($foundReportDoc = false)
+                        @if(count($import_docs_for_report))
+                            <div class="col-12">
+                                <ul class="list-group list-group-flush">
+                                @foreach($import_docs_for_report as $doc)
+                                    <li class="list-group-item">
+                                        @include('site.partial.file_preview_or_download', ['f' => $doc])
+                                    </li>
+                                @endforeach
+                                </ul>
+                            </div>
+                            @php($foundReportDoc = true)
+                        @endif
                         @if(isset($documents) && sizeof($documents))
                             @foreach($documents as $doc)
                                 @if(in_array($doc->doc_type, \App\Enums\DocTypesEnum::docByActTypeInSections($item->act_type_id, 'report')))

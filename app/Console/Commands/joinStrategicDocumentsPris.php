@@ -30,32 +30,31 @@ class joinStrategicDocumentsPris extends Command
      */
     public function handle()
     {
-        $prisQuery = Pris::whereNotNull('old_id')->withTrashed()->get();
+        $prisQuery = Pris::LastVersion()->whereNotNull('old_id')->withTrashed()->get();
         $pris = $prisQuery->pluck('id', 'old_id')->toArray();
         $prisOldIds = implode(',', $prisQuery->pluck('old_id')->toArray());
 
-        $oldDocuments = DB::connection('old_strategy_app')->select(
-            "SELECT
-                sd.id AS old_id,
-                sd.documentnumber AS old_doc_number,
-                sd.documentdate as old_doc_date
-            FROM dbo.strategicdocuments AS sd
-            WHERE sd.languageid = 1 AND sd.documentnumber <> '0'"
-        );
+        $oldDocuments = DB::connection('old_strategy_app')->select("
+             SELECT sd.id AS old_id, sd.documentnumber AS old_doc_number, sd.documentdate as old_doc_date
+               FROM dbo.strategicdocuments AS sd
+              WHERE sd.languageid = 1 AND sd.documentnumber <> '0'
+                --AND sd.id = 1581
+        ");
 
         foreach ($oldDocuments as $oldDocument) {
-            $oldPris = DB::connection('pris')->select("SELECT
-                            id
-                            FROM archimed.e_items pris
-                            WHERE pris.date = '$oldDocument->old_doc_date'
-                            AND pris.number = '$oldDocument->old_doc_number'
-                            AND pris.id IN ($prisOldIds)
-                            group by pris.id
-                            order by pris.id DESC
-                            LIMIT 1");
+            $oldPris = DB::connection('pris')->select("
+                    SELECT id
+                      FROM archimed.e_items pris
+                     WHERE pris.date = '$oldDocument->old_doc_date'
+                       AND pris.number = '$oldDocument->old_doc_number'
+                       AND pris.id IN ($prisOldIds)
+                  group by pris.id
+                  order by pris.id DESC
+                     LIMIT 1
+            ");
 
             if (count($oldPris) === 0) {
-                $this->info('Old PRIS not found with number: ' . $oldDocument->old_doc_number . ' and date: ' . $oldDocument->old_doc_date);
+                $this->error('Old PRIS not found with number: ' . $oldDocument->old_doc_number . ' and date: ' . $oldDocument->old_doc_date);
                 continue;
             }
 
@@ -63,14 +62,14 @@ class joinStrategicDocumentsPris extends Command
 
             $doc = StrategicDocument::where('old_id', $oldDocument->old_id)->first();
 
-            if (isset($doc)) {
+            if (isset($doc) && isset($pris[$oldPris->id])) {
                 $doc->update([
                     'pris_act_id' => $pris[$oldPris->id]
                 ]);
 
                 $this->info('Updated Doc with ID: ' . $doc->id);
             } else {
-                $this->info('Couldn\'t find document or pris!');
+                $this->error('Couldn\'t find document or pris!');
             }
         }
     }
