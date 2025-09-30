@@ -1655,12 +1655,8 @@ class seedOldLastPris extends Command
 
         $formatTimestamp = 'Y-m-d H:i:s';
         $formatDate = 'Y-m-d';
-        //records per query
         $step = 50;
-        //max id in old db
         $maxOldId = DB::connection('pris')->select('select max(archimed.e_items.id) from archimed.e_items');
-        //start from this id in old database
-        //$currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
         $currentStep = 0;
 
         if ((int)$maxOldId[0]->max) {
@@ -1684,16 +1680,12 @@ class seedOldLastPris extends Command
                                pris.datepublished as published_at,
                                pris.datecreated as created_at,
                                pris.datemodified as updated_at
-                               --case when att.attachid is not null then 1 else 0 end as has_files
                           FROM archimed.e_items pris
-                     --LEFT JOIN edocs.attachments att on att.documentid = pris.id
                          WHERE true
                            AND pris.id >= $currentStep
                            AND pris.id < " . ($currentStep + $step) . "
-                           -- AND pris.itemtypeid = 5017 -- skip law records
-                           -- and pris.itemtypeid <> 5030 -- skip law records
-                           -- and documents.lastrevision = \'Y\' -- get final versions
-                     --GROUP BY pris.id
+                           -- AND pris.itemtypeid = 5029 -- Доклад
+                           -- AND pris.itemtypeid <> 5030 -- skip law records
                      ORDER BY pris.id asc
                     ");
 
@@ -1701,8 +1693,6 @@ class seedOldLastPris extends Command
                         foreach ($oldDbResult as $item) {
 
                             $importerInstitutions = [];
-                            $tags = [];
-                            $newItemTags = [];//tags ids to connect to new item
 
                             $xml = simplexml_load_string($item->to_parse_xml_details);
                             $json = json_encode($xml, JSON_UNESCAPED_UNICODE);
@@ -1854,32 +1844,6 @@ class seedOldLastPris extends Command
                                         if (isset($importerInstitutions) && sizeof($importerInstitutions)) {
                                             $existPris->institutions()->sync($importerInstitutions);
                                         }
-
-                                        //3. Create connection pris - tags
-//                                        if(sizeof($tags)) {
-//                                            $newTags = array();
-//                                            foreach ($tags as $tag) {
-//                                                if(!isset($ourTags[$tag])) {
-//                                                    //create tag
-//                                                    $newTag = \App\Models\Tag::create();
-//                                                    if( $newTag ) {
-//                                                        foreach ($locales as $locale) {
-//                                                            $newTag->translateOrNew($locale['code'])->label = $tag;
-//                                                        }
-//                                                    }
-//                                                    $newTag->save();
-//                                                    echo "Tag with name ".$tag." created successfully".PHP_EOL;
-//                                                    $ourTags[$tag] = $newTag->id;
-//                                                }
-//                                                $newTags[] = '('.(int)$ourTags[$tag].', '.$existPris->id.')';
-//                                            }
-//
-//                                            DB::statement('delete from pris_tag where pris_id ='.$existPris->id);
-//                                            if(sizeof($newTags)) {
-//                                                DB::statement('insert into pris_tag values '.implode(',', $newTags));
-//                                                //$existPris->tags()->sync($newTags); //this is slow
-//                                            }
-//                                        }
                                     }
                                 }
                                 continue;
@@ -2120,32 +2084,6 @@ class seedOldLastPris extends Command
                                         $newItem->institutions()->sync($importerInstitutions);
                                     }
                                 }
-
-                                //3. Create connection pris - tags
-//                                if($newItem && sizeof($tags)) {
-//                                    $newItemTags = array();
-//                                    foreach ($tags as $tag) {
-//                                        if(!isset($ourTags[$tag])) {
-//                                            //create tag
-//                                            $newTag = \App\Models\Tag::create();
-//                                            if( $newTag ) {
-//                                                foreach ($locales as $locale) {
-//                                                    $newTag->translateOrNew($locale['code'])->label = $tag;
-//                                                }
-//                                            }
-//                                            $newTag->save();
-//                                            echo "Tag with name ".$tag." created successfully".PHP_EOL;
-//                                            $ourTags[$tag] = $newTag->id;
-//                                        }
-//                                        $newItemTags[] = '('.(int)$ourTags[$tag].', '.$newItem->id.')';
-//                                    }
-//
-//                                    DB::statement('delete from pris_tag where pris_id ='.$newItem->id);
-//                                    if(sizeof($newItemTags)) {
-//                                        DB::statement('insert into pris_tag values '.implode(',', $newItemTags));
-//                                        //$newItem->tags()->sync($newTags); //this is slow
-//                                    }
-//                                }
                             }
                             $this->info("PRIS with old id ($item->old_id) is created");
                         }
