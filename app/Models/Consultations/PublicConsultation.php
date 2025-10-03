@@ -622,7 +622,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
         //Начало на обществената консултация
         $startDate = Carbon::parse($this->open_from)->format('Y-m-d 00:00:00');
-        $sortedTimeline['2'] = [
+        $sortedTimeline[PublicConsultationTimelineEnum::START->value] = [
+            'type' => PublicConsultationTimelineEnum::START->value,
             'label' => __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::START->value)),
             'date' => displayDate($startDate),
             'isActive' => $this->inPeriodBoolean || ($now > Carbon::parse($this->open_to)->format('Y-m-d H:i:s')),
@@ -632,7 +633,8 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
         //Приключване на консултацията
         $endDate = Carbon::parse($this->open_to)->format('Y-m-d 23:59:59');
-        $sortedTimeline['4'] = [
+        $sortedTimeline[PublicConsultationTimelineEnum::END->value] = [
+            'type' => PublicConsultationTimelineEnum::END->value,
             'label' => __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::END->value)),
             'date' => displayDate($endDate),
             'isActive' => $now > Carbon::parse($this->open_to)->format('Y-m-d H:i:s'),
@@ -647,15 +649,19 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             $prisEventDescription = '<p><a class="text-primary" href="' . ($pris->in_archive ? route('pris.archive.view', ['category' => $pris->actType->name, 'id' => $pris->id]) : route('pris.view', ['category' => $pris->actType->name, 'id' => $pris->id])) . '" target="_blank">' . $pris->mcDisplayName . '</a></p>';
         } else {
             $prisEventLabel = __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value));
-            $prisEventDescription = $pdf ? '---' : __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value) . '.description');
+            $prisEventDescription = $pdf
+                ? '---'
+                : __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value) . '.description');
         }
-        $sortedTimeline['6'] = [
+        $sortedTimeline[PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value] = [
+            'type' => PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value,
             'label' => $prisEventLabel,
             'date' => $pris ? displayDate($pris->doc_date) : null,
             'isActive' => (bool)$pris,
             'description' => $prisEventDescription
         ];
 
+        $description_field = 'description_' . app()->getLocale();
         //TODO PublicConsultationTimelineEnum::PRESENTING_IN_NA->value
         foreach ([PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value,
                      PublicConsultationTimelineEnum::FILE_CHANGE->value,
@@ -670,6 +676,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                                 $label = $event->object instanceof OperationalProgramRow ? __('custom.op_project_timeline_label') : __('custom.lp_project_timeline_label');
                                 //always first
                                 $sortedTimeline['1'] = [
+                                    'type' => PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value,
                                     'label' => $label,
 //                                    'date' => displayDate($event->updated_at),
                                     'date' => $event->object->month,
@@ -681,14 +688,16 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                             case PublicConsultationTimelineEnum::FILE_CHANGE->value:
                             case PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value:
                                 $index = $event->event_id == PublicConsultationTimelineEnum::FILE_CHANGE->value ? '3_' . $event->created_at : '5';
-                                if ($event->object->{'description_' . app()->getLocale()}) {
+                                if ($event->object->{$description_field}) {
                                     $sortedTimeline[$index] = [
+                                        'type' => PublicConsultationTimelineEnum::FILE_CHANGE->value,
                                         'label' => __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue($event->event_id)),
                                         'date' => displayDate($event->created_at),
                                         'isActive' => true,
-                                        'description' => $pdf ? '<a href="' . route('download.file', $event->object->id) . '">' . $event->object->{'description_' . app()->getLocale()} . '</a>'
+                                        'description' => $pdf
+                                            ? '<a href="' . route('download.file', $event->object->id) . '">' . $event->object->{$description_field} . '</a>'
                                             : '<p><span class="d-inline-block">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="' . $event->object->id . '" data-url="' . route('admin.preview.file.modal', ['id' => $event->object->id]) . '" title="' . __('custom.preview') . '">' . fileIcon($event->object->content_type) . ' ' . ($event->object->{'description_' . app()->getLocale()}) . ' ' . __('custom.version_short') . ' ' . $event->object->version . '</button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="' . $event->object->id . '" data-url="' . route('admin.preview.file.modal', ['id' => $event->object->id]) . '" title="' . __('custom.preview') . '">' . fileIcon($event->object->content_type) . ' ' . ($event->object->{$description_field}) . ' ' . __('custom.version_short') . ' ' . $event->object->version . '</button>
                                             </span></p>'
                                     ];
                                     if ($rss) {
@@ -712,11 +721,35 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                 ];
                 switch ($e) {
                     case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
+                        $eData['type'] = PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value;
                         if (!$this->old_id) {
                             $sortedTimeline['1'] = $eData;
                         }
                         break;
                     case PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value:
+                        $eData['type'] = PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value;
+                        $reportFile = PublicConsultation::select([
+                                'files.id', 'files.doc_type', 'files.content_type', 'files.created_at', 'files.version',
+                                DB::raw("$description_field as description")
+                            ])
+                            ->join('files', function ($j) {
+                                $j->on('files.id_object', '=', 'public_consultation.id')
+                                    ->where('files.locale', '=', app()->getLocale())
+                                    ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
+                                    ->whereNull('files.doc_type');
+                            })
+                            ->whereRaw("$description_field::TEXT ILIKE '%Справка%'")
+                            ->whereNull('files.deleted_at')
+                            ->where('public_consultation.id', '=', $this->id)
+                            ->orderBy('created_at', 'desc')
+                            ->first();
+                        if ($reportFile) {
+                            $eData['description'] = $pdf
+                                ? '<a href="' . route('download.file', $reportFile->id) . '">' . $reportFile->description . '</a>'
+                                : '<p><span class="d-inline-block">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="' . $reportFile->id . '" data-url="' . route('admin.preview.file.modal', ['id' => $reportFile->id]) . '" title="' . __('custom.preview') . '">' . fileIcon($reportFile->content_type) . ' ' . ($reportFile->description) . ' ' . __('custom.version_short') . ' ' . $reportFile->version . '</button>
+                                    </span></p>';
+                        }
                         $sortedTimeline['5'] = $eData;
                         break;
                 }

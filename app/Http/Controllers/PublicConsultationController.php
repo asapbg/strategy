@@ -107,6 +107,7 @@ class PublicConsultationController extends Controller
         $documents = $item->lastDocumentsByLocaleAndSection(true);
         $documentsImport = $item->lastDocumentsByLocaleImport();
         $timeline = $item->orderTimeline();
+        //dd($documentsImport->toArray());
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC . '_' . app()->getLocale())->first();
         $this->setSeo($item->facebookTitle, $item->ogDescription, '', array('title' => $item->facebookTitle, 'img' => PublicConsultation::DEFAULT_IMG));
 

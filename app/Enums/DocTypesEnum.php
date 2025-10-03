@@ -144,10 +144,10 @@ enum DocTypesEnum: int
 
     /**
      * @param $actType
-     * @param $section {base|kd|report}
+     * @param string $section {base|kd|report}
      * @return array
      */
-    public static function docByActTypeInSections($actType, $section = 'base')
+    public static function docByActTypeInSections($actType, string $section = 'base'): array
     {
         switch ($actType)
         {

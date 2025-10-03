@@ -13,11 +13,6 @@
             </div>
         </div>
     </section>
-{{--    @if(isset($pageTopContent) && !empty($pageTopContent->value))--}}
-{{--        <div class="col-12 mt-2">--}}
-{{--            {!! $pageTopContent->value !!}--}}
-{{--        </div>--}}
-{{--    @endif--}}
     <div class="container-fluid px-0">
         <div class="row">
             @include('site.public_consultations.content')
