@@ -744,6 +744,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                             ->orderBy('created_at', 'desc')
                             ->first();
                         if ($reportFile) {
+                            $eData['isActive'] = true;
                             $eData['description'] = $pdf
                                 ? '<a href="' . route('download.file', $reportFile->id) . '">' . $reportFile->description . '</a>'
                                 : '<p><span class="d-inline-block">
