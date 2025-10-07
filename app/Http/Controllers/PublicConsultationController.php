@@ -137,6 +137,8 @@ class PublicConsultationController extends Controller
 
         $fileName = 'pc_' . date('d_m_Y_H_i_s') . '.pdf';
 
+        increase_file_manipulations_ini_settings();
+
         $pdf = PDF::loadView('exports.pc', ['item' => $item, 'isPdf' => true, 'documents' => $documents, 'documentsImport' => $documentsImport, 'timeline' => $timeline]);
         return $pdf->download($fileName);
     }

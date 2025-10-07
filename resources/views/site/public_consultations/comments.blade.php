@@ -17,6 +17,13 @@
                 @endif
             </h3>
             @if($item->comments->count())
+                <p class="fw-600">
+                    {{
+                        $item->comments->count() == 1
+                            ? trans_choice('custom.total_comments', 1, ['number' => $item->comments->count()])
+                            : trans_choice('custom.total_comments', 2, ['number' => $item->comments->count()])
+                    }}
+                </p>
                 @foreach($item->comments as $c)
                     <div class="obj-comment comment-background p-2 rounded mb-3">
                         <div class="info">

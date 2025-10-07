@@ -558,7 +558,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             })
             ->whereNull('files.deleted_at')
             ->where('public_consultation.id', '=', $this->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at')
             ->get();
     }
 
@@ -752,6 +752,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                             ->first();
                         if ($reportFile) {
                             $eData['isActive'] = true;
+                            $eData['date'] = displayDate($reportFile->created_at);
                             $eData['description'] = $pdf
                                 ? '<a href="' . route('download.file', $reportFile->id) . '">' . $reportFile->description . '</a>'
                                 : '<p><span class="d-inline-block">

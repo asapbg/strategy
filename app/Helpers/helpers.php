@@ -1200,3 +1200,28 @@ if (!function_exists('ip_in_range')) {
         return false;
     }
 }
+
+if (!function_exists('increase_file_manipulations_ini_settings')) {
+
+    /**
+     * Update some ini settings for upload or download files
+     *
+     * @param string $upload_max_filesize
+     * @param string $post_max_size
+     * @param string $memory_limit
+     * @param string $max_execution_time
+     * @return void
+     */
+    function increase_file_manipulations_ini_settings(
+        string $upload_max_filesize = '1024M',
+        string $post_max_size = '1024M',
+        string $memory_limit = '1024M',
+        string $max_execution_time = '60',
+    ): void
+    {
+        ini_set('upload_max_filesize', $upload_max_filesize);
+        ini_set('post_max_size', $post_max_size);
+        ini_set('memory_limit', $memory_limit);
+        ini_set('max_execution_time', $max_execution_time);
+    }
+}
