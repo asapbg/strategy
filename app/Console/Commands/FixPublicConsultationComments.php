@@ -36,7 +36,7 @@ class FixPublicConsultationComments extends Command
             ->withCount('commentsWithTrashed')
             ->whereNotNull('old_id')
             //->whereDoesntHave('comments')
-            ->whereIn('old_id', [7683,7693])
+            //->whereIn('old_id', [7683,7693])
             ->get();
 
         if ($pcWithoutComment->count() == 0) {

@@ -745,7 +745,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                                     ->where('files.code_object', '=', File::CODE_OBJ_PUBLIC_CONSULTATION)
                                     ->whereNull('files.doc_type');
                             })
-                            ->whereRaw("$description_field::TEXT ILIKE '%Справка%'")
+                            ->whereRaw("($description_field::TEXT ILIKE '%справка%' AND $description_field::TEXT ILIKE '%становищ%')")
                             ->whereNull('files.deleted_at')
                             ->where('public_consultation.id', '=', $this->id)
                             ->orderBy('created_at', 'desc')

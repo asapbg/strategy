@@ -220,7 +220,7 @@
                                 <ul class="list-group list-group-flush">
                         @endif
                         @foreach($documentsImport as $doc)
-                            @if(str_contains(mb_strtolower($doc->description), "справка"))
+                            @if(str_contains(mb_strtolower($doc->description), "справка") && str_contains(mb_strtolower($doc->description), "становищ"))
                                 @php($import_docs_for_report[] = $doc)
                             @else
                                 <li class="list-group-item">
