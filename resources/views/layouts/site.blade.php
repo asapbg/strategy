@@ -69,7 +69,7 @@
                             <div class="col-md-12">
                                 <div class="centered-heading w-100 text-center px-3">
                                     <h1 class="text-light adv-board-heading" style="background: unset !important;" >
-                                        {{ $pageTitle }}
+                                        {!! $pageTitle !!}
                                     </h1>
                                 </div>
                             </div>
@@ -87,7 +87,7 @@
                         <div class="slider-content">
                             <div class="page-heading">
                                 <h1 class="mb-0">
-                                    {{ $pageTitle }}
+                                    {!! $pageTitle !!}
                                 </h1>
                             </div>
                         </div>
