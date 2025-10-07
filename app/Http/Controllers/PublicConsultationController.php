@@ -252,7 +252,9 @@ class PublicConsultationController extends Controller
         ));
         $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.public_consultations', 2), trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.public_consultations', 2), 'description' => trans_choice('custom.reports', 2), 'img' => PublicConsultation::DEFAULT_IMG));
 
-        return $this->view('site.public_consultations.report', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
+        return $this->view('site.public_consultations.report',
+            compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm')
+        );
     }
 
     private function filtersReport($request)
@@ -391,7 +393,7 @@ class PublicConsultationController extends Controller
                 'options' => array(
                     ['name' => __('custom.all'), 'value' => ''],
                     ['name' => trans_choice('custom.active', 1), 'value' => '1'],
-                    ['name' => trans_choice('custom.inactive_m', 1), 'value' => '2'],
+                    ['name' => trans_choice('custom.inactive', 1), 'value' => '2'],
                 ),
                 'value' => request()->input('status'),
                 'default' => '',
@@ -1005,7 +1007,19 @@ class PublicConsultationController extends Controller
         ));
         $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.public_consultations', 2), trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.public_consultations', 2), 'description' => trans_choice('custom.reports', 2), 'img' => PublicConsultation::DEFAULT_IMG));
 
-        return $this->view('site.public_consultations.report_institution', compact('filter', 'items', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'consultationsByActType', 'missingFiles', 'closeSearchForm'));
+        return $this->view('site.public_consultations.report_institution',
+            compact(
+                'filter',
+                'items',
+                'pageTitle',
+                'pageTopContent',
+                'defaultOrderBy',
+                'defaultDirection',
+                'consultationsByActType',
+                'missingFiles',
+                'closeSearchForm'
+            )
+        );
     }
 
     public function filtersInstitutionReport($request)

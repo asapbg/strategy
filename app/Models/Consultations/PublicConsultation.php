@@ -7,7 +7,6 @@ use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\PublicConsultationTimelineEnum;
 use App\Models\ActType;
 use App\Models\Comments;
-use App\Models\ConsultationLevel;
 use App\Models\CustomRole;
 use App\Models\FieldOfAction;
 use App\Models\File;
@@ -15,7 +14,6 @@ use App\Models\Law;
 use App\Models\Poll;
 use App\Models\Pris;
 use App\Models\PublicConsultationContact;
-use App\Models\RegulatoryAct;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Timeline;
 use App\Models\User;
@@ -26,10 +24,8 @@ use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use App\Models\ModelActivityExtend;
-use Illuminate\Support\Facades\Log;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 
@@ -660,13 +656,16 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                 ? '---'
                 : __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue(PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value) . '.description');
         }
-        $sortedTimeline[PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value] = [
-            'type' => PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value,
-            'label' => $prisEventLabel,
-            'date' => $pris ? displayDate($pris->doc_date) : null,
-            'isActive' => (bool)$pris,
-            'description' => $prisEventDescription
-        ];
+
+        if (in_array($this->act_type_id, [ActType::ACT_LAW, ActType::ACT_COUNCIL_OF_MINISTERS])) {
+            $sortedTimeline[PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value] = [
+                'type' => PublicConsultationTimelineEnum::ACCEPT_ACT_MC->value,
+                'label' => $prisEventLabel,
+                'date' => $pris ? displayDate($pris->doc_date) : null,
+                'isActive' => (bool)$pris,
+                'description' => $prisEventDescription
+            ];
+        }
 
         $description_field = 'description_' . app()->getLocale();
         //TODO PublicConsultationTimelineEnum::PRESENTING_IN_NA->value

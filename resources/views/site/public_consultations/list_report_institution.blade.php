@@ -40,9 +40,9 @@
                         <td>{{ $item->no_less_days_reason_cnt }} @if($item->less_days_cnt && $item->no_less_days_reason_cnt)({{ round((($item->no_less_days_reason_cnt/$item->less_days_cnt) * 100), 2) }}%)@endif</td>
                         <td>
                             @if(isset($missingFiles) && sizeof($missingFiles) && isset($missingFiles[$item->id]) && $missingFiles[$item->id] > 0)
-                                {{ __('custom.yes') }}
+                                {{ $missingFiles[$item->id] }}
                             @else
-                                {{ __('custom.no') }}
+                                0
                             @endif
                         </td>
                         <td>{{ $item->has_report }}</td>

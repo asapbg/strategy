@@ -26,7 +26,7 @@ class ActType extends ModelActivityExtend implements TranslatableContract
     protected $fillable = ['consultation_level_id'];
 
     const ACT_LAW = 1;
-    const ACT_COUNCIL_OF_MINISTERS = 2;
+    const ACT_COUNCIL_OF_MINISTERS = 2; // Акт на Министерския съвет
     const ACT_NON_NORMATIVE_COUNCIL_OF_MINISTERS = 4; //Ненормативен акт (на МС или на министър)
     const ACT_MINISTER = 3; //Акт на министър
     const ACT_FRAME_POSITION = 5; //Акт на друг централен орган
