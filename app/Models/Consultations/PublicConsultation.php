@@ -371,6 +371,13 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
             ->orderBy('created_at', 'desc');
     }
 
+    public function commentsWithTrashed(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comments::class, 'object_id', 'id')
+            ->where('object_code', '=', Comments::PC_OBJ_CODE)
+            ->withTrashed();
+    }
+
     public function message(): \Illuminate\Database\Eloquent\Relations\hasOne
     {
         return $this->hasOne(Comments::class, 'object_id', 'id')

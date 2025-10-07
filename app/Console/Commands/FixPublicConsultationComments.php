@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Comments;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -30,19 +31,21 @@ class FixPublicConsultationComments extends Command
      */
     public function handle()
     {
-        file_put_contents('old_pc_comments', '');
+        file_put_contents('old_pc_comments_fixed', '');
         $pcWithoutComment = PublicConsultation::select('id','old_id')
-            ->withCount('comments')
+            ->withCount('commentsWithTrashed')
             ->whereNotNull('old_id')
-            ->withTrashed()
             //->whereDoesntHave('comments')
-            //->whereIn('id', [11065])
+            ->whereIn('old_id', [7683,7693])
             ->get();
 
         if ($pcWithoutComment->count() == 0) {
             $this->comment("There are no public consultation without comments");
             return Command::SUCCESS;
         }
+
+        $ourUsers = User::withTrashed()->where('email', 'not like', '%duplicated-%')->whereNotNull('old_id')->get()->pluck('id', 'old_id')->toArray();
+
         foreach ($pcWithoutComment as $pc) {
             $oldDbComments = DB::connection('old_strategy_app')
                 ->select("
@@ -58,17 +61,20 @@ class FixPublicConsultationComments extends Command
                    order by pcomments.datecreated asc
                 ");
             if (!sizeof($oldDbComments)) {
-                $this->comment("No comments found for public consultation with old ID $pc->old_id");
+                //$this->comment("No comments found for public consultation with old ID $pc->old_id");
                 continue;
             }
-            if ($pc->comments_count != count($oldDbComments)) {
-                $text = "Different comments count $pc->comments_count <> ".count($oldDbComments)." for public consultation with old ID $pc->old_id";
-                $this->info($text);
-                file_put_contents('old_pc_comments', $text . PHP_EOL, FILE_APPEND);
-            } else {
-                $this->comment("All good for public consultation with old ID $pc->old_id");
+            if ($pc->comments_with_trashed_count >= count($oldDbComments)) {
+                //$this->comment("All good for public consultation with old ID $pc->old_id");
+                continue;
             }
-            continue;
+
+            $text = "Different comments count $pc->comments_with_trashed_count <> ".count($oldDbComments)." for public consultation with old ID $pc->old_id fixed";
+            $this->info($text);
+            file_put_contents('old_pc_comments_fixed', $text . PHP_EOL, FILE_APPEND);
+
+            Comments::where('object_code', Comments::PC_OBJ_CODE)->where('object_id', $pc->id)->delete();
+
             $inserted = 0;
             foreach ($oldDbComments as $c) {
                 $content = str_replace('&quot;', '"', $c->content);
