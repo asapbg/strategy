@@ -1,3 +1,8 @@
+<style>
+    .obj-comment .comment * {
+        color: var(--bs-body-color) !important;
+    }
+</style>
 <div class="col-lg-10 py-2 right-side-content">
     <div>
         <div class="row mb-4 action-btn-wrapper">
