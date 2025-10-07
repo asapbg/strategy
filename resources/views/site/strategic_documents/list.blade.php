@@ -85,16 +85,16 @@
                                     @endif
 
                                     <div class="meta-consul mt-2">
-                                                <span class="text-secondary d-flex flex-row align-items-baseline lh-normal">
-                                                    <i class="far fa-calendar text-secondary me-1" title="{{ __('custom.period') }}"></i>
-                                                    <!--
-                                                    {{ $document->document_date ? $document->document_date . ' г.' : __('custom.no_terms') }}
-                                                    -->
-                                                    {{ $document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('d-m-Y') : '' }}
-                                                    -
-                                                    {{ $document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('d-m-Y') : __('custom.unlimited') }}
+                                        <span class="text-secondary d-flex flex-row align-items-baseline lh-normal">
+                                            <i class="far fa-calendar text-secondary me-1" title="{{ __('custom.period') }}"></i>
+                                            <!--
+                                            {{ $document->document_date ? $document->document_date . ' г.' : __('custom.no_terms') }}
+                                            -->
+                                            {{ $document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('d-m-Y') : '' }}
+                                            -
+                                            {{ ($document->document_date_expiring && !str_contains($document->document_date_expiring, '9999')) ? \Carbon\Carbon::parse($document->document_date_expiring)->format('d-m-Y') : __('custom.unlimited') }}
 
-                                                </span>
+                                        </span>
                                         <a href="{{ route( 'strategy-document.view' , [$document->id]) }}"
                                            title="{{ $document->title }}">
                                             <i class="fas fa-arrow-right read-more mt-2"></i>

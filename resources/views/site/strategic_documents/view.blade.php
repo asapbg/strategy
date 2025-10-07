@@ -141,12 +141,12 @@
                         <h3 class="mb-2 fs-18">{{ trans_choice('custom.date_expiring', 1) }}</h3>
 
                         <a href="{{ route('strategy-documents.reports').'?validTo='.$strategicDocument->document_date_expiring }}" class="main-color text-decoration-none fs-18" id="dateExpiring"
-                           @if ($strategicDocument->document_date_expiring) data-document-date-expiring="{{ \Carbon\Carbon::parse($strategicDocument->document_date_expiring)->format('d.m.Y') }}"
-                           @else
-                               data-document-date-expiring="true" @endif>
+                           @if ($strategicDocument->document_date_expiring && !str_contains($strategicDocument->document_date_expiring, '9999')) data-document-date-expiring="{{ \Carbon\Carbon::parse($strategicDocument->document_date_expiring)->format('d.m.Y') }}"
+                           @else data-document-date-expiring="true" @endif
+                        >
                         <span class="obj-icon-info me-2">
                             <i class="fas fa-calendar-check me-2 main-color fs-18" title="Тип консултация"></i>
-                            @if ($strategicDocument->document_date_expiring)
+                            @if ($strategicDocument->document_date_expiring && !str_contains($strategicDocument->document_date_expiring, '9999'))
                                 {{ \Carbon\Carbon::parse($strategicDocument->document_date_expiring)->format('d.m.Y') }}
                             @else
                                 {{ trans_choice('custom.date_indefinite_name', 1) }}

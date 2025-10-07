@@ -48,6 +48,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class StrategicDocumentsController extends Controller
 {
     private $pageTitle;
+
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -67,7 +68,7 @@ class StrategicDocumentsController extends Controller
         //Filter
         $rf = $request->all();
         $requestFilter = $request->all();
-        if(empty($rf)){
+        if (empty($rf)) {
             $requestFilter['title'] = null;
             $requestFilter['status'] = 'active';
         }
@@ -81,12 +82,12 @@ class StrategicDocumentsController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        if(isset($requestFilter['title']) && !empty($requestFilter['title'])){
+        if (isset($requestFilter['title']) && !empty($requestFilter['title'])) {
             $requestFilter['text'] = $requestFilter['title'];
             unset($requestFilter['title']);
         }
         $items = StrategicDocument::list($requestFilter, $sort, $sortOrd, $paginate);
-        if(isset($requestFilter['text'])){
+        if (isset($requestFilter['text'])) {
             $requestFilter['title'] = $requestFilter['text'];
             unset($requestFilter['text']);
         }
@@ -95,18 +96,21 @@ class StrategicDocumentsController extends Controller
         $hasSubscribeRss = false;
 
         $closeSearchForm = true;
-        if( $request->ajax() ) {
+        if ($request->ajax()) {
             $closeSearchForm = false;
-            return view('site.strategic_documents.list', compact('filter','sorter', 'items',
-                'rf', 'requestFilter', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm'));
+            return view('site.strategic_documents.list', compact('filter', 'sorter', 'items',
+                'rf', 'requestFilter', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm')
+            );
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.table_view', 1), 'url' => '']));
-        $this->setSeo(__('site.seo_title'),  trans_choice('custom.strategic_documents', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.strategic_documents', 2), 'img' => StrategicDocument::DEFAULT_IMG));
+        $this->setSeo(__('site.seo_title'), trans_choice('custom.strategic_documents', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.strategic_documents', 2), 'img' => StrategicDocument::DEFAULT_IMG));
 
-        return $this->view('site.strategic_documents.index', compact('filter','sorter', 'items', 'pageTitle',
-            'rf', 'requestFilter', 'defaultOrderBy', 'defaultDirection', 'editRouteName', 'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm'));
+        return $this->view('site.strategic_documents.index',
+            compact('filter', 'sorter', 'items', 'pageTitle', 'rf', 'requestFilter', 'defaultOrderBy', 'defaultDirection', 'editRouteName',
+                'deleteRouteName', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'closeSearchForm')
+        );
     }
 
     public function tree(Request $request)
@@ -118,9 +122,9 @@ class StrategicDocumentsController extends Controller
         $categories = isset($rf['level']) ? $rf['level'] : [InstitutionCategoryLevelEnum::CENTRAL->value, InstitutionCategoryLevelEnum::AREA->value, InstitutionCategoryLevelEnum::MUNICIPAL->value];
         $items = [];
         $filter = $this->filtersTree($request, $rf);
-        foreach ($categories as $cat){
-            if(!isset($items[$cat])){
-                $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($cat))];
+        foreach ($categories as $cat) {
+            if (!isset($items[$cat])) {
+                $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.' . \App\Enums\InstitutionCategoryLevelEnum::keyByValue($cat))];
             }
 
             $items[$cat]['items'] = \DB::select('
@@ -138,9 +142,9 @@ class StrategicDocumentsController extends Controller
                     , max(children.depth) as child_depth
                     , max(children.path) as child_path
                 from strategic_document
-                join strategic_document_translations on strategic_document_translations.strategic_document_id = strategic_document.id and strategic_document_translations.locale = \''.app()->getLocale().'\'
+                join strategic_document_translations on strategic_document_translations.strategic_document_id = strategic_document.id and strategic_document_translations.locale = \'' . app()->getLocale() . '\'
                 join field_of_actions on field_of_actions.id = strategic_document.policy_area_id
-                join field_of_action_translations on field_of_action_translations.field_of_action_id = field_of_actions.id and field_of_action_translations.locale = \''.app()->getLocale().'\'
+                join field_of_action_translations on field_of_action_translations.field_of_action_id = field_of_actions.id and field_of_action_translations.locale = \'' . app()->getLocale() . '\'
                 left join public_consultation on strategic_document.public_consultation_id = public_consultation.id
                 left join (
                     select * from (
@@ -156,7 +160,7 @@ class StrategicDocumentsController extends Controller
                                 0 as depth,
                                 array[(strategic_document_children.id || \'\')::varchar] as path
                             from strategic_document_children
-                            inner join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id and strategic_document_children_translations.locale = \''.app()->getLocale().'\'
+                            inner join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id and strategic_document_children_translations.locale = \'' . app()->getLocale() . '\'
                             where strategic_document_children.parent_id is null and strategic_document_children.deleted_at is null
                         )
                         union all
@@ -171,7 +175,7 @@ class StrategicDocumentsController extends Controller
                                 depth + 1 as depth,
                                 path || strategic_document_children.id::varchar
                             from strategic_document_children
-                            inner join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id and strategic_document_children_translations.locale = \''.app()->getLocale().'\'
+                            inner join strategic_document_children_translations on strategic_document_children_translations.strategic_document_children_id = strategic_document_children.id and strategic_document_children_translations.locale = \'' . app()->getLocale() . '\'
                                 inner join sd_child on sd_child.id = strategic_document_children.parent_id
                                 where strategic_document_children.deleted_at is null
                             )
@@ -182,17 +186,17 @@ class StrategicDocumentsController extends Controller
                 where
                     strategic_document.active = true
                     and strategic_document.deleted_at is null
-                    and strategic_document.strategic_document_level_id = '.$cat
-                    . (match($request->get('status', 'active')) {
-                        'active' => 'and (strategic_document.document_date_expiring is null
-                                    or strategic_document.document_date_expiring >= \''.$now.'\')',
+                    and strategic_document.strategic_document_level_id = ' . $cat
+                . (match ($request->get('status', 'active')) {
+                    'active' => 'and (strategic_document.document_date_expiring is null
+                                    or strategic_document.document_date_expiring >= \'' . $now . '\')',
 
-                        'expired' => 'and strategic_document.document_date_expiring <= \''.$now.'\'',
+                    'expired' => 'and strategic_document.document_date_expiring <= \'' . $now . '\'',
 
-                        'public_consultation' => 'and public_consultation.open_to <= \''.$now.'\' and public_consultation.active = 1',
+                    'public_consultation' => 'and public_consultation.open_to <= \'' . $now . '\' and public_consultation.active = 1',
 
-                        default => ''
-                    }) . ($request->filled('title') ? ('and strategic_document_translations.title ILIKE \'%'. $request->get('title') .'%\'') : '') . '
+                    default => ''
+                }) . ($request->filled('title') ? ('and strategic_document_translations.title ILIKE \'%' . $request->get('title') . '%\'') : '') . '
                 group by strategic_document.id, field_of_actions.id, field_of_action_translations.name, children.id, children.depth, children.path
                 order by field_of_action_translations.name, strategic_document.id, children.path, children.depth asc
             ');
@@ -212,13 +216,13 @@ class StrategicDocumentsController extends Controller
 //                ->get();
         }
 
-        if( $request->ajax() ) {
-            return view('site.strategic_documents.list_tree', compact( 'items', 'editRouteName', 'deleteRouteName', 'filter'));
+        if ($request->ajax()) {
+            return view('site.strategic_documents.list_tree', compact('items', 'editRouteName', 'deleteRouteName', 'filter'));
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.tree_view', 1), 'url' => '']));
-        $this->setSeo(__('site.seo_title'),  trans_choice('custom.strategic_documents', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.strategic_documents', 2), 'img' => StrategicDocument::DEFAULT_IMG));
+        $this->setSeo(__('site.seo_title'), trans_choice('custom.strategic_documents', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.strategic_documents', 2), 'img' => StrategicDocument::DEFAULT_IMG));
 
         return $this->view('site.strategic_documents.tree', compact('items', 'pageTitle', 'editRouteName', 'deleteRouteName', 'filter'));
     }
@@ -242,16 +246,16 @@ class StrategicDocumentsController extends Controller
             ->get();
 
         $actNumber = $strategicDocument->pris?->doc_num ?? $strategicDocument->strategic_act_number;
-        $reportsAndDocs = $strategicDocument->files()->where('locale', $locale)->whereHas('documentType.translations', function($query) {
+        $reportsAndDocs = $strategicDocument->files()->where('locale', $locale)->whereHas('documentType.translations', function ($query) {
             $query->where('name', 'like', '%Отчети%')->orWhere('name', 'like', '%Доклади%');
         })->get();
-        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC.'_'.app()->getLocale())->first();
+        $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_STRATEGY_DOC . '_' . app()->getLocale())->first();
         $pageTitle = $strategicDocument->title;
         $this->setBreadcrumbsTitle($pageTitle);
 
         $this->composeBreadcrumbs($strategicDocument);
 
-        $documents = StrategicDocumentChildren::getTree(0,$strategicDocument->id);
+        $documents = StrategicDocumentChildren::getTree(0, $strategicDocument->id);
 
         $hasSubscribeEmail = $this->hasSubscription($strategicDocument);
         $hasSubscribeRss = false;
@@ -273,9 +277,9 @@ class StrategicDocumentsController extends Controller
     public function export(Request $request, $id)
     {
         $strategicDocument = StrategicDocument::with(['documentType.translations'])->findOrFail($id);
-        $documents = StrategicDocumentChildren::getTree(0,$strategicDocument->id);
+        $documents = StrategicDocumentChildren::getTree(0, $strategicDocument->id);
         $pdf = PDF::loadView('exports.strategic_document', compact('strategicDocument', 'documents'));
-        return $pdf->download(substr($strategicDocument->title, 0, 250).'.pdf');
+        return $pdf->download(substr($strategicDocument->title, 0, 250) . '.pdf');
     }
 
     public function contacts(Request $request, $itemId = null)
@@ -286,18 +290,18 @@ class StrategicDocumentsController extends Controller
             ->with(['institution.translations', 'institution.fieldsOfAction.translations'])
             ->get();
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
-        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2),  trans_choice('custom.contacts', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2), 'description' => trans_choice('custom.contacts', 2), 'img' => StrategicDocument::DEFAULT_IMG));
+        $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.strategic_documents', 2), trans_choice('custom.contacts', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.strategic_documents', 2), 'description' => trans_choice('custom.contacts', 2), 'img' => StrategicDocument::DEFAULT_IMG));
         return $this->view('site.strategic_documents.contacts', compact('moderators', 'pageTitle'));
     }
 
     public function documents()
     {
-        $page = Page::with(['files' => function($q) {
+        $page = Page::with(['files' => function ($q) {
             $q->where('locale', '=', app()->getLocale());
         }])
             ->where('system_name', '=', Page::STRATEGIC_DOCUMENT_DOCUMENTS)
             ->first();
-        if(!$page){
+        if (!$page) {
             abort(404);
         }
         $pageTitle = $this->pageTitle;
@@ -308,12 +312,12 @@ class StrategicDocumentsController extends Controller
 
     public function info()
     {
-        $page = Page::with(['files' => function($q) {
+        $page = Page::with(['files' => function ($q) {
             $q->where('locale', '=', app()->getLocale());
         }])
             ->where('system_name', '=', Page::STRATEGIC_DOCUMENT_INFO)
             ->first();
-        if(!$page){
+        if (!$page) {
             abort(404);
         }
         $pageTitle = $this->pageTitle;
@@ -329,7 +333,7 @@ class StrategicDocumentsController extends Controller
         //Filter
         $rf = $request->all();
         $requestFilter = $request->all();
-        if(empty($rf)){
+        if (empty($rf)) {
             $requestFilter['status'] = 'active';
         }
         $filter = $this->filtersReport($request, $rf);
@@ -346,40 +350,40 @@ class StrategicDocumentsController extends Controller
             ->Active()
             ->with(['translations', 'policyArea', 'policyArea.translations', 'acceptActInstitution', 'acceptActInstitution.translations', 'documentType.translations'])
             ->leftJoin('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
-            ->leftJoin('field_of_action_translations', function ($j){
+            ->leftJoin('field_of_action_translations', function ($j) {
                 $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
                     ->where('field_of_action_translations.locale', '=', app()->getLocale());
             })
-            ->leftJoin('strategic_document_translations', function ($j){
+            ->leftJoin('strategic_document_translations', function ($j) {
                 $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
                     ->where('strategic_document_translations.locale', '=', app()->getLocale());
             })
             ->leftJoin('strategic_document_type', 'strategic_document_type.id', '=', 'strategic_document.strategic_document_type_id')
-            ->leftJoin('strategic_document_type_translations', function ($j){
+            ->leftJoin('strategic_document_type_translations', function ($j) {
                 $j->on('strategic_document_type_translations.strategic_document_type_id', '=', 'strategic_document_type.id')
                     ->where('strategic_document_type_translations.locale', '=', app()->getLocale());
             })
             ->whereNull('parent_document_id')
             ->FilterBy($requestFilter)
-            ->when(!$sort, function ($q){
+            ->when(!$sort, function ($q) {
                 return $q->orderBy('strategic_document_level_id', 'asc')
                     ->orderBy('field_of_action_translations.name', 'asc')
                     ->orderBy('strategic_document_translations.title', 'asc');
-            })->when($sort, function ($q) use($sort,$sortOrd){
-                return $q->SortedBy($sort,$sortOrd);
+            })->when($sort, function ($q) use ($sort, $sortOrd) {
+                return $q->SortedBy($sort, $sortOrd);
             });
-            //->GroupBy('strategic_document.id');
+        //->GroupBy('strategic_document.id');
 
-        if($request->input('export_excel') || $request->input('export_word')){
+        if ($request->input('export_excel') || $request->input('export_word')) {
             $items = $q->get();
             $exportData = [
                 'title' => __('custom.strategic_documents_report_title'),
                 'rows' => $items
             ];
 
-            $fileName = 'sd_report_'.Carbon::now()->format('Y_m_d_H_i_s');
+            $fileName = 'sd_report_' . Carbon::now()->format('Y_m_d_H_i_s');
             if ($request->input('export_excel')) {
-                return Excel::download(new StrategicDocumentsExport($exportData), $fileName.'.xlsx');
+                return Excel::download(new StrategicDocumentsExport($exportData), $fileName . '.xlsx');
             } else {
                 $fileName .= '.docx';
 
@@ -439,7 +443,7 @@ class StrategicDocumentsController extends Controller
                     $tableCell->addText($row->documentType ? $row->documentType->name : '---');
 
                     $tableCell = $tableRow->addCell(4000);
-                    $tableCell->addText($row->strategic_document_level_id ? __('custom.strategic_document.dropdown.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($row->strategic_document_level_id)) : '---');
+                    $tableCell->addText($row->strategic_document_level_id ? __('custom.strategic_document.dropdown.' . \App\Enums\InstitutionCategoryLevelEnum::keyByValue($row->strategic_document_level_id)) : '---');
 
                     $tableCell = $tableRow->addCell(4000);
                     $tableCell->addText($row->policyArea ? $row->policyArea->name : '---');
@@ -456,12 +460,12 @@ class StrategicDocumentsController extends Controller
 //                                    : __('custom.to') . ' ' . displayDate($row->document_date_expiring))
 
                         ($row->document_date_accepted
-                                ? \Carbon\Carbon::parse($row->document_date_accepted)->format('d-m-Y')
-                                : '' )
-                            . ' - ' .
-                            ($row->document_date_expiring
-                                ? \Carbon\Carbon::parse($row->document_date_expiring)->format('d-m-Y')
-                                : __('custom.unlimited'))
+                            ? \Carbon\Carbon::parse($row->document_date_accepted)->format('d-m-Y')
+                            : '')
+                        . ' - ' .
+                        ($row->document_date_expiring
+                            ? \Carbon\Carbon::parse($row->document_date_expiring)->format('d-m-Y')
+                            : __('custom.unlimited'))
                     );
                 }
 
@@ -471,21 +475,21 @@ class StrategicDocumentsController extends Controller
 
                 return response()->download(storage_path($fileName), $fileName)->deleteFileAfterSend();
             }
-        } else{
+        } else {
             $items = $q->paginate($paginate);
         }
 
         $closeSearchForm = false;
-        if( $request->ajax() ) {
+        if ($request->ajax()) {
             $closeSearchForm = false;
-            return view('site.strategic_documents.list_report', compact('filter','sorter', 'items', 'rf', 'closeSearchForm'));
+            return view('site.strategic_documents.list_report', compact('filter', 'sorter', 'items', 'rf', 'closeSearchForm'));
         }
 
         $pageTitle = trans('custom.strategy_documents_plural');
         $this->composeBreadcrumbs(null, array(['name' => __('site.strategic_document.all_documents_report'), 'url' => '']));
-        $this->setSeo(__('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2),  trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title').' - '.trans_choice('custom.strategic_documents', 2), 'description' => trans_choice('custom.reports', 2), 'img' => StrategicDocument::DEFAULT_IMG));
+        $this->setSeo(__('site.seo_title') . ' - ' . trans_choice('custom.strategic_documents', 2), trans_choice('custom.reports', 2), '', array('title' => __('site.seo_title') . ' - ' . trans_choice('custom.strategic_documents', 2), 'description' => trans_choice('custom.reports', 2), 'img' => StrategicDocument::DEFAULT_IMG));
 
-        return $this->view('site.strategic_documents.report', compact('filter','sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
+        return $this->view('site.strategic_documents.report', compact('filter', 'sorter', 'items', 'pageTitle', 'rf', 'defaultOrderBy', 'defaultDirection', 'closeSearchForm'));
     }
 
     private function filters($request, $currentRequest)
@@ -538,7 +542,7 @@ class StrategicDocumentsController extends Controller
                     ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
                 ),
                 'value' => request()->input('status'),
-                'default' => empty($currentRequest) ? 'active' :'',
+                'default' => empty($currentRequest) ? 'active' : '',
                 'col' => 'col-md-6'
             ),
             'DocumentType' => array(
@@ -568,7 +572,8 @@ class StrategicDocumentsController extends Controller
         );
     }
 
-    private function filtersReport($request, $currentRequest){
+    private function filtersReport($request, $currentRequest)
+    {
         return array(
             'level' => array(
                 'type' => 'select',
@@ -639,7 +644,7 @@ class StrategicDocumentsController extends Controller
                     ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
                 ),
                 'value' => request()->input('status'),
-                'default' => empty($currentRequest) ? 'active' :'',
+                'default' => empty($currentRequest) ? 'active' : '',
                 'col' => 'col-md-6'
             ),
             'DocumentType' => array(
@@ -686,7 +691,7 @@ class StrategicDocumentsController extends Controller
                     ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
                 ),
                 'value' => request()->input('status'),
-                'default' => empty($currentRequest) ? 'active' :'',
+                'default' => empty($currentRequest) ? 'active' : '',
                 'col' => 'col-md-6'
             ),
             'title' => array(
@@ -740,32 +745,33 @@ class StrategicDocumentsController extends Controller
      * @param $extraItems
      * @return void
      */
-    private function composeBreadcrumbs($item = null, $extraItems = []){
+    private function composeBreadcrumbs($item = null, $extraItems = [])
+    {
         $customBreadcrumbs = array(
             ['name' => trans_choice('custom.strategic_documents', 1), 'url' => route('strategy-documents.index')]
         );
 
-        if($item && $item->strategic_document_level_id){
-            $customBreadcrumbs[] = ['name' => __('custom.strategic_document.levels.'.InstitutionCategoryLevelEnum::keyByValue($item->strategic_document_level_id)), 'url' => route('strategy-documents.index').'?level[]='.$item->strategic_document_level_id];
+        if ($item && $item->strategic_document_level_id) {
+            $customBreadcrumbs[] = ['name' => __('custom.strategic_document.levels.' . InstitutionCategoryLevelEnum::keyByValue($item->strategic_document_level_id)), 'url' => route('strategy-documents.index') . '?level[]=' . $item->strategic_document_level_id];
         }
 
-        if($item && $item->policyArea){
+        if ($item && $item->policyArea) {
             $field = 'fieldOfActions';
-            if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::MUNICIPAL->value) {
+            if ($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::MUNICIPAL->value) {
                 $field = 'municipalities';
             }
-            if($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::AREA->value) {
+            if ($item && $item->strategic_document_level_id == InstitutionCategoryLevelEnum::AREA->value) {
                 $field = 'areas';
             }
-            $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('strategy-documents.index').'?'.$field.'[]='.$item->policyArea->id.'&level[]='.$item->strategic_document_level_id];
+            $customBreadcrumbs[] = ['name' => $item->policyArea->name, 'url' => route('strategy-documents.index') . '?' . $field . '[]=' . $item->policyArea->id . '&level[]=' . $item->strategic_document_level_id];
         }
 
-        if($item){
-             $customBreadcrumbs[] = ['name' => $item->title, 'url' => !empty($extraItems) ? route('advisory-boards.view', $item) : null];
+        if ($item) {
+            $customBreadcrumbs[] = ['name' => $item->title, 'url' => !empty($extraItems) ? route('advisory-boards.view', $item) : null];
         }
 
-        if(!empty($extraItems)){
-            foreach ($extraItems as $eItem){
+        if (!empty($extraItems)) {
+            foreach ($extraItems as $eItem) {
                 $customBreadcrumbs[] = $eItem;
             }
         }

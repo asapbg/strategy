@@ -669,7 +669,7 @@ return [
     'address'              => 'Адрес',
     'effective'              => 'Действащи',
     'expired'              => 'Изтекли',
-    'in_process_of_consultation'  => 'Процес на консултация',
+    'in_process_of_consultation'  => 'В процес на консултация',
     'categories_based_on_livecycle' => 'Категории спрямо цикъла си на живот',
     'secretariat' => 'Секретариат',
     'infinite' =>           'Безсрочна',
