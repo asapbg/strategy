@@ -55,7 +55,7 @@
 
                 <div class="col-md-4 position-relative mt-3">
                     <div class="service-item  position-relative">
-                        <a href="{{ route('legislative_initiatives.index') }}" title="{{ __('custom.ogp') }}">
+                        <a href="{{ route('ogp.info') }}" title="{{ __('custom.ogp') }}">
                             <img height="68" class="rounded-5" style="margin-bottom: 20px;" src="{{ asset('images/ogp_s_logo_2.png') }}" alt="{{ __('custom.ogp') }}">
 {{--                            <div class="icon">--}}
 {{--                                <i class="bi bi-bounding-box-circles"></i>--}}
