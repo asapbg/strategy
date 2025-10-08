@@ -49,7 +49,7 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('layouts.site', function ($view) {
             $facebookAppIdKey = Setting::FACEBOOK_APP_ID;
             $facebookAppId = Cache::get($facebookAppIdKey);
-            if( is_null($facebookAppId) ) {
+            if (is_null($facebookAppId)) {
                 $settingsFb = Setting::where('name', '=', Setting::FACEBOOK_APP_ID)
                     ->where('section', '=', Setting::FACEBOOK_SECTION)->get()->first();
                 $facebookAppId = $settingsFb ? $settingsFb->value : '';
@@ -62,10 +62,10 @@ class ViewServiceProvider extends ServiceProvider
 
             $view->with(
                 [
-                    'facebookAppId'     => $facebookAppId,
-                    'vo_font_percent'   => $vo_font_percent,
-                    'vo_high_contrast'  => $vo_high_contrast,
-                    'vo_can_reset'      => $vo_can_reset,
+                    'facebookAppId' => $facebookAppId,
+                    'vo_font_percent' => $vo_font_percent,
+                    'vo_high_contrast' => $vo_high_contrast,
+                    'vo_can_reset' => $vo_can_reset,
                 ]
             );
         });
@@ -73,7 +73,7 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('site.legislative_initiatives.side_menu', function ($view) {
             $ogpLibraryKey = Page::CACHE_MODULE_PAGES_OGP;
             $library = Cache::get($ogpLibraryKey);
-            if( is_null($library) ) {
+            if (is_null($library)) {
                 $library = Page::with(['translations'])
                     ->where('module_enum', '=', PageModulesEnum::MODULE_OGP->value)
                     ->orderBy('order_idx', 'asc')
@@ -94,8 +94,8 @@ class ViewServiceProvider extends ServiceProvider
                 ->orderBy('from_date', 'asc')
                 ->get();
 
-            if($nationalPlan->count()) {
-                foreach ($nationalPlan as $plan){
+            if ($nationalPlan->count()) {
+                foreach ($nationalPlan as $plan) {
                     $nationalPlans[] = ['url' => route('ogp.national_action_plans.show', $plan->id), 'id' => $plan->id, 'label' => $plan->name, 'old' => false];
                 }
             }
@@ -106,7 +106,7 @@ class ViewServiceProvider extends ServiceProvider
             $developPlan = OgpPlan::select('ogp_plan.*')
                 ->Active()
                 ->join('ogp_status', 'ogp_plan.ogp_status_id', '=', 'ogp_status.id')
-                ->leftJoin('ogp_plan_translations', function ($j){
+                ->leftJoin('ogp_plan_translations', function ($j) {
                     $j->on('ogp_plan_translations.ogp_plan_id', '=', 'ogp_plan.id')
                         ->where('ogp_plan_translations.locale', '=', app()->getLocale());
                 })
@@ -119,7 +119,7 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('impact_assessment.sidebar', function ($view) {
             $ogpLibraryKey = Page::CACHE_MODULE_PAGES_IMPACT_ASSESSMENT;
             $library = Cache::get($ogpLibraryKey);
-            if( is_null($library) ) {
+            if (is_null($library)) {
                 $library = Page::with(['translations'])
                     ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
                     ->orderBy('order_idx', 'asc')
@@ -133,12 +133,12 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('partials.footer_front', function ($view) {
             $currentMenuKey = Setting::CONTACT_MAIL_KEY;
             $contactMail = Cache::get($currentMenuKey);
-            if( is_null($contactMail) ) {
+            if (is_null($contactMail)) {
                 $contactMail = Setting::where('name', '=', $currentMenuKey)->first();
                 //Log::error('Search mail in db');
-                if(!$contactMail) {
+                if (!$contactMail) {
                     $contactMail = '---';
-                } else{
+                } else {
                     $contactMail = $contactMail->value;
                 }
                 Cache::put($currentMenuKey, $contactMail, 3600);
@@ -147,15 +147,14 @@ class ViewServiceProvider extends ServiceProvider
 
             $footerPagesCacheKey = Page::CACHE_FOOTER_PAGES_KEY;
             $footerPages = Cache::get($footerPagesCacheKey);
-            if( is_null($footerPages) ) {
-//            if( true ) {
+            if (is_null($footerPages)) {
                 $footerPages = [];
                 $footerPagesQ = Page::with(['translations'])->InFooter()->get();
-                if($footerPagesQ->count()){
-                    foreach ($footerPagesQ as $page){
+                if ($footerPagesQ->count()) {
+                    foreach ($footerPagesQ as $page) {
                         //case in module
-                        if($page->module_enum && !$page->is_system){
-                            switch ($page->module_enum){
+                        if ($page->module_enum && !$page->is_system) {
+                            switch ($page->module_enum) {
                                 case PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value:
                                     $footerPages[] = ['name' => $page->name, 'url' => route('impact_assessment.library.view', ['slug' => $page->slug])];
                                     break;
@@ -163,9 +162,9 @@ class ViewServiceProvider extends ServiceProvider
                                     $footerPages[] = ['name' => $page->name, 'url' => route('ogp.library.view', ['slug' => $page->slug])];
                                     break;
                             }
-                        } elseif ($page->is_system){
+                        } elseif ($page->is_system) {
                             //case by system name
-                            switch ($page->system_name){
+                            switch ($page->system_name) {
                                 case Page::ADV_BOARD_DOCUMENTS:
                                     $footerPages[] = ['name' => $page->name, 'url' => route('advisory-boards.documents')];
                                     break;
@@ -176,7 +175,7 @@ class ViewServiceProvider extends ServiceProvider
                                     $footerPages[] = ['name' => $page->name, 'url' => route('impact_assessment.index')];
                                     break;
                             }
-                        } else{
+                        } else {
                             $footerPages[] = ['name' => $page->name, 'url' => route('page.view', ['slug' => $page->slug])];
                         }
                     }
@@ -188,14 +187,14 @@ class ViewServiceProvider extends ServiceProvider
             //Terms pages
             $footerTermsPagesCacheKey = Page::CACHE_FOOTER_TERMS_PAGES;
             $footerTermsPages = Cache::get($footerTermsPagesCacheKey);
-            if( is_null($footerTermsPages) ) {
+            if (is_null($footerTermsPages)) {
                 $footerTermsPages = [];
                 $termsPageNames = [Page::ACCESS_POLICY, Page::PRIVACY_POLICY, Page::TERMS, Page::COOKIES];
                 $pages = Page::with(['translations'])->isActive()->whereIn('system_name', $termsPageNames)->get();
-                if($pages->count()){
-                    foreach ($termsPageNames as $systemName){
-                        foreach ($pages as $p){
-                            if($systemName == $p->system_name){
+                if ($pages->count()) {
+                    foreach ($termsPageNames as $systemName) {
+                        foreach ($pages as $p) {
+                            if ($systemName == $p->system_name) {
                                 $footerTermsPages[] = ['name' => $p->name, 'url' => route('page.view', ['slug' => $p->slug])];
                             }
                         }

@@ -7,6 +7,7 @@ use App\Http\Requests\SettingsStoreRequest;
 use App\Library\Facebook;
 use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
@@ -25,7 +26,11 @@ class SettingsController extends Controller
         return $this->view('admin.settings.index', compact('settings', 'section', 'sections', 'disabledSettings'));
     }
 
-    public function store(SettingsStoreRequest $request): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
+    /**
+     * @param SettingsStoreRequest $request
+     * @return RedirectResponse
+     */
+    public function store(SettingsStoreRequest $request)
     {
         $validated = $request->validated();
         $section = $validated['section'];

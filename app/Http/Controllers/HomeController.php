@@ -33,6 +33,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 class HomeController extends Controller
 {
     const USER_GUIDE = 'user_guide';
+
     /**
      * Show the application dashboard.
      *
@@ -46,28 +47,28 @@ class HomeController extends Controller
 
         $publications = Publication::select('publication.*')
             ->whereActive(true)
-            ->with(['translation','mainImg','category.translation'])
+            ->with(['translation', 'mainImg', 'category.translation'])
             ->joinTranslation(Publication::class)
             ->whereLocale(currentLocale())
             //->whereType(PublicationTypesEnum::TYPE_NEWS)
-            ->whereDate('created_at', '<=', date('Y-m-d'))
-            ->orderBy('created_at', 'DESC')
+            ->whereDate('published_at', '<=', date('Y-m-d'))
+            ->orderBy('published_at', 'DESC')
             ->paginate(3);
 
-        $default_img = "files".DIRECTORY_SEPARATOR.File::PUBLICATION_UPLOAD_DIR."news-default.jpg";
+        $default_img = "files" . DIRECTORY_SEPARATOR . File::PUBLICATION_UPLOAD_DIR . "news-default.jpg";
 
         $polls = $this->getPolls(new Request());
         $planAreas = $this->getPlanAreas(new Request());
 
         return $this->view('site.home.index',
-            compact('consultations','initiatives', 'publications','default_img', 'polls', 'planAreas', 'strategicDocuments'));
+            compact('consultations', 'initiatives', 'publications', 'default_img', 'polls', 'planAreas', 'strategicDocuments'));
     }
 
     public function getPlanAreas(Request $request)
     {
         $developPlan = OgpPlan::select('ogp_plan.*')->Active()
             ->join('ogp_status', 'ogp_plan.ogp_status_id', '=', 'ogp_status.id')
-            ->leftJoin('ogp_plan_translations', function ($j){
+            ->leftJoin('ogp_plan_translations', function ($j) {
                 $j->on('ogp_plan_translations.ogp_plan_id', '=', 'ogp_plan.id')
                     ->where('ogp_plan_translations.locale', '=', app()->getLocale());
             })
@@ -88,11 +89,11 @@ class HomeController extends Controller
                 poll.only_registered,
                 poll.start_date,
                 poll.end_date,
-                case when poll.start_date <= \''.$nowDate.'\' and poll.end_date >= \''.$nowDate.'\' then 1 else 0 end as active_ord
+                case when poll.start_date <= \'' . $nowDate . '\' and poll.end_date >= \'' . $nowDate . '\' then 1 else 0 end as active_ord
             from poll
             join poll_question on poll_question.poll_id = poll.id and poll_question.deleted_at is null
             where poll.deleted_at is null
-                and poll.status <> '.PollStatusEnum::INACTIVE->value.'
+                and poll.status <> ' . PollStatusEnum::INACTIVE->value . '
             group by poll.id
             order by poll.created_at desc, active_ord desc
             limit 5
@@ -149,12 +150,12 @@ class HomeController extends Controller
         $paginate = 4;
         $is_search = $request->has('search');
         $keywords = $request->offsetGet('keywords');
-        $initiatives = LegislativeInitiative::select('legislative_initiative.*')->with(['comments','likes'])
+        $initiatives = LegislativeInitiative::select('legislative_initiative.*')->with(['comments', 'likes'])
             ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
-            ->join('law_translations', function ($q){
+            ->join('law_translations', function ($q) {
                 $q->on('law_translations.law_id', '=', 'law.id')->where('law_translations.locale', '=', app()->getLocale());
             })
-            ->when(!empty($keywords), function ($query) use ($keywords){
+            ->when(!empty($keywords), function ($query) use ($keywords) {
                 $query->where('law_translations.name', 'ilike', '%' . $keywords . '%');
                 $query->orWhere('legislative_initiative.description', 'ilike', '%' . $keywords . '%')
                     ->orWhereHas('user', function ($query) use ($keywords) {
@@ -202,57 +203,56 @@ class HomeController extends Controller
         $locale = app()->getLocale();
         $nowDate = Carbon::now()->format('Y-m-d');
         $nowDateTimeStamp = Carbon::now()->format('Y-m-d H:i:s');
-        switch ($section)
-        {
+        switch ($section) {
             case 'adv_board':
                 $sectionName = trans_choice('custom.advisory_boards', 2);
                 $items = AdvisoryBoard::select(['advisory_boards.id', 'advisory_board_translations.name'])
-                    ->join('advisory_board_translations', function ($j) use($locale){
+                    ->join('advisory_board_translations', function ($j) use ($locale) {
                         $j->on('advisory_board_translations.advisory_board_id', '=', 'advisory_boards.id')
                             ->where('advisory_board_translations.locale', '=', $locale);
                     })
-                ->where('advisory_boards.public', '=', true)
-                ->where('advisory_board_translations.name', 'ilike', '%'.$search.'%')
-                ->paginate($paginate);
+                    ->where('advisory_boards.public', '=', true)
+                    ->where('advisory_board_translations.name', 'ilike', '%' . $search . '%')
+                    ->paginate($paginate);
                 break;
             case 'sd':
                 $sectionName = trans_choice('custom.strategic_documents', 2);
                 $items = StrategicDocument::select(['strategic_document.id', \DB::raw('strategic_document_translations.title as name')])
-                    ->join('strategic_document_translations', function ($j) use($locale){
+                    ->join('strategic_document_translations', function ($j) use ($locale) {
                         $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')
                             ->where('strategic_document_translations.locale', '=', $locale);
                     })
                     ->where('strategic_document.active', '=', true)
-                    ->where('strategic_document_translations.title', 'ilike', '%'.$search.'%')
+                    ->where('strategic_document_translations.title', 'ilike', '%' . $search . '%')
                     ->paginate($paginate);
                 break;
             case 'pc':
                 $sectionName = trans_choice('custom.public_consultations', 2);
                 $items = PublicConsultation::select(['public_consultation.id', \DB::raw('public_consultation_translations.title as name')])
-                    ->join('public_consultation_translations', function ($j) use($locale){
+                    ->join('public_consultation_translations', function ($j) use ($locale) {
                         $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
                             ->where('public_consultation_translations.locale', '=', $locale);
                     })
                     ->where('public_consultation.active', '=', 1)
-                    ->where(function ($q) use($search){
-                        $q->where('public_consultation_translations.title', 'ilike', '%'.$search.'%')
-                            ->orWhere('public_consultation_translations.description', 'ilike', '%'.$search.'%');
+                    ->where(function ($q) use ($search) {
+                        $q->where('public_consultation_translations.title', 'ilike', '%' . $search . '%')
+                            ->orWhere('public_consultation_translations.description', 'ilike', '%' . $search . '%');
                     })
                     ->where('public_consultation.open_from', '<=', $nowDate)
                     ->paginate($paginate);
                 break;
             case 'li':
                 $sectionName = trans_choice('custom.legislative_initiatives', 2);
-                $items = LegislativeInitiative::select(['legislative_initiative.id', \DB::raw(__('custom.change_f').' '.__('custom.in').' || \' \' || law_translations.name as name')])
-                    ->join('law', 'law.id', '=','legislative_initiative.law_id')
-                    ->join('law_translations', function ($j) use($locale){
+                $items = LegislativeInitiative::select(['legislative_initiative.id', \DB::raw(__('custom.change_f') . ' ' . __('custom.in') . ' || \' \' || law_translations.name as name')])
+                    ->join('law', 'law.id', '=', 'legislative_initiative.law_id')
+                    ->join('law_translations', function ($j) use ($locale) {
                         $j->on('law_translations.law_id', '=', 'law.id')
                             ->where('law_translations.locale', '=', $locale);
                     })
-                    ->where(function ($q) use($search){
-                        $q->where('legislative_initiative.description', 'ilike', '%'.$search.'%')
-                            ->orWhere('legislative_initiative.law_paragraph', 'ilike', '%'.$search.'%')
-                            ->orWhere('legislative_initiative.law_text', 'ilike', '%'.$search.'%');
+                    ->where(function ($q) use ($search) {
+                        $q->where('legislative_initiative.description', 'ilike', '%' . $search . '%')
+                            ->orWhere('legislative_initiative.law_paragraph', 'ilike', '%' . $search . '%')
+                            ->orWhere('legislative_initiative.law_text', 'ilike', '%' . $search . '%');
                     })
                     ->paginate($paginate);
                 break;
@@ -265,14 +265,14 @@ class HomeController extends Controller
                     ($section == 'news' ? trans_choice('custom.news', 2) : trans_choice('custom.ogp_news', 2));
 
                 $items = Publication::select(['publication.id', \DB::raw('publication_translations.title as name')])
-                    ->join('publication_translations', function ($j) use($locale){
+                    ->join('publication_translations', function ($j) use ($locale) {
                         $j->on('publication_translations.publication_id', '=', 'publication.id')
                             ->where('publication_translations.locale', '=', $locale);
                     })
-                    ->where(function ($q) use($search){
-                        $q->where('publication_translations.title', 'ilike', '%'.$search.'%')
-                            ->orWhere('publication_translations.content', 'ilike', '%'.$search.'%')
-                            ->orWhere('publication_translations.short_content', 'ilike', '%'.$search.'%');
+                    ->where(function ($q) use ($search) {
+                        $q->where('publication_translations.title', 'ilike', '%' . $search . '%')
+                            ->orWhere('publication_translations.content', 'ilike', '%' . $search . '%')
+                            ->orWhere('publication_translations.short_content', 'ilike', '%' . $search . '%');
                     })
                     ->where('publication.active', '=', true)
                     ->where('publication.published_at', '>=', $nowDate)
@@ -281,20 +281,20 @@ class HomeController extends Controller
                 break;
             case 'pris':
                 $sectionName = trans_choice('custom.pris', 2);
-                $items = Pris::select(['pris.id', \DB::raw('legal_act_type_translations.name as act_type_name'), \DB::raw('legal_act_type_translations.name || \' \' || \'' . __('custom.number_symbol') . '\' || pris.doc_num || \' \' || \'' . __('custom.of') . '\' || \''.__('site.the_ministry').'\' || \' \' || \''.__('custom.from').'\' || \' \' || date_part(\'year\',pris.doc_date) || \''.__('custom.year_short').'\' as name')])
-                    ->join('pris_translations', function ($j) use($locale){
+                $items = Pris::select(['pris.id', \DB::raw('legal_act_type_translations.name as act_type_name'), \DB::raw('legal_act_type_translations.name || \' \' || \'' . __('custom.number_symbol') . '\' || pris.doc_num || \' \' || \'' . __('custom.of') . '\' || \'' . __('site.the_ministry') . '\' || \' \' || \'' . __('custom.from') . '\' || \' \' || date_part(\'year\',pris.doc_date) || \'' . __('custom.year_short') . '\' as name')])
+                    ->join('pris_translations', function ($j) use ($locale) {
                         $j->on('pris_translations.pris_id', '=', 'pris.id')
                             ->where('pris_translations.locale', '=', $locale);
                     })
                     ->join('legal_act_type', 'pris.legal_act_type_id', '=', 'legal_act_type.id')
-                    ->join('legal_act_type_translations', function ($j) use($locale){
+                    ->join('legal_act_type_translations', function ($j) use ($locale) {
                         $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
                             ->where('legal_act_type_translations.locale', '=', $locale);
                     })
-                    ->where(function ($q) use($search){
-                        $q->where('pris_translations.about', 'ilike', '%'.$search.'%')
-                            ->orWhere('pris_translations.legal_reason', 'ilike', '%'.$search.'%')
-                            ->orWhere('pris_translations.importer', 'ilike', '%'.$search.'%');
+                    ->where(function ($q) use ($search) {
+                        $q->where('pris_translations.about', 'ilike', '%' . $search . '%')
+                            ->orWhere('pris_translations.legal_reason', 'ilike', '%' . $search . '%')
+                            ->orWhere('pris_translations.importer', 'ilike', '%' . $search . '%');
                     })
                     ->where('pris.active', '=', 1)
                     ->where('pris.asap_last_version', '=', 1)
@@ -308,13 +308,14 @@ class HomeController extends Controller
             abort(404);
         }
 
-        $pageTitle = __('site.search_in_platform_page_title').' '.__('custom.in').' '.__('custom.section_search').' '.$sectionName;
+        $pageTitle = __('site.search_in_platform_page_title') . ' ' . __('custom.in') . ' ' . __('custom.section_search') . ' ' . $sectionName;
         $this->setBreadcrumbsFull(array(
             ['name' => $pageTitle, 'url' => ''],
             ['name' => $sectionName, 'url' => '']
         ));
         return $this->view('site.search_results_section', compact('pageTitle', 'search', 'defaultPaginate', 'items', 'sectionName'));
     }
+
     public function search(Request $request)
     {
         $defaultPaginate = 6;
@@ -466,7 +467,7 @@ class HomeController extends Controller
 
         $totalResults = $totalCnt[0];
         $adv_board_items = $sd_items = $li_items = $pris_items = $publications_items = $news_items = $ogp_news_items = $pc_items = null;
-        if(isset($totalCnt[0]) && $totalCnt[0]->sum) {
+        if (isset($totalCnt[0]) && $totalCnt[0]->sum) {
             //Search in Adv Boards
             $adv_board_items = \DB::select('
                 select
@@ -510,7 +511,7 @@ class HomeController extends Controller
             $li_items = \DB::select('
                 select
                     legislative_initiative.id,
-                    \''.__('custom.change_f').' '.__('custom.in').'\' || \' \' || law_translations.name as name,
+                    \'' . __('custom.change_f') . ' ' . __('custom.in') . '\' || \' \' || law_translations.name as name,
                     \'li\' as item_type,
                     \'\' as act_type_name,
                     0 as in_archive
@@ -532,7 +533,7 @@ class HomeController extends Controller
             $pris_items = \DB::select('
                 select
                     pris.id,
-                    legal_act_type_translations.name_single || \' \' || \'' . __('custom.number_symbol') . '\' || pris.doc_num || \' \' || \'' . __('custom.of') . '\' || \' \' || \''.__('site.the_ministry').'\' || \' \' || \''.__('custom.from').'\' || \' \' || date_part(\'year\',pris.doc_date) || \''.__('custom.year_short').'\' as name,
+                    legal_act_type_translations.name_single || \' \' || \'' . __('custom.number_symbol') . '\' || pris.doc_num || \' \' || \'' . __('custom.of') . '\' || \' \' || \'' . __('site.the_ministry') . '\' || \' \' || \'' . __('custom.from') . '\' || \' \' || date_part(\'year\',pris.doc_date) || \'' . __('custom.year_short') . '\' as name,
                     \'pris\' as item_type,
                     legal_act_type_translations.name as act_type_name,
                     pris.in_archive
@@ -662,9 +663,9 @@ class HomeController extends Controller
 
     public function contacts(Request $request, $section = '')
     {
-        $title = empty($section) ? __('site.contact_with_administrator') : __('site.contact_with_'.str_replace('-', '_', $section));
+        $title = empty($section) ? __('site.contact_with_administrator') : __('site.contact_with_' . str_replace('-', '_', $section));
         $form = false;
-        switch ($section){
+        switch ($section) {
             case 'public-consultations':
                 $roles = [CustomRole::MODERATOR_PUBLIC_CONSULTATION];
                 break;
@@ -685,15 +686,18 @@ class HomeController extends Controller
                 $roles = [CustomRole::ADMIN_USER_ROLE];
         }
 
-        $users = User::role($roles)->orderBy('first_name')->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)->get();
+        //$users = User::role($roles)->orderBy('first_name')->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)->get();
 
-        $users = User::role($roles)->select('users.*')
+        $users = User::role($roles)
+            ->select('users.*')
             ->leftJoin('institution', 'institution.id', '=', 'users.institution_id')
-            ->leftJoin('institution_translations', function ($j){
+            ->leftJoin('institution_translations', function ($j) {
                 $j->on('institution.id', '=', 'institution_translations.institution_id')->where('locale', '=', app()->getLocale());
             })
             ->whereNotIn('users.email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
-            ->orderBy('institution_translations.name')->orderBy('users.first_name')
+            ->whereRaw("users.email::TEXT NOT LIKE '%@asap.bg%'")
+            ->orderBy('institution_translations.name')
+            ->orderBy('users.first_name')
             ->get();
 
         $pageTitle = trans_choice('custom.contacts', 2);
@@ -704,16 +708,16 @@ class HomeController extends Controller
     {
         $validated = $request->validated();
 
-        if(!in_array($validated['subject'], [__('site.contacts.subject.report_problem'), __('site.contacts.subject.question'), __('site.contacts.subject.proposal')])){
+        if (!in_array($validated['subject'], [__('site.contacts.subject.report_problem'), __('site.contacts.subject.question'), __('site.contacts.subject.proposal')])) {
             return back()->withInput()->with('danger', __('site.contacts.subject.missing'));
         }
-        if(config('app.env') != 'production'){
+        if (config('app.env') != 'production') {
             $admins = [config('mail.local_to_mail')];
-        } else{
+        } else {
             $admins = User::role([CustomRole::ADMIN_USER_ROLE])->get()->pluck('email')->toArray();
         }
 
-        if(!sizeof($admins)){
+        if (!sizeof($admins)) {
             return back()->withInput()->with('danger', __('site.contacts.no_admins_for_contact'));
         }
 
@@ -729,7 +733,7 @@ class HomeController extends Controller
         $this->setBreadcrumbsFull(array(
             ['name' => __('site.user_guide'), 'url' => '']
         ));
-        $file = self::USER_GUIDE.'_'.app()->getLocale().'.pdf';
+        $file = self::USER_GUIDE . '_' . app()->getLocale() . '.pdf';
         return $this->view('site.partial.guide', compact('pageTitle', 'file'));
     }
 
@@ -740,7 +744,7 @@ class HomeController extends Controller
             ['name' => __('site.user_video_guide'), 'url' => '']
         ));
         $item = Page::where('system_name', '=', Page::VIDEO_INSTRUCTIONS)->first();
-        if(!$item){
+        if (!$item) {
             abort(404);
         }
         return $this->view('site.page', compact('pageTitle', 'item'));
@@ -769,7 +773,7 @@ class HomeController extends Controller
     public function sitemap(Request $request)
     {
         $addItems = $this->getSiteMapsItems(true);
-        $addItemsPages = ceil(sizeof($addItems)/1500);
+        $addItemsPages = ceil(sizeof($addItems) / 1500);
         $modifyTime = Carbon::now()->toIso8601String();
         return response()->view('site.sitemap', compact('addItemsPages', 'modifyTime'))->header('Content-Type', 'text/xml');
     }
@@ -781,9 +785,9 @@ class HomeController extends Controller
         $prisLegalType = LegalActType::Pris()->get();
         //Get home
         $items = array();
-        foreach ($languages as $lang){
+        foreach ($languages as $lang) {
             //Get home
-            if($lang != config('app.default_lang')){
+            if ($lang != config('app.default_lang')) {
                 $items[] = ['url' => LaravelLocalization::localizeUrl(route('site.home'), $lang['code']), 'priority' => '1.0', 'lastmod' => Carbon::now()->startOfMonth()->format($formatDate)];
             }
 
@@ -810,8 +814,8 @@ class HomeController extends Controller
             $items[] = ['url' => LaravelLocalization::localizeUrl(route('pris.index'), $lang['code']), 'priority' => '0.8', 'lastmod' => Carbon::now()->startOfMonth()->format($formatDate)];
             $items[] = ['url' => LaravelLocalization::localizeUrl(route('pris.archive'), $lang['code']), 'priority' => '0.8', 'lastmod' => Carbon::now()->startOfMonth()->format($formatDate)];
 
-            if($prisLegalType->count()){
-                foreach ($prisLegalType as $i){
+            if ($prisLegalType->count()) {
+                foreach ($prisLegalType as $i) {
                     $items[] = ['url' => LaravelLocalization::localizeUrl(route('pris.category', ['category' => Str::slug($i->name)]), $lang['code']), 'priority' => '0.8', 'lastmod' => Carbon::now()->startOfMonth()->format($formatDate)];
                 }
             }
@@ -862,9 +866,9 @@ class HomeController extends Controller
         $offset = ($page * $perPage) - $perPage;
         $dbItems = $this->getSiteMapsItems(false, $offset, $perPage);
         $items = array();
-        if(sizeof($dbItems)){
+        if (sizeof($dbItems)) {
             foreach ($dbItems as $item) {
-                switch ($item->type){
+                switch ($item->type) {
                     case 'pc':
                         $items[] = ['url' => LaravelLocalization::localizeUrl(route('public_consultation.view', ['id' => $item->id]), $item->locale), 'priority' => '0.8', 'lastmod' => $item->lastmod];
                         break;
@@ -962,7 +966,7 @@ class HomeController extends Controller
                             where
                                 public_consultation.deleted_at is null
                                 and public_consultation.active = 1
-                                and public_consultation.open_from <= \''.$today.'\'
+                                and public_consultation.open_from <= \'' . $today . '\'
                         union all
                             select
                                 \'pc\' as type,
@@ -976,7 +980,7 @@ class HomeController extends Controller
                             where
                                 public_consultation.deleted_at is null
                                 and public_consultation.active = 1
-                                and public_consultation.open_from <= \''.$today.'\'
+                                and public_consultation.open_from <= \'' . $today . '\'
                         union all
                             select
                                 \'li\' as type,
@@ -1148,8 +1152,8 @@ class HomeController extends Controller
                             where
                                 publication.active = true
                                 and publication.deleted_at is null
-                                and publication.published_at >= \''.$today.'\'
-                                and publication.type = '.PublicationTypesEnum::TYPE_ADVISORY_BOARD->value.'
+                                and publication.published_at >= \'' . $today . '\'
+                                and publication.type = ' . PublicationTypesEnum::TYPE_ADVISORY_BOARD->value . '
                         union all
                             select
                                 \'adv_board_news\' as type,
@@ -1163,8 +1167,8 @@ class HomeController extends Controller
                             where
                                 publication.active = true
                                 and publication.deleted_at is null
-                                and publication.published_at >= \''.$today.'\'
-                                and publication.type = '.PublicationTypesEnum::TYPE_ADVISORY_BOARD->value.'
+                                and publication.published_at >= \'' . $today . '\'
+                                and publication.type = ' . PublicationTypesEnum::TYPE_ADVISORY_BOARD->value . '
                         union all
                             select
                                 \'ogp_news\' as type,
@@ -1178,8 +1182,8 @@ class HomeController extends Controller
                             where
                                 publication.active = true
                                 and publication.deleted_at is null
-                                and publication.published_at >= \''.$today.'\'
-                                and publication.type = '.PublicationTypesEnum::TYPE_OGP_NEWS->value.'
+                                and publication.published_at >= \'' . $today . '\'
+                                and publication.type = ' . PublicationTypesEnum::TYPE_OGP_NEWS->value . '
                         union all
                             select
                                 \'ogp_news\' as type,
@@ -1193,8 +1197,8 @@ class HomeController extends Controller
                             where
                                 publication.active = true
                                 and publication.deleted_at is null
-                                and publication.published_at >= \''.$today.'\'
-                                and publication.type = '.PublicationTypesEnum::TYPE_OGP_NEWS->value.'
+                                and publication.published_at >= \'' . $today . '\'
+                                and publication.type = ' . PublicationTypesEnum::TYPE_OGP_NEWS->value . '
                         union all
                             select
                                 \'page_ogp\' as type,
@@ -1209,7 +1213,7 @@ class HomeController extends Controller
                                 page.deleted_at is null
                                 and page.active = 1
                                 and page.is_system = 0
-                                and page.module_enum = '.PageModulesEnum::MODULE_OGP->value.'
+                                and page.module_enum = ' . PageModulesEnum::MODULE_OGP->value . '
                         union all
                             select
                                 \'page_ogp\' as type,
@@ -1224,7 +1228,7 @@ class HomeController extends Controller
                                 page.deleted_at is null
                                 and page.active = 1
                                 and page.is_system = 0
-                                and page.module_enum = '.PageModulesEnum::MODULE_OGP->value.'
+                                and page.module_enum = ' . PageModulesEnum::MODULE_OGP->value . '
                         union all
                             select
                                 \'news\' as type,
@@ -1238,8 +1242,8 @@ class HomeController extends Controller
                             where
                                 publication.active = true
                                 and publication.deleted_at is null
-                                and publication.published_at >= \''.$today.'\'
-                                and publication.type = '.PublicationTypesEnum::TYPE_NEWS->value.'
+                                and publication.published_at >= \'' . $today . '\'
+                                and publication.type = ' . PublicationTypesEnum::TYPE_NEWS->value . '
                         union all
                             select
                                 \'news\' as type,
@@ -1253,8 +1257,8 @@ class HomeController extends Controller
                             where
                                 publication.active = true
                                 and publication.deleted_at is null
-                                and publication.published_at >= \''.$today.'\'
-                                and publication.type = '.PublicationTypesEnum::TYPE_NEWS->value.'
+                                and publication.published_at >= \'' . $today . '\'
+                                and publication.type = ' . PublicationTypesEnum::TYPE_NEWS->value . '
                         union all
                             select
                                 \'publication\' as type,
@@ -1268,8 +1272,8 @@ class HomeController extends Controller
                             where
                                 publication.active = true
                                 and publication.deleted_at is null
-                                and publication.published_at >= \''.$today.'\'
-                                and publication.type = '.PublicationTypesEnum::TYPE_LIBRARY->value.'
+                                and publication.published_at >= \'' . $today . '\'
+                                and publication.type = ' . PublicationTypesEnum::TYPE_LIBRARY->value . '
                         union all
                             select
                                 \'publication\' as type,
@@ -1283,10 +1287,10 @@ class HomeController extends Controller
                             where
                                 publication.active = true
                                 and publication.deleted_at is null
-                                and publication.published_at >= \''.$today.'\'
-                                and publication.type = '.PublicationTypesEnum::TYPE_LIBRARY->value.'
+                                and publication.published_at >= \'' . $today . '\'
+                                and publication.type = ' . PublicationTypesEnum::TYPE_LIBRARY->value . '
                     ) A
-                    '.(!$cnt ? ((isset($offset) && $offset ? ' offset '.$offset : '').' limit '.$perPage) : '').'
+                    ' . (!$cnt ? ((isset($offset) && $offset ? ' offset ' . $offset : '') . ' limit ' . $perPage) : '') . '
                     '
         );
     }
