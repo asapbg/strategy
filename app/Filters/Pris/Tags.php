@@ -54,7 +54,7 @@ class Tags extends QueryFilter implements FilterContract
             WHERE $where
         )";
         if ($logicalAnd == "AND" && isset($trimmed_tags,$tags_count)) {
-            $whereLabel = $upperLowerCase ? "tt.label" : "LOWER(tt.label)";
+            $whereLabel = $upperLowerCase ? "TRIM(tt.label)" : "LOWER(TRIM(tt.label))";
             $queryTag = "pris.id in (
                 SELECT p.id FROM pris p
                 JOIN pris_tag pt ON p.id = pt.pris_id

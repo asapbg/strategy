@@ -73,10 +73,22 @@ class FullSearch extends QueryFilter implements FilterContract
                             $tag = trim($tag);
                             if ($key === 0) {
                                 $whereFulltext .= $tag;
-                                $whereTag .= $upperLowerCase ? "tag_translations.label = '$tag'" : "LOWER(tag_translations.label) = '".mb_strtolower($tag)."'";
+                                if ($upperLowerCase) {
+                                    $whereTag .= $fullKeyword ? "tag_translations.label = '$tag'" : "tag_translations.label ILIKE '%$tag%'";
+                                } else {
+                                    $whereTag .= $fullKeyword
+                                        ? "LOWER(TRIM(tag_translations.label)) = '".mb_strtolower($tag)."'"
+                                        : "LOWER(TRIM(tag_translations.label)) ILIKE '%".mb_strtolower($tag)."%'";
+                                }
                             } else {
                                 $whereFulltext .= " | $tag";
-                                $whereTag .= $upperLowerCase ? " OR tag_translations.label = '$tag'" : " OR LOWER(tag_translations.label) = '".mb_strtolower($tag)."'";
+                                if ($upperLowerCase) {
+                                    $whereTag .= $fullKeyword ? "OR tag_translations.label = '$tag'" : "OR tag_translations.label ILIKE '%$tag%'";
+                                } else {
+                                    $whereTag .= $fullKeyword
+                                        ? "OR LOWER(TRIM(tag_translations.label)) = '".mb_strtolower($tag)."'"
+                                        : "OR LOWER(TRIM(tag_translations.label)) ILIKE '%".mb_strtolower($tag)."%'";
+                                }
                                 $whereAbout .= " OR ";
                                 $whereLegalReason .= " OR ";
                             }
@@ -140,15 +152,40 @@ class FullSearch extends QueryFilter implements FilterContract
                     WHERE $whereTag
                 )";
                 if ($logicalAnd == "AND" && isset($trimmed_tags,$tags_count)) {
-                    $whereLabel = $upperLowerCase ? "tt.label" : "LOWER(tt.label)";
+                    $whereLabel = $upperLowerCase ? "TRIM(tt.label)" : "LOWER(TRIM(tt.label))";
+                    if ($fullKeyword) {
+                        $whereClause = "WHERE $whereLabel IN ($trimmed_tags)";
+                        $having = "COUNT(DISTINCT tt.label) = $tags_count";
+                    } else {
+                        $patterns = array_map(function($tag) use ($whereLabel) {
+                            $tag = trim($tag);
+                            if ($tag === '') {
+                                return null; // игнориране на празни стойности
+                            }
+                            // preg_quote защитава специалните characters за regex
+                            $escapedTag = preg_quote($tag, '/');
+                            return "($whereLabel ILIKE '%$tag%')";
+                        }, $tags);
+                        $patterns = array_filter($patterns);
+                        $whereClause = implode(' OR ', $patterns);
+                        $patterns = array_map(function($tag) {
+                            $tag = trim($tag);
+                            if ($tag === '') {
+                                return null; // игнориране на празни стойности
+                            }
+                            return "COUNT(DISTINCT CASE WHEN LOWER(TRIM(tt.label)) ILIKE '%$tag%' THEN tt.label END) > 0";
+                        }, $tags);
+                        $patterns = array_filter($patterns);
+                        $having = implode(' AND ', $patterns);
+                    }
                     $queryTag = "pris.id in (
                         SELECT p.id FROM pris p
                         JOIN pris_tag pt ON p.id = pt.pris_id
                         JOIN tag t ON pt.tag_id = t.id
                         JOIN tag_translations tt ON t.id = tt.tag_id
-                        WHERE $whereLabel IN ($trimmed_tags)
+                        WHERE $whereClause
                         GROUP BY p.id
-                        HAVING COUNT(DISTINCT tt.label) = $tags_count
+                        HAVING $having
                     )";
                 }
                 //dd($queryTag);
