@@ -52,11 +52,13 @@ class FullSearch extends QueryFilter implements FilterContract
                     $whereImporter .= "pris.old_importers $condition '% $value %'";
                     $whereImporter .= " OR pris.old_importers $condition '% $value'";
                     $whereImporter .= " OR pris.old_importers $condition '$value %'";
+                    $whereImporter .= " OR pris.old_importers = '$value'";
                     $whereImporter .= ")";
                     $whereImporter .= " OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND (";
                     $whereImporter .= "importer::text $condition '% $value %'";
                     $whereImporter .= " OR importer::text $condition '% $value'";
                     $whereImporter .= " OR importer::text $condition '$value %'";
+                    $whereImporter .= " OR importer::text = '$value'";
                     $whereImporter .= "))";
                 }
                 //dd($whereImporter);
