@@ -57,7 +57,7 @@
                             @endif
                         </td>
                         <td>{{ $item->comments->count() }}</td>
-                        <td>@if($item->proposalReport->count()){{ 'Да' }}@else{{ 'Не' }}@endif</td>
+                        <td>@if($item->proposalReport->count()){{ __('custom.yes') }}@else{{ __('custom.no') }}@endif</td>
                     </tr>
                 @endforeach
                 </tbody>

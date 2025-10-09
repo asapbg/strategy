@@ -34,13 +34,6 @@ class LegislativeInitiativeController extends AdminController
     const CREATE_VIEW = 'site.legislative_initiatives.create';
     const SHOW_VIEW = 'site.legislative_initiatives.view';
 
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-        $this->title_singular = __('custom.legislative_initiatives');
-        $this->pageTitle = __('custom.legislative_initiatives');
-    }
-
     /**
      * Show the public consultations.
      *
@@ -94,7 +87,7 @@ class LegislativeInitiativeController extends AdminController
             ->groupBy('legislative_initiative.id')
             ->paginate($countResults);
 
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.legislative_initiatives');
         $this->composeBreadcrumbs(null, array(['name' => __('site.all_legislative_initiative'), 'url' => '']));
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI . '_' . app()->getLocale())->first();
 
@@ -118,7 +111,7 @@ class LegislativeInitiativeController extends AdminController
         $regulatoryActs = RegulatoryAct::orderBy('id')->get();
         $translatableFields = LegislativeInitiative::translationFieldsProperties();
         $item = new LegislativeInitiative();
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.legislative_initiatives');
 
         $lawWithActivePc = array();
         //get law with active public consultation
@@ -173,7 +166,7 @@ class LegislativeInitiativeController extends AdminController
         $translatableFields = LegislativeInitiative::translationFieldsProperties();
         $regulatoryActs = RegulatoryAct::all();
 
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.legislative_initiatives');
         $this->composeBreadcrumbs($item);
         $institutions = Institution::optionsListWithAttr();
         $this->setSeo($item->facebookTitle, $item->ogDescription, '', array('title' => $item->facebookTitle, 'description' => $item->ogDescription, 'img' => LegislativeInitiative::DEFAULT_IMG));
@@ -257,7 +250,7 @@ class LegislativeInitiativeController extends AdminController
     public function show(LegislativeInitiative $item)
     {
         $rssUrl = route('rss.legislative_initiative.item', $item->id);
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.legislative_initiatives');
         $this->composeBreadcrumbs($item, array(['name' => __('site.all_legislative_initiative'), 'url' => '']));
 
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_LI . '_' . app()->getLocale())->first();
@@ -370,7 +363,7 @@ class LegislativeInitiativeController extends AdminController
         if (!$page) {
             abort(404);
         }
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.legislative_initiatives');
 //        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
         $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
 

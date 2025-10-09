@@ -28,10 +28,10 @@
                         <td>{{ __('custom.type_of_governing') }}</td>
                         <td>{{ __('validation.attributes.act_of_creation') }}</td>
                         <td>{{ __('validation.attributes.advisory_chairman_type_id') }}</td>
-                        <td>Представител на НПО</td>
-                        <td>Мин. бр. заседания на година</td>
+                        <td>{{ __('custom.adv_board_search_npo') }}</td>
+                        <td>{{ __('custom.adv_board_search_min_meetings') }}</td>
                         @if($searchMeetings)
-                            <td>Бр. заседания в периода</td>
+                            <td>{{ __('custom.adv_board_search_period_meetings') }}</td>
                         @endif
                         <td>{{ __('custom.status') }}</td>
                     </tr>

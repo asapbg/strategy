@@ -9,7 +9,7 @@
 </tbody>
 </table>
 
-<h5>{{ __('csutom.forms4.text4') }}</h5>
+<h5>{{ __('custom.forms4.text4') }}</h5>
 <table width="100%" class="table">
 <thead>
     <td width="40%">{{ __('custom.forms4.text5') }}</td>

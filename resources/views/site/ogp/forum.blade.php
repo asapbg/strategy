@@ -8,7 +8,9 @@
         <div class="col-lg-10 right-side-content pb-5 pt-1 " id="listContainer">
             <div class="row mb-4 ks-row">
                 <div class="col-md-12">
-                    <h2 class="mb-2">{{ __('custom.information') }} @if($item) <a class="fs-16" href="{{ route('advisory-boards.view', $item) }}" target="_blank">({{ $item->name }})</a> @endif</h2>
+                    <h2 class="mb-2">
+                        {{ __('custom.information') }} @if($item) <a class="fs-16" href="{{ route('advisory-boards.view', $item) }}" target="_blank">({{ $item->name }})</a> @endif
+                    </h2>
                 </div>
             </div>
 

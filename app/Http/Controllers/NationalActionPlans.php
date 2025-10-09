@@ -14,14 +14,6 @@ use Illuminate\View\View;
 
 class NationalActionPlans extends Controller
 {
-    private $pageTitle;
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-        $this->title_singular = __('custom.open_government_partnership');
-        $this->pageTitle = __('custom.open_government_partnership');
-    }
-
     /**
      * List of all otg_areas
      * @param Request $request
@@ -40,7 +32,7 @@ class NationalActionPlans extends Controller
 
         $route_view_name = 'ogp.national_action_plans.show';
 
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
         $this->composeBreadcrumbs();
         $oldPlanStatus = OgpStatus::Final()->first();
         $nationalOldPlans = [
@@ -117,7 +109,7 @@ class NationalActionPlans extends Controller
 
         $item = $plan->developPlan;
 
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
         $this->composeBreadcrumbs($plan, array(
             ['name' => __('custom.develop_plan'), 'url' => ''],
             ['name' => $item->name, 'url' => '']
@@ -162,7 +154,7 @@ class NationalActionPlans extends Controller
         if(auth()->user()->cannot('viewPublic', $item->developPlan)) {
             return redirect(route('ogp.national_action_plans.show', ['id' => $item->id]))->with('warning', __('messages.no_rights_to_view_content'));
         }
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
         $plan = $item->developPlan;
         $this->composeBreadcrumbs($plan, array(
             ['name' => __('custom.develop_plan'), 'url' => ''],

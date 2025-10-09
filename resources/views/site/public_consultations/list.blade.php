@@ -12,7 +12,7 @@
     <div class="col-md-6 mt-2">
         <div class="info-consul text-start">
             <p class="fw-600">
-                {{ trans_choice('custom.total_pagination_result', $pk->count(), ['number' => $pk->total()]) }}
+                {{ trans_choice('custom.total_pagination_result', in_array($pk->count(), [0,1]) ? 1 : 2, ['number' => $pk->total()]) }}
             </p>
         </div>
     </div>

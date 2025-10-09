@@ -49,19 +49,19 @@ use Illuminate\Support\Facades\Storage;
     });
 
     Route::controller(\App\Http\Controllers\AdvisoryBoardController::class)->prefix('advisory-boards')->group(function() {
-        Route::get('', 'index')->name('advisory-boards.index');
-        Route::get('/news', 'news')->name('advisory-boards.news');
-        Route::get('/news/{item}/details', 'newsDetails')->name('advisory-boards.news.details');
-        Route::get('/information', 'info')->name('advisory-boards.info');
-        Route::get('/documents', 'documents')->name('advisory-boards.documents');
-        Route::get('/contacts/{item?}', 'contacts')->name('advisory-boards.contacts');
-        Route::get('{item}/view', 'show')->name('advisory-boards.view');
-        Route::get('{item}/view/news', 'itemNews')->name('advisory-boards.view.news');
-        Route::get('{item}/view/news/{news}/details', 'itemNewsDetails')->name('advisory-boards.view.news.details');
-        Route::get('{item}/view/{section}/section/', 'showSection')->name('advisory-boards.view.section');
-        Route::get('{item}/view/archive/meetings/', 'archiveMeetings')->name('advisory-boards.view.archive.meetings');
+        Route::get('',                      'index')->name('advisory-boards.index');
+        Route::get('/news',                 'news')->name('advisory-boards.news');
+        Route::get('/news/{item}/details',  'newsDetails')->name('advisory-boards.news.details');
+        Route::get('/information',          'info')->name('advisory-boards.info');
+        Route::get('/documents',            'documents')->name('advisory-boards.documents');
+        Route::get('/contacts/{item?}',     'contacts')->name('advisory-boards.contacts');
+        Route::get('{item}/view',           'show')->name('advisory-boards.view');
+        Route::get('{item}/view/news',      'itemNews')->name('advisory-boards.view.news');
+        Route::get('reports',               'reports')->name('advisory-boards.reports');
+        Route::get('{item}/view/news/{news}/details',   'itemNewsDetails')->name('advisory-boards.view.news.details');
+        Route::get('{item}/view/{section}/section/',    'showSection')->name('advisory-boards.view.section');
+        Route::get('{item}/view/archive/meetings/',     'archiveMeetings')->name('advisory-boards.view.archive.meetings');
         Route::get('{item}/view/archive/work_programs/', 'archiveWorkPrograms')->name('advisory-boards.view.archive.work_programs');
-        Route::get('reports', 'reports')->name('advisory-boards.reports');
 
     });
 

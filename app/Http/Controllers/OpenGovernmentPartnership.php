@@ -19,20 +19,13 @@ use Illuminate\View\View;
 
 class OpenGovernmentPartnership extends Controller
 {
-    private $pageTitle;
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-        $this->title_singular = __('custom.open_government_partnership');
-        $this->pageTitle = __('custom.open_government_partnership');
-    }
     /**
      * @param Request $request
      * @return View
      */
     public function index(Request $request)
     {
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
         $this->composeBreadcrumbs();
         return $this->view('site.ogp.index', compact('pageTitle'));
 
@@ -48,7 +41,7 @@ class OpenGovernmentPartnership extends Controller
         if(!$page){
             abort(404);
         }
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
 //        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
         $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
 
@@ -58,9 +51,10 @@ class OpenGovernmentPartnership extends Controller
 
     public function contacts(Request $request, $itemId = null)
     {
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
         $moderators = User::role([CustomRole::MODERATOR_PARTNERSHIP])
             ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
+            ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
             ->get();
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.contacts', 2), 'url' => '']));
         return $this->view('site.ogp.contacts', compact('moderators', 'pageTitle'));
@@ -76,7 +70,7 @@ class OpenGovernmentPartnership extends Controller
         if(!$page){
             return back()->with('warning', __('custom.record_not_found'));
         }
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
 //        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
         $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
 
@@ -105,7 +99,7 @@ class OpenGovernmentPartnership extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
         $items = Publication::select('publication.*')
             ->ActivePublic()
             ->with(['translations',])
@@ -128,7 +122,7 @@ class OpenGovernmentPartnership extends Controller
     }
 
     public function newsDetails(Request $request, Publication $item){
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
         $publication = $item;
         $this->composeBreadcrumbs(null, array(
             ['name' => trans_choice('custom.news', 2), 'url' => route('ogp.news')],
@@ -273,7 +267,7 @@ class OpenGovernmentPartnership extends Controller
                 }
             }
 //        }
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.open_government_partnership');
         $this->composeBreadcrumbs(null, array(
             ['name' => trans_choice('custom.events', 2), 'url' => '']
         ));
@@ -283,13 +277,15 @@ class OpenGovernmentPartnership extends Controller
     public function forum(Request $request)
     {
         $advBoardId = Setting::where('name', '=', Setting::OGP_ADV_BOARD_FORUM)->first();
-        $customContent = Setting::where('name', '=', Setting::OGP_FORUM_INFO)->first();
-        $item = !empty($advBoardId->value) ? AdvisoryBoard::with(['chairmen', 'chairmen.translations',
-            'viceChairmen', 'viceChairmen.translations',
-            'members', 'members.translations', 'secretaryCouncil',
-            'secretaryCouncil.translations', 'meetings',
-            'meetings.translations', 'moderators'])->find((int)$advBoardId->value) : null;
-        $pageTitle = $this->pageTitle;
+        $customContent = Setting::where('name', '=', Setting::OGP_FORUM_INFO."_".app()->getLocale())->first();
+        $item = !empty($advBoardId->value)
+            ? AdvisoryBoard::with([
+                    'chairmen', 'chairmen.translations', 'viceChairmen', 'viceChairmen.translations', 'members', 'members.translations', 'secretaryCouncil',
+                    'secretaryCouncil.translations', 'meetings', 'meetings.translations', 'moderators'
+                ])
+                ->find((int)$advBoardId->value)
+            : null;
+        $pageTitle = __('custom.open_government_partnership');
         $this->composeBreadcrumbs(null, array(
             ['name' => __('custom.ogp_forum'), 'url' => '']
         ));

@@ -9,20 +9,6 @@
 
     <div class="col-lg-10 right-side-content py-2">
         <div class="row mb-2">
-{{--            <h2 class="mb-4">--}}
-{{--                {{ __('site.advisory_boards.moderators_contacts.title') }}--}}
-{{--            </h2>--}}
-{{--            @if($item->moderatorInformation)--}}
-{{--                <h3 class="fs-5">{{ __('site.advisory_boards.moderators_information') }}</h3>--}}
-{{--                <hr>--}}
-{{--                <div class="">{!! $item->moderatorInformation->description !!}</div>--}}
-
-{{--                @if($item->moderatorInformation->files->count())--}}
-{{--                    @foreach($item->moderatorInformation->files as $f)--}}
-{{--                        --}}
-{{--                    @endforeach--}}
-{{--                @endif--}}
-{{--            @endif--}}
 
             <h3 class="fs-5 @if($item->moderatorInformation) mt-4 @endif">{{ __('site.advisory_boards.moderators') }}</h3>
             <hr>

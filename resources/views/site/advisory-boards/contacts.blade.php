@@ -1,6 +1,6 @@
 @extends('layouts.site', ['fullwidth' => true])
 
-@section('pageTitle', trans_choice('custom.advisory_boards', 2))
+{{--@section('pageTitle', trans_choice('custom.advisory_boards', 2))--}}
 
 @section('content')
 

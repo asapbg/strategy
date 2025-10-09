@@ -24,13 +24,13 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="input-group mb-2">
-                    <input type="text" id="new-variant-name" class="form-control" placeholder="Наименование" aria-label="Наименование">
+                    <input type="text" id="new-variant-name" class="form-control" placeholder="{{ __('custom.name') }}" aria-label="{{ __('custom.name') }}">
                     <button class="btn btn-outline-secondary" type="button" id="add-variant">{{ __('custom.calc.add_variant') }}</button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="input-group mb-2">
-                    <input type="text" id="new-criteria-name" class="form-control" placeholder="Наименование" aria-label="Наименование">
+                    <input type="text" id="new-criteria-name" class="form-control" placeholder="{{ __('custom.name') }}" aria-label="{{ __('custom.name') }}">
                     <button class="btn btn-outline-secondary" type="button" id="add-criteria">{{ __('custom.calc.add_criteria') }}</button>
                 </div>
             </div>
@@ -163,7 +163,7 @@
 
         function initMatrix(){
             //add first variant
-            addVariant(GlobalLang == 'bg' ? 'Вариант №1' : 'Variant #1');
+            addVariant(GlobalLang == 'bg' ? 'Вариант №1' : 'Option #1');
             // matrixDom.find('tr').append('<th><input type="text" name="variants[]" class="form-control form-control-sm variants" value="Вариант №1"></th>');
             //add first criteria
             addCriteria(GlobalLang == 'bg' ? 'Критерий №1' : 'Criteria #1')

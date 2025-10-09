@@ -283,7 +283,7 @@ class PublicConsultationController extends Controller
                 'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_AREA), false),
                 'multiple' => true,
                 'default' => '',
-                'label' => trans_choice('custom.areas', 2),
+                'label' => trans_choice('custom.districts', 2),
                 'value' => $request->input('areas'),
                 'col' => 'col-md-4'
             ),

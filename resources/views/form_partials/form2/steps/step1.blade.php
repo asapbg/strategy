@@ -48,7 +48,7 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <h5>1.1 {{ __('csutom.forms2.problems_to_solve') }}:</h5>
+        <h5>1.1 {{ __('custom.forms2.problems_to_solve') }}:</h5>
     </div>
 </div>
 <div class="row">

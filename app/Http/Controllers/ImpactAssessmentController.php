@@ -20,8 +20,8 @@ class ImpactAssessmentController extends Controller
     public function info()
     {
         $page = Page::with(['files' => function($q) {
-            $q->where('locale', '=', app()->getLocale());
-        }])
+                $q->where('locale', '=', app()->getLocale());
+            }])
             ->where('system_name', '=', Page::IA_INFO)
             ->first();
         if(!$page){
@@ -33,11 +33,11 @@ class ImpactAssessmentController extends Controller
 
         $this->composeBreadcrumbs(array(['name' => __('site.base_info'), 'url' => '']));
 
-        $library = Page::with(['translations'])
+        $libraryPages = Page::with(['translations'])
             ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
             ->orderBy('order_idx', 'asc')
             ->get();
-        return $this->view('impact_assessment.page', compact('page', 'pageTitle', 'library'));
+        return $this->view('impact_assessment.page', compact('page', 'pageTitle', 'libraryPages'));
     }
 
     public function index()

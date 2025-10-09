@@ -89,7 +89,7 @@
                                     </li>
                                     <hr class="custom-hr">
                                     <li class="my-2 @if(request()->route()->getName() == 'ogp.contacts') active-item-left p-1 @endif">
-                                        <a href="{{ route('ogp.contacts') }}" class="link-dark text-decoration-none">{{ trans_choice('custom.contacts', 2) }}</a>
+                                        <a href="{{ route('ogp.contacts') }}" class="link-dark text-decoration-none">{{ __('ogp.ogp_plan_contacts') }}</a>
                                     </li>
                                 </ul>
                             </ul>

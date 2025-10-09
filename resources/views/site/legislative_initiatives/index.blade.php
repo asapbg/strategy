@@ -10,11 +10,6 @@
         @endphp
 
         <div class="col-lg-10 right-side-content py-2">
-{{--            @if(isset($pageTopContent) && !empty($pageTopContent->value))--}}
-{{--                <div class="col-12 mb-2">--}}
-{{--                    {!! $pageTopContent->value !!}--}}
-{{--                </div>--}}
-{{--            @endif--}}
             <div class="filter-results mb-2">
                 <h2 class="mb-4">
                     {{ __('custom.search') }}

@@ -47,14 +47,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class StrategicDocumentsController extends Controller
 {
-    private $pageTitle;
-
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-        $this->title_singular = trans_choice('custom.strategic_documents', 2);
-        $this->pageTitle = trans_choice('custom.strategic_documents', 2);
-    }
 
     /**
      * @param Request $request
@@ -284,7 +276,7 @@ class StrategicDocumentsController extends Controller
 
     public function contacts(Request $request, $itemId = null)
     {
-        $pageTitle = $this->pageTitle;
+        $pageTitle = trans_choice('custom.strategic_documents', 2);
         $moderators = User::role([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS, CustomRole::MODERATOR_STRATEGIC_DOCUMENT])
             ->whereNotIn('users.email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
             ->with(['institution.translations', 'institution.fieldsOfAction.translations'])
@@ -304,7 +296,7 @@ class StrategicDocumentsController extends Controller
         if (!$page) {
             abort(404);
         }
-        $pageTitle = $this->pageTitle;
+        $pageTitle = trans_choice('custom.strategic_documents', 2);
         $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
         $this->composeBreadcrumbs(null, array(['name' => $page->name, 'url' => '']));
         return $this->view('site.strategic_documents.page', compact('page', 'pageTitle'));
@@ -320,7 +312,7 @@ class StrategicDocumentsController extends Controller
         if (!$page) {
             abort(404);
         }
-        $pageTitle = $this->pageTitle;
+        $pageTitle = trans_choice('custom.strategic_documents', 2);
 //        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
         $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
 
@@ -422,17 +414,7 @@ class StrategicDocumentsController extends Controller
                 $headerCell->addText(trans_choice('custom.authority_accepting_strategic', 1), $fontStyle);
                 $headerCell = $headerRow->addCell(4000);
                 $headerCell->addText(__('custom.validity'), $fontStyle);
-//                            <td>
-//                @if($row->document_date_accepted && $row->document_date_expiring)
-//                {{ displayDate($row->document_date_accepted) .' - '. displayDate($row->document_date_expiring) }}
-//                                @elseif($row->document_date_accepted || $row->document_date_expiring)
-//                                    @if($row->document_date_accepted)
-//                {{ __('custom.from') .' '.displayDate($row->document_date_accepted) }}
-//                                    @else
-//                                        {{ __('custom.to') .' '.displayDate($row->document_date_expiring) }}
-//                                    @endif
-//                                @endif
-//                            </td>
+
                 foreach ($exportData['rows'] as $row) {
                     $tableRow = $table->addRow();
 
@@ -453,11 +435,6 @@ class StrategicDocumentsController extends Controller
 
                     $tableCell = $tableRow->addCell(4000);
                     $tableCell->addText(
-//                        $row->document_date_accepted && $row->document_date_expiring
-//                                ?  displayDate($row->document_date_accepted) . ' - ' . displayDate($row->document_date_expiring)
-//                                : ($row->document_date_accepted
-//                                    ? __('custom.from') . ' ' . displayDate($row->document_date_accepted)
-//                                    : __('custom.to') . ' ' . displayDate($row->document_date_expiring))
 
                         ($row->document_date_accepted
                             ? \Carbon\Carbon::parse($row->document_date_accepted)->format('d-m-Y')
@@ -608,7 +585,7 @@ class StrategicDocumentsController extends Controller
                 'options' => optionsFromModel(FieldOfAction::optionsList(true, FieldOfAction::CATEGORY_AREA), false),
                 'multiple' => true,
                 'default' => '',
-                'label' => trans_choice('custom.areas', 2),
+                'label' => trans_choice('custom.districts', 2),
                 'value' => $request->input('areas'),
                 'col' => 'col-md-4'
             ),
@@ -639,7 +616,7 @@ class StrategicDocumentsController extends Controller
                 'multiple' => false,
                 'options' => array(
                     ['name' => '', 'value' => ''],
-                    ['name' => trans_choice('custom.effective', 1), 'value' => 'active'],
+                    ['name' => trans_choice('custom.active', 1), 'value' => 'active'],
                     ['name' => trans_choice('custom.expired', 1), 'value' => 'expired'],
                     ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
                 ),

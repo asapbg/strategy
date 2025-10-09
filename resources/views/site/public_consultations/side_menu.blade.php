@@ -15,7 +15,9 @@
                                     {{ __('site.pc_all') }}
                                 </a>
                             </li>
-                            <li class="mb-2 @if(str_contains(url()->current(),'public-consultations/reports')) active-item-left text-white p-1 @endif">{{ __('site.strategic_document.all_documents_report') }}</li>
+                            <li class="mb-2 @if(str_contains(url()->current(),'public-consultations/reports')) active-item-left text-white p-1 @endif">
+                                {{ __('site.strategic_document.all_documents_report') }}
+                            </li>
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                 <ul class="list-unstyled ps-3">
                                     <hr class="custom-hr">

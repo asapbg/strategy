@@ -28,31 +28,18 @@
                             <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1">
                                 <ul class="list-unstyled ps-3">
                                     <hr class="custom-hr">
-{{--                                    active-item-left p-1 text-white--}}
                                     @if(isset($menuCategories) && sizeof($menuCategories))
                                         @foreach($menuCategories as $mc)
-                                            <li class="my-2"><a href="{{ $mc['url'] }}" class="@if(str_contains(url()->current(),'pris/'.$mc['slug'])) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">{{ $mc['label'] }}</a></li>
+                                            <li class="my-2">
+                                                <a href="{{ $mc['url'] }}" class="@if(str_contains(url()->current(),'pris/'.$mc['slug'])) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
+                                                    {{ $mc['label'] }}
+                                                </a>
+                                            </li>
                                             <hr class="custom-hr">
                                         @endforeach
                                     @endif
                                 </ul>
                             </ul>
-
-{{--                            <li class="mb-2 @if(str_contains(url()->current(),'pris/archive')) active-item-left @endif p-1">--}}
-{{--                                <a href="{{ route('pris.archive') }}" class="link-dark  text-decoration-none">{{ __('custom.archive') }}</a>--}}
-{{--                            </li>--}}
-{{--                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1">--}}
-{{--                                <ul class="list-unstyled ps-3">--}}
-{{--                                    <hr class="custom-hr">--}}
-{{--                                    --}}{{--                                    active-item-left p-1 text-white--}}
-{{--                                    @if(isset($menuCategoriesArchive) && sizeof($menuCategoriesArchive))--}}
-{{--                                        @foreach($menuCategoriesArchive as $mac)--}}
-{{--                                            <li class="my-2"><a href="{{ $mac['url'] }}" class="@if(str_contains(url()->current(),'pris/archive/'.$mac['slug'])) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">{{ $mac['label'] }}</a></li>--}}
-{{--                                            <hr class="custom-hr">--}}
-{{--                                        @endforeach--}}
-{{--                                    @endif--}}
-{{--                                </ul>--}}
-{{--                            </ul>--}}
 
                         </ul>
                     </div>

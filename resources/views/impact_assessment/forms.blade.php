@@ -7,30 +7,7 @@
                 @include('impact_assessment.sidebar')
                 <div class="col-lg-10 right-side-content py-2">
                     <h2 class="mb-2">{{ __('site.impact_assessment.forms_and_templates') }}</h2>
-{{--                    <div class="row mb-5 action-btn-wrapper">--}}
-{{--                        <h3>Калкулатор</h3>--}}
-{{--                        <hr class="custom-hr mb-5">--}}
-{{--                        <div class="col-12">--}}
-{{--                            <p>При оценката на въздействието задължително се изчислява административният товар. Административният товар са разходите, наложени върху бизнеса, когато се спазват информационните задължения, произлизащи от правителствена разпоредба. Използвайте този калкулатор, за да оцените административния товар за всяка опция, която се разглежда в оценката на въздействието.</p>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-md-6">--}}
-{{--                            <a href="№" class="box-link gr-color-bgr mb-4 px-4">--}}
-{{--                                <div class="info-box">--}}
-{{--                                    <div class="icon-wrap">--}}
-{{--                                        <i class="bi bi-calculator text-light"></i>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="link-heading">--}}
-{{--                                        <span>--}}
-{{--                                            Калкулатор--}}
-{{--                                        </span>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
                     <div class="row mb-2 action-btn-wrapper">
-{{--                        <h3>{{ trans_choice('custom.impact_assessment', 2) }}</h3>--}}
-{{--                        <hr class="custom-hr mb-5">--}}
                         <div class="col-md-6">
                             <p class="fw-bold">{{ __('site.impact_assessment.forms.part.title') }}</p>
                             {!! __('site.impact_assessment.forms.part.description') !!}

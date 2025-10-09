@@ -19,13 +19,6 @@ use Illuminate\View\View;
 
 class DevelopNewActionPlan extends Controller
 {
-    private $pageTitle;
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-        $this->title_singular = __('custom.open_government_partnership');
-        $this->pageTitle = __('custom.develop_new_action_plan');
-    }
 
     /**
      * List of all otg_areas
@@ -45,7 +38,7 @@ class DevelopNewActionPlan extends Controller
             ->orderBy('ogp_plan.created_at', 'desc')
             ->first();
 
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.develop_new_action_plan');
         $this->composeBreadcrumbs($item);
 
         $schedules = [];
@@ -74,22 +67,6 @@ class DevelopNewActionPlan extends Controller
         return $this->view('site.ogp.develop_new_action_plan.plan_show', compact('item', 'pageTitle', 'schedules'));
     }
 
-//    /**
-//     * @param Request $request
-//     * @param OgpPlan $plan
-//     * @return View
-//     */
-//    public function show(Request $request, $id): View
-//    {
-//        $plan = OgpPlan::whereRelation('status', 'type', OgpStatusEnum::IN_DEVELOPMENT->value)
-//            ->orWhereRelation('status', 'type', OgpStatusEnum::FINAL->value)
-//            ->findOrFail($id);
-//
-//        $pageTitle = $this->pageTitle;
-//        $this->composeBreadcrumbs($plan);
-//        return $this->view('site.ogp.plan_show', compact('plan', 'pageTitle'));
-//    }
-
     /**
      * @param Request $request
      * @param OgpPlan $plan
@@ -101,7 +78,7 @@ class DevelopNewActionPlan extends Controller
         if(!$this->authorize('viewPublic', $plan)) {
             return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));
         }
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.develop_new_action_plan');
         $this->composeBreadcrumbs($plan, array(['name' => $planArea->area->name, 'url' => '']));
         $this->setSeo(__('custom.dev_new_plan_title'),  $plan->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
 
@@ -114,7 +91,7 @@ class DevelopNewActionPlan extends Controller
             return redirect(route('ogp.develop_new_action_plans'))->with('warning', __('messages.no_rights_to_view_content'));
         }
 
-        $pageTitle = $this->pageTitle;
+        $pageTitle = __('custom.develop_new_action_plan');
         $this->composeBreadcrumbs($plan, array(['name' => $planArea->area->name, 'url' => '']));
         $this->setSeo(__('custom.dev_new_plan_title'),  $plan->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
 

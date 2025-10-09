@@ -7,7 +7,7 @@
                         aria-expanded="@if(!isset($closeSearchForm) || $closeSearchForm){{ 'false' }}@else{{ 'true' }}@endif"
                         aria-controls="collapseFilterA"
                 >
-                    <i class="fas fa-search me-2"></i>{{ __('custom.searching') }}
+                    <i class="fas fa-search me-2"></i>{{ __('custom.search') }}
                 </button>
             </h2>
             <div id="collapseFilterA"
@@ -373,7 +373,7 @@
                                 <span
                                     class="btn rss-sub main-color search-btn clear @if(isset($ajax) && $ajax) ajaxSearch @endif"
                                     data-url="{{ url()->current() }}" data-container="{{ $ajaxContainer }}">
-                                <i class="fas fa-eraser"></i> {{ __('custom.clearing') }}
+                                <i class="fas fa-eraser"></i> {{ __('custom.clear') }}
                             </span>
 
                                 @if(isset($ajax) && $ajax)

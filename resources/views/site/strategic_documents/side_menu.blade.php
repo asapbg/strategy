@@ -35,7 +35,7 @@
                             </li>
                             <li class="mb-2">
                                 <a href="{{ route('strategy-document.contacts') }}" class="@if(str_contains(url()->current(),'contacts')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">
-                                    {{ trans_choice('custom.contacts', 2) }}
+                                    {{ __('custom.contact_info') }}
                                 </a>
                             </li>
                         </ul>

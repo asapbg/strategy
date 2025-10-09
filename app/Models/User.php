@@ -52,7 +52,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
     const USER_TYPE_EXTERNAL = 2;
     const USER_TYPE_INTERNAL = 1;
 
-    const EXCLUDE_CONTACT_USER_BY_MAIL = ['r.rankova@government.bg'];
+    const EXCLUDE_CONTACT_USER_BY_MAIL = ['r.rankova@government.bg', 'izabelvalcheva@mail.bg'];
 
     const COUNCIL_OF_MINSTERS_EIK = '000695025';
 

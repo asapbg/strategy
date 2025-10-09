@@ -59,32 +59,24 @@
                                     <hr class="custom-hr">
                                 </ul>
                             </ul>
-                            @if(isset($library) && $library->count())
+                            @if(isset($libraryPages) && $libraryPages->count())
                                 <li class="mb-2 @if(str_contains(url()->current(), 'impact_assessments/library')) active-item-left text-white p-1 @endif">
                                     {{ __('custom.library') }}
-{{--                                    <a href="" class="@if(str_contains(url()->current(), 'impact_assessments/library')) active-item-left text-white p-1 @else link-dark @endif text-decoration-none">--}}
-{{--                                        {{ __('custom.library') }}--}}
-{{--                                    </a>--}}
                                 </li>
                                 <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1 mb-2">
                                     <ul class="list-unstyled ps-3">
                                         <hr class="custom-hr">
-                                        @foreach($library as $page)
-                                            <li class="my-2 @if(str_contains(url()->current(), 'impact_assessments/library/'.$page->slug)) active-item-left p-1 @endif">
-                                                <a href="{{ route('impact_assessment.library.view', ['slug' => $page->slug]) }}" class=" text-decoration-none link-dark">{{ $page->name }}</a></li>
+                                        @foreach($libraryPages as $libraryPage)
+                                            <li class="my-2 @if(str_contains(url()->current(), 'impact_assessments/library/'.$libraryPage->slug)) active-item-left p-1 @endif">
+                                                <a href="{{ route('impact_assessment.library.view', ['slug' => $libraryPage->slug]) }}" class=" text-decoration-none link-dark">
+                                                    {{ $libraryPage->name }}
+                                                </a>
+                                            </li>
                                             <hr class="custom-hr">
                                         @endforeach
                                     </ul>
                                 </ul>
                             @endif
-{{--                            <li class="mb-2 @if(request()->route()->getName() == 'impact_assessment.tools' || str_contains(url()->current(), 'impact_assessments/tools')) active-item-left p-1 @endif"><a href="{{ route('impact_assessment.tools') }}" class="link-dark text-decoration-none">{{ __('site.impact_assessment.methods') }}</a></li>--}}
-{{--                            <ul class="btn-toggle-nav list-unstyled fw-normal px-2 pb-1">--}}
-{{--                                <ul class="list-unstyled ps-3">--}}
-{{--                                    <hr class="custom-hr">--}}
-{{--                                    <li class="my-2"><a href="#" class="link-dark  text-decoration-none">Калкулатор</a></li>--}}
-{{--                                    <hr class="custom-hr">--}}
-{{--                                </ul>--}}
-{{--                            </ul>--}}
 
                             <li class="mb-2 @if(str_contains(url()->current(), '/executors')) active-item-left p-1 @endif">
                                 <a href="{{ route('impact_assessment.executors') }}" class="link-dark text-decoration-none">

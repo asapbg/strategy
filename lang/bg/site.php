@@ -88,7 +88,7 @@ return [
     'calc.cer_c_b' => 'Съотношение „разходи / ефективност (разходи / ползи)“',
     'calc.criteria' => 'Критерий',
     'home_page' => 'Начална страница',
-    'advisory_boards.contacts.title' => 'Контакти на служители от дирекция „Координация на политики и концесии"',
+    'advisory_boards.contacts.title' => 'Контакти',
     'admin.advisory_boards.contacts.title' => 'Контакти на модераторите на "Консултативни съвети"',
     'advisory_boards.moderators_contacts.title' => 'Контакти на модератори към консултативния съвет',
     'advisory_boards.moderators' => 'Модератори',

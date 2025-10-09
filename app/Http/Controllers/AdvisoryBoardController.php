@@ -26,15 +26,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdvisoryBoardController extends Controller
 {
-    private $pageTitle;
-
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-        $this->title_singular = trans_choice('custom.advisory_boards', 2);
-        $this->pageTitle = trans_choice('custom.advisory_boards', 2);
-//        $this->setSlider(trans_choice('custom.advisory_boards', 2), AdvisoryBoard::DEFAULT_HEADER_IMG);
-    }
 
     /**
      * Display a listing of the resource.
@@ -44,10 +35,6 @@ class AdvisoryBoardController extends Controller
     public function index(Request $request)
     {
         $customRequestParam = null;
-//        if (!$request->ajax() && is_null($request->input('status'))) {
-//            $request->request->add(['status' => 1]);
-//            $customRequestParam = ['status' => 1];
-//        }
 
         $rssUrl = config('feed.feeds.adv_boards.url');
 
@@ -67,14 +54,7 @@ class AdvisoryBoardController extends Controller
         $requestFilter = $request->all();
         //Filter
         $filter = $this->boardFilters($request);
-        // Sorting the options by value
-//            usort($filter['status']['options'], function ($a, $b) {
-//                return $a['value'] <=> $b['value'];
-//            });
-//        if (!$request->ajax() && is_null($request->input('status'))) {
-//            $filter['status']['value'] = 1;
-//            $requestFilter['status'] = 1;
-//        }
+
         //Sorter
         $sorter = $this->boardSorters();
         $sort = $request->filled('order_by') ? $request->input('order_by') : 'active';
@@ -87,8 +67,8 @@ class AdvisoryBoardController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        $pageTitle = $this->pageTitle;
-//dd($requestGroupBy, $sort);
+        $pageTitle = trans_choice('custom.advisory_boards', 2);
+
         $groupByColumn = ['advisory_boards.id', 'advisory_board_translations.name'];
 //        if($requestGroupBy){
         if ($requestGroupBy == 'fieldOfAction' || $sort == 'fieldOfAction') {
@@ -227,28 +207,6 @@ class AdvisoryBoardController extends Controller
         $this->composeBreadcrumbs(null);
         $this->setSeo(__('site.seo_title'), trans_choice('custom.advisory_boards', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.advisory_boards', 2), 'img' => AdvisoryBoard::DEFAULT_IMG));
         return $this->view('site.advisory-boards.index', compact('filter', 'sorter', 'items', 'pageTitle', 'defaultOrderBy', 'defaultDirection', 'groupOptions', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm', 'customRequestParam', 'other_nomenclatures'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        dd('create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        dd('store');
     }
 
     /**
@@ -498,7 +456,6 @@ class AdvisoryBoardController extends Controller
     {
         if ($itemId) {
             $item = AdvisoryBoard::with(['translations', 'moderators'])->find($itemId);
-//            $item = AdvisoryBoard::with(['translations', 'moderators', 'moderators.user', 'moderatorInformation', 'moderatorInformation.translations', 'moderatorInformation.files'])->find($itemId);
             if (!$item) {
                 abort(404);
             }
@@ -513,10 +470,11 @@ class AdvisoryBoardController extends Controller
             $this->setSeo($item->name . ' | ' . trans_choice('custom.contacts', 2), $item->ogDescription, '', array('title' => $item->name . ' | ' . trans_choice('custom.contacts', 2), 'description' => $item->ogDescription, 'img' => $item->mainImg ? $item->mainImg->path : AdvisoryBoard::DEFAULT_IMG));
             return $this->view('site.advisory-boards.contacts_inner', compact('pageTitle', 'item', 'customSections'));
         } else {
-            $pageTitle = $this->pageTitle;
+            $pageTitle = trans_choice('custom.advisory_boards', 2);
 
             $moderators = User::role([CustomRole::MODERATOR_ADVISORY_BOARDS, CustomRole::MODERATOR_ADVISORY_BOARD])
                 ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
+                ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                 ->get()
                 ->sortByDesc(function ($item, $key) {
                     return $item->advisoryBoardNames();
@@ -541,7 +499,7 @@ class AdvisoryBoardController extends Controller
         $defaultOrderBy = $sort;
         $defaultDirection = $sortOrd;
 
-        $pageTitle = $this->pageTitle;
+        $pageTitle = trans_choice('custom.advisory_boards', 2);
         $items = Publication::select('publication.*')
             ->ActivePublic()
             ->with(['translations', 'category', 'category.translations'])
@@ -597,7 +555,6 @@ class AdvisoryBoardController extends Controller
             abort(404);
         }
         $pageTitle = $page->name;
-//        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
         $this->composeBreadcrumbs(null, array(['name' => trans_choice('custom.documents', 2), 'url' => '']));
         $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
 
@@ -615,7 +572,6 @@ class AdvisoryBoardController extends Controller
             abort(404);
         }
         $pageTitle = $page->name;
-//        $this->setSeo($page->meta_title, $page->meta_description, $page->meta_keyword);
         $this->composeBreadcrumbs(null, array(['name' => __('site.base_info'), 'url' => '']));
         $this->setSeo($page->meta_title ?? $page->name, $page->meta_description ?? $page->short_content, $page->meta_keyword, array('title' => $page->meta_title ?? $page->name, 'img' => Page::DEFAULT_IMG));
 
@@ -994,13 +950,13 @@ class AdvisoryBoardController extends Controller
             'meetingFrom' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('meetingFrom'),
-                'label' => 'Заседания в периода (от)',
+                'label' => __('custom.meetings_period_from'),
                 'col' => 'col-md-6'
             ),
             'meetingTo' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('meetingTo'),
-                'label' => 'Заседания в периода (до)',
+                'label' => __('custom.meetings_period_till'),
                 'col' => 'col-md-6'
             ),
             'status' => array(
