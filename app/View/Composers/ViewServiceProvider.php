@@ -7,10 +7,8 @@ use App\Enums\OldNationalPlanEnum;
 use App\Enums\PageModulesEnum;
 use App\Models\OgpPlan;
 use App\Models\Page;
-use App\Models\Sector;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -34,18 +32,6 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-        // Using closure based composers...
-//        View::composer('sidebar', function ($view) {
-
-//            $sectors = Sector::select('id', 'name_bg', 'abbr_bg')
-//                ->whereActive(true)
-//                ->get();
-//
-//            $view->with('sectors', $sectors);
-//        });
-//
-
         View::composer('layouts.site', function ($view) {
             $facebookAppIdKey = Setting::FACEBOOK_APP_ID;
             $facebookAppId = Cache::get($facebookAppIdKey);

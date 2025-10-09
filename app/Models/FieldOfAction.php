@@ -27,7 +27,7 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
     public array $translatedAttributes = self::TRANSLATABLE_FIELDS;
 
     protected $table = 'field_of_actions';
-    protected $fillable = ['icon_class','parentid'];
+    protected $fillable = ['icon_class', 'parentid'];
 
     const CATEGORY_NATIONAL = 1;
     const CATEGORY_AREA = 2;
@@ -63,19 +63,23 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
         return $this->belongsTo(FieldOfAction::class, 'parentid');
     }
 
-    public function scopeActive($query){
+    public function scopeActive($query)
+    {
         $query->where('field_of_actions.active', 1);
     }
 
-    public function scopeCentral($query){
+    public function scopeCentral($query)
+    {
         $query->where('field_of_actions.parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::CENTRAL->value));
     }
 
-    public function scopeArea($query){
+    public function scopeArea($query)
+    {
         $query->where('field_of_actions.parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::AREA->value));
     }
 
-    public function scopeMunicipal($query){
+    public function scopeMunicipal($query)
+    {
         $query->where('field_of_actions.parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::MUNICIPAL->value));
     }
 
@@ -101,11 +105,11 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
             ->join('field_of_action_translations', 'field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
             ->where('field_of_action_translations.locale', '=', app()->getLocale());
 
-        if($parent){
+        if ($parent) {
             $q->where('field_of_actions.parentid', '=', $parent);
         }
 
-        if($active) {
+        if ($active) {
             $q->where('field_of_actions.active', '=', 1)
                 ->whereNull('field_of_actions.deleted_at');
         }
@@ -113,5 +117,4 @@ class FieldOfAction extends ModelActivityExtend implements TranslatableContract
         return $q->orderBy('field_of_action_translations.name', 'asc')
             ->get();
     }
-
 }
