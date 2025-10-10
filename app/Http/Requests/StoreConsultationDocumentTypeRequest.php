@@ -30,7 +30,7 @@ class StoreConsultationDocumentTypeRequest extends FormRequest
         ];
 
         if (request()->isMethod('put') ) {
-            $rules['id'] = ['required', 'numeric', 'exists:act_type'];
+            $rules['id'] = ['required', 'numeric', 'exists:consultation_document_type'];
         }
 
         foreach (config('available_languages') as $lang) {
