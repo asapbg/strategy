@@ -92,13 +92,13 @@
                                             -->
                                             {{
                                                 $document->document_date_accepted && !str_contains($document->document_date_accepted, '9999')
-                                                    ? \Carbon\Carbon::parse($document->document_date_accepted)->format('d-m-Y')
-                                                    : \Carbon\Carbon::parse($document->created_at)->format('d-m-Y')
+                                                    ? displayDate($document->document_date_accepted)
+                                                    : displayDate($document->created_at)
                                             }}
                                             -
                                             {{
                                                 ($document->document_date_expiring && !str_contains($document->document_date_expiring, '9999'))
-                                                    ? \Carbon\Carbon::parse($document->document_date_expiring)->format('d-m-Y')
+                                                    ? displayDate($document->document_date_expiring)
                                                     : __('custom.unlimited')
                                             }}
 

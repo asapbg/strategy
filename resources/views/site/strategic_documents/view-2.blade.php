@@ -79,14 +79,26 @@
                     <h3 class="mb-2 fs-5">{{ trans_choice('custom.accepted_date', 1) }}</h3>
                     <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
-                        <i class="fas fa-calendar main-color me-2 fs-18" title="Тип консултация"></i>{{ $strategicDocument->document_date_accepted }}</span>
+                        <i class="fas fa-calendar main-color me-2 fs-18" title="Тип консултация"></i>
+                        {{
+                            $strategicDocument->document_date_accepted && !str_contains($strategicDocument->document_date_accepted, '9999')
+                                ? displayDate($strategicDocument->document_date_accepted)
+                                : displayDate($strategicDocument->created_at)
+                        }}
+                    </span>
                     </a>
                 </div>
                 <div class="col-md-4">
                     <h3 class="mb-2 fs-5">{{ trans_choice('custom.date_expiring', 1) }}</h3>
                     <a href="#" class="main-color text-decoration-none fs-18">
                     <span class="obj-icon-info me-2">
-                        <i class="fas fa-calendar-check me-2 main-color fs-18" title="Тип консултация"></i>{{ $strategicDocument->document_date_expiring }}</span>
+                        <i class="fas fa-calendar-check me-2 main-color fs-18" title="Тип консултация"></i>
+                        {{
+                            $strategicDocument->document_date_expiring && !str_contains($strategicDocument->document_date_expiring, '9999')
+                                ? displayDate($strategicDocument->document_date_expiring)
+                                : __('custom.unlimited')
+                        }}
+                    </span>
                     </a>
                 </div>
                 <div class="col-md-4">

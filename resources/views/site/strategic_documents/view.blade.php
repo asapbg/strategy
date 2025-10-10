@@ -129,11 +129,18 @@
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <h3 class="mb-2 fs-18">{{ __('custom.effective_at') }}</h3>
-                        <a href="{{ route('strategy-documents.reports').'?validFrom='.$strategicDocument->document_date_accepted }}" class="main-color text-decoration-none fs-18" id="dateAccepted"
-                           data-document-date-accepted="{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('d.m.Y') }}">
-                        <span class="obj-icon-info me-2">
-                            <i class="fas fa-calendar main-color me-2 fs-18"
-                               title="Тип консултация"></i>{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('d.m.Y') }}</span>
+                        <a href="{{ route('strategy-documents.reports').'?validFrom='.$strategicDocument->document_date_accepted }}"
+                           class="main-color text-decoration-none fs-18" id="dateAccepted"
+                           data-document-date-accepted="{{ \Carbon\Carbon::parse($strategicDocument->document_date_accepted)->format('d.m.Y') }}"
+                        >
+                            <span class="obj-icon-info me-2">
+                                <i class="fas fa-calendar main-color me-2 fs-18" title="Тип консултация"></i>
+                                {{
+                                    $strategicDocument->document_date_expiring && !str_contains($strategicDocument->document_date_expiring, '9999')
+                                        ? displayDate($strategicDocument->document_date_expiring)
+                                        : __('custom.unlimited')
+                                }}
+                            </span>
                         </a>
                     </div>
 
@@ -147,7 +154,7 @@
                         <span class="obj-icon-info me-2">
                             <i class="fas fa-calendar-check me-2 main-color fs-18" title="Тип консултация"></i>
                             @if ($strategicDocument->document_date_expiring && !str_contains($strategicDocument->document_date_expiring, '9999'))
-                                {{ \Carbon\Carbon::parse($strategicDocument->document_date_expiring)->format('d.m.Y') }}
+                                {{ displayDate($strategicDocument->document_date_expiring) }}
                             @else
                                 {{ trans_choice('custom.date_indefinite_name', 1) }}
                             @endif

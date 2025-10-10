@@ -53,18 +53,17 @@
                             {{ $document->acceptActInstitution ? $document->acceptActInstitution->name : '---' }}
                         </td>
                         <td class="text-nowrap">
-{{--                            @if($document->document_date_accepted && $document->document_date_expiring)--}}
-{{--                                {{ displayDate($document->document_date_accepted) .' - '. displayDate($document->document_date_expiring) }}--}}
-{{--                            @elseif($document->document_date_accepted || $document->document_date_expiring)--}}
-{{--                                @if($document->document_date_accepted)--}}
-{{--                                    {{ __('custom.from') .' '.displayDate($document->document_date_accepted) }}--}}
-{{--                                @else--}}
-{{--                                    {{ __('custom.to') .' '.displayDate($document->document_date_expiring) }}--}}
-{{--                                @endif--}}
-{{--                            @endif--}}
-                            {{ $document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('d-m-Y') : '' }}
+                            {{
+                                $document->document_date_accepted && !str_contains($document->document_date_accepted, '9999')
+                                    ? \Carbon\Carbon::parse($document->document_date_accepted)->format('d-m-Y')
+                                    : \Carbon\Carbon::parse($document->created_at)->format('d-m-Y')
+                            }}
                             -
-                            {{ $document->document_date_expiring ? \Carbon\Carbon::parse($document->document_date_expiring)->format('d-m-Y') : __('custom.unlimited') }}
+                            {{
+                                ($document->document_date_expiring && !str_contains($document->document_date_expiring, '9999'))
+                                    ? \Carbon\Carbon::parse($document->document_date_expiring)->format('d-m-Y')
+                                    : __('custom.unlimited')
+                            }}
                         </td>
                     </tr>
                 @endforeach

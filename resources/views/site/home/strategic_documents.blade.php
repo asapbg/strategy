@@ -61,9 +61,15 @@
                             <div class="meta-consul mt-2">
                                 <span class="text-secondary">
                                     {{
-                                        $sd->document_date_accepted || $sd->document_date_expiring
-                                            ? ($sd->document_date_accepted ? displayDate($sd->document_date_accepted) . ' г.' : __('custom.date_expring_indefinite')) . ' - ' . ($sd->document_date_expiring ? displayDate($sd->document_date_expiring) . ' г.' : __('custom.date_expring_indefinite'))
-                                            : __('custom.date_expring_indefinite')
+                                        $sd->document_date_accepted && !str_contains($sd->document_date_accepted, '9999')
+                                            ? displayDate($sd->document_date_accepted) ." ". __('custom.year_short')
+                                            : displayDate($sd->created_at) ." ". __('custom.year_short')
+                                    }}
+                                    -
+                                    {{
+                                        ($sd->document_date_expiring && !str_contains($sd->document_date_expiring, '9999'))
+                                            ? displayDate($sd->document_date_expiring) ." ". __('custom.year_short')
+                                            : __('custom.unlimited')
                                     }}
                                 </span>
 

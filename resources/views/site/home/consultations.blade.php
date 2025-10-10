@@ -53,7 +53,7 @@
 
                             <div class="meta-consul mt-2">
                                 <span class="text-secondary">
-                                    {{ displayDate($consultation->open_from) }} г. - {{ displayDate($consultation->open_to) }} г.
+                                    {{ displayDate($consultation->open_from)  ." ". __('custom.year_short') }} - {{ displayDate($consultation->open_to) ." ". __('custom.year_short') }}
                                     | {{ $consultation->comments->count() }} <i class="far fa-comment text-secondary"></i>
                                 </span>
 
