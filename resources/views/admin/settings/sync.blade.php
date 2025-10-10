@@ -2,15 +2,15 @@
     $show_button    = $show_button  ?? false;
     $title          = $title        ?? __('custom.sync_all_institutions');
     $question       = $question     ?? __('custom.are_you_sure_sync_all');
-    $last_sync_data = json_decode($row->value, true);
+    $last_sync_data = json_decode($setting->value, true);
 @endphp
 
 <!-- Button trigger modal -->
 @if($show_button)
-    @if (!$row->custom_value)
+    @if (!$setting->custom_value)
         <p>В процес на синхронизация ..</p>
     @else
-        <p>Последната синхронизация е била извършена на <b>{{ displayDate($row->custom_value) }}</b></p>
+        <p>Последната синхронизация е била извършена на <b>{{ displayDate($setting->custom_value) }}</b></p>
         @if(!empty($last_sync_data))
             <p>Следните промени са били направени: </p>
             <ol>
@@ -22,7 +22,7 @@
             <p>Няма направени промени</p>
         @endif
     @endif
-    <input type="hidden" id="last_sync_date" value="{{ $row->custom_value }}">
+    <input type="hidden" id="last_sync_date" value="{{ $setting->custom_value }}">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sync-institutions-modal">
         {{ __('custom.sync_all_institutions') }}
     </button>

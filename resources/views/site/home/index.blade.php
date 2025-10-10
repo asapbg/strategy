@@ -271,7 +271,7 @@
                                             </a>
                                         @endcan
                                         @can(($isAdvBoardNews ? 'updateAdvBoard' : 'update'), $publication)
-                                            <a href="{{ route('admin.publications.edit' , [$publication->id]) }}" data-toggle="tooltip" title="{{ __('custom.edit') }}">
+                                            <a href="{{ route('admin.publications.edit' , ['type' => $publication->type, $publication->id]) }}" data-toggle="tooltip" title="{{ __('custom.edit') }}">
                                                 <i class="fas fa-pen-to-square float-end main-color fs-4" role="button" title="{{ __('custom.edit') }}"></i>
                                             </a>
                                         @endcan

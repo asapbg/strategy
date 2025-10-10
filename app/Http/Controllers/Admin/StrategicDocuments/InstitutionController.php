@@ -10,6 +10,7 @@ use App\Http\Requests\StoreInstitutionRequest;
 use App\Models\FieldOfAction;
 use App\Models\InstitutionHistoryName;
 use App\Models\InstitutionLink;
+use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\ConsultationLevel;
 use Illuminate\Contracts\View\View;
@@ -59,9 +60,10 @@ class InstitutionController extends AdminController
         $fieldOfActions = FieldOfAction::Active()->with(['translations'])
             ->where('parentid', InstitutionCategoryLevelEnum::fieldOfActionCategory($item->level->nomenclature_level))
             ->orderByTranslation('name')->get();
+        $setting = Setting::whereType(Setting::TYPE_SYNC)->first();
 
         return $this->view(self::EDIT_VIEW,
-            compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels', 'fieldOfActions')
+            compact('item', 'storeRouteName', 'listRouteName', 'translatableFields', 'consultationLevels', 'fieldOfActions','setting')
         );
     }
 
