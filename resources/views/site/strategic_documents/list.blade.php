@@ -90,9 +90,17 @@
                                             <!--
                                             {{ $document->document_date ? $document->document_date . ' г.' : __('custom.no_terms') }}
                                             -->
-                                            {{ $document->document_date_accepted ? \Carbon\Carbon::parse($document->document_date_accepted)->format('d-m-Y') : '' }}
+                                            {{
+                                                $document->document_date_accepted && !str_contains($document->document_date_accepted, '9999')
+                                                    ? \Carbon\Carbon::parse($document->document_date_accepted)->format('d-m-Y')
+                                                    : \Carbon\Carbon::parse($document->created_at)->format('d-m-Y')
+                                            }}
                                             -
-                                            {{ ($document->document_date_expiring && !str_contains($document->document_date_expiring, '9999')) ? \Carbon\Carbon::parse($document->document_date_expiring)->format('d-m-Y') : __('custom.unlimited') }}
+                                            {{
+                                                ($document->document_date_expiring && !str_contains($document->document_date_expiring, '9999'))
+                                                    ? \Carbon\Carbon::parse($document->document_date_expiring)->format('d-m-Y')
+                                                    : __('custom.unlimited')
+                                            }}
 
                                         </span>
                                         <a href="{{ route( 'strategy-document.view' , [$document->id]) }}"
