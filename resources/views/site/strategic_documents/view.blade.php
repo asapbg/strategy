@@ -136,9 +136,9 @@
                             <span class="obj-icon-info me-2">
                                 <i class="fas fa-calendar main-color me-2 fs-18" title="Тип консултация"></i>
                                 {{
-                                    $strategicDocument->document_date_expiring && !str_contains($strategicDocument->document_date_expiring, '9999')
-                                        ? displayDate($strategicDocument->document_date_expiring)
-                                        : __('custom.unlimited')
+                                    $strategicDocument->document_date_accepted && !str_contains($strategicDocument->document_date_accepted, '9999')
+                                        ? displayDate($strategicDocument->document_date_accepted)
+                                        : displayDate($strategicDocument->created_at)
                                 }}
                             </span>
                         </a>
