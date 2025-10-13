@@ -124,7 +124,7 @@ class PublicConsultationController extends Controller
         $item = PublicConsultation::ActivePublic()->with([
             'translation', 'actType.translation', 'contactPersons', 'responsibleInstitution.historyNames',
             'importerInstitution.historyNames', 'importerInstitution.links.translations', 'pollsInPeriod.questions.answers',
-            'fieldOfAction.translation'
+            'fieldOfAction.translation', 'comments.author'
         ])->find($id);
 
         if (!$item) {

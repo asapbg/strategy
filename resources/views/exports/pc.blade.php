@@ -244,8 +244,10 @@
                     @if($poll->questions->count())
                         @foreach($poll->questions as $key => $q)
                             <div>
-                                <p><strong>{{ __('custom.question_with_number', ['number' => ($key+1)]) }}</strong> {{ $q->name }} ({{ trans_choice('custom.users', 2) }}: {{ isset($statistic[$q->id]) ? $statistic[$q->id]['users'] : 0 }})</p>
-{{--                                <p>{{ trans_choice('custom.users', 2) }}: {{ isset($statistic[$q->id]) ? $statistic[$q->id]['users'] : 0 }} </p>--}}
+                                <p>
+                                    <strong>{{ __('custom.question_with_number', ['number' => ($key+1)]) }}</strong>
+                                    {{ $q->name }} ({{ trans_choice('custom.users', 2) }}: {{ isset($statistic[$q->id]) ? $statistic[$q->id]['users'] : 0 }})
+                                </p>
                                 @foreach($q->answers as $key => $a)
                                     @php($percents = 0)
                                     @if(sizeof($statistic) && isset($statistic[$q->id]) && isset($statistic[$q->id]['options'][$a->id]))
