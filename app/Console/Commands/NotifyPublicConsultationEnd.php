@@ -40,12 +40,14 @@ class NotifyPublicConsultationEnd extends Command
             ->whereHas('author')
             ->whereNull('end_notify')
             ->get();
-        if($pcs->count()){
+        if ($pcs->count()) {
             foreach ($pcs as $pc) {
                 $to = config('app.env') != 'production' ? config('mail.local_to_mail') : $pc->author->email;
-                Mail::to($to)->send(new PublicConsultationEnd($pc));
-                $pc->end_notify = $now;
-                $pc->save();
+                if ($to) {
+                    Mail::to($to)->send(new PublicConsultationEnd($pc));
+                    $pc->end_notify = $now;
+                    $pc->save();
+                }
             }
         }
     }
