@@ -1632,6 +1632,21 @@ class FixOldPrisImporters extends Command
             }
         }
 
+        // replace ", " with " , " because of the search
+        // example "ММС, МТ" => "ММС , МТ"
+        DB::statement("
+            UPDATE pris
+               SET old_importers = regexp_replace(old_importers, '(?<!\s),', ' ,', 'g')
+             WHERE old_importers ~ '(?<!\s),'
+        ");
+
+        // remove new lines and replace them with " , " because of the search
+        DB::statement("
+            UPDATE pris
+               SET old_importers = regexp_replace(old_importers, '\r?\n', ' , ', 'g')
+             WHERE old_importers ~ '\r?\n'
+        ");
+
         return Command::SUCCESS;
     }
 }

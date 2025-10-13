@@ -156,7 +156,7 @@ class FullSearch extends QueryFilter implements FilterContract
                 if ($logicalAnd == "AND" && isset($trimmed_tags,$tags_count)) {
                     $whereLabel = $upperLowerCase ? "TRIM(tt.label)" : "LOWER(TRIM(tt.label))";
                     if ($fullKeyword) {
-                        $whereClause = "WHERE $whereLabel IN ($trimmed_tags)";
+                        $whereClause = "$whereLabel IN ($trimmed_tags)";
                         $having = "COUNT(DISTINCT tt.label) = $tags_count";
                     } else {
                         $patterns = array_map(function($tag) use ($whereLabel) {
@@ -180,6 +180,7 @@ class FullSearch extends QueryFilter implements FilterContract
                         $patterns = array_filter($patterns);
                         $having = implode(' AND ', $patterns);
                     }
+                    //dd($whereClause);
                     $queryTag = "pris.id in (
                         SELECT p.id FROM pris p
                         JOIN pris_tag pt ON p.id = pt.pris_id
