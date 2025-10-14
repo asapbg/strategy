@@ -34,7 +34,7 @@ class FullSearch extends QueryFilter implements FilterContract
                     OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND importer::text $condition '%$value%')
                 ";
                 if ($fullKeyword) {
-                    $whereTag = "tag_translations.label $condition '$value'";
+                    $whereTag = "TRIM(tag_translations.label) $condition '$value'";
 
                     $whereAbout = "(";
                     $whereAbout .= "pris_translations.about $condition '% $value %'";
