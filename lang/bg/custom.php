@@ -90,7 +90,7 @@ return [
     'emails'                           => 'Email|Emails',
     'forms'                            => 'Форма|Форми',
     'reports'                          => 'Отчет|Отчети',
-    'results'                          => 'Резултат|Резултати',
+    'results'                          => 'Резултат|Резултата',
     'contacts'                         => 'Контакт|Контакти',
     'contact_info'                     => 'Контакти',
     'specialists'                      => 'Специалист|Специалисти',
