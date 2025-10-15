@@ -40,12 +40,14 @@ class FullSearch extends QueryFilter implements FilterContract
                     $whereAbout .= "pris_translations.about $condition '% $value %'";
                     $whereAbout .= " OR pris_translations.about $condition '% $value'";
                     $whereAbout .= " OR pris_translations.about $condition '$value %'";
+                    $whereAbout .= " OR pris_translations.about $condition '%$value,%'";
                     $whereAbout .= ")";
 
                     $whereLegalReason = "(";
                     $whereLegalReason .= "pris_translations.legal_reason $condition '% $value %'";
                     $whereLegalReason .= " OR pris_translations.legal_reason $condition '% $value'";
                     $whereLegalReason .= " OR pris_translations.legal_reason $condition '$value %'";
+                    $whereLegalReason .= " OR pris_translations.legal_reason $condition '%$value,%'";
                     $whereLegalReason .= ")";
 
                     $whereImporter = "(";
@@ -194,7 +196,7 @@ class FullSearch extends QueryFilter implements FilterContract
                         HAVING $having
                     )";
                 }
-                //dd($queryTag);
+                //dd($queryTag);$fullKeyword, $upperLowerCase
                 if ($searchInFiles || $searchInAbout || $searchInLegalReason || $searchInTags || $searchInImporter) {
                     $q->where(function ($q) use (
                         $searchInFiles,
@@ -206,13 +208,21 @@ class FullSearch extends QueryFilter implements FilterContract
                         $queryTag,
                         $whereAbout,
                         $whereImporter,
+                        $fullKeyword,
+                        $upperLowerCase,
                         $whereLegalReason
                     ) {
                         $q->where('pris.id', '=', 0)
-                            ->when($searchInFiles, function ($query) use ($whereFulltext) {
-                                $query->orWhereHas('files', function (Builder $query) use ($whereFulltext) {
-//                                    $query->whereRaw("to_tsvector('bulgarian', file_text_ts_bg::text) @@ plainto_tsquery('bulgarian', ?)", [$whereFulltext]);
-                                    $query->whereRaw('file_text_ts_bg @@ plainto_tsquery(\'bulgarian\', ?)', [$whereFulltext]);
+                            ->when($searchInFiles, function ($query) use ($whereFulltext, $fullKeyword, $upperLowerCase) {
+                                $query->orWhereHas('files', function (Builder $query) use ($whereFulltext, $fullKeyword, $upperLowerCase) {
+                                    if ($fullKeyword) {
+                                        //$query->whereRaw("to_tsvector('bulgarian', file_text_ts_bg::text) @@ plainto_tsquery('bulgarian', ?)", [$whereFulltext]);
+                                        $query->whereRaw("file_text_ts_bg @@ to_tsquery('bulgarian', '$whereFulltext')");
+                                    } else {
+                                        $query->whereRaw("file_text_ts_bg @@ to_tsquery('bulgarian', '$whereFulltext:*')");
+                                        //$condition = $upperLowerCase ? 'LIKE' : 'ILIKE';
+                                        //$query->whereRaw("file_text_ts_bg::TEXT $condition '%$whereFulltext%'");
+                                    }
                                 });
                             })
                             ->when($searchInAbout, function ($query) use ($whereAbout) {
