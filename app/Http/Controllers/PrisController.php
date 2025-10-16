@@ -55,6 +55,7 @@ class PrisController extends Controller
             ->LastVersion()
             //->InPris()
             ->Published()
+            ->whereActive(true)
             ->with(['translations', 'actType.translations', 'institutions.historyNames', 'institutions.translation'])
             ->leftJoin('pris_translations', function ($j) {
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
@@ -268,6 +269,7 @@ class PrisController extends Controller
 
         $item = Pris::LastVersion()
             //->InPris()
+            ->whereActive(true)
             ->when(!$can_access_orders, function ($query) {
                 $query->where('legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
             })
@@ -281,6 +283,7 @@ class PrisController extends Controller
         if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
+        //dd($item->changedDocs);
 
         if ($item->legal_act_type_id == LegalActType::TYPE_TRANSCRIPTS) {
             $item->files = $item->files->sortByDesc('filename');
