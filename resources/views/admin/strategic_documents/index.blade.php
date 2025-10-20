@@ -108,6 +108,50 @@
 
     </style>
 
+    @push('scripts')
+        <script type="text/javascript">
+            $(document).ready(function (){
+                let centralLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::CENTRAL->value; ?>';
+                let areaLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::AREA->value; ?>';
+                let municipalityLevel = '<?php echo \App\Enums\InstitutionCategoryLevelEnum::MUNICIPAL->value; ?>';
+
+                let fieldOfActions = $('#fieldOfActions');
+                let areas = $('#areas');
+                let municipalities = $('#municipalities');
+                let level = $('#category');
+
+                function categoriesControl(){
+                    let levelVal = level.val();
+                    // console.log(level.val(), centralLevel, levelVals.indexOf(centralLevel) != -1 || !levelVals.length);
+                    if(levelVal == centralLevel || !levelVal){
+                        fieldOfActions.parent().removeClass('d-none');
+                    } else{
+                        fieldOfActions.parent().addClass('d-none');
+                        fieldOfActions.val('');
+                    }
+                    // console.log(level.val(), areaLevel, levelVals.indexOf(areaLevel) != -1 || !levelVals.length);
+                    if(levelVal == areaLevel ||!levelVal){
+                        areas.parent().removeClass('d-none');
+                    } else{
+                        areas.parent().addClass('d-none');
+                        areas.val('');
+                    }
+                    // console.log(level.val(), municipalityLevel, levelVals.indexOf(municipalityLevel) != -1 || !levelVals.length);
+                    if(levelVal == municipalityLevel || !levelVal){
+                        municipalities.parent().removeClass('d-none');
+                    } else{
+                        municipalities.parent().addClass('d-none');
+                        municipalities.val('');
+                    }
+                }
+
+                $(document).on('change', level, function (){
+                    categoriesControl();
+                });
+                categoriesControl();
+            });
+        </script>
+    @endpush
 @endsection
 
 

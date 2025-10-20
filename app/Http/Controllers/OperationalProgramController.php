@@ -15,6 +15,7 @@ class OperationalProgramController extends Controller
 {
     public function index(Request $request)
     {
+        $can_access_orders = $this->canAccessOrders($request);
         $rssUrl = config('feed.feeds.op.url');
         $paginate = $filter['paginate'] ?? OperationalProgram::PAGINATE;
         $items = OperationalProgram::Published()->FilterBy($request->all())->orderBy('from_date', 'desc')->paginate($paginate);
@@ -23,31 +24,19 @@ class OperationalProgramController extends Controller
 
         //$pageTitle = __('site.menu.op');
 
-        $menuCategories = [];
-        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
-            ->Pris()
-            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
-            ->get();
-        if( $actTypes->count() ) {
-            foreach ($actTypes as $act) {
-                $menuCategories[] = [
-                    'label' => $act->name,
-                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
-                    'slug' => Str::slug($act->name)
-                ];
-            }
-        }
+        [ $menuCategories, $menuCategoriesArchive ] = $this->getPrisProgramsMenuItems($can_access_orders);
 
         $pageTitle = __('site.pris.page_title');
         $this->composeBreadcrumbs();
 
         $hasSubscribeEmail = $this->hasSubscription(null, OperationalProgram::class, $request->all());
         $hasSubscribeRss = false;
-        return $this->view('site.op.index', compact('items', 'pageTitle', 'pageTopContent', 'menuCategories', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss'));
+        return $this->view('site.op.index', compact('items', 'pageTitle', 'pageTopContent', 'menuCategories', 'menuCategoriesArchive', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     public function show(Request $request, int $id = 0)
     {
+        $can_access_orders = $this->canAccessOrders($request);
 //        return $this->view('templates.op');
         $item = OperationalProgram::Published()->with(['rowFilesLocale'])->find($id);
         if( !$item ) {
@@ -62,9 +51,11 @@ class OperationalProgramController extends Controller
         $pageTitle = __('site.pris.page_title');
         $this->composeBreadcrumbs([], $item);
 
+        [ $menuCategories, $menuCategoriesArchive ] = $this->getPrisProgramsMenuItems($can_access_orders);
+
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = false;
-        return $this->view('site.op.view', compact('item', 'data', 'months', 'institutions', 'pageTitle', 'hasSubscribeEmail', 'hasSubscribeRss'));
+        return $this->view('site.op.view', compact('item', 'data', 'months', 'institutions', 'pageTitle', 'hasSubscribeEmail', 'hasSubscribeRss', 'menuCategories', 'menuCategoriesArchive'));
     }
 
     /**

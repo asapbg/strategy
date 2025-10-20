@@ -87,29 +87,8 @@ class PrisController extends Controller
             );
         }
 
-        $menuCategories = [];
-        $menuCategoriesArchive = [];
-        $actTypes = LegalActType::with(['translations'])
-            //->Pris()
-            ->when(!$can_access_orders, function ($query) {
-                $query->where('id', '<>', LegalActType::TYPE_ORDER);
-            })
-            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
-            ->get();
-        if ($actTypes->count()) {
-            foreach ($actTypes as $act) {
-                $menuCategories[] = [
-                    'label' => $act->name,
-                    'url' => route('pris.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
-                    'slug' => Str::slug($act->name)
-                ];
-                $menuCategoriesArchive[] = [
-                    'label' => $act->name,
-                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
-                    'slug' => Str::slug($act->name)
-                ];
-            }
-        }
+        [ $menuCategories, $menuCategoriesArchive ] = $this->getPrisProgramsMenuItems($can_access_orders);
+
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS . '_' . app()->getLocale())->first();
 
         $pageTitle = __('site.pris.page_title');
@@ -486,17 +465,23 @@ class PrisController extends Controller
 //                    ),
 //                )
 //            ),
-            'fromDate' => array(
-                'type' => 'datepicker',
-                'value' => $request->input('fromDate'),
-                'label' => __('custom.begin_date'),
-                'col' => 'col-md-3'
-            ),
-            'toDate' => array(
-                'type' => 'datepicker',
-                'value' => $request->input('toDate'),
-                'label' => __('custom.end_date'),
-                'col' => 'col-md-3'
+            'formGroupPeriod' => array(
+                'title' => __('custom.period_search'),
+                'class' => 'row',
+                'fields' => array(
+                    'fromDate' => array(
+                        'type' => 'datepicker',
+                        'value' => $request->input('fromDate'),
+                        'label' => __('custom.begin_date'),
+                        'col' => 'col-md-3'
+                    ),
+                    'toDate' => array(
+                        'type' => 'datepicker',
+                        'value' => $request->input('toDate'),
+                        'label' => __('custom.end_date'),
+                        'col' => 'col-md-3'
+                    ),
+                ),
             ),
             'newspaperNumber' => array(
                 'type' => 'text',

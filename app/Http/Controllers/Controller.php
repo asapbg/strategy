@@ -6,6 +6,7 @@ use App\Enums\PageModulesEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\LanguageFileUploadRequest;
 use App\Models\File;
+use App\Models\LegalActType;
 use App\Models\Page;
 use App\Models\StrategicDocumentFile;
 use App\Models\User;
@@ -20,6 +21,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use romanzipp\Seo\Structs\Meta;
 use romanzipp\Seo\Structs\Meta\OpenGraph;
@@ -614,5 +616,38 @@ class Controller extends BaseController
         }
 
         return $query;
+    }
+
+    public function getPrisProgramsMenuItems($can_access_orders)
+    {
+        $menuCategories = [];
+        $menuCategoriesArchive = [];
+        $actTypes = LegalActType::with(['translations'])
+            //->Pris()
+            ->when(!$can_access_orders, function ($query) {
+                $query->where('id', '<>', LegalActType::TYPE_ORDER);
+            })
+            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->get();
+        if ($actTypes->count()) {
+            foreach ($actTypes as $act) {
+                $menuCategories[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
+                    'slug' => Str::slug($act->name)
+                ];
+                $menuCategoriesArchive[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
+                    'slug' => Str::slug($act->name)
+                ];
+            }
+        }
+
+        // You can assign the results to a variable dynamically by simply doing this:
+        // [ $variable_for_first_element, $variable_for_second_element ] = $this->getPrisProgramsMenuItems($can_access_orders)
+        return [
+            $menuCategories, $menuCategoriesArchive
+        ];
     }
 }

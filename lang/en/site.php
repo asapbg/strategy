@@ -240,7 +240,7 @@ return [
     'commented' => 'Commented',
     'supported' => 'Supported',
     'institution.adv_board.title' => 'Advisory boards related to :name',
-    'old_portal_link' => 'Link to the old portal',
+    'old_portal_link' => 'Link to the previous Public Consultation Portal',
     'user_guide' => 'User guide',
     'user_video_guide' => 'User video guide',
     'home.no_polls_found' => 'There are currently no active polls',

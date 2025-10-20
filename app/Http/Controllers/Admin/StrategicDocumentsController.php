@@ -68,6 +68,7 @@ class StrategicDocumentsController extends AdminController
                 $j->on('strategic_document_translations.strategic_document_id', '=', 'strategic_document.id')->where('strategic_document_translations.locale', '=', app()->getLocale());
             })
             ->FilterBy($requestFilter)
+            ->SortedBy('validFrom', 'desc')
             ->when(isset($requestFilter['only_deleted']), fn($q) => $q->onlyTrashed());
 //            ->when(($requestFilter['strategic_document_type_id'] ?? null), fn($q, $value) => $q->where('strategic_document_type_id', $value));
 
@@ -678,18 +679,29 @@ class StrategicDocumentsController extends AdminController
 
     private function filters($request)
     {
+        $user = $request->user();
+
+        if ($user->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::SUPER_USER_ROLE, CustomRole::MODERATOR_STRATEGIC_DOCUMENTS])) {
+            //Field of actions split by parent categories
+            $ekateAreas = \App\Models\FieldOfAction::Active()->Area()->with(['translations'])->orderByTranslation('name')->get();
+            $ekateMunicipalities = \App\Models\FieldOfAction::Active()->Municipal()->with(['translations'])->orderByTranslation('name')->get();
+            $policyAreas = \App\Models\FieldOfAction::Active()->Central()->with(['translations'])->orderByTranslation('name')->get();
+        } else {
+            //Field of actions split by parent categories
+            $userPolicyAreas = $user->institution ?
+                ($user->institution->fieldsOfAction->count() ? $user->institution->fieldsOfAction->pluck('id')->toArray() : [0])
+                : [0];
+
+            $ekateAreas = $user->institution ? \App\Models\FieldOfAction::Active(true)->Area()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
+            $ekateMunicipalities = $user->institution ? \App\Models\FieldOfAction::Active(true)->Municipal()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
+            $policyAreas = $user->institution ? \App\Models\FieldOfAction::Active(true)->Central()->whereIn('field_of_actions.id', $userPolicyAreas)->with(['translations'])->orderByTranslation('name')->get() : null;
+        }
+
         return array(
             'title' => array(
                 'type' => 'text',
                 'placeholder' => __('validation.attributes.title'),
                 'value' => $request->input('title'),
-                'col' => 'col-md-4'
-            ),
-            'category' => array(
-                'type' => 'select',
-                'placeholder' => trans_choice('custom.nomenclature.strategic_document_level', 1),
-                'value' => $request->input('category'),
-                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', false, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
                 'col' => 'col-md-4'
             ),
             'DocumentType' => array(
@@ -712,8 +724,40 @@ class StrategicDocumentsController extends AdminController
                 'value' => request()->input('status', 'active'),
                 'col' => 'col-md-4'
             ),
+            'category' => array(
+                'type' => 'select',
+                'placeholder' => trans_choice('custom.nomenclature.strategic_document_level', 1),
+                'value' => $request->input('category'),
+                'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', false, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
+                'col' => 'col-md-12'
+            ),
+            'fieldOfActions' => array(
+                'type' => 'select',
+                'multiple' => true,
+                'options' => optionsFromModel($policyAreas),
+                'placeholder' => trans_choice('custom.field_of_actions', 2),
+                'value' => $request->input('fieldOfActions'),
+                'col' => 'col-md-4',
+            ),
+            'areas' => array(
+                'type' => 'select',
+                'multiple' => true,
+                'options' => optionsFromModel($ekateAreas),
+                'placeholder' => trans_choice('custom.areas', 2),
+                'value' => $request->input('areas'),
+                'col' => 'col-md-4'
+            ),
+            'municipalities' => array(
+                'type' => 'select',
+                'multiple' => true,
+                'options' => optionsFromModel($ekateMunicipalities),
+                'placeholder' => trans_choice('custom.municipalitys', 2),
+                'value' => $request->input('municipalities'),
+                'col' => 'col-md-4'
+            ),
             'only_deleted' => array(
                 'type' => 'checkbox',
+                'multiple' => true,
                 'checked' => $request->input('only_deleted'),
                 'placeholder' => __('custom.all_deleted'),
                 'value' => 1,
