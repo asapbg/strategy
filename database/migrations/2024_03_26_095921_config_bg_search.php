@@ -29,7 +29,7 @@ return new class extends Migration
         DB::statement("ALTER TABLE strategic_document_file ADD COLUMN sd_file_text_ts_bg tsvector GENERATED ALWAYS AS (to_tsvector('bulgarian', regexp_replace(regexp_replace(file_text, E'<[^>]+>', '', 'gi'), E'&nbsp;', '', 'g'))) STORED;");
         DB::statement("CREATE INDEX sd_file_text_ts_bg ON strategic_document_file USING GIN (sd_file_text_ts_bg);");
 
-        DB::statement("ALTER TABLE files ADD COLUMN file_text_ts_bg tsvector GENERATED ALWAYS AS (to_tsvector('bulgarian', regexp_replace(regexp_replace(file_text, E'<[^>]+>', '', 'gi'), E'&nbsp;', '', 'g'))) STORED;");
+        DB::statement("ALTER TABLE files ADD COLUMN file_text_ts_bg tsvector GENERATED ALWAYS AS (to_tsvector('simple', regexp_replace(regexp_replace(file_text, E'<[^>]+>', '', 'gi'), E'&nbsp;', '', 'g'))) STORED;");
         DB::statement("CREATE INDEX file_text_ts_bg ON files USING GIN (file_text_ts_bg);");
     }
 
