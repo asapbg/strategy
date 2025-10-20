@@ -215,13 +215,14 @@ class FullSearch extends QueryFilter implements FilterContract
                         $q->where('pris.id', '=', 0)
                             ->when($searchInFiles, function ($query) use ($whereFulltext, $fullKeyword, $upperLowerCase) {
                                 $query->orWhereHas('files', function (Builder $query) use ($whereFulltext, $fullKeyword, $upperLowerCase) {
+                                    $condition = $upperLowerCase ? 'LIKE' : 'ILIKE';
                                     if ($fullKeyword) {
                                         //$query->whereRaw("to_tsvector('bulgarian', file_text_ts_bg::text) @@ plainto_tsquery('bulgarian', ?)", [$whereFulltext]);
-                                        $query->whereRaw("file_text_ts_bg @@ to_tsquery('bulgarian', '$whereFulltext')");
+                                        $query->whereRaw("file_text_ts_bg @@ to_tsquery('simple', '$whereFulltext')");
+//                                        $query->whereRaw("file_text::TEXT $condition '% $whereFulltext %'");
                                     } else {
-                                        $query->whereRaw("file_text_ts_bg @@ to_tsquery('bulgarian', '$whereFulltext:*')");
-                                        //$condition = $upperLowerCase ? 'LIKE' : 'ILIKE';
-                                        //$query->whereRaw("file_text_ts_bg::TEXT $condition '%$whereFulltext%'");
+                                        $query->whereRaw("file_text_ts_bg @@ to_tsquery('simple', '$whereFulltext:*')");
+//                                        $query->whereRaw("file_text::TEXT $condition '%$whereFulltext%'");
                                     }
                                 });
                             })
