@@ -15,6 +15,8 @@ class LegislativeProgramController extends Controller
 {
     public function index(Request $request)
     {
+        $can_access_orders = $this->canAccessOrders($request);
+
         $rssUrl = config('feed.feeds.lp.url');
 
         $paginate = $filter['paginate'] ?? LegislativeProgram::PAGINATE;
@@ -25,18 +27,19 @@ class LegislativeProgramController extends Controller
 
         //$pageTitle = __('site.menu.lp');
 
-        $menuCategories = $this->composeMenuCategories();
+        [ $menuCategories, $menuCategoriesArchive ] = $this->getPrisProgramsMenuItems($can_access_orders);
 
         $pageTitle = __('site.pris.page_title');
         $this->composeBreadcrumbs();
 
         $hasSubscribeEmail = $this->hasSubscription(null, LegislativeProgram::class, $request->all());
         $hasSubscribeRss = false;
-        return $this->view('site.lp.index', compact('items', 'pageTitle', 'pageTopContent', 'menuCategories', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss'));
+        return $this->view('site.lp.index', compact('items', 'pageTitle', 'pageTopContent', 'menuCategories', 'menuCategoriesArchive', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss'));
     }
 
     public function show(Request $request, int $id = 0)
     {
+        $can_access_orders = $this->canAccessOrders($request);
 //        return $this->view('templates.zp');
         $item = LegislativeProgram::Published()->with(['rowFilesLocale'])->find($id);
         if( !$item ) {
@@ -55,9 +58,9 @@ class LegislativeProgramController extends Controller
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = false;
 
-        $menuCategories = $this->composeMenuCategories();
+        [ $menuCategories, $menuCategoriesArchive ] = $this->getPrisProgramsMenuItems($can_access_orders);
 
-        return $this->view('site.lp.view', compact('item', 'months', 'data', 'institutions', 'pageTitle', 'hasSubscribeEmail', 'hasSubscribeRss', 'menuCategories'));
+        return $this->view('site.lp.view', compact('item', 'months', 'data', 'institutions', 'pageTitle', 'hasSubscribeEmail', 'hasSubscribeRss', 'menuCategories', 'menuCategoriesArchive'));
     }
 
     /**
@@ -81,25 +84,5 @@ class LegislativeProgramController extends Controller
             $customBreadcrumbs[] = ['name' => $item->name, 'url' => ''];
         }
         $this->setBreadcrumbsFull($customBreadcrumbs);
-    }
-
-    private function composeMenuCategories() {
-        $menuCategories = [];
-
-        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
-            ->Pris()
-            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
-            ->get();
-        if( $actTypes->count() ) {
-            foreach ($actTypes as $act) {
-                $menuCategories[] = [
-                    'label' => $act->name,
-                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
-                    'slug' => Str::slug($act->name)
-                ];
-            }
-        }
-
-        return $menuCategories;
     }
 }

@@ -87,29 +87,8 @@ class PrisController extends Controller
             );
         }
 
-        $menuCategories = [];
-        $menuCategoriesArchive = [];
-        $actTypes = LegalActType::with(['translations'])
-            //->Pris()
-            ->when(!$can_access_orders, function ($query) {
-                $query->where('id', '<>', LegalActType::TYPE_ORDER);
-            })
-            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
-            ->get();
-        if ($actTypes->count()) {
-            foreach ($actTypes as $act) {
-                $menuCategories[] = [
-                    'label' => $act->name,
-                    'url' => route('pris.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
-                    'slug' => Str::slug($act->name)
-                ];
-                $menuCategoriesArchive[] = [
-                    'label' => $act->name,
-                    'url' => route('pris.archive.category', ['category' => Str::slug($act->name)]) . '?legalАctТype=' . $act->id,
-                    'slug' => Str::slug($act->name)
-                ];
-            }
-        }
+        [ $menuCategories, $menuCategoriesArchive ] = $this->getPrisProgramsMenuItems($can_access_orders);
+
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PRIS . '_' . app()->getLocale())->first();
 
         $pageTitle = __('site.pris.page_title');
