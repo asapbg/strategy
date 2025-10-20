@@ -34,7 +34,8 @@
                                 @case('select')
                                     <select class="form-control form-control-sm select2 @if(isset($field['class'])){{ $field['class'] }}@endif"
                                             @if(isset($field['placeholder'])) data-placeholder="{{ $field['placeholder'] }}" @endif name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
-                                     @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
+                                     @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif
+                                            id="{{ $key }}">
                                         {{-- select with groups--}}
                                         @if(isset($field['group']) && $field['group'])
                                             @foreach($field['options'] as $group_name => $group)

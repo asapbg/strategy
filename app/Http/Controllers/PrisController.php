@@ -486,17 +486,23 @@ class PrisController extends Controller
 //                    ),
 //                )
 //            ),
-            'fromDate' => array(
-                'type' => 'datepicker',
-                'value' => $request->input('fromDate'),
-                'label' => __('custom.begin_date'),
-                'col' => 'col-md-3'
-            ),
-            'toDate' => array(
-                'type' => 'datepicker',
-                'value' => $request->input('toDate'),
-                'label' => __('custom.end_date'),
-                'col' => 'col-md-3'
+            'formGroupPeriod' => array(
+                'title' => __('custom.period_search'),
+                'class' => 'row',
+                'fields' => array(
+                    'fromDate' => array(
+                        'type' => 'datepicker',
+                        'value' => $request->input('fromDate'),
+                        'label' => __('custom.begin_date'),
+                        'col' => 'col-md-3'
+                    ),
+                    'toDate' => array(
+                        'type' => 'datepicker',
+                        'value' => $request->input('toDate'),
+                        'label' => __('custom.end_date'),
+                        'col' => 'col-md-3'
+                    ),
+                ),
             ),
             'newspaperNumber' => array(
                 'type' => 'text',

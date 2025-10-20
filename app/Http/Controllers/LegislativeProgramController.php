@@ -25,20 +25,7 @@ class LegislativeProgramController extends Controller
 
         //$pageTitle = __('site.menu.lp');
 
-        $menuCategories = [];
-        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
-            ->Pris()
-            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
-            ->get();
-        if( $actTypes->count() ) {
-            foreach ($actTypes as $act) {
-                $menuCategories[] = [
-                    'label' => $act->name,
-                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
-                    'slug' => Str::slug($act->name)
-                ];
-            }
-        }
+        $menuCategories = $this->composeMenuCategories();
 
         $pageTitle = __('site.pris.page_title');
         $this->composeBreadcrumbs();
@@ -67,7 +54,10 @@ class LegislativeProgramController extends Controller
 
         $hasSubscribeEmail = $this->hasSubscription($item);
         $hasSubscribeRss = false;
-        return $this->view('site.lp.view', compact('item', 'months', 'data', 'institutions', 'pageTitle', 'hasSubscribeEmail', 'hasSubscribeRss'));
+
+        $menuCategories = $this->composeMenuCategories();
+
+        return $this->view('site.lp.view', compact('item', 'months', 'data', 'institutions', 'pageTitle', 'hasSubscribeEmail', 'hasSubscribeRss', 'menuCategories'));
     }
 
     /**
@@ -91,5 +81,25 @@ class LegislativeProgramController extends Controller
             $customBreadcrumbs[] = ['name' => $item->name, 'url' => ''];
         }
         $this->setBreadcrumbsFull($customBreadcrumbs);
+    }
+
+    private function composeMenuCategories() {
+        $menuCategories = [];
+
+        $actTypes = LegalActType::where('id', '<>', LegalActType::TYPE_ORDER)
+            ->Pris()
+            ->where('id', '<>', LegalActType::TYPE_ARCHIVE)
+            ->get();
+        if( $actTypes->count() ) {
+            foreach ($actTypes as $act) {
+                $menuCategories[] = [
+                    'label' => $act->name,
+                    'url' => route('pris.category', ['category' => Str::slug($act->name)]).'?legalАctТype='.$act->id,
+                    'slug' => Str::slug($act->name)
+                ];
+            }
+        }
+
+        return $menuCategories;
     }
 }
