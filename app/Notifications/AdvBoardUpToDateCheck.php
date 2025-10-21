@@ -12,6 +12,7 @@ class AdvBoardUpToDateCheck extends Notification
     use Queueable;
 
     protected $items;
+
     /**
      * Create a new notification instance.
      *
@@ -25,7 +26,7 @@ class AdvBoardUpToDateCheck extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -36,16 +37,16 @@ class AdvBoardUpToDateCheck extends Notification
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
-        $msg = (new MailMessage)->subject('[Strategy.bg] '.__('notifications_msg.adv_board_up_to_date'))
+        $msg = (new MailMessage)->subject('[Strategy.bg] ' . __('notifications_msg.adv_board_up_to_date'))
             ->line(__('notifications_msg.adv_board_up_to_date.extra_info'));
 
-        if(sizeof($this->items)) {
-            foreach ($this->items as $item){
+        if (sizeof($this->items)) {
+            foreach ($this->items as $item) {
                 $msg->action($item->name, route('admin.advisory-boards.edit', $item));
             }
         }
@@ -56,13 +57,13 @@ class AdvBoardUpToDateCheck extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function toArray($notifiable)
     {
         $list = '';
-        if(sizeof($this->items)) {
+        if (sizeof($this->items)) {
             foreach ($this->items as $item) {
                 $list .= '<br><a href="' . route('admin.advisory-boards.edit', $item) . '">' . $item->name . '</a>';
             }
@@ -72,7 +73,7 @@ class AdvBoardUpToDateCheck extends Notification
             //'model' => get_class($this->item),
             //'id' => $this->item->id,
             'subject' => __('notifications_msg.adv_board_up_to_date'),
-            'message' => __('notifications_msg.adv_board_up_to_date.extra_info').$list
+            'message' => __('notifications_msg.adv_board_up_to_date.extra_info') . $list
         ];
     }
 }

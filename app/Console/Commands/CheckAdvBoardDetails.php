@@ -38,40 +38,42 @@ class CheckAdvBoardDetails extends Command
             ->where('section', '=', Setting::ADVISORY_BOARDS_SECTION)
             ->first();
 
-        if(!$period || (int)$period->value <= 0 ) {
+        if (!$period || (int)$period->value <= 0) {
             return Command::SUCCESS;
         }
 
-            $lastCheckFile = Storage::disk('local')->get($this->jobFile);
-            $needCheck = false;
+        $lastCheckFile = Storage::disk('local')->get($this->jobFile);
+        $needCheck = false;
 
-        if($lastCheckFile) {
-            if(Carbon::now()->format('Y-m-d') > Carbon::parse($lastCheckFile)->addMonths((int)$period->value)->format('Y-m-d')){
+        if ($lastCheckFile) {
+            if (Carbon::now()->format('Y-m-d') > Carbon::parse($lastCheckFile)->addMonths((int)$period->value)->format('Y-m-d')) {
 //            if(true){
                 $needCheck = true;
             }
-        } else{
+        } else {
             $needCheck = true;
         }
 
-        if(!$needCheck) {
+        if (!$needCheck) {
             return Command::SUCCESS;
         }
 
         $users = User::with('moderateAdvisoryBoards', 'moderateAdvisoryBoards.board')
-            ->whereHas('roles', function ($q){
+            ->whereHas('roles', function ($q) {
                 $q->where('name', '=', CustomRole::MODERATOR_ADVISORY_BOARD);
             })
             ->whereHas('moderateAdvisoryBoards')
             ->get();
 
-        if($users->count()){
-            foreach ($users as $user){
+        if ($users->count()) {
+            foreach ($users as $user) {
                 $items = [];
-                foreach ($user->moderateAdvisoryBoards as $item){
-                    $items[] = $item->board;
+                foreach ($user->moderateAdvisoryBoards as $item) {
+                    if ($item->board) {
+                        $items[] = $item->board;
+                    }
                 }
-                if(sizeof($items)){
+                if (sizeof($items)) {
                     $user->notify(new AdvBoardUpToDateCheck($items));
                 }
                 sleep(1);
