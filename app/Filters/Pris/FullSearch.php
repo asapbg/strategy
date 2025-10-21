@@ -41,6 +41,7 @@ class FullSearch extends QueryFilter implements FilterContract
                     $whereAbout .= " OR pris_translations.about $condition '% $value'";
                     $whereAbout .= " OR pris_translations.about $condition '$value %'";
                     $whereAbout .= " OR pris_translations.about $condition '%$value,%'";
+                    $whereAbout .= " OR pris_translations.about $condition '%$value/%'";
                     $whereAbout .= ")";
 
                     $whereLegalReason = "(";
@@ -48,6 +49,7 @@ class FullSearch extends QueryFilter implements FilterContract
                     $whereLegalReason .= " OR pris_translations.legal_reason $condition '% $value'";
                     $whereLegalReason .= " OR pris_translations.legal_reason $condition '$value %'";
                     $whereLegalReason .= " OR pris_translations.legal_reason $condition '%$value,%'";
+                    $whereLegalReason .= " OR pris_translations.legal_reason $condition '%$value/%'";
                     $whereLegalReason .= ")";
 
                     $whereImporter = "(";
