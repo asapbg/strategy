@@ -33,7 +33,7 @@
                                                                         <div class="text-start col-md-1">
                                                                             <i class="fas fa-info-circle text-primary"
                                                                                style="font-size: 20px;position:absolute;top: -10px;right:-23px;"
-                                                                               title="Разделяйте термините със запетая (,)" data-html="true"
+                                                                               title="Разделяйте термините със знак плюс (+)" data-html="true"
                                                                                data-bs-placement="top" data-bs-toggle="tooltip"
                                                                             >
                                                                                 <span class="d-none">.</span>

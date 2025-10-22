@@ -61,11 +61,11 @@ class PrisController extends Controller
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
             })
-            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
-            ->join('legal_act_type_translations', function ($j) {
-                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
-                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
-            })
+//            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
+//            ->join('legal_act_type_translations', function ($j) {
+//                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+//                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
+//            })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->when(!$can_access_orders, function ($query) {
                 $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);

@@ -587,6 +587,9 @@ class Controller extends BaseController
     }
 
     public function canAccessOrders($request) {
+        if (app()->environment('local')) {
+            return true;
+        }
         return env('COUNCIL_OF_MINSTERS_IP_RANGE') // If the environment variable is set
             && $request->user() // And a user has logged in
             && ip_in_range($request->user()->ip, env('COUNCIL_OF_MINSTERS_IP_RANGE')) // And the user is in the ip ranges
