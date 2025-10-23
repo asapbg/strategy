@@ -72,8 +72,8 @@ class FullSearch extends QueryFilter implements FilterContract
                 }
                 //dd($whereImporter);
                 $trimmed_tags = "";
-                if (strstr($value, "+")) {
-                    $tags = explode("+", $value);
+                if (str_contains($value, ",")) {
+                    $tags = explode(",", $value);
                     $tags_count = count($tags);
                     $whereFulltext = "";
                     $whereAbout = "(";
@@ -178,7 +178,7 @@ class FullSearch extends QueryFilter implements FilterContract
                     LEFT JOIN tag_translations on tag.id = tag_translations.tag_id AND tag_translations.locale = '$locale'
                     WHERE $whereTag
                 )";
-                if ($logicalAnd == "AND" && isset($trimmed_tags,$tags_count)) {
+                if ($logicalAnd == "AND" && !empty($trimmed_tags) && isset($tags_count)) {
                     $whereLabel = $upperLowerCase ? "TRIM(tt.label)" : "LOWER(TRIM(tt.label))";
                     if ($fullKeyword) {
                         $whereClause = "$whereLabel IN ($trimmed_tags)";
