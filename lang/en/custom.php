@@ -1386,4 +1386,6 @@ return [
     'sync_started' => 'Synchronizing... Please wait!',
     'are_you_sure_start' => 'Are you sure you want to start',
     'period_search'                    => 'Period search',
+    'login_users'                      => 'User login',
+    'login_administrators'             => 'Administration login',
 ];
