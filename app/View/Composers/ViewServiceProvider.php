@@ -131,7 +131,7 @@ class ViewServiceProvider extends ServiceProvider
             }
             $view->with('contactMail', $contactMail);
 
-            $footerPagesCacheKey = Page::CACHE_FOOTER_PAGES_KEY;
+            $footerPagesCacheKey = Page::CACHE_FOOTER_PAGES_KEY . '_' . app()->getLocale();
             $footerPages = Cache::get($footerPagesCacheKey);
             if (is_null($footerPages)) {
                 $footerPages = [];
@@ -171,7 +171,7 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('footerPages', $footerPages);
 
             //Terms pages
-            $footerTermsPagesCacheKey = Page::CACHE_FOOTER_TERMS_PAGES;
+            $footerTermsPagesCacheKey = Page::CACHE_FOOTER_TERMS_PAGES . '_' . app()->getLocale();
             $footerTermsPages = Cache::get($footerTermsPagesCacheKey);
             if (is_null($footerTermsPages)) {
                 $footerTermsPages = [];
