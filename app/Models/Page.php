@@ -16,6 +16,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const TRANSLATABLE_FIELDS = ['name', 'short_content', 'content', 'meta_keyword', 'meta_title', 'meta_description'];
     const MODULE_NAME = 'custom.page';
     const ACCESS_POLICY = 'accessibility_policy';
+    const ACCESS_STATEMENT = 'accessibility_statement';
     const PRIVACY_POLICY = 'privacy_policy';
     const TERMS = 'terms_of_use';
     const COOKIES = 'cookies';
@@ -31,7 +32,7 @@ class Page  extends ModelActivityExtend implements TranslatableContract
     const LEGISLATIVE_INITIATIVE_INFO = 'li-info';
 
     const CACHE_FOOTER_PAGES_KEY = 'footer_pages';
-    const CACHE_FOOTER_TERMS_PAGES = 'footer_terms_pages';
+    const CACHE_FOOTER_TERMS_PAGES = 'footer_terms_pages_v1'; // Change version to immediately see the changes
     const CACHE_MODULE_PAGES_OGP = 'ogp_library';
     const CACHE_MODULE_PAGES_IMPACT_ASSESSMENT = 'impact_assessment';
 
