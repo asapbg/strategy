@@ -39,13 +39,17 @@ class FixOldPrisChangePris extends Command
         $step = 50;
         $maxId = Pris::max('id');
         $currentStep = 0;
+//        $maxId = 1;
         while ($currentStep < $maxId) {
-            $prisDocuments = Pris::withTrashed()
+            $prisDocuments = Pris::select('id','old_connections')
+                ->withTrashed()
                 ->where('id', '>=', $currentStep)
                 ->where('id', '<', ($currentStep + $step))
+//                ->where('id', '14558')
                 ->where('asap_last_version', '=', 1)
                 ->whereNotNull('old_connections')
                 ->get();
+
             if ($prisDocuments->count()) {
                 foreach ($prisDocuments as $prisDocument) {
                     //echo 'Start fixing connections of pris doc with ID: ' . $prisDocument->id . PHP_EOL;
@@ -148,7 +152,7 @@ class FixOldPrisChangePris extends Command
         }
         if (sizeof($matches) != 5) {
             //изменен от Пост П-268 дата 01/01/09
-            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (РЕШ) П-([\d*(?:\.\d+)?]{1,}) дата ([\d\/\d\/\d]{8})+/', $str, $matches);
+            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (РАЗП|разп|Разп|РЕШ|Реш|реш|ПРОТ|Прот|ПОСТ|Пост) П-([\d*(?:\.\d+)?]{1,}) дата ([\d\/\d\/\d]{8})+/', $str, $matches);
         }
         if (sizeof($matches) != 5) {
             //изменен от Пост 268 на ВАС дата 01/01/09

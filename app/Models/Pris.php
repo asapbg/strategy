@@ -179,7 +179,11 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         $actName = $this->actType ? $this->actType->name_single : '';
 //        $actName = $this->actType ? __('custom.'.Str::slug($this->actType->name).'_slug_one') : '';
         return Attribute::make(
-            get: fn() => __('custom.pris_program_title', ['actType' => $actName, 'number' => __('custom.number_symbol') . $this->doc_num, 'year' => Carbon::parse($this->doc_date)->format('Y')])
+            get: fn() => __('custom.pris_program_title', [
+                'actType' => $actName,
+                'number' => __('custom.number_symbol') . $this->doc_num,
+                'year' => Carbon::parse($this->doc_date)->format('Y')
+            ])
         );
     }
 
