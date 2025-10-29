@@ -172,7 +172,9 @@ class PrisController extends AdminController
             $item->save();
 
             $item->tags()->sync($validated['tags'] ?? []);
-            $item->institutions()->sync($validated['institutions'] ?? []);
+            if (!empty($validated['institutions'])) {
+                $item->institutions()->sync($validated['institutions']);
+            }
 
             $this->storeTranslateOrNew(Pris::TRANSLATABLE_FIELDS, $item, $validated);
             DB::commit();

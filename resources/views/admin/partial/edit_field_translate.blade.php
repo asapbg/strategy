@@ -10,7 +10,9 @@
         <div class="col-md-{{ $col ?? 6 }} col-12">
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="{{ $fieldName }}">@if(isset($tooltip) && !empty($tooltip)) <i class="fas fa-info-circle text-info mr-1" title="{{ $tooltip }}"></i>@endif{{ __('validation.attributes.'.( isset($custom_lang_key) && !empty($custom_lang_key) ? $custom_lang_key.'_'.$language['code'] : $fieldName)) }}
-                    @if(isset($required) && $required && ((isset($fieldProperties) && isset($fieldProperties['required_all_lang']) && $fieldProperties['required_all_lang']) || $mainLang))<span class="required">*</span>@endif
+                    @if(isset($required) && $required && ((isset($fieldProperties) && isset($fieldProperties['required_all_lang']) && $fieldProperties['required_all_lang']) || $mainLang))
+                        <span class="required {{ $fieldName }}">*</span>
+                    @endif
                 </label>
                 <div class="col-12">
                     @switch($fieldProperties['type'])

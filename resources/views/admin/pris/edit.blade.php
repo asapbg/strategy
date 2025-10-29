@@ -88,7 +88,7 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label class="col-12 control-label" for="institutions">
-                                                        {{ trans_choice('custom.institutions', 2) }} <span class="required">*</span>
+                                                        {{ trans_choice('custom.institutions', 2) }}
                                                     </label>
                                                     <div class=" col-12 d-flex flex-row">
                                                         <div class="input-group">
@@ -494,8 +494,16 @@
                 });
             });
 
+            let nor_required_importer = @json([\App\Models\LegalActType::TYPE_PROTOCOL, \App\Models\LegalActType::TYPE_TRANSCRIPTS, \App\Models\LegalActType::TYPE_ORDER]);
             $('#legal_act_type_id').on('change', function() {
-                if ($(this).val() == {{ \App\Models\LegalActType::TYPE_PROTOCOL }}) {
+                let value = Number($(this).val());
+                //console.log(value,nor_required_importer);
+                if ($.inArray(value, nor_required_importer) !== -1) {
+                    $(".required.importer_bg").hide();
+                } else {
+                    $(".required.importer_bg").show();
+                }
+                if (value == {{ \App\Models\LegalActType::TYPE_PROTOCOL }}) {
                     $("#decision_protocol_row").hide();
                 } else {
                     $("#decision_protocol_row").show();
