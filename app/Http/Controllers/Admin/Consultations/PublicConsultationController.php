@@ -73,6 +73,7 @@ class PublicConsultationController extends AdminController
         $items = PublicConsultation::with(['translation', 'consultations'])
             ->FilterBy($requestFilter)
             ->ByUser()
+            ->orderByDesc('id')
             ->paginate($paginate);
         $toggleBooleanModel = 'PublicConsultation';
         $editRouteName = self::EDIT_ROUTE;

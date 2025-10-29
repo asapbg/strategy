@@ -134,8 +134,10 @@
                                                                         @endforeach
                                                                         <option {{ $optionDataAttributes }} value="{{ $option['value'] }}"
                                                                                 @if(
-                                                                                    (isset($field['multiple']) && $field['multiple']
-                                                                                    && in_array($option['value'], old($key.'[]', $field['value'] ?? [])))
+                                                                                    (
+                                                                                        isset($field['multiple']) && $field['multiple']
+                                                                                        && in_array($option['value'], old($key.'[]', (isset($field['value']) && is_array($field['value']) ? $field['value'] : [])))
+                                                                                    )
                                                                                     || (
                                                                                         (!isset($field['multiple']) || !$field['multiple'])
                                                                                         && $option['value']== old($key, ($field['value'] != ''

@@ -175,7 +175,7 @@ class ViewServiceProvider extends ServiceProvider
             $footerTermsPages = Cache::get($footerTermsPagesCacheKey);
             if (is_null($footerTermsPages)) {
                 $footerTermsPages = [];
-                $termsPageNames = [Page::ACCESS_POLICY, Page::PRIVACY_POLICY, Page::TERMS, Page::COOKIES];
+                $termsPageNames = [Page::ACCESS_POLICY, Page::PRIVACY_POLICY, Page::TERMS, Page::COOKIES, Page::ACCESS_STATEMENT];
                 $pages = Page::with(['translations'])->isActive()->whereIn('system_name', $termsPageNames)->get();
                 if ($pages->count()) {
                     foreach ($termsPageNames as $systemName) {

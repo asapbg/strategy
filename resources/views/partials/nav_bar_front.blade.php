@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse justify-content-between" id="navbarTogglerDemo02">
             <ul class="navbar-nav">
                 <li class="nav-item home-icon-menu">
-                    <a class="nav-link @if(request()->route()->getName() == 'home') active @endif" aria-current="page"
+                    <a class="nav-link @if(request()->route()?->getName() == 'home') active @endif" aria-current="page"
                         href="/"><i class="bi bi-house-door-fill text-light"><span class="d-none">Home</span></i></a>
                 </li>
                 <li class="nav-item">
