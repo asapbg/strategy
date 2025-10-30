@@ -23,12 +23,14 @@ class FullSearch extends QueryFilter implements FilterContract
                 $searchInAbout = is_array($filter) && isset($filter['aboutSearch']) ? 1 : null;
                 $searchInLegalReason = is_array($filter) && isset($filter['legalReasonSearch']) ? 1 : null;
                 $searchInTags = is_array($filter) && isset($filter['tagsSearch']) ? 1 : null;
+                $searchInChanges = is_array($filter) && isset($filter['changesSearch']) ? 1 : null;
                 $locale = app()->getLocale();
                 $condition = $upperLowerCase ? 'LIKE' : 'ILIKE';
 
                 $whereFulltext = $value;
                 $whereTag = "tag_translations.label $condition '%$value%'";
                 $whereAbout = "pris_translations.about $condition '%$value%'";
+                $whereChanges = "changes_from.full_text $condition '%$value%' or changes_to.full_text $condition '%$value%'";
                 $whereLegalReason = "pris_translations.legal_reason $condition '%$value%'";
                 $whereImporter = "pris.old_importers $condition '%$value%'
                     OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND importer::text $condition '%$value%')
@@ -45,6 +47,16 @@ class FullSearch extends QueryFilter implements FilterContract
                     $whereAbout .= " OR pris_translations.about $condition '% $value,%'";
                     $whereAbout .= " OR pris_translations.about $condition '% $value/%'";
                     $whereAbout .= ")";
+
+                    $whereChanges = "(";
+                    $whereChanges .= "changes_from.full_text $condition '% $value %'";
+                    $whereChanges .= " OR changes_from.full_text $condition '% $value'";
+                    $whereChanges .= " OR changes_from.full_text $condition '$value %'";
+                    $whereChanges .= " OR changes_from.full_text $condition '$value,%'";
+                    $whereChanges .= " OR changes_from.full_text $condition '$value/%'";
+                    $whereChanges .= " OR changes_from.full_text $condition '% $value,%'";
+                    $whereChanges .= " OR changes_from.full_text $condition '% $value/%'";
+                    $whereChanges .= ")";
 
                     $whereLegalReason = "(";
                     $whereLegalReason .= "pris_translations.legal_reason $condition '% $value %'";
@@ -77,6 +89,7 @@ class FullSearch extends QueryFilter implements FilterContract
                     $tags_count = count($tags);
                     $whereFulltext = "";
                     $whereAbout = "(";
+                    $whereChanges = "(";
                     $whereLegalReason = "(";
                     if ($logicalAnd == "OR") {
                         $whereTag = "(";
@@ -101,6 +114,7 @@ class FullSearch extends QueryFilter implements FilterContract
                                         : "OR LOWER(TRIM(tag_translations.label)) ILIKE '%".mb_strtolower($tag)."%'";
                                 }
                                 $whereAbout .= " OR ";
+                                $whereChangest .= " OR ";
                                 $whereLegalReason .= " OR ";
                             }
                             if ($fullKeyword) {
@@ -114,6 +128,16 @@ class FullSearch extends QueryFilter implements FilterContract
                                 $whereAbout .= " OR pris_translations.about $condition '% $tag/%'";
                                 $whereAbout .= ")";
 
+                                $whereChanges .= "(";
+                                $whereChanges .= "changes_from.full_text $condition '% $tag %' OR changes_to.full_text $condition '% $tag %'";
+                                $whereChanges .= " OR changes_from.full_text $condition '% $tag' OR changes_to.full_text $condition '% $tag'";
+                                $whereChanges .= " OR changes_from.full_text $condition '$tag %' OR changes_to.full_text $condition '$tag %'";
+                                $whereChanges .= " OR changes_from.full_text $condition '$tag,%' OR changes_to.full_text $condition '$tag,%'";
+                                $whereChanges .= " OR changes_from.full_text $condition '$tag/%' OR changes_to.full_text $condition '$tag/%'";
+                                $whereChanges .= " OR changes_from.full_text $condition '% $tag,%' OR changes_to.full_text $condition '% $tag,%'";
+                                $whereChanges .= " OR changes_from.full_text $condition '% $tag/%' OR changes_to.full_text $condition '% $tag/%'";
+                                $whereChanges .= ")";
+
                                 $whereLegalReason .= "(";
                                 $whereLegalReason .= "pris_translations.legal_reason $condition '% $tag %'";
                                 $whereLegalReason .= " OR pris_translations.legal_reason $condition '% $tag'";
@@ -125,6 +149,7 @@ class FullSearch extends QueryFilter implements FilterContract
                                 $whereLegalReason .= ")";
                             } else {
                                 $whereAbout .= "pris_translations.about $condition '%$tag%'";
+                                $whereChanges .= "changes_from.full_text $condition '%$tag%' OR changes_to.full_text $condition '%$tag%'";
                                 $whereLegalReason .= "pris_translations.legal_reason $condition '%$tag%'";
                             }
                         }
@@ -140,6 +165,7 @@ class FullSearch extends QueryFilter implements FilterContract
                                 $whereFulltext .= " & $tag";
                                 $trimmed_tags .= $upperLowerCase ? ", '$tag'" : ", '".mb_strtolower($tag)."'";
                                 $whereAbout .= " AND ";
+                                $whereChanges .= " AND ";
                                 $whereLegalReason .= " AND ";
                             }
                             if ($fullKeyword) {
@@ -153,6 +179,16 @@ class FullSearch extends QueryFilter implements FilterContract
                                 $whereAbout .= " OR pris_translations.about $condition '% $tag/%'";
                                 $whereAbout .= ")";
 
+                                $whereChanges .= "(";
+                                $whereChanges .= "changes_from.full_text $condition '% $tag %' OR changes_to.full_text $condition '% $tag %'";
+                                $whereChanges .= " OR changes_from.full_text $condition '% $tag' OR changes_to.full_text $condition '% $tag'";
+                                $whereChanges .= " OR changes_from.full_text $condition '$tag %' OR changes_to.full_text $condition '$tag %'";
+                                $whereChanges .= " OR changes_from.full_text $condition '$tag,%' OR changes_to.full_text $condition '$tag,%'";
+                                $whereChanges .= " OR changes_from.full_text $condition '$tag/%' OR changes_to.full_text $condition '$tag/%'";
+                                $whereChanges .= " OR changes_from.full_text $condition '% $tag,%' OR changes_to.full_text $condition '% $tag,%'";
+                                $whereChanges .= " OR changes_from.full_text $condition '% $tag/%' OR changes_to.full_text $condition '% $tag/%'";
+                                $whereChanges .= ")";
+
                                 $whereLegalReason .= "(";
                                 $whereLegalReason .= "pris_translations.legal_reason $condition '% $tag %'";
                                 $whereLegalReason .= " OR pris_translations.legal_reason $condition '% $tag'";
@@ -164,14 +200,15 @@ class FullSearch extends QueryFilter implements FilterContract
                                 $whereLegalReason .= ")";
                             } else {
                                 $whereAbout .= "pris_translations.about $condition '%$tag%'";
+                                $whereChanges .= "changes_from.full_text $condition '%$tag%' OR changes_to.full_text $condition '%$tag%'";
                                 $whereLegalReason .= "pris_translations.legal_reason $condition '%$tag%'";
                             }
                         }
                     }
                     $whereAbout .= ")";
+                    $whereChanges .= ")";
                     $whereLegalReason .= ")";
                 }
-                //dd($whereAbout);
                 $queryTag = "pris.id in (
                     SELECT pris_tag.pris_id from pris_tag
                     LEFT JOIN tag on pris_tag.tag_id = tag.id
@@ -216,17 +253,20 @@ class FullSearch extends QueryFilter implements FilterContract
                         HAVING $having
                     )";
                 }
+                //dd($whereChanges);
                 //dd($queryTag);$fullKeyword, $upperLowerCase
-                if ($searchInFiles || $searchInAbout || $searchInLegalReason || $searchInTags || $searchInImporter) {
+                if ($searchInFiles || $searchInAbout || $searchInChanges || $searchInLegalReason || $searchInTags || $searchInImporter) {
                     $q->where(function ($q) use (
                         $searchInFiles,
                         $searchInAbout,
+                        $searchInChanges,
                         $searchInLegalReason,
                         $searchInTags,
                         $searchInImporter,
                         $whereFulltext,
                         $queryTag,
                         $whereAbout,
+                        $whereChanges,
                         $whereImporter,
                         $fullKeyword,
                         $upperLowerCase,
@@ -248,6 +288,9 @@ class FullSearch extends QueryFilter implements FilterContract
                             })
                             ->when($searchInAbout, function ($query) use ($whereAbout) {
                                 $query->orWhereRaw($whereAbout);
+                            })
+                            ->when($searchInChanges, function ($query) use ($whereChanges) {
+                                $query->orWhereRaw($whereChanges);
                             })
                             ->when($searchInLegalReason, function ($query) use ($whereLegalReason) {
                                 $query->orWhereRaw($whereLegalReason);

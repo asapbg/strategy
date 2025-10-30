@@ -6,6 +6,7 @@ use App\Models\LegalActType;
 use App\Models\Pris;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -69,6 +70,10 @@ class PrisController extends Controller
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->when(!$can_access_orders, function ($query) {
                 $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
+            })
+            ->when($request->has('changesSearch'), function ($query) {
+                $query->leftJoin('pris_change_pris as changes_from', 'pris.id', '=', 'changes_from.pris_id')
+                    ->leftJoin('pris_change_pris as changes_to', 'pris.id', '=', 'changes_to.changed_pris_id');
             })
             ->FilterBy($requestFilter)
             ->SortedBy($sort, $sortOrd)
@@ -340,7 +345,7 @@ class PrisController extends Controller
             ),
             'fullSearch' => array(
                 'type' => 'text',
-                'label' => __('custom.files') . '/' . __('custom.pris_about') . '/' . __('custom.pris_legal_reason') . '/' . trans_choice('custom.tags', 2),
+                'label' => __('custom.files') . '/' . __('custom.pris_about') . '/' . __('custom.pris_legal_reason') . '/' . trans_choice('custom.tags', 2). '/'. __('custom.change'),
                 'value' => $request->input('fullSearch'),
                 'col' => 'col-md-12'
             ),
@@ -380,6 +385,13 @@ class PrisController extends Controller
                         'type' => 'checkbox',
                         'checked' => $request->ajax() ? $request->input('tagsSearch') : true,
                         'label' => trans_choice('custom.tags', 2),
+                        'value' => 1,
+                        'col' => 'col-md-1 d-inline me-2'
+                    ),
+                    'changesSearch' => array(
+                        'type' => 'checkbox',
+                        'checked' => $request->ajax() ? $request->input('changesSearch') : true,
+                        'label' => __('custom.change'),
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'
                     )
