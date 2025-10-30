@@ -836,6 +836,7 @@ $(document).ready(function (e) {
                 ['para', ['ul', 'ol']], //,'paragraph'
                 ['view', ['fullscreen']],
                 ['insert', ['link']],
+                ['table', ['table']],
                 //['fontsize', ['fontsize']],
             ],
             dialogsInBody: true,
