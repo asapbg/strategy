@@ -223,7 +223,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             ],
             'importer' => [
                 'type' => 'text',
-                'rules' => ['required', 'string', 'max:255'],
+                'rules' => ['nullable', 'string', 'max:255'],
                 'required_all_lang' => false
             ],
         );

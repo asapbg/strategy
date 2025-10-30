@@ -171,7 +171,6 @@ class PrisController extends AdminController
 
             $item->tags()->sync($validated['tags'] ?? []);
             if (!empty($validated['institutions'])) {
-                dd($validated);
                 $item->institutions()->sync($validated['institutions']);
             }
 

@@ -113,7 +113,7 @@
 {{--                                                </div>--}}
 {{--                                            </div>--}}
                                             <div class="col-12"></div>
-                                            @include('admin.partial.edit_field_translate', ['field' => 'importer', 'required' => true])
+                                            @include('admin.partial.edit_field_translate', ['field' => 'importer', 'required' => false])
                                             @if($item->old_id)
                                                 <div class="col-md-6 mt-2 mb-4" id="old_importers">
                                                     <label class="col-sm-12 control-label">
@@ -498,17 +498,14 @@
             $('#legal_act_type_id').on('change', function() {
                 let value = Number($(this).val());
                 //console.log(value,nor_required_importer);
-                if ($.inArray(value, nor_required_importer) !== -1) {
-                    $(".required.importer_bg").hide();
-                } else {
-                    $(".required.importer_bg").show();
-                }
+                //if ($.inArray(value, nor_required_importer) !== -1) {$(".required.importer_bg").hide();} else {$(".required.importer_bg").show();}
                 if (value == {{ \App\Models\LegalActType::TYPE_PROTOCOL }}) {
                     $("#decision_protocol_row").hide();
                 } else {
                     $("#decision_protocol_row").show();
                 }
             });
+            //$('#legal_act_type_id').trigger('change');
 
             $('.disconnect-document').on('click', function(){
                 errorContainer.html('');
@@ -546,7 +543,6 @@
                     });
                 });
             @endif
-            $('#legal_act_type_id').trigger('change');
         });
     </script>
 @endpush

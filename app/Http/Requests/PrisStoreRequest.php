@@ -58,9 +58,9 @@ class PrisStoreRequest extends FormRequest
         }
 
         $translation_rules = Pris::translationFieldsProperties();
-        if (in_array($this->legal_act_type_id, [\App\Models\LegalActType::TYPE_PROTOCOL, \App\Models\LegalActType::TYPE_TRANSCRIPTS, \App\Models\LegalActType::TYPE_ORDER])) {
-            $translation_rules['importer']['rules'][0] = "nullable";
-        }
+//        if (in_array($this->legal_act_type_id, [\App\Models\LegalActType::TYPE_PROTOCOL, \App\Models\LegalActType::TYPE_TRANSCRIPTS, \App\Models\LegalActType::TYPE_ORDER])) {
+//            $translation_rules['importer']['rules'][0] = "nullable";
+//        }
         return $this->getRules($rules, $translation_rules);
     }
 }
