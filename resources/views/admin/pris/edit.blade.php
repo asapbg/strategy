@@ -85,33 +85,33 @@
                                                 </div>
                                             </div>
                                             <div class="col-12"></div>
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label class="col-12 control-label" for="institutions">
-                                                        {{ trans_choice('custom.institutions', 2) }}
-                                                    </label>
-                                                    <div class=" col-12 d-flex flex-row">
-                                                        <div class="input-group">
-                                                            <select class="form-control form-control-sm select2 @error('institutions') is-invalid @enderror" name="institutions[]" id="institutions" multiple>
-                                                                <option value="" @if(empty(old('institutions', $item->id && $item->institutions  ? $item->institutions->pluck('id')->toArray() : []))) selected @endif>---</option>
-                                                                @if(isset($institutions) && sizeof($institutions))
-                                                                    @foreach($institutions as $option)
-                                                                        <option value="{{ $option['value'] }}" @if(in_array($option['value'],  old('institutions', ($item->id && $item->institutions ? $item->institutions->pluck('id')->toArray() : [])))) selected @endif>{{ $option['name'] }}</option>
-                                                                    @endforeach
-                                                                @endif
-                                                            </select>
-                                                        </div>
-                                                        <button type="button" class="btn btn-primary ml-1 pick-institution"
-                                                                data-title="{{ trans_choice('custom.institutions',2) }}"
-                                                                data-url="{{ route('modal.institutions').'?select=1&multiple=1&admin=1&dom=institutions' }}">
-                                                            <i class="fas fa-list"></i>
-                                                        </button>
-                                                    </div>
-                                                    @error('institutions')
-                                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
+{{--                                            <div class="col-12">--}}
+{{--                                                <div class="form-group">--}}
+{{--                                                    <label class="col-12 control-label" for="institutions">--}}
+{{--                                                        {{ trans_choice('custom.institutions', 2) }}--}}
+{{--                                                    </label>--}}
+{{--                                                    <div class=" col-12 d-flex flex-row">--}}
+{{--                                                        <div class="input-group">--}}
+{{--                                                            <select class="form-control form-control-sm select2 @error('institutions') is-invalid @enderror" name="institutions[]" id="institutions" multiple>--}}
+{{--                                                                <option value="" @if(empty(old('institutions', $item->id && $item->institutions  ? $item->institutions->pluck('id')->toArray() : []))) selected @endif>---</option>--}}
+{{--                                                                @if(isset($institutions) && sizeof($institutions))--}}
+{{--                                                                    @foreach($institutions as $option)--}}
+{{--                                                                        <option value="{{ $option['value'] }}" @if(in_array($option['value'],  old('institutions', ($item->id && $item->institutions ? $item->institutions->pluck('id')->toArray() : [])))) selected @endif>{{ $option['name'] }}</option>--}}
+{{--                                                                    @endforeach--}}
+{{--                                                                @endif--}}
+{{--                                                            </select>--}}
+{{--                                                        </div>--}}
+{{--                                                        <button type="button" class="btn btn-primary ml-1 pick-institution"--}}
+{{--                                                                data-title="{{ trans_choice('custom.institutions',2) }}"--}}
+{{--                                                                data-url="{{ route('modal.institutions').'?select=1&multiple=1&admin=1&dom=institutions' }}">--}}
+{{--                                                            <i class="fas fa-list"></i>--}}
+{{--                                                        </button>--}}
+{{--                                                    </div>--}}
+{{--                                                    @error('institutions')--}}
+{{--                                                    <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                                                    @enderror--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
                                             <div class="col-12"></div>
                                             @include('admin.partial.edit_field_translate', ['field' => 'importer', 'required' => true])
                                             @if($item->old_id)
@@ -466,7 +466,7 @@
             }
         }
 
-        $(document).ready(function (){
+        $(document).ready(function () {
             let errorContainer = $('#connect-doc-error');
             $('#connect-documents').on('click', function(){
                 errorContainer.html('');
@@ -546,6 +546,7 @@
                     });
                 });
             @endif
+            $('#legal_act_type_id').trigger('change');
         });
     </script>
 @endpush

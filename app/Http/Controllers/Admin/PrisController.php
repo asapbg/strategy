@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\PrisConnectionStatusEnum;
 use App\Enums\PrisDocChangeTypeEnum;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\PrisStoreRequest;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegalActType;
@@ -173,6 +171,7 @@ class PrisController extends AdminController
 
             $item->tags()->sync($validated['tags'] ?? []);
             if (!empty($validated['institutions'])) {
+                dd($validated);
                 $item->institutions()->sync($validated['institutions']);
             }
 
@@ -365,15 +364,15 @@ class PrisController extends AdminController
                 'value' => $request->input('importer'),
                 'col' => 'col-md-4'
             ),
-            'institutions' => array(
-                'type' => 'subjects',
-                'placeholder' => trans_choice('custom.institutions', 1),
-                'multiple' => true,
-                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', trans_choice('custom.institutions', 1)),
-                'value' => request()->input('institutions'),
-                'default' => '',
-                'col' => 'col-md-8'
-            ),
+//            'institutions' => array(
+//                'type' => 'subjects',
+//                'placeholder' => trans_choice('custom.institutions', 1),
+//                'multiple' => true,
+//                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', trans_choice('custom.institutions', 1)),
+//                'value' => request()->input('institutions'),
+//                'default' => '',
+//                'col' => 'col-md-8'
+//            ),
             'fromDate' => array(
                 'type' => 'datepicker',
                 'value' => $request->input('fromDate'),

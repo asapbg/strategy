@@ -33,7 +33,7 @@ class PrisStoreRequest extends FormRequest
             'doc_date' => ['required', 'date'],
             'legal_act_type_id' => ['required', 'numeric', 'exists:legal_act_type,id'],
 //            'institution_id' => ['required', 'numeric', 'exists:institution,id'],
-            'institutions' => ['nullable', 'array'],
+//            'institutions' => ['nullable', 'array'],
 //            'institutions.*' => ['numeric', 'exists:institution,id'],
 //            'protocol' => ['required', 'string'],
             'public_consultation_id' => ['nullable', 'numeric'],
