@@ -262,7 +262,7 @@ class PrisController extends Controller
         if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
-        //dd($item->changedDocs);
+        //dd($item->changedDocsWithoutRelation);
 
         if ($item->legal_act_type_id == LegalActType::TYPE_TRANSCRIPTS) {
             $item->files = $item->files->sortByDesc('filename');

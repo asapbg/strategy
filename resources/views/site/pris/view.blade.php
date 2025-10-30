@@ -188,11 +188,6 @@
 
                     <div class="col-md-9 pris-left-column">
                         @if($item->changedDocs->count() || $item->changedByDocs->count() || $item->changedDocsWithoutRelation->count())
-                            @foreach($item->changedDocsWithoutRelation as $pris)
-                                <div id="disconnect_text_{{ $item->id }}">
-                                    {{ $pris->connect_text }}
-                                </div>
-                            @endforeach
                             @foreach($item->changedDocs as $doc)
                                 <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
                                    class="text-decoration-none main-color d-block">
@@ -205,6 +200,11 @@
                                     {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }}
                                     {{ $doc->mcDisplayName }} {{ $doc->pivot->connect_text ? "({$doc->pivot->connect_text})" : "" }}
                                 </a>
+                            @endforeach
+                            @foreach($item->changedDocsWithoutRelation as $pris)
+                                <div id="disconnect_text_{{ $item->id }}">
+                                    {{ $pris->full_text }}
+                                </div>
                             @endforeach
                         @endif
                     </div>

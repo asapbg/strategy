@@ -13,6 +13,8 @@ enum PrisDocChangeTypeEnum: int
     case CHANGE = 1; //изменя
     case COMPLEMENTS = 2; //допълва
     case CANCEL = 3; //отменя
+
+    case AMENDMENT = 4; //поправка
     case SEE_IN = 5; //виж
 
     // Return enum name by value
