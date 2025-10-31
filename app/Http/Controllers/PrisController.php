@@ -77,7 +77,7 @@ class PrisController extends Controller
             })
             ->FilterBy($requestFilter)
             ->SortedBy($sort, $sortOrd)
-            //->GroupBy('pris.id', 'institution_translations.name', 'legal_act_type_translations.name')
+            ->GroupBy('pris.id')
             ->paginate($paginate);
 
 
