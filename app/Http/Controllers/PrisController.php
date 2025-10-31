@@ -71,10 +71,7 @@ class PrisController extends Controller
             ->when(!$can_access_orders, function ($query) {
                 $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
             })
-            ->when($request->has('changesSearch'), function ($query) {
-                $query->leftJoin('pris_change_pris as changes_from', 'pris.id', '=', 'changes_from.pris_id')
-                    ->leftJoin('pris_change_pris as changes_to', 'pris.id', '=', 'changes_to.changed_pris_id');
-            })
+
             ->FilterBy($requestFilter)
             ->SortedBy($sort, $sortOrd)
             ->GroupBy('pris.id')

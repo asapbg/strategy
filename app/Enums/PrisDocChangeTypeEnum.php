@@ -34,6 +34,7 @@ enum PrisDocChangeTypeEnum: int
             self::CHANGE->value => PrisConnectionStatusEnum::CHANGED->value,
             self::COMPLEMENTS->value => PrisConnectionStatusEnum::SUPPLEMENTED->value,
             self::CANCEL->value => PrisConnectionStatusEnum::CANCELED->value,
+            self::AMENDMENT->value => PrisConnectionStatusEnum::AMENDMENT->value,
             self::SEE_IN->value => PrisConnectionStatusEnum::SEE->value
         ];
         return $statuses[$val];
