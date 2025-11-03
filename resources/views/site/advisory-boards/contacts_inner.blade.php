@@ -43,7 +43,7 @@
 {{--                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.Duis aute--}}
 {{--                                    irure dolor in reprehenderit in.--}}
 {{--                                </p>--}}
-                                @if($m->user && !empty($m->user->email) || !empty($m->user->phone))
+                                @if($m->user && (!empty($m->user->email) || !empty($m->user->phone)) && $m->user?->show_contacts)
                                     <div class="team-member-contact d-flex flex-row mt-3">
                                         @if(!empty($m->user->phone))
                                             <a href="#" class="text-decoration-none me-4">

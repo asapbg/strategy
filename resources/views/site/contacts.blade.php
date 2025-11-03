@@ -79,7 +79,7 @@
                                             </span>
                                         @endif
                                     </p>
-                                    @if(!empty($row->email) || !empty($row->phone))
+                                    @if((!empty($row->email) || !empty($row->phone)) && $row->show_contacts)
                                         <div class="team-member-contact d-flex flex-row mb-2">
                                             @if(!empty($row->phone))
                                                 <a href="#" class="text-decoration-none me-4">

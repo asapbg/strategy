@@ -220,7 +220,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group mb-4">
+                                <div class="form-group">
                                     <label class="col-sm-12 control-label" for="activity_status">
                                         Блокиран?
                                     </label>
@@ -250,6 +250,33 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group mb-4">
+                                    <label class="col-sm-12 control-label" for="show_contacts">
+                                        Показване на данни за контакт в публичния портал?
+                                    </label>
+                                    <div class="col-12">
+                                        <div class="icheck-primary d-inline mr-3">
+                                            <input type="radio" name="show_contacts" id="show_contacts_1" value="1"
+                                                   @if(old('_token') && old('show_contacts') == 1)
+                                                       checked="checked"
+                                                   @elseif($user->show_contacts == 1)
+                                                       checked="checked"
+                                                @endif
+                                            >
+                                            <label for="show_contacts_1">Да</label>
+                                        </div>
+                                        <div class="icheck-primary  d-inline ">
+                                            <input type="radio" name="show_contacts" id="show_contacts_0" value="0"
+                                                   @if(old('_token') && old('show_contacts') == 0)
+                                                       checked="checked"
+                                                   @elseif($user->show_contacts == 0)
+                                                       checked="checked"
+                                                @endif
+                                            >
+                                            <label for="show_contacts_0">Не</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-md-6 col-sm-12 pl-5">

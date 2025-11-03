@@ -42,7 +42,7 @@
                                         </p>
                                     @endif
                                 @endif
-                                @if(!empty($m->email) || !empty($m->phone))
+                                @if((!empty($m->email) || !empty($m->phone)) && $m->show_contacts)
                                     <div class="team-member-contact d-flex flex-row">
                                         @if(!empty($m->phone))
                                             <a href="#" class="text-decoration-none me-4">

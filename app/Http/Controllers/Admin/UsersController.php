@@ -260,6 +260,7 @@ class  UsersController extends Controller
             $user->job                  = $data['job'] ?? null;
             $user->unit                 = $data['unit'] ?? null;
             $user->phone                = $data['phone'] ?? null;
+            $user->show_contacts        = $data['show_contacts'] ?? false;
 
             if (!is_null($data['password'])) {
                 $user->password = bcrypt($data['password']);
