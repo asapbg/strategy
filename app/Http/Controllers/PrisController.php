@@ -70,9 +70,11 @@ class PrisController extends Controller
             ->when(!$can_access_orders, function ($query) {
                 $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
             })
-
             ->FilterBy($requestFilter)
             ->SortedBy($sort, $sortOrd)
+            ->when($sort != 'docNum', function ($query) use($sort, $sortOrd) {
+                $query->orderBy('doc_num', 'desc');
+            })
             ->GroupBy('pris.id')
             ->paginate($paginate);
 
@@ -170,27 +172,20 @@ class PrisController extends Controller
                 $j->on('pris_translations.pris_id', '=', 'pris.id')
                     ->where('pris_translations.locale', '=', app()->getLocale());
             })
-//            ->when($institutions, function ($query) use ($institutions) {
-//                $query->join(
-//                    'pris_institution as pi',
-//                    'pi.pris_id',
-//                    '=',
-//                    DB::raw("pris.id AND pi.institution_id IN(".implode(',', $institutions).")")
-//                )
-//                    ->join('institution', 'institution.id', '=', DB::raw("pi.institution_id AND institution.active = '1' AND institution.deleted_at IS NULL"))
-//                    ->join('institution_translations as it', 'it.institution_id', '=', DB::raw("pi.institution_id AND it.locale = '".app()->getLocale()."'"));
+//            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
+//            ->join('legal_act_type_translations', function ($j) {
+//                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
+//                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
 //            })
-            ->join('legal_act_type', 'legal_act_type.id', '=', 'pris.legal_act_type_id')
-            ->join('legal_act_type_translations', function ($j) {
-                $j->on('legal_act_type_translations.legal_act_type_id', '=', 'legal_act_type.id')
-                    ->where('legal_act_type_translations.locale', '=', app()->getLocale());
-            })
             ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ARCHIVE)
             ->when(!$can_access_orders, function ($query) {
                 $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
             })
             ->FilterBy($requestFilter)
             ->SortedBy($sort, $sortOrd)
+            ->when($sort != 'docNum', function ($query) use($sort, $sortOrd) {
+                $query->orderBy('doc_num', 'desc');
+            })
             ->paginate($paginate);
 
 

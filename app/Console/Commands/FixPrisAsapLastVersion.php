@@ -29,7 +29,7 @@ class FixPrisAsapLastVersion extends Command
      */
     public function handle()
     {
-        file_put_contents('pris_asap_last_version_fixed.txt', '');
+        //file_put_contents('pris_asap_last_version_fixed.txt', '');
         $results = DB::select("
                 select
                     doc_num, legal_act_type_id, protocol, count(*),
@@ -49,7 +49,7 @@ class FixPrisAsapLastVersion extends Command
                     and published_at is not null
                     and deleted_at is null
                     and asap_last_version = 1
-                    --and protocol is not NULL
+                    and old_id is not null
                 group by
                     asap_last_version, doc_num, legal_act_type_id, protocol
                 having

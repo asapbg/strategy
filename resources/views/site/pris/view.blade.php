@@ -189,17 +189,34 @@
                     <div class="col-md-9 pris-left-column">
                         @if($item->changedDocs->count() || $item->changedByDocs->count() || $item->changedDocsWithoutRelation->count())
                             @foreach($item->changedDocs as $doc)
-                                <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
-                                   class="text-decoration-none main-color d-block">
-                                    {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }} {{ $doc->mcDisplayName }} {{ $doc->pivot->connect_text ? "({$doc->pivot->connect_text})" : "" }}
-                                </a>
+                                @if ($doc->legal_act_type_id == \App\Models\LegalActType::TYPE_ORDER)
+                                    <div id="disconnect_text_{{ $item->id }}">
+                                        {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }}
+                                        {{ $doc->mcDisplayName }} {{ $doc->pivot->connect_text ? "({$doc->pivot->connect_text})" : "" }}
+                                    </div>
+                                @else
+                                    <a href="{{ $item->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
+                                       class="text-decoration-none main-color d-block"
+                                    >
+                                        {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }}
+                                        {{ $doc->mcDisplayName }} {{ $doc->pivot->connect_text ? "({$doc->pivot->connect_text})" : "" }}
+                                    </a>
+                                @endif
                             @endforeach
                             @foreach($item->changedByDocs as $doc)
-                                <a href="{{ $doc->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($doc->actType->name), 'id' => $doc->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
-                                   class="text-decoration-none main-color d-block">
-                                    {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }}
-                                    {{ $doc->mcDisplayName }} {{ $doc->pivot->connect_text ? "({$doc->pivot->connect_text})" : "" }}
-                                </a>
+                                @if ($doc->legal_act_type_id == \App\Models\LegalActType::TYPE_ORDER)
+                                    <div id="disconnect_text_{{ $item->id }}">
+                                        {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }}
+                                        {{ $doc->mcDisplayName }} {{ $doc->pivot->connect_text ? "({$doc->pivot->connect_text})" : "" }}
+                                    </div>
+                                @else
+                                    <a href="{{ $doc->in_archive ? route('pris.archive.view', ['category' => \Illuminate\Support\Str::slug($doc->actType->name), 'id' => $doc->id]) : route('pris.view', ['category' => \Illuminate\Support\Str::slug($item->actType->name), 'id' => $doc->id]) }}" target="_blank"
+                                       class="text-decoration-none main-color d-block"
+                                    >
+                                        {{ $doc->pivot->old_connect_type ?? $doc->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($doc->pivot->connect_type)) : ''  }}
+                                        {{ $doc->mcDisplayName }} {{ $doc->pivot->connect_text ? "({$doc->pivot->connect_text})" : "" }}
+                                    </a>
+                                    @endif
                             @endforeach
                             @foreach($item->changedDocsWithoutRelation as $pris)
                                 <div id="disconnect_text_{{ $item->id }}">

@@ -35,7 +35,7 @@ class seedOldPublicConsultationFiles extends Command
      */
     public function handle()
     {
-        file_put_contents('missing_pc_files_in_old_files.txt', '');
+        //file_put_contents('missing_pc_files_in_old_files.txt', '');
         activity()->disableLogging();
         $this->info('Start at ' . date('Y-m-d H:i:s'));
         $formatTimestamp = 'Y-m-d H:i:s';
@@ -59,7 +59,7 @@ class seedOldPublicConsultationFiles extends Command
 
         $stop = false;
         $maxOldId = (int)$maxOldId[0]->max;
-        //$maxOldId = 0;
+        $maxOldId = 0;
         while ($currentStep <= $maxOldId && !$stop) {
             //$this->comment("Current step: $currentStep");
             $oldDbFiles = DB::connection('old_strategy_app')
@@ -82,18 +82,19 @@ class seedOldPublicConsultationFiles extends Command
                     left join dbo.files f on f.id = uf.fileid
                     left join dbo.filefolders folders on folders.id = f.folderid
                     where true
-                        and p.id >= ' . $currentStep . '
-                        and p.id < ' . ($currentStep + $step) . '
+                        --and p.id >= ' . $currentStep . '
+                        --and p.id < ' . ($currentStep + $step) . '
                         and p.languageid = 1
                         and f.id is not null
                         and folders.id is not null
                         and uf.tabletype = 3
                         --and LENGTH(f."name") > 100
-                        --and p.id = 5740
+                        and p.id = 9532
                         -- check if uf.tabletype should be 3
                     order by p.id asc
                 ');
 
+            //dd($oldDbFiles);
             if (!sizeof($oldDbFiles)) {
                 $this->comment("No files was found for Current step: $currentStep");
                 if ($currentStep == $maxOldId) {
@@ -149,6 +150,7 @@ class seedOldPublicConsultationFiles extends Command
                         if (!file_exists($copy_from)) {
                             if (mb_strlen($filename) > 100) {
                                 $first100Chars = rtrim(mb_substr($filename, 0, 100));
+                                //dd($folder_path .$first100Chars.".".$extension);
                                 $copy_from = base_path($folder_path .$first100Chars.".".$extension);
                                 //dd($copy_from);
                             }

@@ -31,12 +31,13 @@ class FixPublicConsultationComments extends Command
      */
     public function handle()
     {
-        file_put_contents('old_pc_comments_fixed', '');
+        //file_put_contents('old_pc_comments_fixed', '');
         $pcWithoutComment = PublicConsultation::select('id','old_id')
             ->withCount('commentsWithTrashed')
             ->whereNotNull('old_id')
+            ->where('old_id', '>', 9517)
             //->whereDoesntHave('comments')
-            //->whereIn('old_id', [7683,7693])
+            //->whereIn('old_id', [9517])
             ->get();
 
         if ($pcWithoutComment->count() == 0) {

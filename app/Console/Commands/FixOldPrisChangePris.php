@@ -33,20 +33,28 @@ class FixOldPrisChangePris extends Command
      */
     public function handle()
     {
-        DB::table('pris_change_pris')->truncate();
-        file_put_contents('old_pris_connections_missing_documents.txt', '');
-        file_put_contents('old_pris_missing_connections.txt', '');
+        //DB::table('pris_change_pris')->truncate();
+        //file_put_contents('old_pris_connections_missing_documents.txt', '');
+        //file_put_contents('old_pris_missing_connections.txt', '');
         $step = 50;
         $maxId = Pris::max('id');
         $currentStep = 0;
-//        $maxId = 1;
+        $maxId = 1;
         while ($currentStep < $maxId) {
             $prisDocuments = Pris::select('id','old_connections')
                 ->withTrashed()
-                ->where('id', '>=', $currentStep)
-                ->where('id', '<', ($currentStep + $step))
+                ->whereDoesntHave('changedDocs')
+                ->whereDoesntHave('changedByDocs')
+                ->where('legal_act_type_id', '=', 7)
+                //->where('id', '>=', $currentStep)
+                //->where('id', '<', ($currentStep + $step))
+                //->where('id', '=', 14552)
+                //->where('id', '=', 167695)
                 ->where('asap_last_version', '=', 1)
                 ->whereNotNull('old_connections')
+                ->orderBy('id')
+                //->skip(1)
+                //->limit(1)
                 ->get();
 
             if ($prisDocuments->count()) {
@@ -55,10 +63,12 @@ class FixOldPrisChangePris extends Command
 
                     try {
                         $oldConnections = explode(';', $prisDocument->old_connections);
+                        //dd($oldConnections);
                         if (sizeof($oldConnections)) {
                             foreach ($oldConnections as $oldC) {
 
                                 $connection = $this->parseConnection($oldC);
+                                //dd($connection);
                                 if (sizeof($connection) == 5) {
                                     $oldConnection = $connection[1];
                                     switch ($oldConnection) //type of Connection
@@ -110,7 +120,7 @@ class FixOldPrisChangePris extends Command
                                             break;
                                     }
 
-                                    //dd($prisId, $changedPrisId, $newConnection, $oldConnection, $oldC);
+//                                    dump($prisId, $changedPrisId, $newConnection, $oldConnection, $oldC);
                                     if ($newConnection && $prisId && ($changedPrisId || $oldConnection == "поправка")) {
                                         if ($oldConnection != 'виж') {
                                             DB::statement('insert into pris_change_pris
@@ -153,6 +163,7 @@ class FixOldPrisChangePris extends Command
     {
         $str = preg_replace('/\s+/', ' ', $str);
         $str = trim($str);
+
         //изменен от Пост 268 дата 01/01/09
         preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (РАЗП|разп|Разп|Решение|РЕШ|Реш|реш|ПРОТ|Прот|ПОСТ|Пост) ([\d*(?:\.\d+)?]{1,}) дата ([\d\/\d\/\d]{8})+/', $str, $matches);
         if (sizeof($matches) != 5) {
@@ -161,7 +172,16 @@ class FixOldPrisChangePris extends Command
         }
         if (sizeof($matches) != 5) {
             //изменен от Пост П-268 дата 01/01/09
-            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (РАЗП|разп|Разп|Решение|РЕШ|Реш|реш|ПРОТ|Прот|ПОСТ|Пост) П-([\d*(?:\.\d+)?]{1,}) дата ([\d\/\d\/\d]{8})+/', $str, $matches);
+            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (РАЗП|разп|Разп|Решение|РЕШ|Реш|реш|ПРОТ|Прот|ПОСТ|Пост) (П-\d+) дата ([\d\/\d\/\d]{8})+/', $str, $matches);
+        }
+        if (sizeof($matches) != 5) {
+            //отменен от Зап Р-91 от 2021
+            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (Зап|ЗАП) ((?:[А-Яа-я]{1,2}-\d+)(?:[\s,]+[А-Яа-я]{1,2}-\d+)*) от (\d{4})+/', $str, $matches);
+        }
+        if (sizeof($matches) != 5) {
+            //отменен от Зап КВ-15 дата 28/02/96
+            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (Зап|ЗАП) ((?:[А-Яа-я]{1,2}-\d+)(?:[\s,]+[А-Яа-я]{1,2}-\d+)*) дата (\d{2}\/\d{2}\/\d{2})/', $str, $matches);
+            //dd($str,$matches);
         }
         if (sizeof($matches) != 5) {
             //изменен от Пост 268 на ВАС дата 01/01/09
@@ -175,6 +195,7 @@ class FixOldPrisChangePris extends Command
             //поправка ДВ. бр. 27 от 2024
             preg_match('/^(поправка|поправка в) (ДВ\. бр\.|ДВ\., бр\.) ([\d*(?:\.\d+)?]{1,}) от ([\d]{4})+/', $str, $matches);
         }
+        //dd($matches);
         return $matches;
     }
 
@@ -193,6 +214,7 @@ class FixOldPrisChangePris extends Command
             'РЕШ', 'Решение', 'Реш', 'реш' => LegalActType::TYPE_DECISION,
             'ПРОТ', 'Прот' => LegalActType::TYPE_PROTOCOL,
             'ПОСТ', 'Пост' => LegalActType::TYPE_DECREES,
+            'Зап', 'ЗАП' => LegalActType::TYPE_ORDER,
             default => null,
         };
 
@@ -201,6 +223,9 @@ class FixOldPrisChangePris extends Command
         }
 
         $number = $data[3];
+        if (str_contains($number, ".") && $category == 5) {
+            $category = LegalActType::TYPE_PROTOCOL_DECISION;
+        }
 
         if (!$number) {
             return null;
@@ -216,6 +241,14 @@ class FixOldPrisChangePris extends Command
                 ->where('asap_last_version', '=', 1)
                 ->get();
 
+            if ($pris->count() != 1 && $number == "830") {
+//                $pris = Pris::where('legal_act_type_id', '=', LegalActType::TYPE_DECISION)
+//                    ->where('doc_num', '=', $number)
+//                    ->where('doc_date', '>=', $from)
+//                    ->where('doc_date', '<=', $to)
+//                    ->where('asap_last_version', '=', 1)
+//                    ->get();
+            }
 
 //            if($pris->count() == 0){
 //                //TODO if not found last version search by last by id
@@ -257,6 +290,7 @@ class FixOldPrisChangePris extends Command
                         ->whereYear('doc_date', '=', $doc_year)
                         ->where('asap_last_version', '=', 1)
                         ->get();
+                    //dd($category, $number, $doc_year);
                 }
             }
 
@@ -266,6 +300,7 @@ class FixOldPrisChangePris extends Command
 //            }
 
             if ($pris->count() != 1) {
+                //dump($category, $number, $docDate);
                 if ($docDate >= '1990-03-22') {
                     file_put_contents('old_pris_connections_missing_documents.txt', json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
                 }
