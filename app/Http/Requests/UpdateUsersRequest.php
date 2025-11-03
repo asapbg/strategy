@@ -30,7 +30,8 @@ class UpdateUsersRequest extends FormRequest
         return array_merge($storeRules->rules($this), [
 //            'username'              => ['required', 'string', 'max:255'],
             'password'              => ['nullable', 'confirmed', Password::min(6)->numbers()],
-            'password_confirmation' => ['nullable','same:password']
+            'password_confirmation' => ['nullable','same:password'],
+            'show_contacts'         => ['nullable', 'boolean'],
         ]);
     }
 }

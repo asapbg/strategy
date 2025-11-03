@@ -50,7 +50,7 @@
 {{--                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.Duis aute--}}
 {{--                                    irure dolor in reprehenderit in.--}}
 {{--                                </p>--}}
-                                @if(!empty($m->email) || !empty($m->phone))
+                                @if((!empty($m->email) || !empty($m->phone)) && $row->show_contacts)
                                     <div class="team-member-contact d-flex flex-row mt-3">
                                         @if(!empty($m->phone))
                                             <a href="#" class="text-decoration-none me-4">
