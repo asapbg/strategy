@@ -1441,6 +1441,7 @@ class FixOldPrisImporters extends Command
 
         //start from this id in old database
         $currentStep = 0;
+        //$currentStep = 167355;
 
         if ((int)$maxOldId[0]->max) {
             $stop = false;

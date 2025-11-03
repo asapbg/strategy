@@ -2,13 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\PrisDocChangeTypeEnum;
-use App\Models\LegalActType;
 use App\Models\Pris;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class FixOldPrisLastVersion extends Command
 {
@@ -51,6 +47,7 @@ class FixOldPrisLastVersion extends Command
                         json_agg(json_build_object(\'id\', p.id, \'old_id\', p.old_id, \'created_at\', p.created_at, \'last_version\', p.last_version)) as records
                   from pris p
                  where p.old_id <= ' . (int)$maxLocalOldPrisId . '
+                   --and p.old_id > 167355
                    and p.old_id is not null
                    and p.deleted_at is null
               group by p.legal_act_type_id , p.doc_num, p.doc_date

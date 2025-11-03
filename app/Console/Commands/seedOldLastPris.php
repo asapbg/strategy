@@ -1711,6 +1711,7 @@ class seedOldLastPris extends Command
                                     //Update version
                                     if ($existPris->last_version != $item->last_version) {
                                         $existPris->last_version = $item->last_version;
+                                        $existPris->asap_last_version = $item->asap_last_version;
                                         $existPris->save();
                                     }
 
@@ -1879,6 +1880,7 @@ class seedOldLastPris extends Command
                                     'state' => $item->state,
                                     'xstate' => $item->xstate,
                                     'last_version' => $item->last_version,
+                                    'asap_last_version' => $item->last_version,
                                     'old_importers' => null,
                                 ];
                                 //Do something

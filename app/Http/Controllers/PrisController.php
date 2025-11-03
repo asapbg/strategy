@@ -6,7 +6,6 @@ use App\Models\LegalActType;
 use App\Models\Pris;
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 

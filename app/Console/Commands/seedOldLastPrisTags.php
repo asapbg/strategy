@@ -43,6 +43,7 @@ class seedOldLastPrisTags extends Command
         //start from this id in old database
         //$currentStep = DB::table('pris')->select(DB::raw('max(old_id) as max'))->first()->max + 1;
         $currentStep = 0;
+        //$currentStep = 167355;
 
         if ((int)$maxOldId[0]->max) {
             $stop = false;
