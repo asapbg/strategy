@@ -20,6 +20,7 @@ use App\Models\Page;
 use App\Models\Poll;
 use App\Models\Pris;
 use App\Models\Publication;
+use App\Models\Setting;
 use App\Models\StrategicDocument;
 use App\Models\User;
 use Carbon\Carbon;
@@ -711,10 +712,17 @@ class HomeController extends Controller
         if (!in_array($validated['subject'], [__('site.contacts.subject.report_problem'), __('site.contacts.subject.question'), __('site.contacts.subject.proposal')])) {
             return back()->withInput()->with('danger', __('site.contacts.subject.missing'));
         }
-        if (config('app.env') != 'production') {
-            $admins = [config('mail.local_to_mail')];
-        } else {
-            $admins = User::role([CustomRole::ADMIN_USER_ROLE])->get()->pluck('email')->toArray();
+
+//        if (config('app.env') != 'production') {
+//            $admins = [config('mail.local_to_mail')];
+//        } else {
+//            $admins = User::role([CustomRole::ADMIN_USER_ROLE])->get()->pluck('email')->toArray();
+//        }
+        $setting = Setting::where('name', Setting::CONTACT_MAIL_KEY)->first();
+        $admins = [];
+
+        if ($setting) {
+            $admins[] = $setting->value;
         }
 
         if (!sizeof($admins)) {
