@@ -26,6 +26,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -71,6 +72,10 @@ class CommonController extends Controller
         $entity = $model::find($entityId);
         $entity->$booleanType = $status;
         $entity->save();
+        if ($entity instanceof Page) {
+            Cache::forget(Page::CACHE_FOOTER_PAGES_KEY . '_' . app()->getLocale());
+            Cache::forget(Page::CACHE_FOOTER_TERMS_PAGES . '_' . app()->getLocale());
+        }
     }
 
     /**

@@ -29,7 +29,7 @@ class PageStoreRequest extends FormRequest
     {
         $rules = [
             'id' => ['required', 'numeric'],
-            'active' => ['required', 'numeric', 'gt:0'],
+            'active' => ['nullable', 'boolean'],
             'order_idx' => ['required', 'numeric', 'gte:0'],
             'in_footer' => ['nullable', 'numeric'],
             'slug' => ['nullable', 'string', 'max:255'],

@@ -135,7 +135,7 @@ class ViewServiceProvider extends ServiceProvider
             $footerPages = Cache::get($footerPagesCacheKey);
             if (is_null($footerPages)) {
                 $footerPages = [];
-                $footerPagesQ = Page::with(['translations'])->InFooter()->get();
+                $footerPagesQ = Page::with(['translations'])->isActive()->InFooter()->get();
                 if ($footerPagesQ->count()) {
                     foreach ($footerPagesQ as $page) {
                         //case in module

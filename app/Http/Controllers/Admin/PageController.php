@@ -220,7 +220,8 @@ class PageController  extends AdminController
 
             DB::commit();
 
-            Cache::forget(Page::CACHE_FOOTER_PAGES_KEY);
+            Cache::forget(Page::CACHE_FOOTER_PAGES_KEY . '_' . app()->getLocale());
+            Cache::forget(Page::CACHE_FOOTER_TERMS_PAGES . '_' . app()->getLocale());
 
             //request comes from some module
             if($module) {
