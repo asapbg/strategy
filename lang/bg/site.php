@@ -188,7 +188,7 @@ return [
     'footer.other_links.5' => 'Законопроекти в интернет страницата на народното събрание',
     'footer.other_links.6' => 'Национален център за парламентарни изследвания',
     'footer.other_links.7' => 'Държавен вестник',
-    'contact_with_administrator' => 'Контакт с админиситратор',
+    'contact_with_administrator' => 'Контакт с администратор',
     'contact_with_public_consultations' => 'Контакти на модераторите на раздел "Обществени консултации"',
     'contact_with_advisory_boards' => 'Контакти на модераторите на раздел "Консултативни съвети"',
     'contact_with_strategy_documents' => 'Контакти на модераторите на раздел "Стратегически документи"',
