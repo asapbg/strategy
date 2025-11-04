@@ -215,10 +215,7 @@
                     @endif
                     @php($import_docs_for_report = [])
                     @if($documentsImport->count())
-                        @if(!$foundBaseDoc)
-                            <div class="col-12">
-                                <ul class="list-group list-group-flush">
-                        @endif
+                        <ul class="list-group list-group-flush">
                         @foreach($documentsImport as $doc)
                             @if(str_contains(mb_strtolower($doc->description), "справка") && str_contains(mb_strtolower($doc->description), "становищ"))
                                 @php($import_docs_for_report[] = $doc)
@@ -228,10 +225,7 @@
                                 </li>
                             @endif
                         @endforeach
-                        @if(!$foundBaseDoc)
-                                </ul>
-                            </div>
-                        @endif
+                        </ul>
                         @php($foundBaseDoc)
                     @endif
                     @if(!$foundBaseDoc && !$documentsImport->count())
@@ -284,15 +278,11 @@
                     <ul class="list-group list-group-flush">
                         @php($foundReportDoc = false)
                         @if(count($import_docs_for_report))
-                            <div class="col-12">
-                                <ul class="list-group list-group-flush">
-                                @foreach($import_docs_for_report as $doc)
-                                    <li class="list-group-item">
-                                        @include('site.partial.file_preview_or_download', ['f' => $doc])
-                                    </li>
-                                @endforeach
-                                </ul>
-                            </div>
+                            @foreach($import_docs_for_report as $doc)
+                                <li class="list-group-item">
+                                    @include('site.partial.file_preview_or_download', ['f' => $doc])
+                                </li>
+                            @endforeach
                             @php($foundReportDoc = true)
                         @endif
                         @if(isset($documents) && sizeof($documents))
