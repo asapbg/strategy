@@ -11,6 +11,7 @@ use App\Models\Consultations\OperationalProgram;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\File;
 use App\Models\Law;
+use App\Models\LegalActType;
 use App\Models\Page;
 use App\Models\Pris;
 use App\Models\Publication;
@@ -26,6 +27,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -173,6 +175,14 @@ class CommonController extends Controller
      */
     public function downloadFile(File $file, $disk = 'public_uploads')
     {
+        $can_access_orders = $this->canAccessOrders(request());
+        if ($file->code_object == File::CODE_OBJ_PRIS) {
+            $pris = Pris::find($file->id_object);
+            if ($pris->legal_act_type_id == LegalActType::TYPE_ORDER && !$can_access_orders) {
+                abort('403');
+            }
+        }
+
         //TODO Do we need other check here? Permission or else in some cases
         if (!in_array($file->code_object,
                 [
