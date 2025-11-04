@@ -870,11 +870,11 @@ class PublicConsultationController extends Controller
                 join act_type_translations on act_type_translations.act_type_id = act_type.id and act_type_translations.locale = \'' . app()->getLocale() . '\'
                 ' . ($openForm ? ' and public_consultation.open_from >= \'' . $openForm . '\'' : '') . '
                 ' . ($openTo ? ' and public_consultation.open_to <= \'' . $openTo . '\'' : '') . '
-                ' . ($institutions ? ' and public_consultation.importer_institution_id in (' . implode(',', $institutions) . ')' : '') . '
-                ' . ($levels ? ' and public_consultation.consultation_level_id in (' . implode(',', $levels) . ')' : '') . '
-                ' . ($fieldOfActions ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActions) . ')' : '') . '
-                ' . ($fieldOfActionsAreas ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActionsAreas) . ')' : '') . '
-                ' . ($fieldOfActionsMunicipalities ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActionsMunicipalities) . ')' : '') . '
+                ' . (!empty($institutions) ? ' and public_consultation.importer_institution_id in (' . implode(',', $institutions) . ')' : '') . '
+                ' . (!empty($levels) ? ' and public_consultation.consultation_level_id in (' . implode(',', $levels) . ')' : '') . '
+                ' . (!empty($fieldOfActions) ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActions) . ')' : '') . '
+                ' . (!empty($fieldOfActionsAreas) ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActionsAreas) . ')' : '') . '
+                ' . (!empty($fieldOfActionsMunicipalities) ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActionsMunicipalities) . ')' : '') . '
                 group by public_consultation.importer_institution_id, act_type.id
             ) A
             group by A.institution_id
@@ -910,11 +910,11 @@ class PublicConsultationController extends Controller
                 where public_consultation.old_id is null
                 ' . ($openForm ? ' and public_consultation.open_from >= \'' . $openForm . '\'' : '') . '
                 ' . ($openTo ? ' and public_consultation.open_to <= \'' . $openTo . '\'' : '') . '
-                ' . ($institutions ? ' and public_consultation.importer_institution_id in (' . implode(',', $institutions) . ')' : '') . '
-                ' . ($levels ? ' and public_consultation.consultation_level_id in (' . implode(',', $levels) . ')' : '') . '
-                ' . ($fieldOfActions ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActions) . ')' : '') . '
-                ' . ($fieldOfActionsAreas ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActionsAreas) . ')' : '') . '
-                ' . ($fieldOfActionsMunicipalities ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActionsMunicipalities) . ')' : '') . '
+                ' . (!empty($institutions) ? ' and public_consultation.importer_institution_id in (' . implode(',', $institutions) . ')' : '') . '
+                ' . (!empty($levels) ? ' and public_consultation.consultation_level_id in (' . implode(',', $levels) . ')' : '') . '
+                ' . (!empty($fieldOfActions) ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActions) . ')' : '') . '
+                ' . (!empty($fieldOfActionsAreas) ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActionsAreas) . ')' : '') . '
+                ' . (!empty($fieldOfActionsMunicipalities) ? ' and public_consultation.field_of_actions_id in (' . implode(',', $fieldOfActionsMunicipalities) . ')' : '') . '
                 group by public_consultation.id
             ) A
             group by A.institution_id
