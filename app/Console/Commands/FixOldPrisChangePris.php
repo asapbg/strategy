@@ -25,6 +25,7 @@ class FixOldPrisChangePris extends Command
      * @var string
      */
     protected $description = 'Fix old PRIS connections between documents';
+    private ?int $category;
 
     /**
      * Execute the console command.
@@ -42,14 +43,16 @@ class FixOldPrisChangePris extends Command
         $maxId = 1;
         while ($currentStep < $maxId) {
             $prisDocuments = Pris::select('id','old_connections')
-                ->withTrashed()
+                //->withTrashed()
+                //->where('legal_act_type_id', '<>', 7)
                 ->whereDoesntHave('changedDocs')
                 ->whereDoesntHave('changedByDocs')
-                ->where('legal_act_type_id', '=', 7)
+                ->whereDoesntHave('changedDocsWithoutRelation')
+                ->whereDoesntHave('changedByDocsWithoutRelation')
+                //->where('id', '=', 69056)
                 //->where('id', '>=', $currentStep)
                 //->where('id', '<', ($currentStep + $step))
-                //->where('id', '=', 14552)
-                //->where('id', '=', 167695)
+                //->where('id', '!=', 137821)
                 ->where('asap_last_version', '=', 1)
                 ->whereNotNull('old_connections')
                 ->orderBy('id')
@@ -60,9 +63,10 @@ class FixOldPrisChangePris extends Command
             if ($prisDocuments->count()) {
                 foreach ($prisDocuments as $prisDocument) {
                     //echo 'Start fixing connections of pris doc with ID: ' . $prisDocument->id . PHP_EOL;
-
+                    //dd($prisDocument->toArray());
                     try {
                         $oldConnections = explode(';', $prisDocument->old_connections);
+                        //unset($oldConnections[0],$oldConnections[1]);
                         //dd($oldConnections);
                         if (sizeof($oldConnections)) {
                             foreach ($oldConnections as $oldC) {
@@ -79,6 +83,7 @@ class FixOldPrisChangePris extends Command
                                             $changedPrisId = $this->findPris($connection);
                                             break;
                                         case 'отменя':
+                                        case 'отменям':
                                             $newConnection = PrisDocChangeTypeEnum::CANCEL->value;
                                             $prisId = $prisDocument->id;
                                             $changedPrisId = $this->findPris($connection);
@@ -120,24 +125,47 @@ class FixOldPrisChangePris extends Command
                                             break;
                                     }
 
-//                                    dump($prisId, $changedPrisId, $newConnection, $oldConnection, $oldC);
-                                    if ($newConnection && $prisId && ($changedPrisId || $oldConnection == "поправка")) {
+                                    //dd($prisId, $changedPrisId, $newConnection, $oldConnection, $oldC);
+                                    if (
+                                        $newConnection
+                                        &&
+                                        (
+                                            $prisId && $changedPrisId
+                                            ||
+                                            ($prisId && !$changedPrisId || $changedPrisId && !$prisId)
+                                        )
+                                    ) {
                                         if ($oldConnection != 'виж') {
                                             DB::statement('insert into pris_change_pris
-                                                                (pris_id, changed_pris_id, connect_type, old_connect_type, full_text)
-                                                             select ?, ?, ?, ?, ?
+                                                                (pris_id, changed_pris_id, connect_type, old_connect_type, full_text, created_at)
+                                                             select ?, ?, ?, ?, ?, ?
                                                              where not exists (
-                                                                select pris_change_pris.pris_id from pris_change_pris where pris_id = ? and changed_pris_id = ? and connect_type = ?)'
-                                                , [$prisId, $changedPrisId, $newConnection, $oldConnection, $oldC, $prisId, $changedPrisId, $newConnection]);
+                                                                select pris_change_pris.pris_id
+                                                                  from pris_change_pris
+                                                                 where pris_id = ? and changed_pris_id = ? and connect_type = ?
+                                                            )'
+                                                , [
+                                                    $prisId, $changedPrisId, $newConnection, $oldConnection, trim($oldC), now(),
+                                                    $prisId, $changedPrisId, $newConnection
+                                                ]);
                                         } else {
+                                            //dd($prisId, $changedPrisId, $newConnection, $oldConnection, $oldC);
                                             DB::statement('insert into pris_change_pris
-                                                                (pris_id, changed_pris_id, connect_type, old_connect_type, full_text)
-                                                             select ?, ?, ?, ?, ?
+                                                                (pris_id, changed_pris_id, connect_type, old_connect_type, full_text, created_at)
+                                                             select ?, ?, ?, ?, ?, ?
                                                              where not exists (
-                                                                select pris_change_pris.pris_id from pris_change_pris where (pris_id = ? and changed_pris_id = ? and connect_type = ?) or (pris_id = ? and changed_pris_id = ? and connect_type = ?))'
-                                                , [$prisId, $changedPrisId, $newConnection, $oldConnection, $oldC, $prisId, $changedPrisId, $newConnection, $changedPrisId, $prisId, $newConnection]);
+                                                                select pris_change_pris.pris_id
+                                                                from pris_change_pris
+                                                                where (pris_id = ? and changed_pris_id = ? and connect_type = ?) or (pris_id = ? and changed_pris_id = ? and connect_type = ?)
+                                                            )'
+                                                , [
+                                                    $prisId, $changedPrisId, $newConnection, $oldConnection, trim($oldC), now(),
+                                                    $prisId, $changedPrisId, $newConnection, $changedPrisId, $prisId, $newConnection
+                                                ]);
                                         }
-                                        $this->info("Connections fixed for pris doc with ID $changedPrisId");
+                                        $this->info("Connections fixed for pris doc with ID $prisDocument->id");
+                                    } else {
+                                        $this->error("Missing connections for pris with ID $prisDocument->id | ". $connection[0]);
                                     }
                                 } else {
                                     $this->error("Missing connections for pris with ID $prisDocument->id". ' - ' . $oldC . ' | ' . json_encode($connection));
@@ -175,17 +203,8 @@ class FixOldPrisChangePris extends Command
             preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (РАЗП|разп|Разп|Решение|РЕШ|Реш|реш|ПРОТ|Прот|ПОСТ|Пост) (П-\d+) дата ([\d\/\d\/\d]{8})+/', $str, $matches);
         }
         if (sizeof($matches) != 5) {
-            //отменен от Зап Р-91 от 2021
-            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (Зап|ЗАП) ((?:[А-Яа-я]{1,2}-\d+)(?:[\s,]+[А-Яа-я]{1,2}-\d+)*) от (\d{4})+/', $str, $matches);
-        }
-        if (sizeof($matches) != 5) {
-            //отменен от Зап КВ-15 дата 28/02/96
-            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (Зап|ЗАП) ((?:[А-Яа-я]{1,2}-\d+)(?:[\s,]+[А-Яа-я]{1,2}-\d+)*) дата (\d{2}\/\d{2}\/\d{2})/', $str, $matches);
-            //dd($str,$matches);
-        }
-        if (sizeof($matches) != 5) {
             //изменен от Пост 268 на ВАС дата 01/01/09
-            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (РАЗП|разп|Разп|Решение|РЕШ|Реш|реш|ПРОТ|Прот|ПОСТ|Пост) ([\d*(?:\.\d+)?]{1,}) на ВАС дата ([\d\/\d\/\d]{8})+/', $str, $matches);
+            preg_match('/^(изменя|изменен от|отменя|отменям|отменен от|допълва|допълнен от|виж) (РАЗП|разп|Разп|Решение|РЕШ|Реш|реш|ПРОТ|Прот|ПОСТ|Пост) ([\d*(?:\.\d+)?]{1,}) на ВАС дата ([\d\/\d\/\d]{8})+/', $str, $matches);
         }
         if (sizeof($matches) != 5) {
             //изменен от Пост 268 от 2009
@@ -193,7 +212,27 @@ class FixOldPrisChangePris extends Command
         }
         if (sizeof($matches) != 5) {
             //поправка ДВ. бр. 27 от 2024
-            preg_match('/^(поправка|поправка в) (ДВ\. бр\.|ДВ\., бр\.) ([\d*(?:\.\d+)?]{1,}) от ([\d]{4})+/', $str, $matches);
+            preg_match('/^(поправка|поправка в) (ДВ\. бр\.|ДВ\., бр\.|ДВ\. бр) ([\d*(?:\.\d+)?]{1,}) от ([\d]{4})+/', $str, $matches);
+            //dd($str,$matches);
+        }
+        if (sizeof($matches) != 5) {
+            //отменен от Зап Р-91 от 2021
+            preg_match('/^(изменя|изменен от|отменя|отменен от|допълва|допълнен от|виж) (Зап|ЗАП) ((?:[А-я]{1,2}-\d+)(?:[\s,]+[А-я]{1,2}-\d+)*) от (\d{4})+/u', $str, $matches);
+        }
+        if (sizeof($matches) != 5) {
+            //отменен от Зап КВ-15 дата 28/02/96
+            preg_match('/^(изменя|изменен от|отменя|отменям|отменен от|допълва|допълнен от|виж) (Зап|ЗАП) ((?:[А-я]{1,2}-\d+)(?:[\s,]+[А-я]{1,2}-\d+)*) дата (\d{2}\/\d{2}\/\d{2})/u', $str, $matches);
+            //dd($str,$matches);
+        }
+        if (sizeof($matches) != 5) {
+            //за всякакви други тъпотии писани от тъпаците в МС :D
+            preg_match('/^(изменя|изменен от|отменя|отменям|отменен от|допълва|допълнен от|виж)/', $str, $matches);
+            if (count($matches) == 2) {
+                $matches[0] = $str;
+                $matches[2] = "";
+                $matches[3] = 0;
+                $matches[4] = '28/02/22';
+            }
         }
         //dd($matches);
         return $matches;
@@ -209,7 +248,7 @@ class FixOldPrisChangePris extends Command
 //            4 => "31/12/80"
 //        ],
 
-        $category = match ($data[2]) {
+        $this->category = match ($data[2]) {
             'РАЗП', 'разп', 'Разп' => LegalActType::TYPE_DISPOSITION,
             'РЕШ', 'Решение', 'Реш', 'реш' => LegalActType::TYPE_DECISION,
             'ПРОТ', 'Прот' => LegalActType::TYPE_PROTOCOL,
@@ -218,13 +257,13 @@ class FixOldPrisChangePris extends Command
             default => null,
         };
 
-        if (!$category) {
+        if (!$this->category) {
             return null;
         }
 
         $number = $data[3];
-        if (str_contains($number, ".") && $category == 5) {
-            $category = LegalActType::TYPE_PROTOCOL_DECISION;
+        if (str_contains($number, ".") && $this->category == 5) {
+            $this->category = LegalActType::TYPE_PROTOCOL_DECISION;
         }
 
         if (!$number) {
@@ -234,28 +273,22 @@ class FixOldPrisChangePris extends Command
         if (strlen($data[4]) == 4) {
             $from = $data[4] . '-01-01';
             $to = $data[4] . '-12-31';
-            $pris = Pris::where('legal_act_type_id', '=', $category)
+            $pris = Pris::where('legal_act_type_id', '=', $this->category)
                 ->where('doc_num', '=', $number)
                 ->where('doc_date', '>=', $from)
                 ->where('doc_date', '<=', $to)
                 ->where('asap_last_version', '=', 1)
                 ->get();
 
-            if ($pris->count() != 1 && $number == "830") {
-//                $pris = Pris::where('legal_act_type_id', '=', LegalActType::TYPE_DECISION)
-//                    ->where('doc_num', '=', $number)
-//                    ->where('doc_date', '>=', $from)
-//                    ->where('doc_date', '<=', $to)
-//                    ->where('asap_last_version', '=', 1)
-//                    ->get();
-            }
-
 //            if($pris->count() == 0){
 //                //TODO if not found last version search by last by id
-//                $pris = Pris::where('legal_act_type_id', '=', $category)->where('doc_num', '=', $number)->where('doc_date', '>=', $from)->where('doc_date', '<=', $to)->orderBy('id', 'desc')->limit(1)->get();
+//                $pris = Pris::where('legal_act_type_id', '=', $this->category)->where('doc_num', '=', $number)->where('doc_date', '>=', $from)->where('doc_date', '<=', $to)->orderBy('id', 'desc')->limit(1)->get();
 //            }
 
             if ($pris->count() != 1) {
+                if ($this->category == LegalActType::TYPE_ORDER) {
+                    return null;
+                }
                 if ($from >= '1990-03-22') {
                     file_put_contents('old_pris_connections_missing_documents.txt', json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
                 }
@@ -278,29 +311,32 @@ class FixOldPrisChangePris extends Command
             }
 
             if (checkdate($dateInfo[1], $dateInfo[0], $doc_year)) {
-                $pris = Pris::where('legal_act_type_id', '=', $category)
+                $pris = Pris::where('legal_act_type_id', '=', $this->category)
                     ->where('doc_num', '=', $number)
                     ->where('doc_date', '=', $docDate)
                     ->where('asap_last_version', '=', 1)
                     ->get();
+                //dd($this->category, $number, $docDate, $pris);
             } else {
                 if (!empty($doc_year)) {
-                    $pris = Pris::where('legal_act_type_id', '=', $category)
+                    $pris = Pris::where('legal_act_type_id', '=', $this->category)
                         ->where('doc_num', '=', $number)
                         ->whereYear('doc_date', '=', $doc_year)
                         ->where('asap_last_version', '=', 1)
                         ->get();
-                    //dd($category, $number, $doc_year);
+                    //dd($this->category, $number, $doc_year);
                 }
             }
 
 //            if($pris->count() == 0){
 //                //TODO if not found last version search by last by id
-//                $pris = Pris::where('legal_act_type_id', '=', $category)->where('doc_num', '=', $number)->where('doc_date', '=', $docDate)->orderBy('id', 'desc')->limit(1)->get();
+//                $pris = Pris::where('legal_act_type_id', '=', $this->category)->where('doc_num', '=', $number)->where('doc_date', '=', $docDate)->orderBy('id', 'desc')->limit(1)->get();
 //            }
 
             if ($pris->count() != 1) {
-                //dump($category, $number, $docDate);
+                if ($this->category == LegalActType::TYPE_ORDER) {
+                    return null;
+                }
                 if ($docDate >= '1990-03-22') {
                     file_put_contents('old_pris_connections_missing_documents.txt', json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
                 }

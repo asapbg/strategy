@@ -17,6 +17,8 @@ enum PrisDocChangeTypeEnum: int
     case AMENDMENT = 4; //поправка
     case SEE_IN = 5; //виж
 
+    case OTHER = 6; //ДРУГО
+
     // Return enum name by value
     public static function keyByValue($searchVal): string
     {
@@ -35,7 +37,8 @@ enum PrisDocChangeTypeEnum: int
             self::COMPLEMENTS->value => PrisConnectionStatusEnum::SUPPLEMENTED->value,
             self::CANCEL->value => PrisConnectionStatusEnum::CANCELED->value,
             self::AMENDMENT->value => PrisConnectionStatusEnum::AMENDMENT->value,
-            self::SEE_IN->value => PrisConnectionStatusEnum::SEE->value
+            self::SEE_IN->value => PrisConnectionStatusEnum::SEE->value,
+            self::OTHER->value => PrisConnectionStatusEnum::OTHER->value
         ];
         return $statuses[$val];
     }

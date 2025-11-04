@@ -285,6 +285,11 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
         return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id')->withPivot(['connect_type', 'old_connect_type'])->withTrashed();
     }
 
+    public function changedByDocsWithoutRelation()
+    {
+        return $this->hasMany(PrisChangePris::class, 'changed_pris_id', 'id')->whereNull('pris_id');
+    }
+
     public function files(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(File::class, 'id_object', 'id')

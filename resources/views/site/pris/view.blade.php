@@ -187,7 +187,12 @@
                     </div>
 
                     <div class="col-md-9 pris-left-column">
-                        @if($item->changedDocs->count() || $item->changedByDocs->count() || $item->changedDocsWithoutRelation->count())
+                        @if(
+                            $item->changedDocs->count()
+                            || $item->changedByDocs->count()
+                            || $item->changedDocsWithoutRelation->count()
+                            || $item->changedByDocsWithoutRelation->count()
+                        )
                             @foreach($item->changedDocs as $doc)
                                 @if ($doc->legal_act_type_id == \App\Models\LegalActType::TYPE_ORDER)
                                     <div id="disconnect_text_{{ $item->id }}">
@@ -219,6 +224,11 @@
                                     @endif
                             @endforeach
                             @foreach($item->changedDocsWithoutRelation as $pris)
+                                <div id="disconnect_text_{{ $item->id }}">
+                                    {{ $pris->full_text }}
+                                </div>
+                            @endforeach
+                            @foreach($item->changedByDocsWithoutRelation as $pris)
                                 <div id="disconnect_text_{{ $item->id }}">
                                     {{ $pris->full_text }}
                                 </div>
