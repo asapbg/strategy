@@ -118,6 +118,7 @@ class PrisTranslationObserver
             } else{
                 $administrators = User::whereActive(true)
                     ->hasRole(CustomRole::ADMIN_USER_ROLE)
+                    ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                     ->get();
 
                 $subscribedUsers = UserSubscribe::where('id', 0)->get();
@@ -174,6 +175,7 @@ class PrisTranslationObserver
                 } else{
                     $administrators = User::whereActive(true)
                         ->hasRole(CustomRole::ADMIN_USER_ROLE)
+                        ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                         ->get();
                     $subscribedUsers = UserSubscribe::where('id', 0)->get();
                     //get users by model filter

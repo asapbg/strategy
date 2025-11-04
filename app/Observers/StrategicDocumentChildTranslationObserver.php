@@ -61,6 +61,7 @@ class StrategicDocumentChildTranslationObserver
         if ($event == "created") {
             $administrators = User::whereActive(true)
                 ->hasRole(CustomRole::ADMIN_USER_ROLE)
+                ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                 ->get();
 
             $moderators = \DB::select('
