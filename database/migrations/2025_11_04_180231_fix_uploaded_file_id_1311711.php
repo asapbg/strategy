@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        \App\Models\File::where('id', 1311710)->update(['created_at' => '2025-09-30 10:01:13']);
+        \App\Models\File::where('id', 1311710)->update(['created_at' => '2025-09-30 10:01:13','updated_at' => '2025-09-30 10:01:13']);
     }
 
     /**
