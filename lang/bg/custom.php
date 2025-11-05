@@ -531,6 +531,7 @@ return [
     'pris.change_enum.SEE_IN'                  => 'Виж',
     'pris.change_enum.reverse.SEE_IN'          => 'Виж',
     'pris.change_enum.AMENDMENT'               => 'Поправка',
+    'pris.change_enum.OTHER'                => 'Друго',
     'new_record'                                => 'Нов запис',
     'published_at'                              => 'Публикувано на',
     'change_docs'                                => 'Свързани документи',

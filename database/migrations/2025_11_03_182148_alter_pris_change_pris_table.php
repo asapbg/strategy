@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasColumn('pris', 'created_at')) {
+        if (!Schema::hasColumn('pris_change_pris', 'created_at')) {
             Schema::table('pris_change_pris', function (Blueprint $table){
                 $table->timestamps();
             });
@@ -30,7 +30,7 @@ return new class extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('pris', 'created_at')) {
+        if (Schema::hasColumn('pris_change_pris', 'created_at')) {
             Schema::table('pris_change_pris', function (Blueprint $table) {
                 //$table->dropTimestamps();
             });
