@@ -45,14 +45,14 @@ class FixOldPrisChangePris extends Command
             $prisDocuments = Pris::select('id','old_connections')
                 //->withTrashed()
                 //->where('legal_act_type_id', '<>', 7)
-                ->whereDoesntHave('changedDocs')
-                ->whereDoesntHave('changedByDocs')
-                ->whereDoesntHave('changedDocsWithoutRelation')
-                ->whereDoesntHave('changedByDocsWithoutRelation')
-                //->where('id', '=', 69056)
+                //->whereDoesntHave('changedDocs')
+                //->whereDoesntHave('changedByDocs')
+                //->whereDoesntHave('changedDocsWithoutRelation')
+                //->whereDoesntHave('changedByDocsWithoutRelation')
                 //->where('id', '>=', $currentStep)
                 //->where('id', '<', ($currentStep + $step))
                 //->where('id', '!=', 137821)
+                ->where('id', '=', 166527)
                 ->where('asap_last_version', '=', 1)
                 ->whereNotNull('old_connections')
                 ->orderBy('id')
@@ -164,8 +164,10 @@ class FixOldPrisChangePris extends Command
                                                 ]);
                                         }
                                         $this->info("Connections fixed for pris doc with ID $prisDocument->id");
+                                        file_put_contents('old_pris_missing_connections.txt', 'Pris ID:' . $prisDocument->id . ' - ' . $oldC . ' | ' . json_encode($connection) . PHP_EOL, FILE_APPEND);
                                     } else {
                                         $this->error("Missing connections for pris with ID $prisDocument->id | ". $connection[0]);
+                                        file_put_contents('old_pris_missing_connections.txt', 'Pris ID:' . $prisDocument->id . ' - ' . $oldC . ' | ' . json_encode($connection) . PHP_EOL, FILE_APPEND);
                                     }
                                 } else {
                                     $this->error("Missing connections for pris with ID $prisDocument->id". ' - ' . $oldC . ' | ' . json_encode($connection));

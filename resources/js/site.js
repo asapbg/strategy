@@ -373,33 +373,36 @@ $(document).on('change', '#level', function (){
 
 function ajaxList(domElement) {
     $(document).on('change', domElement + ' #groupByAjax', function (){
+        ShowLoadingSpinner(true);
         $($(this).data('container')).load($(this).find(':selected').data('url'), function (){
-            ShowLoadingSpinner();
             //$('.select2').select2(select2Options);
             initInputs();
             ajaxList($(this).data('container'));
             categoriesControl();
             institutionControl();
+            HideLoadingSpinner();
         });
     });
     $(document).on('change', domElement + ' #list-paginate', function (){
+        ShowLoadingSpinner(true);
         $($(this).data('container')).load($(this).find(':selected').data('url'), function (){
-            ShowLoadingSpinner();
             //$('.select2').select2(select2Options);
             initInputs();
             ajaxList($(this).data('container'));
             categoriesControl();
             institutionControl();
+            HideLoadingSpinner();
         });
     });
     $(document).on('click', domElement + ' .ajaxSort', function (e){
         e.preventDefault();
+        ShowLoadingSpinner(true);
         $($(this).data('container')).load($(this).data('url'), function (){
-            ShowLoadingSpinner();
             initInputs();
             ajaxList($(this).data('container'));
             categoriesControl();
             institutionControl();
+            HideLoadingSpinner();
         });
     });
     $(document).on('click', domElement + ' .ajaxSearch', function (e){
@@ -436,7 +439,7 @@ function ajaxList(domElement) {
                 initInputs();
                 categoriesControl();
                 institutionControl();
-                ajaxList($(this).data('container'))
+                ajaxList($(this).data('container'));
                 HideLoadingSpinner();
             });
         }

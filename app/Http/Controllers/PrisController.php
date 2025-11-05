@@ -75,7 +75,9 @@ class PrisController extends Controller
             ->when($sort != 'docNum', function ($query) use($sort, $sortOrd) {
                 $query->orderBy('doc_num', 'desc');
             })
-            ->GroupBy('pris.id')
+            ->when(!$request->filled('order_by'), function ($query) use($sort) {
+                $query->GroupBy('pris.id');
+            })
             ->paginate($paginate);
 
 
