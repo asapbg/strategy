@@ -23,6 +23,7 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     const TYPE_DISPOSITION = 4;
     const TYPE_PROTOCOL = 5;
     const TYPE_TRANSCRIPTS = 6;
+    const TYPE_LAW = 14;
 
     const IN_PRIS = [self::TYPE_DECREES, self::TYPE_DECISION, self::TYPE_PROTOCOL_DECISION, self::TYPE_DISPOSITION, self::TYPE_PROTOCOL, self::TYPE_TRANSCRIPTS];
     /**

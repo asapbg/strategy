@@ -49,9 +49,7 @@ class PrisController extends Controller
         $in_archive = $request->offsetGet('in_archive');
 
         $items = Pris::select('pris.*')
-            ->when(!$in_archive, function ($query) {
-                $query->where('pris.in_archive', 0);
-            })
+            ->where('pris.in_archive', !$in_archive ? 0 : 1)
             ->LastVersion()
             //->InPris()
             ->Published()

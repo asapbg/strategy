@@ -45,7 +45,7 @@ class FixPrisAsapLastVersion extends Command
                 from
                     pris
                 where
-                    in_archive = 0
+                    in_archive = 1
                     and published_at is not null
                     and deleted_at is null
                     and asap_last_version = 1
@@ -66,6 +66,7 @@ class FixPrisAsapLastVersion extends Command
                 SELECT rootid FROM "archimed".e_items where id in ('.join(",", $our_old_ids).') GROUP BY rootid HAVING COUNT(*) > 1
             ');
             if (!count($rootid)) {
+                $this->comment("nothing to fix");
                 continue;
             }
             $old_ids = DB::connection('pris')->select('
