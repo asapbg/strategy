@@ -30,8 +30,14 @@ class LanguageFileUploadRequest extends FormRequest
         $formats = constant("\App\Models\File::$formatInput");
 
         $rules = [
-            'description_bg' => ['nullable', 'string', 'max:255', 'required_without:description_en', 'required_with:file_bg'],
-            'description_en' => ['nullable', 'string', 'max:255', 'required_without:description_bg', 'required_with:file_en'],
+            'description_bg' => [
+                'nullable', 'string', 'max:255',
+                //'required_without:description_en', 'required_with:file_bg'
+            ],
+            'description_en' => [
+                'nullable', 'string', 'max:255',
+                //'required_without:description_bg', 'required_with:file_en'
+            ],
             'is_visible' => ['nullable', 'numeric'],
             'formats' => ['required', 'string'],
             'file_bg' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', $formats)],

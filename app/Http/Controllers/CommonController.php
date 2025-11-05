@@ -57,11 +57,11 @@ class CommonController extends Controller
         }
         $entityId = $request->get('entityId');
         $booleanType = $request->get('booleanType');
-        $model = "\App\Models\\".$request->get('model');
+        $model = "\App\Models\\" . $request->get('model');
         if (!class_exists($model)) {
-            $model = "\App\\".$request->get('model'); //Spatie\Permission\Models
+            $model = "\App\\" . $request->get('model'); //Spatie\Permission\Models
             if (!class_exists($model)) {
-                $model = "Spatie\Permission\Models\\".$request->get('model');
+                $model = "Spatie\Permission\Models\\" . $request->get('model');
                 if (!class_exists($model)) {
                     return back();
                 }
@@ -98,9 +98,9 @@ class CommonController extends Controller
         }
         $entityId = request()->get('entityId');
         $permission = request()->get('permission');
-        $model = "\App\Models\\".request()->get('model');
+        $model = "\App\Models\\" . request()->get('model');
         if (!class_exists($model)) {
-            $model = "\App\\".request()->get('model');
+            $model = "\App\\" . request()->get('model');
             if (!class_exists($model)) {
                 return back();
             }
@@ -110,8 +110,7 @@ class CommonController extends Controller
 
         if ($status == 0) {
             $entity->revokePermissionTo($permission);
-        }
-        else {
+        } else {
             $entity->givePermissionTo($permission);
         }
     }
@@ -138,10 +137,11 @@ class CommonController extends Controller
         }
     }
 
-    public function uploadFile(PageFileUploadRequest $request, $objectId, $typeObject) {
+    public function uploadFile(PageFileUploadRequest $request, $objectId, $typeObject)
+    {
         try {
             $validated = $request->validated();
-            $fileNameToStore = round(microtime(true)).'.'.$validated['file']->getClientOriginalExtension();
+            $fileNameToStore = round(microtime(true)) . '.' . $validated['file']->getClientOriginalExtension();
             // Upload File
             $pDir = match ((int)$typeObject) {
                 File::CODE_OBJ_PAGE => File::PAGE_UPLOAD_DIR,
@@ -154,7 +154,7 @@ class CommonController extends Controller
                 'code_object' => $typeObject,
                 'filename' => $fileNameToStore,
                 'content_type' => $validated['file']->getClientMimeType(),
-                'path' => $pDir.$fileNameToStore,
+                'path' => $pDir . $fileNameToStore,
                 'description' => $validated['description'],
                 'sys_user' => $request->user()->id,
             ]);
@@ -190,27 +190,27 @@ class CommonController extends Controller
 
         //TODO Do we need other check here? Permission or else in some cases
         if (!in_array($file->code_object,
-                [
-                    File::CODE_OBJ_PUBLICATION,
-                    File::CODE_OBJ_LEGISLATIVE_PROGRAM,
-                    File::CODE_OBJ_OPERATIONAL_PROGRAM,
-                    File::CODE_OBJ_PRIS,
-                    File::CODE_OBJ_PUBLIC_CONSULTATION,
-                    File::CODE_AB,
-                    File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL,
-                    File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL,
-                    File::CODE_OBJ_STRATEGIC_DOCUMENT,
-                    File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN,
-                    File::CODE_OBJ_OGP,
-                    File::CODE_OBJ_PAGE,
-                ]
-            )
+            [
+                File::CODE_OBJ_PUBLICATION,
+                File::CODE_OBJ_LEGISLATIVE_PROGRAM,
+                File::CODE_OBJ_OPERATIONAL_PROGRAM,
+                File::CODE_OBJ_PRIS,
+                File::CODE_OBJ_PUBLIC_CONSULTATION,
+                File::CODE_AB,
+                File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL,
+                File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL,
+                File::CODE_OBJ_STRATEGIC_DOCUMENT,
+                File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN,
+                File::CODE_OBJ_OGP,
+                File::CODE_OBJ_PAGE,
+            ]
+        )
         ) {
             return back()->with('warning', __('custom.record_not_found'));
         }
 
-        $path = match ($disk){
-            default => str_replace('files'.DIRECTORY_SEPARATOR, '', $file->path)
+        $path = match ($disk) {
+            default => str_replace('files' . DIRECTORY_SEPARATOR, '', $file->path)
         };
 
         if (!Storage::disk('public_uploads')->has($path)) {
@@ -233,10 +233,10 @@ class CommonController extends Controller
             $extraName .= '.' . $extension;
         }
         try {
-            $extraName = str_replace(['\\','/'], ['-','-'], $extraName);
+            $extraName = str_replace(['\\', '/'], ['-', '-'], $extraName);
             return Storage::disk('public_uploads')->download($path, $extraName);
-        } catch (\Exception $e){
-            Log::error('Error download file (download.file): '.$e->getMessage().PHP_EOL.'file : '.$file->id.' | path: '.$path.' | extraName: '.($extraName ?? ''));
+        } catch (\Exception $e) {
+            Log::error('Error download file (download.file): ' . $e->getMessage() . PHP_EOL . 'file : ' . $file->id . ' | path: ' . $path . ' | extraName: ' . ($extraName ?? ''));
             return back()->with('warning', __('custom.file_not_found'));
         }
     }
@@ -259,7 +259,7 @@ class CommonController extends Controller
         if (empty($path)) {
             return __('messages.record_not_found');
         }
-        $path = 'files'.DIRECTORY_SEPARATOR.$path;
+        $path = 'files' . DIRECTORY_SEPARATOR . $path;
         return fileHtmlContentByPath($path, $type);
     }
 
@@ -277,7 +277,7 @@ class CommonController extends Controller
 
         $file = $sdFile ? StrategicDocumentFile::find((int)$file) : File::find((int)$file);
 
-        if( !$user->can('delete', $file) ) {
+        if (!$user->can('delete', $file)) {
             abort(Response::HTTP_UNAUTHORIZED);
         }
 
@@ -286,15 +286,15 @@ class CommonController extends Controller
             File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL => url()->previous(),
             File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL => url()->previous(),
             File::CODE_OBJ_PUBLIC_CONSULTATION => url()->previous(),
-            File::CODE_OBJ_OGP => url()->previous().'#report',
-            default => url()->previous().'#ct-files',
+            File::CODE_OBJ_OGP => url()->previous() . '#report',
+            default => url()->previous() . '#ct-files',
         };
 
-        if( $file->code_object == File::CODE_OBJ_PUBLICATION ){
+        if ($file->code_object == File::CODE_OBJ_PUBLICATION) {
             $publication = Publication::where('file_id', '=', $file->id)
                 ->where('id', '=', $file->id_object)
                 ->first();
-            if($publication) {
+            if ($publication) {
                 $publication->file_id = null;
                 $publication->save();
             }
@@ -302,7 +302,7 @@ class CommonController extends Controller
 
         $file->delete();
 
-        if(!File::where('id', '<>', $file->id)->where('path', '=', $file->path)->count()){
+        if (!File::where('id', '<>', $file->id)->where('path', '=', $file->path)->count()) {
             if (Storage::disk($disk)->has($file->path)) {
                 Storage::disk($disk)->delete($file->path, $file->filename);
             }
@@ -319,7 +319,7 @@ class CommonController extends Controller
      */
     public function downloadPageFile(Request $request, File $file)
     {
-        if( $file->code_object != File::CODE_OBJ_PAGE ) {
+        if ($file->code_object != File::CODE_OBJ_PAGE) {
             return back()->with('warning', __('custom.record_not_found'));
         }
 
@@ -366,10 +366,10 @@ class CommonController extends Controller
                 break;
             case 'pc':
                 $explode = isset($requestData['search']) ? explode('/', $requestData['search']) : [];
-                if(sizeof($explode) == 2){
+                if (sizeof($explode) == 2) {
                     $requestData['reg_num'] = trim($explode[0]);
                     $requestData['title'] = trim($explode[1]);
-                } elseif(sizeof($explode) == 1){
+                } elseif (sizeof($explode) == 1) {
                     $requestData['title'] = trim($requestData['search']);
                 }
 //                $requestData['reg_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
@@ -380,14 +380,14 @@ class CommonController extends Controller
                 $filter = array();
                 $filter['search'] = $requestData['search'] ?? null;
                 $filter['sd_document_id'] = $requestData['document'];
-                if(isset($requestData['level'])) {
-                    if((int)$requestData['level'] == InstitutionCategoryLevelEnum::CENTRAL->value && isset($requestData['policy'])){
+                if (isset($requestData['level'])) {
+                    if ((int)$requestData['level'] == InstitutionCategoryLevelEnum::CENTRAL->value && isset($requestData['policy'])) {
                         $filter['field_of_action_id'] = (int)$requestData['policy'];
-                    } else if((int)$requestData['level'] == InstitutionCategoryLevelEnum::AREA->value && isset($requestData['areaPolicy'])){
+                    } else if ((int)$requestData['level'] == InstitutionCategoryLevelEnum::AREA->value && isset($requestData['areaPolicy'])) {
                         $filter['field_of_action_id'] = (int)$requestData['areaPolicy'];
-                    } else if((int)$requestData['level'] == InstitutionCategoryLevelEnum::MUNICIPAL->value && isset($requestData['municipalityPolicy'])){
+                    } else if ((int)$requestData['level'] == InstitutionCategoryLevelEnum::MUNICIPAL->value && isset($requestData['municipalityPolicy'])) {
                         $filter['field_of_action_id'] = (int)$requestData['municipalityPolicy'];
-                    } else{
+                    } else {
                         $filter['field_of_action_id'] = 0;
                     }
                 }
@@ -425,11 +425,12 @@ class CommonController extends Controller
      * @param $rowMonth
      * @return JsonResponse
      */
-    public function uploadFileLpOp(Request $request, $objectId, $typeObject, $rowNum, $rowMonth) {
+    public function uploadFileLpOp(Request $request, $objectId, $typeObject, $rowNum, $rowMonth)
+    {
 
         $req = new LanguageFileUploadRequest();
         $validator = Validator::make($request->all(), $req->rules());
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 200);
         }
 
@@ -445,7 +446,7 @@ class CommonController extends Controller
                 default => '',
             };
 
-            switch (((int)$typeObject)){
+            switch (((int)$typeObject)) {
                 case File::CODE_OBJ_OPERATIONAL_PROGRAM:
                     $item = OperationalProgram::find($objectId);
                     $route = route('admin.consultations.operational_programs.edit', $item);
@@ -460,20 +461,20 @@ class CommonController extends Controller
             foreach ($this->languages as $lang) {
                 $code = $lang['code'];
 
-                if (!isset($validated['file_'.$code])) {
+                if (!isset($validated['file_' . $code])) {
                     continue;
                 }
 
-                if (!isset($validated['file_'.$code])) {
+                if (!isset($validated['file_' . $code])) {
                     $file = $validated['file_bg'];
                     $desc = $validated['description_bg'] ?? null;
                 } else {
-                    $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
-                    $desc = isset($validated['description_'.$code]) && !empty($validated['description_'.$code]) ? $validated['description_'.$code] : ($validated['description_'.config('app.default_lang')] ?? null);
+                    $file = isset($validated['file_' . $code]) && $validated['file_' . $code] ? $validated['file_' . $code] : $validated['file_bg'];
+                    $desc = isset($validated['description_' . $code]) && !empty($validated['description_' . $code]) ? $validated['description_' . $code] : ($validated['description_' . config('app.default_lang')] ?? null);
                 }
 
                 $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $fileNameToStore = round(microtime(true)) . '.' . $file->getClientOriginalExtension();
                 $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
 
                 $newFile = new File([
@@ -481,17 +482,17 @@ class CommonController extends Controller
                     'code_object' => $typeObjectToSave,
                     'filename' => $fileNameToStore,
                     'content_type' => $file->getClientMimeType(),
-                    'path' => $pDir.$fileNameToStore,
-                    'description_'.$code => $desc,
+                    'path' => $pDir . $fileNameToStore,
+                    'description_' . $code => $desc,
                     'sys_user' => $request->user()->id,
                     'locale' => $code,
-                    'version' => ($version + 1).'.0',
+                    'version' => ($version + 1) . '.0',
                     'is_visible' => isset($validated['is_visible']) ? (int)$validated['is_visible'] : 0
                 ]);
                 $newFile->save();
                 $ocr = new FileOcr($newFile->refresh());
                 $ocr->extractText();
-                $item->rowFiles()->attach($newFile->id ,['row_month' => $rowMonth, 'row_num' => $rowNum]);
+                $item->rowFiles()->attach($newFile->id, ['row_month' => $rowMonth, 'row_num' => $rowNum]);
                 $item->save();
             }
 

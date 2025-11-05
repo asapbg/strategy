@@ -10,6 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class PrisStoreRequest extends FormRequest
 {
     use TranslatableFieldsRules;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -38,6 +39,7 @@ class PrisStoreRequest extends FormRequest
 //            'protocol' => ['required', 'string'],
             'public_consultation_id' => ['nullable', 'numeric'],
             'newspaper_number' => ['nullable', 'numeric'],
+            'tags_list' => ['nullable', 'string'],
             'newspaper_year' => ['nullable', 'date_format:Y', 'max:4'],
             'tags' => ['array'],
             'tags.*' => ['required', 'exists:tag,id'],
@@ -46,14 +48,14 @@ class PrisStoreRequest extends FormRequest
             'protocol_point' => ['nullable', 'numeric', 'gt:0'],
         ];
 
-        if( request()->isMethod('put') ) {
+        if (request()->isMethod('put')) {
             $rules['id'] = ['required', 'numeric', 'exists:pris,id'];
             $rules['doc_num'] = ['required', 'string', new UniquePrisNumber(request()->input('legal_act_type_id'), request()->input('doc_date'), request()->input('id'))];
         }
 
         foreach (config('available_languages') as $lang) {
             foreach (Pris::translationFieldsProperties() as $field => $properties) {
-                $rules[$field.'_'.$lang['code']] = $properties['rules'];
+                $rules[$field . '_' . $lang['code']] = $properties['rules'];
             }
         }
 

@@ -31,10 +31,14 @@ class FilePolicy
      */
     public function delete(User $user, File $file)
     {
-        return ($file->code_object == File::CODE_OBJ_PUBLICATION || $file->code_object == File::CODE_OBJ_PAGE
+        return
+            (
+                $file->code_object == File::CODE_OBJ_PUBLICATION || $file->code_object == File::CODE_OBJ_PAGE
+                || $file->code_object == File::CODE_OBJ_PRIS
                 || $file->code_object == File::CODE_OBJ_OPERATIONAL_PROGRAM_GENERAL || $file->code_object == File::CODE_OBJ_LEGISLATIVE_PROGRAM_GENERAL
                 || $file->code_object == File::CODE_OBJ_STRATEGIC_DOCUMENT || $file->code_object == File::CODE_OBJ_STRATEGIC_DOCUMENT_CHILDREN
-                || $file->code_object == File::CODE_OBJ_OGP || $file->code_object == File::CODE_OBJ_PUBLIC_CONSULTATION)
+                || $file->code_object == File::CODE_OBJ_OGP || $file->code_object == File::CODE_OBJ_PUBLIC_CONSULTATION
+            )
             && $user->user_type == User::USER_TYPE_INTERNAL;
     }
 }

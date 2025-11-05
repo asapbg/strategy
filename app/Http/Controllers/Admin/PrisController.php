@@ -153,11 +153,13 @@ class PrisController extends AdminController
         $id = $validated['id'];
         $item = $id ? $this->getRecord($id) : new Pris();
 
-        if (($id && $request->user()->cannot('update', $item))
-            || (!$id && $request->user()->cannot('create', $item))) {
+        if (
+            ($id && $request->user()->cannot('update', $item))
+            || (!$id && $request->user()->cannot('create', $item))
+        ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
-
+        //dd($tags_from_list, $tags);
         DB::beginTransaction();
         try {
             $fillable = $this->getFillableValidated($validated, $item);
@@ -169,7 +171,32 @@ class PrisController extends AdminController
 
             $item->save();
 
-            $item->tags()->sync($validated['tags'] ?? []);
+            $tags = $validated['tags'] ?? [];
+            $tags_from_list = explode(',', $validated['tags_list']);
+            foreach ($tags_from_list as $check_tag) {
+                $check_tag = trim($check_tag);
+                if (empty($check_tag)) {
+                    continue;
+                }
+                $exist = Tag::select('id')
+                    ->whereHas('translation', function ($q) use ($check_tag) {
+                        $q->where('label', '=', $check_tag)->where('locale', '=', 'bg');
+                    })
+                    ->orWhereHas('translation', function ($q) use ($check_tag) {
+                        $q->where('label', '=', $check_tag)->where('locale', '=', 'en');
+                    })
+                    ->first();
+                if ($exist && !in_array($exist->id, $tags)) {
+                    $tags[] = $exist->id;
+                    continue;
+                }
+                $tag = new Tag();
+                $tag->save();
+                $this->storeTranslateOrNew(Tag::TRANSLATABLE_FIELDS, $tag, ['label_bg' => $check_tag,'label_en' => $check_tag]);
+                $tags[] = $tag->id;
+            }
+
+            $item->tags()->sync($tags);
             if (!empty($validated['institutions'])) {
                 $item->institutions()->sync($validated['institutions']);
             }
@@ -213,15 +240,16 @@ class PrisController extends AdminController
         if (isset($validated['connectIds'])) {
             $item->changedDocs()->attach(
                 $validated['connectIds'],
-                ['connect_type' => $validated['connect_type'], 'connect_text' => $validated['connect_text']]
+                ['connect_type' => $validated['connect_type'], 'connect_text' => $validated['connect_text'], 'created_at' => now()]
             );
-            Pris::whereIn('id', $validated['connectIds'])->update(['connection_status' => PrisDocChangeTypeEnum::toStatus($validated['connect_type'])]);
+            //Pris::whereIn('id', $validated['connectIds'])->update(['connection_status' => PrisDocChangeTypeEnum::toStatus($validated['connect_type'])]);
         } else {
             DB::table('pris_change_pris')->insert([
                 'pris_id' => $item->id,
                 'changed_pris_id' => null,
                 'connect_type' => $validated['connect_type'],
-                'connect_text' => $validated['connect_text']
+                'connect_text' => $validated['connect_text'],
+                'created_at' => now(),
             ]);
         }
 

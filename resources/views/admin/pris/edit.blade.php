@@ -366,6 +366,11 @@
                                                         <div class="text-danger mt-1">{{ $message }}</div>
                                                         @enderror
                                                     </div>
+                                                    <div class="col-12 mt-2">
+                                                        <input name="tags_list" type="text" class="form-control" placeholder="Термини разделени със запетая"
+                                                            value="{{ old('tags_list') }}"
+                                                        >
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -407,7 +412,7 @@
                                     <input type="hidden" name="formats" value="ALLOWED_FILE_PRIS">
                                     @foreach(config('available_languages') as $lang)
                                         <div class="col-md-6 mb-3">
-                                            <label for="description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }}<span class="required">*</span> </label>
+                                            <label for="description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }} </label>
                                             <input value="{{ old('description_'.$lang['code'], '') }}" class="form-control form-control-sm @error('description_'.$lang['code']) is-invalid @enderror" id="description_{{ $lang['code'] }}" type="text" name="description_{{ $lang['code'] }}">
                                             @error('description_'.$lang['code'])
                                             <span class="text-danger">{{ $message }}</span>
@@ -435,7 +440,14 @@
                                                 <a class="mr-3" href="{{ route('admin.download.file', $f) }}" target="_blank" title="{{ __('custom.download') }}">
                                                     {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }} - {{ __('custom.'.$f->locale) }} | {{ __('custom.version_short').' '.$f->version }} | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
                                                 </a>
-                                                <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $f->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}">{{ __('custom.preview') }}</button>
+                                                <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $f->id }}"
+                                                        data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
+                                                >
+                                                    {{ __('custom.preview') }}
+                                                </button>
+                                                <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
+                                                    <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                </a>
                                             </div>
                                         @endforeach
                                     </div>
@@ -538,6 +550,7 @@
                 $('.add-tag').on('click', function (){
                     new MyModal({
                         title: '<?php echo __('custom.new_tag') ?>',
+                        customClass: 'width-40',
                         footer: '<button type="button" class="btn btn-success" onclick="validateTagForm();">' + '<?php echo __('custom.add') ?> ' + '</button><button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="'+ '<?php echo __('custom.cancel') ?>' +'">'+ '<?php echo __('custom.cancel') ?>' +'</button>',
                         bodyLoadUrl: $(this).data('url'),
                     });
