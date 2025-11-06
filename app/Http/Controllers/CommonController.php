@@ -349,6 +349,7 @@ class CommonController extends Controller
                 $explode = isset($requestData['search']) ? explode('/', $requestData['search']) : [];
                 $requestData['year'] = sizeof($explode) && isset($explode[1]) ? $explode[1] : '';
                 $requestData['doc_num'] = sizeof($explode) && isset($explode[0]) ? $explode[0] : '';
+                $requestData['can_access_orders'] = $this->canAccessOrders($request);
                 $data = Pris::select2AjaxOptions($requestData);
                 break;
             case 'lp_record':

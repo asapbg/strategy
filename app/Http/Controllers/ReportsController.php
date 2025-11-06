@@ -1184,6 +1184,7 @@ class ReportsController extends Controller
                         ->whereNull('pris.deleted_at')
                         ->whereNotNull('pris.published_at')
                         ->whereIn('pris.legal_act_type_id', LegalActType::IN_PRIS)
+                        ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER)
                         ->where('pris.asap_last_version', '=', 1)
                         ->where('pris.in_archive', '=', $inArchive)
 //                    ->where('pris.id', '=', 131703)

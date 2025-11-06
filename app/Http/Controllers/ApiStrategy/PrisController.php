@@ -200,6 +200,7 @@ class PrisController extends ApiController
             })
             ->where('pris.id', '=', $id)
             ->whereIn('pris.legal_act_type_id', LegalActType::IN_PRIS)
+            ->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER)
             ->where('pris.asap_last_version', '=', 1);
 
             if(!$this->authanticated){

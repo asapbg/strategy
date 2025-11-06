@@ -14,18 +14,21 @@ class LegalActType extends ModelActivityExtend implements TranslatableContract
     const PAGINATE = 20;
     const TRANSLATABLE_FIELDS = ['name', 'name_single'];
     const MODULE_NAME = ('custom.nomenclatures.legal_act_type');
-    const TYPE_ORDER = 7;
-    const TYPE_ARCHIVE = 8;
-    const TYPE_REPORT = 9;
     const TYPE_DECREES = 1;
     const TYPE_DECISION = 2;
     const TYPE_PROTOCOL_DECISION = 3;
     const TYPE_DISPOSITION = 4;
     const TYPE_PROTOCOL = 5;
     const TYPE_TRANSCRIPTS = 6;
+    const TYPE_ORDER = 7;
+    const TYPE_ARCHIVE = 8;
+    const TYPE_REPORT = 9;
     const TYPE_LAW = 14;
 
-    const IN_PRIS = [self::TYPE_DECREES, self::TYPE_DECISION, self::TYPE_PROTOCOL_DECISION, self::TYPE_DISPOSITION, self::TYPE_PROTOCOL, self::TYPE_TRANSCRIPTS];
+    const IN_PRIS = [
+        self::TYPE_DECREES, self::TYPE_DECISION, self::TYPE_PROTOCOL_DECISION,
+        self::TYPE_DISPOSITION, self::TYPE_PROTOCOL, self::TYPE_TRANSCRIPTS, self::TYPE_ORDER
+    ];
     /**
      * 2 - Decision
      * 3 - Protocol Decisions
