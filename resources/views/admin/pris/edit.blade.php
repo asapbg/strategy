@@ -299,15 +299,13 @@
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        @if($item->changedDocs->count() || $item->changedByDocs->count() || $item->changedDocsWithoutRelation->count())
+                                                        @if(
+                                                            $item->changedDocs->count()
+                                                            || $item->changedByDocs->count()
+                                                            || $item->changedDocsWithoutRelation->count()
+                                                            || $item->changedByDocsWithoutRelation->count()
+                                                        )
                                                             <div class="col-12 mt-4" id="connected_documents">
-                                                                @foreach($item->changedDocsWithoutRelation as $pris)
-                                                                    <div id="disconnect_text_{{ $item->id }}">
-                                                                        <i class="text-primary fas fa-link mr-2"></i>
-                                                                        {{ $pris->connect_text }}
-                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-text="{{ $pris->connect_text }}" role="button"></i>
-                                                                    </div>
-                                                                @endforeach
                                                                 @foreach($item->changedDocs as $pris)
                                                                     <div id="disconnect_{{ $pris->id }}">
                                                                         <a class="mr-2" href="{{ route('admin.pris.edit', $pris->id) }}" target="_blank">
@@ -326,6 +324,20 @@
                                                                             {{ $pris->actType->name_single }} {{ $pris->regNum }} {{ $pris->pivot->connect_text ? "({$pris->pivot->connect_text})" : "" }}
                                                                         </a>
                                                                         <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
+                                                                    </div>
+                                                                @endforeach
+                                                                @foreach($item->changedDocsWithoutRelation as $pris)
+                                                                    <div id="disconnect_text_{{ $item->id }}">
+                                                                        <i class="text-primary fas fa-link mr-2"></i>
+                                                                        {{ $pris->full_text }}
+                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-text="{{ $pris->full_text }}" role="button"></i>
+                                                                    </div>
+                                                                @endforeach
+                                                                @foreach($item->changedByDocsWithoutRelation as $pris)
+                                                                    <div id="disconnect_text_{{ $item->id }}">
+                                                                        <i class="text-primary fas fa-link mr-2"></i>
+                                                                        {{ $pris->full_text }}
+                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-text="{{ $pris->full_text }}" role="button"></i>
                                                                     </div>
                                                                 @endforeach
                                                             </div>

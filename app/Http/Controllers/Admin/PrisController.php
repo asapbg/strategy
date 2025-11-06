@@ -55,18 +55,21 @@ class PrisController extends AdminController
         $locale = app()->getLocale();
         $condition = $upperLowerCase ? 'LIKE' : 'ILIKE';
         $whereImporter = "pris.old_importers $condition '%$importer%'
-                    OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND importer::text $condition '%$importer%')
-                ";
+            OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND importer::text $condition '%$importer%')
+        ";
         if ($fullKeyword) {
             $whereImporter = "(";
-            $whereImporter .= "pris.old_importers $condition '% $importer %'";
-            $whereImporter .= " OR pris.old_importers $condition '% $importer'";
-            $whereImporter .= " OR pris.old_importers $condition '$importer %'";
+            $whereImporter .= "pris.old_importers $condition ',% $importer'";
+            $whereImporter .= " OR pris.old_importers $condition '$importer,%'";
+            $whereImporter .= " OR pris.old_importers = '$importer'";
+            if (!$upperLowerCase) {
+                $whereImporter .= " OR LOWER(pris.old_importers) = '$importer'";
+            }
             $whereImporter .= ")";
             $whereImporter .= " OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND (";
-            $whereImporter .= "importer::text $condition '% $importer %'";
-            $whereImporter .= " OR importer::text $condition '% $importer'";
-            $whereImporter .= " OR importer::text $condition '$importer %'";
+            $whereImporter .= "importer::text $condition ',% $importer'";
+            $whereImporter .= " OR importer::text $condition '$importer,%'";
+            $whereImporter .= " OR importer::text = '$importer'";
             $whereImporter .= "))";
         }
 

@@ -30,7 +30,7 @@ class FullSearch extends QueryFilter implements FilterContract
                 $whereFulltext = $value;
                 $whereTag = "tag_translations.label $condition '%$value%'";
                 $whereAbout = "pris_translations.about $condition '%$value%'";
-                $whereChanges = "change.full_text $condition '%$value%'";
+                $whereChanges = "full_text $condition '%$value%'";
                 $whereLegalReason = "pris_translations.legal_reason $condition '%$value%'";
                 $whereImporter = "pris.old_importers $condition '%$value%'
                     OR exists (select * from pris_translations t where pris.id = t.pris_id and locale = '$locale' AND importer::text $condition '%$value%')
@@ -40,6 +40,7 @@ class FullSearch extends QueryFilter implements FilterContract
 
                     $whereAbout = $this->buildWhereAbout($condition, $value);
                     $whereLegalReason = $this->buildWhereLegalReason($condition, $value);
+                    $whereChanges = $this->buildWhereChanges($condition, $value);
 
                     $whereImporter = "(";
                     $whereImporter .= "pris.old_importers $condition ',% $value'";
@@ -63,50 +64,44 @@ class FullSearch extends QueryFilter implements FilterContract
                     $whereFulltext = "";
                     $whereAbout = "(";
                     $whereLegalReason = "(";
+                    $whereChanges = "(";
                     if ($logicalAnd == "OR") {
                         $whereTag = "(";
-                        $whereChanges = "(";
                         foreach ($tags as $key => $tag) {
                             $tag = trim($tag);
                             if ($key === 0) {
                                 $whereFulltext .= $tag;
                                 if ($upperLowerCase) {
                                     $whereTag .= $fullKeyword ? "tag_translations.label = '$tag'" : "tag_translations.label ILIKE '%$tag%'";
-                                    $whereChanges .= $fullKeyword ? "change.full_text = '$tag'" : "change.full_text ILIKE '%$tag%'";
                                 } else {
                                     $whereTag .= $fullKeyword
                                         ? "LOWER(TRIM(tag_translations.label)) = '".mb_strtolower($tag)."'"
                                         : "LOWER(TRIM(tag_translations.label)) ILIKE '%".mb_strtolower($tag)."%'";
-                                    $whereChanges .= $fullKeyword
-                                        ? "LOWER(TRIM(change.full_text)) = '".mb_strtolower($tag)."'"
-                                        : "LOWER(TRIM(change.full_text)) ILIKE '%".mb_strtolower($tag)."%'";
                                 }
                             } else {
                                 $whereFulltext .= " | $tag";
                                 if ($upperLowerCase) {
                                     $whereTag .= $fullKeyword ? " OR tag_translations.label = '$tag'" : "OR tag_translations.label ILIKE '%$tag%'";
-                                    $whereChanges .= $fullKeyword ? " OR change.full_text = '$tag'" : "OR change.full_text ILIKE '%$tag%'";
                                 } else {
                                     $whereTag .= $fullKeyword
                                         ? " OR LOWER(TRIM(tag_translations.label)) = '".mb_strtolower($tag)."'"
                                         : " OR LOWER(TRIM(tag_translations.label)) ILIKE '%".mb_strtolower($tag)."%'";
-                                    $whereChanges .= $fullKeyword
-                                        ? " OR LOWER(TRIM(change.full_text)) = '".mb_strtolower($tag)."'"
-                                        : " OR LOWER(TRIM(change.full_text)) ILIKE '%".mb_strtolower($tag)."%'";
                                 }
                                 $whereAbout .= " OR ";
                                 $whereLegalReason .= " OR ";
+                                $whereChanges .= " OR ";
                             }
                             if ($fullKeyword) {
                                 $whereAbout = $this->buildWhereAbout($condition, $tag, $whereAbout);
                                 $whereLegalReason = $this->buildWhereLegalReason($condition, $tag, $whereLegalReason);
+                                $whereChanges = $this->buildWhereChanges($condition, $tag, $whereChanges);
                             } else {
                                 $whereAbout .= "pris_translations.about $condition '%$tag%'";
                                 $whereLegalReason .= "pris_translations.legal_reason $condition '%$tag%'";
+                                $whereChanges .= "full_text $condition '%$tag%'";
                             }
                         }
                         $whereTag .= " )";
-                        $whereChanges .= " )";
                     } else {
                         foreach ($tags as $key => $tag) {
                             $tag = trim($tag);
@@ -114,6 +109,7 @@ class FullSearch extends QueryFilter implements FilterContract
                             if ($key === 0) {
                                 $whereAbout .= "(";
                                 $whereLegalReason .= "(";
+                                $whereChanges .= "(";
                                 $whereFulltext .= $tag;
                                 $trimmed_tags .= $upperLowerCase ? "'$tag'" : "'".mb_strtolower($tag)."'";
                             } else {
@@ -121,18 +117,22 @@ class FullSearch extends QueryFilter implements FilterContract
                                 $trimmed_tags .= $upperLowerCase ? ", '$tag'" : ", '".mb_strtolower($tag)."'";
                                 $whereAbout .= " AND (";
                                 $whereLegalReason .= " AND (";
+                                $whereChanges .= " AND (";
                             }
                             if ($fullKeyword) {
                                 $whereAbout = $this->buildWhereAbout($condition, $tag, $whereAbout).")";
                                 $whereLegalReason = $this->buildWhereLegalReason($condition, $tag, $whereLegalReason).")";
+                                $whereChanges = $this->buildWhereChanges($condition, $tag, $whereChanges).")";
                             } else {
                                 $whereAbout .= "pris_translations.about $condition '%$tag%'".")";
                                 $whereLegalReason .= "pris_translations.legal_reason $condition '%$tag%'".")";
+                                $whereChanges .= "full_text $condition '%$tag%'".")";
                             }
                         }
                     }
                     $whereAbout .= ")";
                     $whereLegalReason .= ")";
+                    $whereChanges .= " )";
                 }
                 //dd($whereChanges);
                 $queryTag = "pris.id in (
@@ -142,8 +142,12 @@ class FullSearch extends QueryFilter implements FilterContract
                      WHERE $whereTag
                 )";
                 $queryChanges = "pris.id in (
-                    SELECT change.pris_id
-                      FROM pris_change_pris as change
+                    SELECT pris_id
+                      FROM pris_change_pris
+                     WHERE $whereChanges
+                ) OR pris.id in (
+                    SELECT changed_pris_id
+                      FROM pris_change_pris
                      WHERE $whereChanges
                 )";
                 if ($logicalAnd == "AND" && !empty($trimmed_tags) && isset($tags_count) && $searchInTags) {
@@ -185,40 +189,46 @@ class FullSearch extends QueryFilter implements FilterContract
                         HAVING $having
                     )";
                 }
-                if ($logicalAnd == "AND" && !empty($trimmed_tags) && isset($tags_count) && $searchInChanges) {
-                    $whereText = $upperLowerCase ? "TRIM(change.full_text)" : "LOWER(TRIM(change.full_text))";
-                    if ($fullKeyword) {
-                        $whereClause = "$whereText IN ($trimmed_tags)";
-                        $having = "COUNT(DISTINCT change.full_text) = $tags_count";
-                    } else {
-                        $patterns = array_map(function($tag) use ($whereText) {
-                            $tag = trim($tag);
-                            if ($tag === '') {
-                                return null;
-                            }
-                            return "($whereText ILIKE '%$tag%')";
-                        }, $tags);
-                        $patterns = array_filter($patterns);
-                        $whereClause = implode(' OR ', $patterns);
-                        $patterns = array_map(function($tag) {
-                            $tag = trim($tag);
-                            if ($tag === '') {
-                                return null; // игнориране на празни стойности
-                            }
-                            return "COUNT(DISTINCT CASE WHEN LOWER(TRIM(change.full_text)) ILIKE '%$tag%' THEN change.full_text END) > 0";
-                        }, $tags);
-                        $patterns = array_filter($patterns);
-                        $having = implode(' AND ', $patterns);
-                    }
-                    //dd($whereClause);
-                    $queryChanges = "pris.id in (
-                        SELECT change.pris_id
-                          FROM pris_change_pris as change
-                         WHERE $whereClause
-                      GROUP BY change.pris_id
-                        HAVING $having
-                    )";
-                }
+//                if ($logicalAnd == "AND" && !empty($trimmed_tags) && isset($tags_count) && $searchInChanges) {
+//                    $whereText = $upperLowerCase ? "TRIM(full_text)" : "LOWER(TRIM(full_text))";
+//                    if ($fullKeyword) {
+//                        $whereClause = "$whereText IN ($trimmed_tags)";
+//                        $having = "COUNT(DISTINCT full_text) = $tags_count";
+//                    } else {
+//                        $patterns = array_map(function($tag) use ($whereText) {
+//                            $tag = trim($tag);
+//                            if ($tag === '') {
+//                                return null;
+//                            }
+//                            return "($whereText ILIKE '%$tag%')";
+//                        }, $tags);
+//                        $patterns = array_filter($patterns);
+//                        $whereClause = implode(' OR ', $patterns);
+//                        $patterns = array_map(function($tag) {
+//                            $tag = trim($tag);
+//                            if ($tag === '') {
+//                                return null; // игнориране на празни стойности
+//                            }
+//                            return "COUNT(DISTINCT CASE WHEN LOWER(TRIM(full_text)) ILIKE '%$tag%' THEN full_text END) > 0";
+//                        }, $tags);
+//                        $patterns = array_filter($patterns);
+//                        $having = implode(' AND ', $patterns);
+//                    }
+//                    //dd($whereClause);
+//                    $queryChanges = "pris.id in (
+//                        SELECT pris_id
+//                          FROM pris_change_pris
+//                         WHERE $whereClause
+//                      GROUP BY pris_id
+//                        HAVING $having
+//                    ) OR pris.id in (
+//                        SELECT changed_pris_id
+//                          FROM pris_change_pris
+//                         WHERE $whereClause
+//                      GROUP BY changed_pris_id
+//                        HAVING $having
+//                    )";
+//                }
                 //dd($queryChanges);
                 //dd($queryTag);$fullKeyword, $upperLowerCase
                 if ($searchInFiles || $searchInAbout || $searchInChanges || $searchInLegalReason || $searchInTags || $searchInImporter) {
@@ -280,69 +290,6 @@ class FullSearch extends QueryFilter implements FilterContract
 
             });
         }
-    }
-
-    /**
-     * @param string $condition
-     * @param $value
-     * @return string
-     */
-    function buildWhereAbout(string $condition, $value, $whereAbout = null): string
-    {
-        $whereAbout = ($whereAbout) ? $whereAbout . "(" : "(";
-        $like_conditions = $this->getLikeConditions($value);
-        foreach ($like_conditions as $key => $like_condition) {
-            $whereAbout .= $key == 0
-                ? "pris_translations.about $condition $like_condition"
-                : " OR pris_translations.about $condition $like_condition";
-        }
-        $whereAbout .= ")";
-        return $whereAbout;
-    }
-
-    /**
-     * @param string $condition
-     * @param $value
-     * @return string
-     */
-    function buildWhereChanges(string $condition, $value, $whereChanges = null): string
-    {
-        $whereChanges = ($whereChanges) ? $whereChanges . "(" : "(";
-        $like_conditions = $this->getLikeConditions($value);
-        foreach ($like_conditions as $key => $like_condition) {
-            $whereChanges .= $key == 0
-                ? "changes_from.full_text $condition $like_condition OR changes_to.full_text $condition $like_condition"
-                : " OR changes_from.full_text $condition $like_condition OR changes_to.full_text $condition $like_condition";
-        }
-        $whereChanges .= ")";
-        return $whereChanges;
-    }
-
-    /**
-     * @param string $condition
-     * @param $value
-     * @return string
-     */
-    function buildWhereLegalReason(string $condition, $value, $whereLegalReason = null): string
-    {
-        $whereLegalReason = ($whereLegalReason) ? $whereLegalReason . "(" : "(";
-        $like_conditions = $this->getLikeConditions($value);
-        foreach ($like_conditions as $key => $like_condition) {
-            $whereLegalReason .= $key == 0
-                ? "pris_translations.legal_reason $condition $like_condition"
-                : " OR pris_translations.legal_reason $condition $like_condition";
-        }
-        $whereLegalReason .= ")";
-        return $whereLegalReason;
-    }
-
-    /**
-     * @param $value
-     * @return array
-     */
-    private function getLikeConditions($value): array
-    {
-        return ["'% $value %'", "'% $value'", "'$value %'", "'$value,%'", "'$value/%'", "'% $value,%'", "'% $value/%'"];
     }
 }
 
