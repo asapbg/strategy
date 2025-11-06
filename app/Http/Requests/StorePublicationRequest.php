@@ -32,7 +32,10 @@ class StorePublicationRequest extends FormRequest
     {
         $rules = [
             'id' => ['required', 'numeric'],
-            'slug' => ['nullable', 'string', 'max:255', Rule::unique('publication', 'slug')->ignore((int)request()->input('id'))],
+            'slug' => [
+                'nullable', 'string', 'max:255',
+                //Rule::unique('publication', 'slug')->ignore((int)request()->input('id'))
+            ],
             'type' => ['required', 'numeric'],
             'stay' => ['nullable', 'numeric'],
             'stay_in_files' => ['nullable', 'numeric'],

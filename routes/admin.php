@@ -69,10 +69,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Publications
     Route::controller(PublicationController::class)->group(function () {
-        Route::get('/library', 'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
-        Route::get('/library/edit/{type}/{item?}', 'edit')->name('publications.edit');
+        Route::get('/library',                                  'index')->name('publications.index')->middleware('can:viewAny,App\Models\Publication');
+        Route::get('/library/edit/{type}/{item?}',              'edit')->name('publications.edit');
         Route::match(['post', 'put'], '/publications/store/{item?}', 'store')->name('publications.store');
-        Route::post('/library/{item}/delete', 'destroy')->name('publications.delete');
+        Route::post('/library/{item}/delete',                   'destroy')->name('publications.delete');
     });
 
     // Consultations
