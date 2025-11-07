@@ -45,23 +45,23 @@ class ImpactAssessmentController extends Controller
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => __('site.base_info'), 'url' => '']));
 
-        $library = Page::with(['translations'])
+        $libraryPages = Page::with(['translations'])
             ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
             ->orderBy('order_idx', 'asc')
             ->get();
-        return $this->view('impact_assessment.index', compact('pageTitle', 'library'));
+        return $this->view('impact_assessment.index', compact('pageTitle', 'libraryPages'));
     }
 
     public function forms()
     {
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => __('site.impact_assessment.forms_and_templates'), 'url' => '']));
-        $library = Page::with(['translations'])
+        $libraryPages = Page::with(['translations'])
             ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
             ->orderBy('order_idx', 'asc')
             ->get();
 
-        return $this->view('impact_assessment.forms', compact('pageTitle', 'library'));
+        return $this->view('impact_assessment.forms', compact('pageTitle', 'libraryPages'));
     }
 
     public function form($formName, Request $request)
@@ -78,11 +78,11 @@ class ImpactAssessmentController extends Controller
             ['name' => __("forms.$formName"), 'url' => '']
         ));
 
-        $library = Page::with(['translations'])
+        $libraryPages = Page::with(['translations'])
             ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
             ->orderBy('order_idx', 'asc')
             ->get();
-        return $this->view('site.impact_assessment', compact('pageTitle', 'formName', 'state', 'step', 'steps', 'inputId', 'library'));
+        return $this->view('site.impact_assessment', compact('pageTitle', 'formName', 'state', 'step', 'steps', 'inputId', 'libraryPages'));
     }
 
     public function store($formName, Request $request)
@@ -183,11 +183,11 @@ class ImpactAssessmentController extends Controller
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => __("forms.$formName"), 'url' => '']));
 
-        $library = Page::with(['translations'])
+        $libraryPages = Page::with(['translations'])
             ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
             ->orderBy('order_idx', 'asc')
             ->get();
-        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly', 'pageTitle', 'library'));
+        return view('impact_assessment.show', compact('formName', 'steps', 'state', 'readOnly', 'pageTitle', 'libraryPages'));
     }
 
     public function pdf($formName, $inputId)
@@ -305,13 +305,13 @@ class ImpactAssessmentController extends Controller
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => __('List of individuals and legal entities'), 'url' => '']));
 
-        $library = Page::with(['translations'])
+        $libraryPages = Page::with(['translations'])
             ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
             ->orderBy('order_idx', 'asc')
             ->get();
 
         return $this->view('impact_assessment.executors',
-            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle', 'institutions','library', 'requestFilter'));
+            compact('executors', 'min_price', 'max_price', 'p_min', 'p_max', 'is_search', 'paginate','pageTitle', 'institutions','libraryPages', 'requestFilter'));
     }
 
     public function libraryView(Request $request, $slug = ''){
@@ -333,11 +333,11 @@ class ImpactAssessmentController extends Controller
             ['name' => $page->name, 'url' => '']
         ));
 
-        $library = Page::with(['translations'])
+        $libraryPages = Page::with(['translations'])
             ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
             ->orderBy('order_idx', 'asc')
             ->get();
-        return $this->view('impact_assessment.page', compact('page', 'pageTitle', 'library'));
+        return $this->view('impact_assessment.page', compact('page', 'pageTitle', 'libraryPages'));
     }
 
     /**
