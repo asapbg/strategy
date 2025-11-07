@@ -14,7 +14,7 @@
                         <div class="col-12 mb-5 ">
                             <div class="member d-flex align-items-center p-3 custom-shadow br-08">
 
-                                <form class="col-12 mb-4 " action="{{ route('contacts.message') }}" method="POST">
+                                <form id="contact-form" class="col-12 mb-4" action="{{ route('contacts.message') }}" method="POST">
                                     @csrf
                                         <div class="row">
                                             <div class="col-12">
@@ -34,6 +34,35 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="input-group ">
+                                                    <div class="mb-3 d-flex flex-column w-100">
+                                                        <label for="name" class="form-label">{{ __('custom.name') }}
+                                                        <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror">
+                                                        @error('name')
+                                                        <div class="text-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="input-group ">
+                                                    <div class="mb-3 d-flex flex-column w-100">
+                                                        <label for="email" class="form-label">{{ __('custom.email') }} <span class="required">*</span></label>
+                                                        <input type="text" id="email" name="email" class="form-control @error('email') is-invalid @enderror">
+                                                        @error('email')
+                                                        <div class="text-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="input-group ">
@@ -49,7 +78,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">{{ __('custom.send') }}</button>
+
+                                    <p>{!! __('messages.contacts_message') !!}</p>
+                                        <button class="btn btn-primary g-recaptcha"
+                                                data-sitekey="{{ config('recaptcha.site_key') }}"
+                                                data-callback='onSubmit'
+                                                data-action='submit'>{{ __('custom.send') }}</button>
                                 </form>
 
                             </div>
@@ -146,4 +180,11 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            function onSubmit(token) {
+                document.getElementById("contact-form").submit();
+            }
+        </script>
+    @endpush
 @endsection
