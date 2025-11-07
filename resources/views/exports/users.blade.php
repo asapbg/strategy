@@ -18,6 +18,7 @@
         <th>Последен вход на</th>
         <th>{{__('custom.active_m')}}</th>
         <th>Роля</th>
+        <th>Институция</th>
         <th>Създаден на</th>
         <th>Обновен на</th>
         <th>Изтрит на</th>
@@ -46,6 +47,7 @@
                 <td>
                     {{ implode(', ',$user->roles->pluck('display_name')->toArray()) }}
                 </td>
+                <td>{{$user->institution?->name }}</td>
                 <td>{{$user->created_at}}</td>
                 <td>{{$user->updated_at}}</td>
                 <td>{{$user->deleted_at}}</td>

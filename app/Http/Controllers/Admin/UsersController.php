@@ -96,7 +96,7 @@ class  UsersController extends Controller
         $name = ($request->filled('name')) ? $request->get('name') : null;
         $email = ($request->filled('email')) ? $request->get('email') : null;
         $role_id = ($request->filled('role_id')) ? $request->get('role_id') : null;
-        $users = User::with('roles')
+        $users = User::with(['roles', 'institution'])
             ->when($role_id, function ($query, $role_id) {
             return $query->whereHas('roles', function ($q) use ($role_id) {
                 $q->where('id', $role_id);
