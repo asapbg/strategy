@@ -655,7 +655,7 @@ $(document).ready(function () {
         if(e.which == 13) {
             if($('.ajaxSearch').length){
                 e.preventDefault();
-                $('.filter-results').parent().find('.ajaxSearch').trigger('click');
+                $('.filter-results').parent().find('.ajaxSearch').first().trigger('click');
             }
         }
     });

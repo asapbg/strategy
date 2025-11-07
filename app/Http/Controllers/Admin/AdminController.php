@@ -78,12 +78,12 @@ class AdminController extends Controller
             foreach ($fields as $field) {
                 $fieldName = $field."_".$locale['code'];
                 if((is_null($item) || !$item->id)
-                    || (!isset($validated[$fieldName]) && ($item->id && !empty($item->translate($locale['code'])->{$field})) )
-                    || ($item->id && isset($validated[$fieldName]) && $item->translate($locale['code'])->{$field} != $validated[$fieldName])){
+                    || (!isset($validated[$fieldName]) && ($item->id && !empty($item->translate($locale['code'])?->{$field})) )
+                    || ($item->id && isset($validated[$fieldName]) && $item->translate($locale['code'])?->{$field} != $validated[$fieldName])){
                     if(!isset($changes[$locale['code']])){
                         $changes[$locale['code']] = array();
                     }
-                    $changes[$locale['code']][$field] = ['old' => $item->id ? $item->translate($locale['code'])->{$field} : '', 'new' => $validated[$fieldName]];
+                    $changes[$locale['code']][$field] = ['old' => $item->id ? $item->translate($locale['code'])?->{$field} : '', 'new' => $validated[$fieldName]];
                 }
             }
         }
