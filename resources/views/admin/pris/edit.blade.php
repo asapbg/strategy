@@ -329,6 +329,7 @@
                                                                 @foreach($item->changedDocsWithoutRelation as $pris)
                                                                     <div id="disconnect_text_{{ $item->id }}">
                                                                         <i class="text-primary fas fa-link mr-2"></i>
+
                                                                         {{ $pris->full_text }}
                                                                         <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-text="{{ $pris->full_text }}" role="button"></i>
                                                                     </div>

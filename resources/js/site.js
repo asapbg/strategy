@@ -274,15 +274,18 @@ function initInputs() {
 function institutionControl(){
     let level = $('#level');
     let levelVals = level.val();
-    if($('#importers').length){
+    if (isEmpty(levelVals)) {
+        return;
+    }
+    if ($('#importers').length) {
         $('#importers option').each(function (){
             let opt = $(this);
-            if(typeof opt.data('level') == 'undefined'){
+            if (isEmpty(opt.data('level'))) {
                 $(this).attr('disabled', false);
-            } else{
-                if(levelVals.indexOf(opt.data('level').toString()) != -1){
+            } else {
+                if (levelVals.includes(String(opt.data('level')))) {
                     $(this).attr('disabled', false);
-                } else{
+                } else {
                     $(this).attr('disabled', true);
                 }
             }

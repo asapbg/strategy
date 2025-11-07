@@ -70,14 +70,19 @@ class PublicConsultationController extends Controller
         $closeSearchForm = true;
         if ($request->ajax()) {
             $closeSearchForm = false;
-            return view('site.public_consultations.list', compact('filter', 'sorter', 'pk', 'rf', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm'));
+            return view('site.public_consultations.list', compact(
+                'filter', 'sorter', 'pk', 'rf', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter', 'rssUrl', 'closeSearchForm')
+            );
         }
 
         $pageTitle = __('site.menu.public_consultation');
         $pageTopContent = Setting::where('name', '=', Setting::PAGE_CONTENT_PC . '_' . app()->getLocale())->first();
         $this->setSeo(__('site.seo_title'), trans_choice('custom.public_consultations', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.public_consultations', 2), 'img' => PublicConsultation::DEFAULT_IMG));
 
-        return $this->view('site.public_consultations.index', compact('filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection', 'hasSubscribeEmail', 'requestFilter', 'rssUrl', 'closeSearchForm'));
+        return $this->view('site.public_consultations.index', compact(
+            'filter', 'sorter', 'pk', 'pageTitle', 'pageTopContent', 'defaultOrderBy', 'defaultDirection',
+            'hasSubscribeEmail', 'requestFilter', 'rssUrl', 'closeSearchForm')
+        );
     }
 
     public function show(int $id = 0)
@@ -1213,7 +1218,7 @@ class PublicConsultationController extends Controller
                 'type' => 'subjects',
                 'label' => __('site.public_consultation.importer_pc'),
                 'multiple' => true,
-                'options' => optionsFromModel(Institution::simpleOptionsList(), true, '', __('site.public_consultation.importer')),
+                'options' => optionsFromModel(Institution::simpleOptionsList()),
                 'value' => $importers,
                 'default' => '',
                 'col' => 'col-md-4'

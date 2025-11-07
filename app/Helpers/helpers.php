@@ -167,7 +167,7 @@ if (!function_exists('u_trans')) {
      * Translates the string and converts its first letter to capital
      *
      * @method u_trans
-     * @param string  $value string to translate
+     * @param string $value string to translate
      * @param integer $count singular or plural
      *
      * @return string
@@ -184,7 +184,7 @@ if (!function_exists('l_trans')) {
      * Translates the string and converts its first letter to lower
      *
      * @method l_trans
-     * @param string  $value string to translate
+     * @param string $value string to translate
      * @param integer $count singular or plural
      *
      * @return string
@@ -266,7 +266,7 @@ if (!function_exists('optionsUserTypes')) {
  *
  * @method optionsApplicationStatus
  *
- * @param bool       $any
+ * @param bool $any
  * @param string|int $anyValue
  * @param string|int $anyName
  *
@@ -291,7 +291,7 @@ if (!function_exists('optionsStatuses')) {
      *
      * @method optionsStatuses
      *
-     * @param bool       $any
+     * @param bool $any
      * @param string|int $anyValue
      * @param string|int $anyName
      *
@@ -318,7 +318,7 @@ if (!function_exists('optionsPublished')) {
      *
      * @method optionsPublished
      *
-     * @param bool       $any
+     * @param bool $any
      * @param string|int $anyValue
      * @param string|int $anyName
      *
@@ -359,7 +359,7 @@ if (!function_exists('stripHtmlTags')) {
      * return striped html string
      *
      * @param string $html_string
-     * @param array  $tags
+     * @param array $tags
      *
      * @return string
      */
@@ -378,7 +378,7 @@ if (!function_exists('extractMonths')) {
      *
      * @param string $form
      * @param string $to
-     * @param bool   $year
+     * @param bool $year
      *
      * @return array
      */
@@ -436,7 +436,7 @@ if (!function_exists('optionsFromModel')) {
      * @method optionsFromModel
      *
      * @param            $dbOptions
-     * @param bool       $any
+     * @param bool $any
      * @param string|int $anyValue
      * @param string|int $anyName
      *
@@ -450,9 +450,9 @@ if (!function_exists('optionsFromModel')) {
         }
         foreach ($dbOptions as $option) {
             $data = ['value' => $option->id, 'name' => $option->name];
-            foreach ($option as $key => $value){
-                if(!in_array($key, ['id', 'name'])){
-                    $data['data-'.$key] = $value;
+            foreach ($option as $key => $value) {
+                if (!in_array($key, ['id', 'name'])) {
+                    $data['data-' . $key] = $value;
                 }
             }
             $options[] = $data;
@@ -468,7 +468,7 @@ if (!function_exists('optionsStatusesFilter')) {
      *
      * @method optionsStatusesFilter
      *
-     * @param bool       $any
+     * @param bool $any
      * @param string|int $anyValue
      * @param string|int $anyName
      *
@@ -477,8 +477,8 @@ if (!function_exists('optionsStatusesFilter')) {
     function optionsStatusesFilter(bool $any = false, string|int $anyValue = '', string|int $anyName = ''): array
     {
         $options = array(
-          ['value' => 1, 'name' => trans_choice('custom.active', 1)],
-          ['value' => 0, 'name' => trans_choice('custom.inactive', 1)]
+            ['value' => 1, 'name' => trans_choice('custom.active', 1)],
+            ['value' => 0, 'name' => trans_choice('custom.inactive', 1)]
         );
         if ($any) {
             $options[] = ['value' => $anyValue, 'name' => $anyName];
@@ -535,21 +535,21 @@ if (!function_exists('fileHtmlContent')) {
     {
         $content = '';
         $downLoadRoute = $file instanceof \App\Models\File ? route('download.file', $file) : route('strategy-document.download-file', $file);
-        if(in_array($file->content_type, App\Models\File::CONTENT_TYPE_IMAGES) || in_array($file->content_type, \App\Models\File::IMG_CONTENT_TYPE)){
-            return '<a class="mb-2 btn btn-sm btn-success" href="'.$downLoadRoute.'">'.__('custom.download').'</a><br>'.$file->preview;
+        if (in_array($file->content_type, App\Models\File::CONTENT_TYPE_IMAGES) || in_array($file->content_type, \App\Models\File::IMG_CONTENT_TYPE)) {
+            return '<a class="mb-2 btn btn-sm btn-success" href="' . $downLoadRoute . '">' . __('custom.download') . '</a><br>' . $file->preview;
         }
 
         switch ($file->content_type) {
             case 'application/pdf':
                 $path = (!str_contains($file->path, 'files') ? 'files/' : '') . $file->path;
-                $content = '<a class="mb-2 btn btn-sm btn-success" href="'.$downLoadRoute.'">'.__('custom.download').'</a><embed src="' . asset($path) . '" width="100%" height="700px" />';
+                $content = '<a class="mb-2 btn btn-sm btn-success" href="' . $downLoadRoute . '">' . __('custom.download') . '</a><embed src="' . asset($path) . '" width="100%" height="700px" />';
                 break;
             case 'application/msword': //doc
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': //xlsx
             case 'application/vnd.ms-excel': //xls
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
 //                $downLoadRoute = $file instanceof \App\Models\File ? route('download.file', $file) : route('strategy-document.download-file', $file);
-                $content = '<a class="mb-2 btn btn-sm btn-success" href="'.$downLoadRoute.'">'.__('custom.download').'</a><iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . $downLoadRoute . '" width="100%" height="700px;"/></iframe>';
+                $content = '<a class="mb-2 btn btn-sm btn-success" href="' . $downLoadRoute . '">' . __('custom.download') . '</a><iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . $downLoadRoute . '" width="100%" height="700px;"/></iframe>';
                 break;
 //            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
 //                //$content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
@@ -559,7 +559,7 @@ if (!function_exists('fileHtmlContent')) {
 //                $content = $html->getContent();
 //                break;
             default:
-                return '<a class="mb-2 btn btn-sm btn-success" href="'.$downLoadRoute.'">'.__('custom.download').'</a><p>Документът не може да бъде визуализиран</p>';
+                return '<a class="mb-2 btn btn-sm btn-success" href="' . $downLoadRoute . '">' . __('custom.download') . '</a><p>Документът не може да бъде визуализиран</p>';
         }
 
         return $content;
@@ -659,9 +659,9 @@ if (!function_exists('enumToSelectOptions')) {
     /**
      * return pagination options
      *
-     * @param array  $enums
+     * @param array $enums
      * @param string $translationBase
-     * @param bool   $any
+     * @param bool $any
      *
      * @return array
      */
@@ -673,7 +673,7 @@ if (!function_exists('enumToSelectOptions')) {
         }
         if (sizeof($enums)) {
             foreach ($enums as $name => $val) {
-                if(empty($excludeValues) || !in_array($val, $excludeValues)){
+                if (empty($excludeValues) || !in_array($val, $excludeValues)) {
                     $options[] = ['value' => $val, 'name' => !empty($translationBase) ? __('custom.' . $translationBase . '.' . $name) : $name];
                 }
             }
@@ -840,7 +840,7 @@ if (!function_exists('getOldFileInformation')) {
      * It's using the lportal.dlfileentry table.
      *
      * @param       $search_name - The file name.
-     * @param array $files       - Array of file objects.
+     * @param array $files - Array of file objects.
      *
      * @return mixed|null
      */
@@ -913,12 +913,12 @@ if (!function_exists('addUrlParams')) {
         $strParams = '';
 
         foreach ($params as $key => $value) {
-            if(is_array($value)){
-                foreach ($value as $v){
-                    $strParams .= (empty($strParams) ? '?' : '&') .$key.'[]='.$v;
+            if (is_array($value)) {
+                foreach ($value as $v) {
+                    $strParams .= (empty($strParams) ? '?' : '&') . $key . '[]=' . $v;
                 }
-            } else{
-                $strParams .= (empty($strParams) ? '?' : '&') .$key.'='.$value;
+            } else {
+                $strParams .= (empty($strParams) ? '?' : '&') . $key . '=' . $value;
             }
         }
 
@@ -988,8 +988,8 @@ if (!function_exists('fileThumbnail')) {
     function fileThumbnail($file)
     {
         $thumbnail = '';
-        if(in_array($file->content_type, ['image/png', 'image/jpeg', 'image/gif', 'image/apng', 'image/avif', 'image/webp'])){
-            $thumbnail = '<div class="col-md-4 mb-3"><img class="img-thumbnail preview-file-modal" role="button" data-file="'.$file->id.'" data-url="'.route('modal.file_preview', ['id' => $file->id]).'" src="'.asset('files'.DIRECTORY_SEPARATOR.str_replace('files'.DIRECTORY_SEPARATOR, '', $file->path)).'"></div>';
+        if (in_array($file->content_type, ['image/png', 'image/jpeg', 'image/gif', 'image/apng', 'image/avif', 'image/webp'])) {
+            $thumbnail = '<div class="col-md-4 mb-3"><img class="img-thumbnail preview-file-modal" role="button" data-file="' . $file->id . '" data-url="' . route('modal.file_preview', ['id' => $file->id]) . '" src="' . asset('files' . DIRECTORY_SEPARATOR . str_replace('files' . DIRECTORY_SEPARATOR, '', $file->path)) . '"></div>';
         }
 
         return $thumbnail;
@@ -1066,7 +1066,8 @@ if (!function_exists('groupAdvisoryBoardItems')) {
      *
      * @return void
      */
-    function groupItems($groups, $item, $type, $id_field, $relation) {
+    function groupItems($groups, $item, $type, $id_field, $relation)
+    {
         $found_group = $groups->where('id', $item->$id_field)->first();
 
         if (!$found_group) {
@@ -1154,15 +1155,15 @@ if (!function_exists('generateImageThumbnail')) {
                 'height' => \App\Models\File::THUMBNAIL_LIST_NEWS_SMALL_IMAGE_MAX_HEIGHT,
             ],
             'home' => [
-                'width' => \App\Models\File::THUMBNAIL_HOME_PAGE_IMAGE_MAX_WIDTH ,
-                'height' => \App\Models\File::THUMBNAIL_HOME_PAGE_IMAGE_MAX_HEIGHT ,
+                'width' => \App\Models\File::THUMBNAIL_HOME_PAGE_IMAGE_MAX_WIDTH,
+                'height' => \App\Models\File::THUMBNAIL_HOME_PAGE_IMAGE_MAX_HEIGHT,
             ]
         );
-        foreach ($thumbs as $type => $options){
+        foreach ($thumbs as $type => $options) {
             $image = $manager->read(Storage::disk('public_uploads')->path($file->path));
             $image->cover($options['width'], $options['height'])
                 ->toJpeg()
-                ->save($destinationPathThumbnail.DIRECTORY_SEPARATOR.$file->id.'_thumbnail_'.$type.'.jpg');
+                ->save($destinationPathThumbnail . DIRECTORY_SEPARATOR . $file->id . '_thumbnail_' . $type . '.jpg');
         }
     }
 }
@@ -1170,27 +1171,28 @@ if (!function_exists('generateImageThumbnail')) {
 if (!function_exists('ip_in_range')) {
     /**
      * Check if a given ip is in a list of ranges
-     * @param  string $ip    IP to check in IPV4 format eg. 127.0.0.1
-     * @param  string $ranges IP/CIDR netmasks eg. 127.0.0.0/24,10.0.0.0/24 or just 127.0.0.0/24, also 127.0.0.1 is accepted and /32 assumed
+     * @param string $ip IP to check in IPV4 format eg. 127.0.0.1
+     * @param string $ranges IP/CIDR netmasks eg. 127.0.0.0/24,10.0.0.0/24 or just 127.0.0.0/24, also 127.0.0.1 is accepted and /32 assumed
      * @return boolean true if the ip is in any of the ranges / false if not.
      */
-    function ip_in_range( $ip, $ranges ) {
+    function ip_in_range($ip, $ranges)
+    {
         $ranges = explode(',', $ranges);
 
         foreach ($ranges as $range) {
             // In case of whitespaces
             $range = trim($range);
 
-            if ( strpos( $range, '/' ) == false ) {
+            if (strpos($range, '/') == false) {
                 $range .= '/32';
             }
             // $range is in IP/CIDR format eg 127.0.0.1/24
-            list( $range, $netmask ) = explode( '/', $range, 2 );
-            $range_decimal = ip2long( $range );
-            $ip_decimal = ip2long( $ip );
-            $wildcard_decimal = pow( 2, ( 32 - $netmask ) ) - 1;
-            $netmask_decimal = ~ $wildcard_decimal;
-            $is_in_range = ( ( $ip_decimal & $netmask_decimal ) == ( $range_decimal & $netmask_decimal ) );
+            list($range, $netmask) = explode('/', $range, 2);
+            $range_decimal = ip2long($range);
+            $ip_decimal = ip2long($ip);
+            $wildcard_decimal = pow(2, (32 - $netmask)) - 1;
+            $netmask_decimal = ~$wildcard_decimal;
+            $is_in_range = (($ip_decimal & $netmask_decimal) == ($range_decimal & $netmask_decimal));
 
             if ($is_in_range) {
                 return true;

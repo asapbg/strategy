@@ -83,14 +83,14 @@
                                                     @endif
                                                     <div class="input-group ">
                                                         <div class="mb-1 d-flex flex-column  w-100">
-                                                            <label for="exampleFormControlInput1"
-                                                                   class="form-label">{{ $field['label'] }}:</label>
+                                                            <label for="exampleFormControlInput1" class="form-label">{{ $field['label'] }}:</label>
                                                             <select
                                                                 class="form-select select2 @if(isset($field['class'])){{$field['class'] }}@endif @if(isset($field['skipCategoriesControl']) && $field['skipCategoriesControl']) skipCategoriesControl @endif"
                                                                 name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
                                                                 id="{{ $key }}"
                                                                 @if(isset($field['onchange']) && is_array($field['onchange'])) onchange="{!! implode(';', $field['onchange']) !!}" @endif
-                                                                @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif>
+                                                                @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif
+                                                            >
                                                                 {{-- select with groups--}}
                                                                 @if(isset($field['group']) && $field['group'])
                                                                     @foreach($field['options'] as $group_name => $group)
@@ -105,7 +105,10 @@
                                                                             <option value="{{ $group['value'] }}"
                                                                                     @if($group['value'] == old($key, $field['value'])) selected
                                                                                     @elseif(is_null(old($key, $field['value'])) && isset($field['default']) &&
-                                                                                    $group['value'] == $field['default']) selected @endif {{ $optionDataAttributes }}>{{ $group['name'] }}</option>
+                                                                                    $group['value'] == $field['default']) selected @endif {{ $optionDataAttributes }}
+                                                                            >
+                                                                                {{ $group['name'] }}
+                                                                            </option>
                                                                         @else
                                                                             <optgroup label="{{ $group_name }}">
                                                                                 @if(sizeof($group) > 0)
@@ -168,10 +171,11 @@
                                                             </button>
                                                         </label>
                                                         <div class="mb-1 d-flex flex-row  w-100">
-                                                            <select class="form-control select2 @if(isset($field['class'])){{$field['class'] }}@endif"
+                                                            <select class="form-select select2 @if(isset($field['class'])){{$field['class'] }}@endif"
                                                                 @if(isset($field['multiple']) && $field['multiple']) multiple="multiple" @endif
                                                                 name="{{ $key.(isset($field['multiple']) && $field['multiple'] ? '[]' : '') }}"
-                                                                id="{{ $key }}">
+                                                                id="{{ $key }}"
+                                                            >
                                                                 @foreach($field['options'] as $option)
                                                                     @php($optionDataAttributes = '')
                                                                     @foreach($option as $k => $v)
@@ -179,11 +183,12 @@
                                                                             @php($optionDataAttributes .= ($k.'='.$v.' '))
                                                                         @endif
                                                                     @endforeach
-                                                                    <option {{ $optionDataAttributes }}  value="{{ $option['value'] }}"
-                                                                        @if((isset($field['multiple']) && $field['multiple'] &&
-                                                                        in_array($option['value'], old($key.'[]', $field['value'] ?? []))) ||
-                                                                        ((!isset($field['multiple']) || !$field['multiple']) && $option['value']==old($key,
-                                                                        $field['value']))) selected @endif
+                                                                    <option {{ $optionDataAttributes }} value="{{ $option['value'] }}"
+                                                                        @if(
+                                                                            (isset($field['multiple']) && $field['multiple'] && in_array($option['value'], old($key.'[]', $field['value'] ?? [])))
+                                                                            ||
+                                                                            ((!isset($field['multiple']) || !$field['multiple']) && $option['value'] == old($key,$field['value']))
+                                                                        ) selected @endif
                                                                     >
                                                                         {{ $option['name'] }}
                                                                     </option>

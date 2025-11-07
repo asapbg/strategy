@@ -24,7 +24,11 @@
       $(document).ready(function (){
           var last_login = "{{ auth()->user() ? auth()->user()->last_login_at : \Carbon\Carbon::now() }}";
           var session_lifetime = "{{ \Session::get('user_session_time_limit') }}";
-          session_lifetime = session_lifetime * 60;
+          @if (env('APP_ENV') == 'local')
+            session_lifetime = session_lifetime * 360;
+          @else
+            session_lifetime = session_lifetime * 60;
+          @endif
 
           var remindedSessionEndInAdmin = false;
           var remindedSessionEndInFront = false;
