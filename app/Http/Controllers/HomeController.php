@@ -25,6 +25,7 @@ use App\Models\StrategicDocument;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -708,6 +709,20 @@ class HomeController extends Controller
 
     public function sendMessage(SendMessageRequest $request)
     {
+        // Recaptcha check
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => config('recaptcha.secret_key'),
+            'response' => $request->input('g-recaptcha-response'),
+            'remoteip' => $request->ip(),
+        ]);
+
+        $recaptcha_data = $response->json();
+
+        if (!$recaptcha_data['success']) {
+            return back()->with(['danger' => __('messages.recaptcha_failed')])->withInput();
+        }
+        //
+
         $validated = $request->validated();
 
         if (!in_array($validated['subject'], [__('site.contacts.subject.report_problem'), __('site.contacts.subject.question'), __('site.contacts.subject.proposal')])) {

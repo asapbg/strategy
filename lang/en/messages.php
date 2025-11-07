@@ -50,4 +50,6 @@
     'success_delete_subscribe'         => 'You have successfully deleted your subscription',
     'success_edit_subscribe'         => 'You have successfully edited your subscription',
     'sync_finished_successfully' => 'Successful synchronization',
+    'recaptcha_failed'          => 'reCAPTCHA verification failed. Please try again.',
+    'contacts_message' => 'For the purpose of better service, please send an email to <a href="mailto:support.strategy@government.bg">support.strategy@government.bg</a>, describing in detail your problem, suggestion or signal related to the functions or content of the Portal. For a clearer presentation of the case, we recommend that you also attach screenshots of the relevant page.',
 ];

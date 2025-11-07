@@ -19,6 +19,9 @@
     <!-- Custom css -->
 {{--    <link href="{{ asset('css/app_vendor.css?v='.date('d')) }}" rel="stylesheet">--}}
     <link href="{{ asset('css/app_vendor.css') }}" rel="stylesheet">
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     @stack('styles')
 
     <!-- Add favicon -->
