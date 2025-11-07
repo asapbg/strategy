@@ -278,6 +278,7 @@ class StrategicDocumentsController extends Controller
     {
         $pageTitle = trans_choice('custom.strategic_documents', 2);
         $moderators = User::role([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS, CustomRole::MODERATOR_STRATEGIC_DOCUMENT])
+            ->whereActive(true)
             ->whereNotIn('users.email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
             ->whereRaw("users.email::TEXT NOT LIKE '%@asap.bg%'")
             ->with(['institution.translations', 'institution.fieldsOfAction.translations'])
