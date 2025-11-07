@@ -31,7 +31,7 @@ class PrisController extends Controller
         $filter['fullSearch']['label'] .= "/" . __('custom.search_in_archive');
         $filter['formGroup']['fields']['in_archive'] = [
             'type' => 'checkbox',
-            'checked' => $request->ajax() ? $request->input('in_archive') : true,
+            'checked' => $request->ajax() ? $request->input('in_archive') : false,
             'label' => __('custom.search_in_archive'),
             'value' => 1,
             'col' => 'col-md-1 d-inline me-2'
@@ -123,6 +123,9 @@ class PrisController extends Controller
         );
     }
 
+    /**
+     * @deprecated
+     */
     public function archive(Request $request, $category = '')
     {
         //Filter
@@ -346,42 +349,42 @@ class PrisController extends Controller
                 'fields' => array(
                     'fileSearch' => array(
                         'type' => 'checkbox',
-                        'checked' => $request->ajax() ? $request->input('fileSearch') : true,
+                        'checked' => $request->ajax() ? $request->input('fileSearch') : false,
                         'label' => trans_choice('custom.files', 2),
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'
                     ),
                     'importer' => array(
                         'type' => 'checkbox',
-                        'checked' => $request->ajax() ? $request->input('importer') : true,
+                        'checked' => $request->ajax() ? $request->input('importer') : false,
                         'label' => trans_choice('custom.importers', 1),
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'
                     ),
                     'aboutSearch' => array(
                         'type' => 'checkbox',
-                        'checked' => $request->ajax() ? $request->input('aboutSearch') : true,
+                        'checked' => $request->ajax() ? $request->input('aboutSearch') : false,
                         'label' => __('custom.about'),
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'
                     ),
                     'legalReasonSearch' => array(
                         'type' => 'checkbox',
-                        'checked' => $request->ajax() ? $request->input('legalReasonSearch') : true,
+                        'checked' => $request->ajax() ? $request->input('legalReasonSearch') : false,
                         'label' => __('custom.pris_legal_reason'),
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'
                     ),
                     'tagsSearch' => array(
                         'type' => 'checkbox',
-                        'checked' => $request->ajax() ? $request->input('tagsSearch') : true,
+                        'checked' => $request->ajax() ? $request->input('tagsSearch') : false,
                         'label' => trans_choice('custom.tags', 2),
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'
                     ),
                     'changesSearch' => array(
                         'type' => 'checkbox',
-                        'checked' => $request->ajax() ? $request->input('changesSearch') : true,
+                        'checked' => $request->ajax() ? $request->input('changesSearch') : false,
                         'label' => __('custom.change'),
                         'value' => 1,
                         'col' => 'col-md-1 d-inline me-2'

@@ -124,7 +124,9 @@ class PrisController extends AdminController
      */
     public function edit(Request $request, int $id)
     {
-        $item = $id ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType', 'changedDocsWithoutRelation']) : new Pris();
+        $item = $id
+            ? $this->getRecord($id, ['translation', 'tags', 'changedDocs', 'changedDocs.actType', 'changedDocsWithoutRelation'])
+            : new Pris();
         $can_access_orders = $this->canAccessOrders($request);
 
         if (($id && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', Pris::class)) {

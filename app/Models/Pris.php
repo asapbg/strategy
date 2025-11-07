@@ -294,7 +294,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     {
         return $this->hasMany(File::class, 'id_object', 'id')
             ->where('code_object', '=', File::CODE_OBJ_PRIS)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at')
             ->orderBy('locale');
     }
 
