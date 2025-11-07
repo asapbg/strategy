@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CalcTypesEnum;
+use App\Enums\PageModulesEnum;
+use App\Models\Page;
 use App\Rules\MulticriteriaWeightSum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +17,13 @@ class ImpactAssessmentCalculatorsController extends Controller
     {
         $pageTitle = trans_choice('custom.impact_assessment', 1);
         $this->composeBreadcrumbs(array(['name' => __('site.impact_assessment.methods'), 'url' => '']));
-        return $this->view('impact_assessment.tools', compact('pageTitle'));
+
+        $libraryPages = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+
+        return $this->view('impact_assessment.tools', compact('pageTitle', 'libraryPages'));
     }
 
     public function calc(Request $request, $type)
@@ -26,8 +34,13 @@ class ImpactAssessmentCalculatorsController extends Controller
             ['name' => __('site.calc.'.$type.'.title'), 'url' => '']
         ));
 
+        $libraryPages = Page::with(['translations'])
+            ->where('module_enum', '=', PageModulesEnum::MODULE_IMPACT_ASSESSMENT->value)
+            ->orderBy('order_idx', 'asc')
+            ->get();
+
         if($request->isMethod('get')){
-            return $this->view('impact_assessment.calc', compact('pageTitle', 'type'));
+            return $this->view('impact_assessment.calc', compact('pageTitle', 'type', 'libraryPages'));
         }
 
         Session::forget('old');
@@ -37,6 +50,7 @@ class ImpactAssessmentCalculatorsController extends Controller
         }
         $validated = $rv->validated();
         $results = $this->methodCalculation($type, $validated);
+
         return redirect(route('impact_assessment.tools.calc', $type))->with('old', array_merge($request->all(), ['results' => $results]));
     }
 

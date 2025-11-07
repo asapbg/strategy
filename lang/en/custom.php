@@ -46,6 +46,7 @@ return [
     'total' => 'Total',
     'number' => 'Number',
     'name' => 'Name',
+    'employer_unit_name'               => 'Employee name/unit name',
     'awaiting_completion' => 'awaiting completion',
     'not_approved' => 'Not approved',
     'ready' => 'Ready',

@@ -245,7 +245,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4 my-3" id="legislative_programs">
+        <div class="col-md-12 my-3" id="legislative_programs">
             <div class="form-group" id="legislative_program_id">
                 <label class="col-sm-12 control-label"
                        for="legislative_program_id">{{ trans_choice('custom.legislative_programs', 1) }}<span
@@ -301,7 +301,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 my-3" id="operational_programs">
+        <div class="col-md-12 my-3" id="operational_programs">
             <div class="form-group" id="operational_program_id">
                 <label class="col-sm-12 control-label" for="operational_program_id">Законопроект от оперативна
                     програма</label>
@@ -407,9 +407,9 @@
     <div class="row">
         @include('admin.partial.edit_field_translate', ['field' => 'proposal_ways', 'required' => true, 'default_val' => __('custom.proposal_ways_default_html')])
     </div>
-    <div class="row">
-        @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])
-    </div>
+{{--    <div class="row">--}}
+{{--        @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])--}}
+{{--    </div>--}}
 
     <hr class="mb-5">
     <div class="row mb-2">

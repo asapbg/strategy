@@ -17,7 +17,7 @@
                                 <a class="nav-link" id="ct-kd-tab" data-toggle="pill" href="#ct-kd" role="tab" aria-controls="ct-kd" aria-selected="false">Консултационен документ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="ct-contacts-tab" data-toggle="pill" href="#ct-contacts" role="tab" aria-controls="ct-contacts" aria-selected="false">Лица за контакт</a>
+                                <a class="nav-link" id="ct-contacts-tab" data-toggle="pill" href="#ct-contacts" role="tab" aria-controls="ct-contacts" aria-selected="false">Контактна информация</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="ct-polls-tab" data-toggle="pill" href="#ct-polls" role="tab" aria-controls="ct-polls" aria-selected="false">Анкети</a>

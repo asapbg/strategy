@@ -46,6 +46,7 @@ return [
     'total'                            => 'Общо',
     'number'                           => 'Номер',
     'name'                             => 'Наименование',
+    'employer_unit_name'               => 'Име на служител/наименование на звеното',
     'awaiting_completion'              => 'чакащи приключване',
     'not_approved'                     => 'Неодобрен',
     'ready'                            => 'Готово',

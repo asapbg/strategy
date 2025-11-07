@@ -3,7 +3,7 @@
         <table class="table table-sm sm-text table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>{{ __('custom.name') }}</th>
+                    <th>{{ __('custom.employer_unit_name') }}</th>
                     <th>{{ __('custom.email') }}</th>
                     <th>{{ __('custom.actions') }}</th>
                 </tr>
