@@ -407,9 +407,9 @@
     <div class="row">
         @include('admin.partial.edit_field_translate', ['field' => 'proposal_ways', 'required' => true, 'default_val' => __('custom.proposal_ways_default_html')])
     </div>
-    <div class="row">
-        @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])
-    </div>
+{{--    <div class="row">--}}
+{{--        @include('admin.partial.edit_field_translate', ['field' => 'responsible_unit'])--}}
+{{--    </div>--}}
 
     <hr class="mb-5">
     <div class="row mb-2">
