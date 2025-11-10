@@ -13,6 +13,7 @@ use App\Http\Requests\PublicConsultationContactsUpdateRequest;
 use App\Http\Requests\PublicConsultationDocStoreRequest;
 use App\Http\Requests\PublicConsultationKdStoreRequest;
 use App\Http\Requests\PublicConsultationSubDocUploadRequest;
+use App\Http\Requests\StorePublicConsultationOtherSourceCommentRequest;
 use App\Http\Requests\StorePublicConsultationProposalReport;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Jobs\SendSubscribedUserEmailJob;
@@ -189,10 +190,14 @@ class PublicConsultationController extends AdminController
             ->unique()
             ->toArray();
 
+        $otherSourceComments = $item->documents()->where('doc_type', DocTypesEnum::PC_OTHER_SOURCE_COMMENTS->value)
+            ->where('locale', app()->getLocale())
+            ->get();
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',
             'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel',
-            'fieldsOfActions', 'institutionLevels', 'isAdmin', 'institutions', 'pris', 'laws', 'subDocumentsTypes'));
+            'fieldsOfActions', 'institutionLevels', 'isAdmin', 'institutions', 'pris', 'laws', 'subDocumentsTypes', 'otherSourceComments'));
     }
 
     public function store(Request $request, PublicConsultation $item)
@@ -943,6 +948,48 @@ class PublicConsultationController extends AdminController
             }
 
             //Generate comments csv and pfd after pk end and show it in public page
+            return redirect(route(self::EDIT_ROUTE, $pc) . '#ct-comments')
+                ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error('Error save proposal report public consultation' . $e);
+            return redirect(url()->previous() . '#ct-comments')->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function addOtherSourceComment(StorePublicConsultationOtherSourceCommentRequest $request)
+    {
+        try {
+            $validated = $request->validated();
+            $doc_type = \App\Enums\DocTypesEnum::PC_OTHER_SOURCE_COMMENTS->value;
+            $pc = PublicConsultation::find((int)$validated['id']);
+
+            $dir = File::PUBLIC_CONSULTATIONS_OTHER_SOURCE_COMMENTS_UPLOAD_DIR;
+
+            foreach (config('available_languages') as $lang) {
+                $code = $lang['code'];
+                $file = $request->file('file_' . $doc_type . '_' . $code);
+
+                $description = $validated['filename_' . $doc_type . '_' . $code];
+
+                $fileNameToStore = round(microtime(true)) . '.' . $file->getClientOriginalExtension();
+                $file->storeAs($dir, $fileNameToStore, 'public_uploads');
+
+                $newFile = new File([
+                    'id_object' => $pc->id,
+                    'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
+                    'filename' => $fileNameToStore,
+                    'doc_type' => $doc_type,
+                    'content_type' => $file->getClientMimeType(),
+                    'path' => $dir . $fileNameToStore,
+                    'description_' . $code => $description,
+                    'sys_user' => $request->user()->id,
+                    'locale' => $code,
+                    'source' => $validated['file_source_' . $code]
+                ]);
+
+                $newFile->save();
+            }
+
             return redirect(route(self::EDIT_ROUTE, $pc) . '#ct-comments')
                 ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {

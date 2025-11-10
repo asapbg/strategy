@@ -122,6 +122,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/consultations/public-consultations/update-contact',   'updateContacts')->name('consultations.public_consultations.update.contacts');
         Route::post('/consultations/public-consultations/add-poll',         'attachPoll')->name('consultations.public_consultations.poll.attach');
         Route::post('/consultations/public-consultations/add-proposal-report','addProposalReport')->name('consultations.public_consultations.proposal_report.store');
+        Route::post('/consultations/public-consultations/add-other-source-comment', 'addOtherSourceComment')->name('consultations.public_consultations.other_source_comment.store');
         Route::post('/consultations/public-consultations/{item}/delete',    'destroy')->name('consultations.public_consultations.delete');
         Route::get('/consultations/public-consultations/publish/{item}',    'publish')->name('consultations.public_consultations.publish');
         Route::get('/consultations/public-consultations/unpublish/{item}',  'unPublish')->name('consultations.public_consultations.unpublish');

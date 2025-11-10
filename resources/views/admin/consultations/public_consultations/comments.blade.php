@@ -1,5 +1,7 @@
 @php($docTypeCommentReport = \App\Enums\DocTypesEnum::PC_COMMENTS_REPORT->value)
+@php($docTypeOtherSourceComment = \App\Enums\DocTypesEnum::PC_OTHER_SOURCE_COMMENTS->value)
 <form class="row mb-5" enctype="multipart/form-data" action="{{ route('admin.consultations.public_consultations.proposal_report.store') }}" method="post">
+    <h3><strong>Прикачване на становище</strong></h3>
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
     <div class="col-md-3">
@@ -53,6 +55,62 @@
     </div>
 
 </form>
+
+<hr>
+
+<form class="mb-5" method="POST" enctype="multipart/form-data" action="{{ route('admin.consultations.public_consultations.other_source_comment.store') }}">
+    <h3><strong>Прикачване на коментар от друг канал</strong></h3>
+    @csrf
+
+    <input type="hidden" name="id" value="{{ $item->id }}">
+
+    <div class="row">
+        @foreach(config('available_languages') as $lang)
+            @php($fieldName = 'filename_'.$docTypeOtherSourceComment.'_'.$lang['code'])
+            <div class="col-md-6 mb-3">
+                <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} <span class="required">*</span> </label>
+                <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" id="{{ $fieldName }}" type="text" name="{{ $fieldName }}">
+                @error($fieldName)
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        @endforeach
+    </div>
+
+    <div class="row">
+        @foreach(config('available_languages') as $lang)
+            @php($validationRules = \App\Enums\DocTypesEnum::validationRules($docTypeOtherSourceComment, $lang['code']))
+            @php($fieldName = 'file_'.$docTypeOtherSourceComment.'_'.$lang['code'])
+            <div class="col-md-6 mb-3">
+                <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if(in_array('required', $validationRules))<span class="required">*</span>@endif </label>
+                <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" id="{{ $fieldName }}" type="file" name="{{ $fieldName }}">
+                @error($fieldName)
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        @endforeach
+    </div>
+
+    <div class="row">
+        @foreach(config('available_languages') as $lang)
+            @php($fieldName = 'file_source_'.$lang['code'])
+            <div class="col-md-6 mb-3">
+                <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} <span class="required">*</span> </label>
+                <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" id="{{ $fieldName }}" type="text" name="{{ $fieldName }}">
+                @error($fieldName)
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        @endforeach
+    </div>
+
+    <div class="col-md-2">
+        <button class="btn btn-sm btn-success" type="submit">{{ __('custom.save') }}</button>
+    </div>
+</form>
+
+<hr>
+
 <div class="row">
     <h3><strong>Текущо становище:</strong></h3>
     @php($hasProposalReport = false)
@@ -167,3 +225,40 @@
         </tbody>
     </table>
 </div>
+
+<div class="row">
+    <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
+        <thead>
+        <tr>
+            <th colspan="4" class="text-center">
+                <h3 class="fw-bold">Коментари от други канали</h3>
+            </th>
+        </tr>
+        <tr>
+            <th>ID</th>
+            <th>Файл</th>
+            <th>Канал</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if($otherSourceComments->count() > 0)
+            @foreach($otherSourceComments as $otherSourceComment)
+                <tr>
+                    <td>{{ $otherSourceComment->id }}</td>
+                    <td>
+                        <a class="mr-3" style="font-size: 16px" href="{{ route('download.file', $otherSourceComment) }}" target="_blank" title="{{ __('custom.download') }}">
+                            {!! fileIcon($otherSourceComment->content_type) !!} {{ $otherSourceComment->{'description_' . app()->getLocale()} }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ $otherSourceComment->source }}
+                    </td>
+                </tr>
+            @endforeach
+        @endif
+        </tbody>
+    </table>
+</div>
+
+<hr>
+
