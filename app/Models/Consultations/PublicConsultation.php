@@ -703,7 +703,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                                         'description' => $pdf
                                             ? '<a href="' . route('download.file', $event->object->id) . '">' . $event->object->{$description_field} . '</a>'
                                             : '<p><span class="d-inline-block">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="' . $event->object->id . '" data-url="' . route('admin.preview.file.modal', ['id' => $event->object->id]) . '" title="' . __('custom.preview') . '">' . fileIcon($event->object->content_type) . ' ' . ($event->object->{$description_field}) . ' ' . __('custom.version_short') . ' ' . $event->object->version . '</button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="' . $event->object->id . '" data-url="' . route('modal.file_preview', ['id' => $event->object->id]) . '" title="' . __('custom.preview') . '">' . fileIcon($event->object->content_type) . ' ' . ($event->object->{$description_field}) . ' ' . __('custom.version_short') . ' ' . $event->object->version . '</button>
                                             </span></p>'
                                     ];
                                     if ($rss) {
@@ -755,7 +755,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                             $eData['description'] = $pdf
                                 ? '<a href="' . route('download.file', $reportFile->id) . '">' . $reportFile->description . '</a>'
                                 : '<p><span class="d-inline-block">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="' . $reportFile->id . '" data-url="' . route('admin.preview.file.modal', ['id' => $reportFile->id]) . '" title="' . __('custom.preview') . '">' . fileIcon($reportFile->content_type) . ' ' . ($reportFile->description) . ' ' . __('custom.version_short') . ' ' . $reportFile->version . '</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary preview-file-modal" data-file="' . $reportFile->id . '" data-url="' . route('modal.file_preview', ['id' => $reportFile->id]) . '" title="' . __('custom.preview') . '">' . fileIcon($reportFile->content_type) . ' ' . ($reportFile->description) . ' ' . __('custom.version_short') . ' ' . $reportFile->version . '</button>
                                     </span></p>';
                         }
                         $sortedTimeline['5'] = $eData;
