@@ -100,6 +100,10 @@
                                         <i class="fa fa-list"></i>
                                     </button>
                                 @break('subjects')
+                                @case('hidden')
+                                    <input type="hidden" name="{{ $key }}" autocomplete="off"
+                                           value="{{ old($key, $field['value']) }}" >
+                                @break('hidden')
                             @endswitch
                         </div>
                     @endforeach
