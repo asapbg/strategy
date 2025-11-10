@@ -112,6 +112,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(PublicConsultationController::class)->group(function () {
         Route::get('/consultations/public-consultations',                   'index')->name('consultations.public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
         Route::get('/consultations/public-consultations/edit/{item?}',      'edit')->name('consultations.public_consultations.edit');
+        Route::get('/consultations/public-consultations/export-comments/{item}',   'exportComments')->name('consultations.public_consultations.export_comments');
         Route::match(['post', 'put'], '/consultations/public-consultations/store/{item?}', 'store')->name('consultations.public_consultations.store');
         Route::post('/consultations/public-consultations/store-kd',         'storeKd')->name('consultations.public_consultations.store.kd');
         Route::post('/consultations/public-consultations/store-doc',        'storeDocs')->name('consultations.public_consultations.store.documents');

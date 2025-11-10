@@ -6,6 +6,7 @@ use App\Enums\DocTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\PublicConsultationTimelineEnum;
+use App\Exports\CommentsExport;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\PublicConsultationContactStoreRequest;
 use App\Http\Requests\PublicConsultationContactsUpdateRequest;
@@ -49,6 +50,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class PublicConsultationController extends AdminController
@@ -1017,6 +1019,18 @@ class PublicConsultationController extends AdminController
             return redirect(url()->previous())->with('danger', __('messages.system_error'));
 
         }
+    }
+
+    public function exportComments(PublicConsultation $item)
+    {
+        $comments = $item->comments;
+
+        $exportData = [
+            'title' => 'Коментари към обществена консултация '.$item->title,
+            'rows' => $item->comments
+        ];
+
+        return Excel::download(new CommentsExport($exportData), 'public_consultation_comments.xlsx');
     }
 
     /**

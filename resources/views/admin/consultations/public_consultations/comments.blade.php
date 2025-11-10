@@ -125,6 +125,15 @@
             </tr>
         @endif
         <tr>
+            <th colspan="2">Експорт на коментари в реално време</th>
+            <th colspan="2">
+                <a href="{{ route('admin.consultations.public_consultations.export_comments', ['item' => $item]) }}" download>
+                    <i class="fas fa-file-excel text-success me-1"></i>
+                    Excel
+                </a>
+            </th>
+        </tr>
+        <tr>
             <th>ID</th>
             <th>{{ __('validation.attributes.content') }}</th>
             <th>{{ __('custom.created_at') }}</th>
