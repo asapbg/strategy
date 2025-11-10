@@ -261,6 +261,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/users/{user}/restore','restore')->name('users.restore')->withTrashed();
         Route::get('/users/export', 'export')->name('users.export');
         Route::get('/users/change-requests', 'index')->name('users')->middleware('can:viewAny,App\Models\User');
+
+        Route::get('/{user}/verify',     'verify')->name('users.verify');
     });
 
     Route::controller(\App\Http\Controllers\Admin\UserChangeRequestController::class)->group(function () {
