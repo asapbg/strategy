@@ -262,8 +262,7 @@
                 <div class="col-12">
                     <select name="legislative_program_id"
                             class="form-control form-control-sm select2 @error('legislative_program_id'){{ 'is-invalid' }}@enderror">
-                        <option value="0"
-                                @if(old('legislative_program_id', ($item->id ? $item->legislative_program_id : 0)) == 0) selected @endif>
+                        <option value="">
                             ---
                         </option>
                         @if(isset($legislativePrograms) && $legislativePrograms->count())
@@ -316,8 +315,7 @@
                 <div class="col-12">
                     <select name="operational_program_id"
                             class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
-                        <option value="0"
-                                @if(old('operational_program_id', ($item->id ? $item->operational_program_id : 0)) == 0) selected @endif>
+                        <option value="">
                             ---
                         </option>
                         @if(isset($operationalPrograms) && $operationalPrograms->count())
