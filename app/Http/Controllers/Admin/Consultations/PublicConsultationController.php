@@ -174,7 +174,7 @@ class PublicConsultationController extends AdminController
 
 //        $pris = Pris::Decrees()->get();
         $pris = $item->pris;
-        $laws = Law::with(['translations'])->get();
+        $laws = Law::with(['translations'])->whereActive(true)->orderByTranslation('name')->get();
 
 //        $diffInDays = null;
 //        if($item->id){
