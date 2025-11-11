@@ -163,8 +163,8 @@ class PublicConsultationController extends AdminController
 
         $programProjects = ProgramProject::with(['translation'])->get();
         $linkCategories = LinkCategory::with(['translation'])->get();
-        $operationalPrograms = OperationalProgram::get();
-        $legislativePrograms = LegislativeProgram::get();
+        $operationalPrograms = OperationalProgram::orderByDesc('id')->get();
+        $legislativePrograms = LegislativeProgram::orderByDesc('id')->get();
 
         $documents = [];
         foreach ($item->documents as $document) {

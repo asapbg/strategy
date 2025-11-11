@@ -205,7 +205,7 @@
                     <select id="pris_id" name="pris_id" data-types2ajax="pris_doc"
                             data-legalacttype="{{ \App\Models\LegalActType::TYPE_DECREES }}"
                             data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}"
-                            data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}"
+                            data-placeholders2="233/2024"
                             class="form-control form-control-sm select2-autocomplete-ajax @error('pris_id'){{ 'is-invalid' }}@enderror">
                         <option value=""
                                 @if(old('pris_id', ($item->id && $pris ? $item->pris_id : 0)) == 0) selected @endif>---
@@ -217,6 +217,7 @@
                     @error('pris_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
+                    <p class="text-muted">{{ __('custom.search_pris_doc_js_placeholder') }}</p>
                 </div>
             </div>
         </div>
