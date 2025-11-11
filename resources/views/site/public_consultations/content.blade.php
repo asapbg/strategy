@@ -210,8 +210,8 @@
                                         @if($att->doc_type == $doc->doc_type.'00' && $att->locale == app()->getLocale())
                                             @php($foundBaseDoc = true)
                                             <li class="ms-5 list-unstyled @if(!$foundBaseDocSub) mt-2 @endif">
-                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                                    {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
+                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $att->id }}" data-url="{{ route('modal.file_preview', ['id' => $att->id]) }}">
+                                                    {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($att->created_at) }}
                                                 </a>
                                             </li>
                                             @php($foundBaseDocSub = 1)
