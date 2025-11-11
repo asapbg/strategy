@@ -150,9 +150,9 @@
             <div class="form-group">
                 <label class="col-sm-12 control-label"
                        for="field_of_actions_id">
-                    @if($item?->fieldOfAction->parent?->id == \App\Models\FieldOfAction::CATEGORY_AREA)
+                    @if($item?->fieldOfAction?->parent?->id == \App\Models\FieldOfAction::CATEGORY_AREA)
                         {{ trans_choice('custom.area', 1) }}
-                    @elseif($item?->fieldOfAction->parent?->id == \App\Models\FieldOfAction::CATEGORY_MUNICIPAL)
+                    @elseif($item?->fieldOfAction?->parent?->id == \App\Models\FieldOfAction::CATEGORY_MUNICIPAL)
                         {{ __('custom.municipalities') }}
                     @else
                         {{ trans_choice('custom.field_of_actions', 1) }}
