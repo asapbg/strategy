@@ -292,7 +292,7 @@ class AdvisoryBoardController extends AdminController
                 $query->when(request()->get('show_deleted_functions_files', 0) == 1, function ($query) {
                     $query->withTrashed();
                 });
-            })->whereYear('working_year', '>=', now()->year);
+            });
         }, 'organizationRule' => function ($query) {
             $query->with('files');
         }, 'establishment' => function ($query) {
