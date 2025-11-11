@@ -240,6 +240,10 @@ class PublicConsultationController extends AdminController
             return back()->withInput()->withErrors(['open_from' => 'Консултацията може да стартира най-скоро с днешна дата']);
         }
 
+        if ($id && !$item->contactPersons()->count()) {
+            return $this->backWithError('danger', 'Моля, въведете поне един служител в таб "Контактна информация"');
+        }
+
         DB::beginTransaction();
         try {
 
