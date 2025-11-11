@@ -283,7 +283,7 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="legislative_program_row_id">Законопроект от законодателната
-                    програма</label>
+                    програма<span class="required">*</span></label>
                 @php($institutionid = $item->id ? ($item->importer_institution_id) : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->id :0))
                 <select id="legislative_program_row_id" name="legislative_program_row_id" data-types2ajax="lp_record_pc"
                         data-institution="{{ $institutionid }}"
@@ -312,7 +312,7 @@
 
         <div class="col-md-12 my-3" id="operational_programs">
             <div class="form-group" id="operational_program_id">
-                <label class="col-sm-12 control-label" for="operational_program_id">Подзаконов нормативен акт от оперативната програма</label>
+                <label class="col-sm-12 control-label" for="operational_program_id">Подзаконов нормативен акт от оперативната програма<span class="required">*</span></label>
                 <div class="col-12">
                     <select name="operational_program_id"
                             class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
@@ -337,7 +337,7 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-12 control-label"
-                       for="operational_program_row_id">Проект на нормативен акт от оперативната програма</label>
+                       for="operational_program_row_id">Проект на нормативен акт от оперативната програма <span class="required">*</span></label>
                 @php($institutionid = $item->id ? ($item->importer_institution_id) : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->id :0))
                 <select id="operational_program_row_id" name="operational_program_row_id"
                         data-types2ajax="op_record_pc" data-urls2="{{ route('admin.select2.ajax', 'op_record_pc') }}"
