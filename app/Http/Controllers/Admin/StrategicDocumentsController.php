@@ -276,7 +276,7 @@ class StrategicDocumentsController extends AdminController
         } catch (\Exception $e) {
             throw $e;
             logError('Upload file strategic document', $e->getMessage());
-            return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
+            return $this->backWithMessage('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
         }
     }
 
@@ -342,7 +342,7 @@ class StrategicDocumentsController extends AdminController
         } catch (\Exception $e) {
             throw $e;
             logError('Upload file strategic document', $e->getMessage());
-            return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
+            return $this->backWithMessage('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
         }
     }
 

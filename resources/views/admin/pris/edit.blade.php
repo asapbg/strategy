@@ -68,7 +68,7 @@
                                                         {{ trans_choice('custom.legal_act_types', 1) }} <span class="required">*</span>
                                                     </label>
                                                     <div class="col-12">
-                                                        <select id="legal_act_type_id" name="legal_act_type_id"  class="form-control form-control-sm select2 @error('legal_act_type_id'){{ 'is-invalid' }}@enderror">
+                                                        <select id="legal_act_type_id" name="legal_act_type_id"  class="form-control form-control-sm @error('legal_act_type_id'){{ 'is-invalid' }}@enderror">
                                                             @if(!$item->id)
                                                                 <option value="">---</option>
                                                             @endif
@@ -242,7 +242,7 @@
                                                 <div class="col-12 mb-5 ml-2">
                                                     <div class="row">
                                                         <div class="col-md-3">
-                                                            <select id="legal_act_type_filter" name="legal_act_type_filter"  class="form-control form-control-sm select2
+                                                            <select id="legal_act_type_filter" name="legal_act_type_filter"  class="form-select
                                                                 @error('legal_act_type_filter'){{ 'is-invalid' }}@enderror"
                                                             >
                                                                 <option value="">-- изберете {{ l_trans('custom.legal_act_types') }} --</option>
@@ -258,9 +258,14 @@
                                                             <div class="text-danger mt-1">{{ $message }}</div>
                                                             @enderror
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-5">
                                                             @php($itemChangedDocIds = $item->changedDocs->pluck('id')->toArray())
-                                                            <select id="change_docs" name="change_docs[]" multiple="multiple"  data-types2ajax="pris_doc" data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}" data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}" class="form-control form-control-sm select2-autocomplete-ajax @error('change_docs'){{ 'is-invalid' }}@enderror">
+                                                            <select id="change_docs" name="change_docs[]" multiple="multiple"
+                                                                    data-types2ajax="pris_doc"
+                                                                    data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}"
+                                                                    data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}"
+                                                                    class="form-select form-control-sm select2-autocomplete-ajax @error('change_docs'){{ 'is-invalid' }}@enderror"
+                                                            >
                                                                 @if(isset($item->changedDocs) && $item->changedDocs->count())
                                                                     @foreach($item->changedDocs as $row)
                                                                         <option value="{{ $row->id }}">{{ $row->doc_num.' ('.$row->actType->name.')' }}</option>
@@ -272,10 +277,12 @@
                                                             @enderror
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <select id="connect_type" name="connect_type" class="form-control form-control-sm select2 @error('connect_type'){{ 'is-invalid' }}@enderror">
+                                                            <select id="connect_type" name="connect_type" class="form-select @error('connect_type'){{ 'is-invalid' }}@enderror">
                                                                 <option value="">---</option>
                                                                 @foreach(\App\Enums\PrisDocChangeTypeEnum::options() as $name => $val)
-                                                                    <option value="{{ $val }}" @if(old('connect_type') == $val) selected @endif>{{ __('custom.pris.change_enum.'.$name) }}</option>
+                                                                    <option value="{{ $val }}" @if(old('connect_type') == $val) selected @endif>
+                                                                        {{ __('custom.pris.change_enum.'.$name) }}
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
                                                             @error('connect_type')
@@ -286,7 +293,7 @@
                                                     <div class="row mt-2">
                                                         <div class="col-md-6">
                                                             <input type="text" id="connect_text" name="connect_text" placeholder="Въведете текст"
-                                                                   class="form-control form-control-sm @error('connect_text'){{ 'is-invalid' }}@enderror"
+                                                                   class="form-control @error('connect_text'){{ 'is-invalid' }}@enderror"
                                                             >
                                                             @error('connect_text')
                                                             <div class="text-danger mt-1">{{ $message }}</div>
@@ -313,7 +320,19 @@
                                                                             {{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }}
                                                                             {{ $pris->actType->name_single }} {{ $pris->regNum }} {{ $pris->pivot->connect_text ? "({$pris->pivot->connect_text})" : "" }}
                                                                         </a>
-                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
+                                                                        <i class="text-info fas fa-edit  connection d-none"
+                                                                           data-pris="{{ $item->id }}"
+                                                                           data-connection-id="{{ $pris->pivot->id }}"
+                                                                           data-url="{{ route('admin.pris.connection.edit', ['pris_id' => $item->id, 'id' => $pris->pivot->id]) }}"
+                                                                           role="button">
+                                                                        </i>
+                                                                        <i class="text-danger fas fa-trash js-toggle-delete-resource-modal"
+                                                                           data-target="#modal-delete-resource"
+                                                                           data-resource-id="{{ $item->id }}"
+                                                                           data-resource-name="Документа"
+                                                                           data-resource-delete-url="{{ route('admin.pris.disconnect', ['pris_id' => $item->id, 'id' => $pris->pivot->id]) }}"
+                                                                           role="button">
+                                                                        </i>
                                                                     </div>
                                                                 @endforeach
                                                                 @foreach($item->changedByDocs as $pris)
@@ -323,7 +342,19 @@
                                                                             {{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }}
                                                                             {{ $pris->actType->name_single }} {{ $pris->regNum }} {{ $pris->pivot->connect_text ? "({$pris->pivot->connect_text})" : "" }}
                                                                         </a>
-                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-disconnect="{{ $pris->id }}" role="button"></i>
+                                                                        <i class="text-info fas fa-edit  connection d-none"
+                                                                           data-pris="{{ $item->id }}"
+                                                                           data-connection-id="{{ $pris->pivot->id }}"
+                                                                           data-url="{{ route('admin.pris.connection.edit', ['pris_id' => $item->id, 'id' => $pris->pivot->id]) }}"
+                                                                           role="button">
+                                                                        </i>
+                                                                        <i class="text-danger fas fa-trash js-toggle-delete-resource-modal"
+                                                                           data-target="#modal-delete-resource"
+                                                                           data-resource-id="{{ $item->id }}"
+                                                                           data-resource-name="Документа"
+                                                                           data-resource-delete-url="{{ route('admin.pris.disconnect', ['pris_id' => $item->id, 'id' => $pris->pivot->id]) }}"
+                                                                           role="button">
+                                                                        </i>
                                                                     </div>
                                                                 @endforeach
                                                                 @foreach($item->changedDocsWithoutRelation as $pris)
@@ -331,14 +362,38 @@
                                                                         <i class="text-primary fas fa-link mr-2"></i>
 
                                                                         {{ $pris->full_text }}
-                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-text="{{ $pris->full_text }}" role="button"></i>
+                                                                        <i class="text-info fas fa-edit  connection d-none"
+                                                                           data-pris="{{ $item->id }}"
+                                                                           data-connection-id="{{ $pris->id }}"
+                                                                           data-url="{{ route('admin.pris.connection.edit', ['pris_id' => $item->id, 'id' => $pris->id]) }}"
+                                                                           role="button">
+                                                                        </i>
+                                                                        <i class="text-danger fas fa-trash js-toggle-delete-resource-modal"
+                                                                           data-target="#modal-delete-resource"
+                                                                           data-resource-id="{{ $item->id }}"
+                                                                           data-resource-name="Документа"
+                                                                           data-resource-delete-url="{{ route('admin.pris.disconnect', ['pris_id' => $item->id, 'id' => $pris->id]) }}"
+                                                                           role="button">
+                                                                        </i>
                                                                     </div>
                                                                 @endforeach
                                                                 @foreach($item->changedByDocsWithoutRelation as $pris)
                                                                     <div id="disconnect_text_{{ $item->id }}">
                                                                         <i class="text-primary fas fa-link mr-2"></i>
                                                                         {{ $pris->full_text }}
-                                                                        <i class="text-danger fas fa-trash disconnect-document" data-pris="{{ $item->id }}" data-text="{{ $pris->full_text }}" role="button"></i>
+                                                                        <i class="text-info fas fa-edit  connection d-none"
+                                                                           data-pris="{{ $item->id }}"
+                                                                           data-connection-id="{{ $pris->id }}"
+                                                                           data-url="{{ route('admin.pris.connection.edit', ['pris_id' => $item->id, 'id' => $pris->id]) }}"
+                                                                           role="button">
+                                                                        </i>
+                                                                        <i class="text-danger fas fa-trash js-toggle-delete-resource-modal"
+                                                                           data-target="#modal-delete-resource"
+                                                                           data-resource-id="{{ $item->id }}"
+                                                                           data-resource-name="Документа"
+                                                                           data-resource-delete-url="{{ route('admin.pris.disconnect', ['pris_id' => $item->id, 'id' => $pris->id]) }}"
+                                                                           role="button">
+                                                                        </i>
                                                                     </div>
                                                                 @endforeach
                                                             </div>
@@ -473,6 +528,7 @@
             </div>
         </div>
     </section>
+    @includeIf('modals.delete-resource', ['resource' => ''])
 @endsection
 
 @push('scripts')
@@ -514,8 +570,18 @@
                         }
                     },
                     error : function() {
-                        errorContainer.html('System error');
+                        errorContainer.html(response.message);
                     }
+                });
+            });
+
+            $('.edit_connection').on('click', function() {
+                new MyModal({
+                    title: '{{ __('custom.change_docs') }}',
+                    customClass: 'width-60',
+                    //onclick="$(\'#modal_edit_connected_document\').submit()"
+                    footer: '<button type="button" class="btn btn-success update_connected_document">' + '{{ __('custom.update') }}' + '</button><button class="btn btn-sm btn-danger closeModal ms-3" data-dismiss="modal" aria-label="'+ '{{ __('custom.cancel') }}' +'">'+ '{{ __('custom.cancel') }}' +'</button>',
+                    bodyLoadUrl: $(this).data('url'),
                 });
             });
 
@@ -531,33 +597,6 @@
                 }
             });
             //$('#legal_act_type_id').trigger('change');
-
-            $('.disconnect-document').on('click', function(){
-                errorContainer.html('');
-                let prisId = $(this).data('pris');
-                let connectId = $(this).data('disconnect');
-                let connectText = $(this).data('text');
-                $.ajax({
-                    url  : '<?php echo route("admin.pris.disconnect"); ?>',
-                    type : 'POST',
-                    data : { _token: '{{ csrf_token() }}', id: prisId, disconnect: connectId, connect_text: connectText },
-                    success : function(data) {
-                        if( typeof data.error != 'undefined' ) {
-                            errorContainer.html(data.message);
-                        } else {
-                            if (connectText) {
-                                $('#disconnect_text_' + prisId).remove();
-                                return;
-                            }
-                            //console.log('#disconnect_' + connectId);
-                            $('#disconnect_' + connectId).remove();
-                        }
-                    },
-                    error : function() {
-                        errorContainer.html('System error');
-                    }
-                });
-            });
 
             @if($item->id)
                 $('.add-tag').on('click', function (){

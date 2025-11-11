@@ -3,7 +3,7 @@
     $modal_id ??= 'modal-delete-resource';
 @endphp
 
-<div class="modal fade" id="{{ $modal_id }}" role="dialog" aria-hidden=" true">
+<div class="modal fade" id="{{ $modal_id }}" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
 
         <div class="modal-content">

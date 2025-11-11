@@ -271,7 +271,7 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     public function changedDocs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(self::class, 'pris_change_pris', 'pris_id', 'changed_pris_id')
-            ->withPivot(['connect_type', 'connect_text', 'old_connect_type'])
+            ->withPivot(['id', 'changed_pris_id', 'connect_type', 'connect_text', 'old_connect_type'])
             ->withTrashed();
     }
 
@@ -282,7 +282,9 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
 
     public function changedByDocs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id')->withPivot(['connect_type', 'old_connect_type'])->withTrashed();
+        return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id')
+            ->withPivot(['id', 'changed_pris_id', 'connect_type', 'connect_text', 'old_connect_type'])
+            ->withTrashed();
     }
 
     public function changedByDocsWithoutRelation()

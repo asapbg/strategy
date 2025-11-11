@@ -134,7 +134,7 @@ class InstitutionController extends AdminController
             return to_route('admin.strategic_documents.institutions.edit', $id)->with('success', 'Записът беше добавен успешно');
         } catch (\Exception $e) {
             Log::error($e);
-            return $this->backWithError('danger', __('messages.system_error'));
+            return $this->backWithMessage('danger', __('messages.system_error'));
         }
     }
 
@@ -170,7 +170,7 @@ class InstitutionController extends AdminController
                 ->with('success', 'Записът беше обновен успешно');
         } catch (\Exception $e) {
             Log::error($e);
-            return $this->backWithError('danger', __('messages.system_error'));
+            return $this->backWithMessage('danger', __('messages.system_error'));
         }
     }
 

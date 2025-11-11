@@ -109,7 +109,7 @@ class Controller extends BaseController
      *
      * @return RedirectResponse
      */
-    protected function backWithError($error_type, $error_msg)
+    protected function backWithMessage($error_type, $error_msg)
     {
         return back()->withInput(request()->all())->with($error_type, $error_msg);
     }
@@ -411,7 +411,7 @@ class Controller extends BaseController
             }
         } catch (Exception $e) {
             logError('Upload file', $e->getMessage());
-            return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
+            return $this->backWithMessage('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
         }
     }
 
@@ -515,7 +515,7 @@ class Controller extends BaseController
             }
         } catch (Exception $e) {
             logError('Upload file', $e->getMessage());
-            return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
+            return $this->backWithMessage('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
         }
     }
 

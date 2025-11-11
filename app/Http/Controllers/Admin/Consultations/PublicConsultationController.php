@@ -516,7 +516,7 @@ class PublicConsultationController extends AdminController
         } catch (\Exception $e) {
             DB::rollBack();
             logError('Upload file', $e->getMessage());
-            return $this->backWithError('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
+            return $this->backWithMessage('danger', 'Възникна грешка при качването на файловете. Презаредете страницата и опитайте отново.');
         }
     }
 

@@ -52,7 +52,7 @@ class FixOldPrisChangePris extends Command
                 //->where('id', '>=', $currentStep)
                 //->where('id', '<', ($currentStep + $step))
                 //->where('id', '!=', 137821)
-                ->where('id', '=', 166527)
+                ->where('id', '=', 178)
                 ->where('asap_last_version', '=', 1)
                 ->whereNotNull('old_connections')
                 ->orderBy('id')
@@ -64,7 +64,7 @@ class FixOldPrisChangePris extends Command
                 foreach ($prisDocuments as $prisDocument) {
                     //echo 'Start fixing connections of pris doc with ID: ' . $prisDocument->id . PHP_EOL;
                     //dd($prisDocument->toArray());
-                    try {
+//                    try {
                         $oldConnections = explode(';', $prisDocument->old_connections);
                         //unset($oldConnections[0],$oldConnections[1]);
                         //dd($oldConnections);
@@ -135,31 +135,38 @@ class FixOldPrisChangePris extends Command
                                             ($prisId && !$changedPrisId || $changedPrisId && !$prisId)
                                         )
                                     ) {
+                                        $connect_text = null;
+                                        if (isset($connection[4])) {
+                                            $text = explode($connection[4], $oldC);
+                                            if (isset($text[1])) {
+                                                $connect_text = trim($text[1]);
+                                            }
+                                        }
                                         if ($oldConnection != 'виж') {
-                                            DB::statement('insert into pris_change_pris
-                                                                (pris_id, changed_pris_id, connect_type, old_connect_type, full_text, created_at)
-                                                             select ?, ?, ?, ?, ?, ?
-                                                             where not exists (
-                                                                select pris_change_pris.pris_id
-                                                                  from pris_change_pris
-                                                                 where pris_id = ? and changed_pris_id = ? and connect_type = ?
-                                                            )'
-                                                , [
-                                                    $prisId, $changedPrisId, $newConnection, $oldConnection, trim($oldC), now(),
+                                            DB::statement('
+                                                insert into pris_change_pris
+                                                    (pris_id, changed_pris_id, connect_type, old_connect_type, connect_text, full_text, created_at)
+                                                 select ?, ?, ?, ?, ?, ?, ?
+                                                 where not exists (
+                                                    select pris_change_pris.pris_id
+                                                      from pris_change_pris
+                                                     where pris_id = ? and changed_pris_id = ? and connect_type = ?
+                                                )', [
+                                                    $prisId, $changedPrisId, $newConnection, $oldConnection, $connect_text, trim($oldC), now(),
                                                     $prisId, $changedPrisId, $newConnection
                                                 ]);
                                         } else {
                                             //dd($prisId, $changedPrisId, $newConnection, $oldConnection, $oldC);
-                                            DB::statement('insert into pris_change_pris
-                                                                (pris_id, changed_pris_id, connect_type, old_connect_type, full_text, created_at)
-                                                             select ?, ?, ?, ?, ?, ?
-                                                             where not exists (
-                                                                select pris_change_pris.pris_id
-                                                                from pris_change_pris
-                                                                where (pris_id = ? and changed_pris_id = ? and connect_type = ?) or (pris_id = ? and changed_pris_id = ? and connect_type = ?)
-                                                            )'
-                                                , [
-                                                    $prisId, $changedPrisId, $newConnection, $oldConnection, trim($oldC), now(),
+                                            DB::statement(
+                                            'insert into pris_change_pris
+                                                    (pris_id, changed_pris_id, connect_type, old_connect_type, connect_text, full_text, created_at)
+                                                 select ?, ?, ?, ?, ?, ?, ?
+                                                 where not exists (
+                                                    select pris_change_pris.pris_id
+                                                    from pris_change_pris
+                                                    where (pris_id = ? and changed_pris_id = ? and connect_type = ?) or (pris_id = ? and changed_pris_id = ? and connect_type = ?)
+                                                )', [
+                                                    $prisId, $changedPrisId, $newConnection, $oldConnection, $connect_text, trim($oldC), now(),
                                                     $prisId, $changedPrisId, $newConnection, $changedPrisId, $prisId, $newConnection
                                                 ]);
                                         }
@@ -177,10 +184,10 @@ class FixOldPrisChangePris extends Command
                             }
                         }
 
-                    } catch (\Exception $e) {
-                        Log::error('Fix old pris connections: ' . $e->getMessage());
-                        $this->error('Error: '. $e->getMessage());
-                    }
+//                    } catch (\Exception $e) {
+//                        Log::error('Fix old pris connections: ' . $e->getMessage());
+//                        $this->error('Error: '. $e->getMessage());
+//                    }
                 }
 
             }

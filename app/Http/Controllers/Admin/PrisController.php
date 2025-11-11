@@ -226,11 +226,11 @@ class PrisController extends AdminController
     public function connectDocuments(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id' => ['required', 'exists:pris,id'],
-            'connectIds' => ['nullable', 'required_with:connect_type', 'array'],
-            'connectIds.*' => ['nullable', 'exists:pris,id'],
-            'connect_type' => ['nullable', 'required_without:connect_text', 'numeric'],
-            'connect_text' => ['nullable', 'required_without:connect_type,connectIds', 'string', 'max:255'],
+            'id'            => ['required', 'exists:pris,id'],
+            'connectIds'    => ['nullable', 'required_with:connect_type', 'array'],
+            'connectIds.*'  => ['nullable', 'exists:pris,id'],
+            'connect_type'  => ['nullable', 'required_without:connect_text', 'numeric'],
+            'connect_text'  => ['nullable', 'required_without:connect_type,connectIds', 'string', 'max:255'],
         ]);
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], Response::HTTP_OK);
@@ -243,18 +243,35 @@ class PrisController extends AdminController
         }
 
         if (isset($validated['connectIds'])) {
-            $item->changedDocs()->attach(
-                $validated['connectIds'],
-                ['connect_type' => $validated['connect_type'], 'connect_text' => $validated['connect_text'], 'created_at' => now()]
-            );
+            foreach ($validated['connectIds'] as $connectId) {
+                $connectDoc = Pris::find($connectId);
+                $connect_type = "";
+                if ($validated['connect_type']) {
+                    $connect_type = __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($validated['connect_type']))." ";
+                }
+                $full_text = $connect_type.$connectDoc->mcDisplayName;
+                if (!empty($validated['connect_text'])) {
+                    $full_text .= " {$validated['connect_text']}";
+                }
+                //dd($validated,$full_text);
+                $item->changedDocs()->attach(
+                    [$connectId],
+                    [
+                        'connect_type'  => $validated['connect_type'],
+                        'connect_text'  => $validated['connect_text'],
+                        'full_text'     => $full_text,
+                        'created_at'    => now()
+                    ]
+                );
+            }
             //Pris::whereIn('id', $validated['connectIds'])->update(['connection_status' => PrisDocChangeTypeEnum::toStatus($validated['connect_type'])]);
         } else {
             DB::table('pris_change_pris')->insert([
-                'pris_id' => $item->id,
+                'pris_id'       => $item->id,
                 'changed_pris_id' => null,
-                'connect_type' => $validated['connect_type'],
-                'connect_text' => $validated['connect_text'],
-                'created_at' => now(),
+                'connect_type'  => $validated['connect_type'],
+                'full_text'     => $validated['connect_text'],
+                'created_at'    => now(),
             ]);
         }
 
@@ -262,35 +279,110 @@ class PrisController extends AdminController
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException
+     * @param $pris_id
+     * @param $id
+     * @return View|RedirectResponse
      */
-    public function disconnectDocuments(Request $request)
+    public function editConnectedDocuments($pris_id, $id)
+    {
+        $connection = PrisChangePris::find($id);
+        if (!$connection) {
+            return $this->backWithMessage('danger', 'Свързания документ не може да бъде намерен');
+        }
+        $connection_id = $pris_id == $connection->pris_id
+            ? $connection->changed_pris_id
+            : $connection->pris_id;
+        $connectedDoc = $connection_id ? Pris::find($connection_id) : null;
+        $connected_doc_name = "";
+        if ($connectedDoc) {
+            $legalActType = LegalActType::with('translation')->find($connectedDoc->legal_act_type_id);
+            $connected_doc_name = "$legalActType->name_single № $connectedDoc->doc_num от ".date("Y", strtotime($connectedDoc->doc_date))." г.";
+        }
+        $pris = Pris::find($pris_id);
+        $can_access_orders = $this->canAccessOrders(request());
+        $legalActTypes = LegalActType::with(['translation'])->Pris()
+            ->when(!$can_access_orders, function ($query) {
+                $query->where('id', '<>', LegalActType::TYPE_ORDER);
+            })
+            ->get();
+
+        return $this->view('admin.pris.edit-connected-document',
+            compact('pris', 'connection', 'legalActTypes', 'connectedDoc', 'connected_doc_name')
+        );
+    }
+
+    public function updateConnectedDocuments(Request $request, $pris_id, $id)
     {
         $validator = Validator::make($request->all(), [
-            'id' => ['required', 'exists:pris,id'],
-            'disconnect' => ['nullable', 'exists:pris,id'],
-            'connect_text' => ['nullable', 'string']
+            'connectIds'        => ['nullable', 'required_with:connect_type', 'array'],
+            'connectIds.*'      => ['nullable', 'exists:pris,id'],
+            'connect_type'      => ['nullable', 'required_without:connect_text', 'numeric'],
+            'connect_text'      => ['nullable', 'required_without:connect_type,connectIds', 'string', 'max:255'],
         ]);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], Response::HTTP_OK);
+        }
+        $connection = PrisChangePris::find($id);
+        if (!$connection) {
+            return $this->backWithMessage('danger', 'Свързания документ не може да бъде намерен');
+        }
         $validated = $validator->validated();
-        if (!isset($validated['disconnect']) && !isset($validated['connect_text'])) {
-            return response()->json(['error' => 1, 'message' => 'Липсват данни'], Response::HTTP_OK);
-        }
-
-        $pris = Pris::find((int)$validated['id']);
+        $pris = Pris::find($pris_id);
         if ($request->user()->cannot('update', $pris)) {
-            return response()->json(['error' => 1, 'message' => __('messages.unauthorized')], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['success' => false, 'message' => __('messages.unauthorized')], Response::HTTP_UNAUTHORIZED);
         }
 
-        if (isset($validated['disconnect']) && !is_null($validated['disconnect'])) {
-            $pris->changedDocs()->detach($validated['disconnect']);
-        }
-        if (isset($validated['connect_text']) && !is_null($validated['connect_text'])) {
-            PrisChangePris::where('pris_id', $pris->id)->where('connect_text', $validated['connect_text'])->delete();
+        if (isset($validated['connectIds'])) {
+            foreach ($validated['connectIds'] as $connectId) {
+                $connectDoc = Pris::find($connectId);
+                $connect_type = "";
+                if ($validated['connect_type']) {
+                    $connect_type = __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($validated['connect_type']))." ";
+                }
+                $full_text = $connect_type.$connectDoc->mcDisplayName;
+                if (!empty($validated['connect_text'])) {
+                    $full_text .= " {$validated['connect_text']}";
+                }
+                //dd($validated,$full_text);
+                $pris->changedDocs()->attach(
+                    [$connectId],
+                    [
+                        'connect_type'  => $validated['connect_type'],
+                        'connect_text'  => $validated['connect_text'],
+                        'full_text'     => $full_text,
+                        'created_at'    => now()
+                    ]
+                );
+            }
+        } else {
+            $connection->connect_type = $validated['connect_type'];
+            $connection->full_text = $validated['connect_text'];
+            $connection->save();
         }
 
-        return response()->json(['success' => 1], Response::HTTP_OK);
+        return response()->json(['success' => true], Response::HTTP_OK);
+    }
+
+    /**
+     * @param $pris_id
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function disconnectDocuments($pris_id, $id)
+    {
+        $connection = PrisChangePris::find($id);
+        if (!$connection) {
+            return $this->backWithMessage('danger', 'Свързания документ не може да бъде намерен');
+        }
+
+        $pris = Pris::find($pris_id);
+        if (request()->user()->cannot('update', $pris)) {
+            return $this->backWithMessage('danger', __('messages.unauthorized'));
+        }
+
+        $connection->delete();
+
+        return $this->backWithMessage('success', 'Документът беше изтрит успешно');
     }
 
     /**

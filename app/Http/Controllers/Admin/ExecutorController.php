@@ -107,7 +107,7 @@ class ExecutorController extends AdminController
 
             DB::rollBack();
 
-            $this->backWithError('danger', __('messages.system_error'));
+            $this->backWithMessage('danger', __('messages.system_error'));
         }
     }
 
@@ -166,7 +166,7 @@ class ExecutorController extends AdminController
 
             DB::rollBack();
 
-            $this->backWithError('danger', __('messages.system_error'));
+            $this->backWithMessage('danger', __('messages.system_error'));
         }
     }
 
@@ -190,7 +190,7 @@ class ExecutorController extends AdminController
 
             Log::error($e);
 
-            $this->backWithError('danger', __('messages.system_error'));
+            $this->backWithMessage('danger', __('messages.system_error'));
 
         }
     }

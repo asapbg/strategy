@@ -199,7 +199,7 @@ class PublicationController extends AdminController
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            return $this->backWithError('danger', __('messages.system_error'));
+            return $this->backWithMessage('danger', __('messages.system_error'));
         }
 
     }

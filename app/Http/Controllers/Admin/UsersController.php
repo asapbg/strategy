@@ -156,7 +156,7 @@ class  UsersController extends Controller
 
         // An internal user cannot have the external user role
         if (in_array(User::EXTERNAL_USER_DEFAULT_ROLE, $rolesNames) && $data['user_type'] == User::USER_TYPE_INTERNAL) {
-            return $this->backWithError('danger', __('User type cannot be "Internal" when assigning the "External User" role. Please change the type or the role.'));
+            return $this->backWithMessage('danger', __('User type cannot be "Internal" when assigning the "External User" role. Please change the type or the role.'));
         }
 
         if(count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0) {
@@ -235,13 +235,13 @@ class  UsersController extends Controller
 
         // An internal user cannot have the external user role
         if (in_array(User::EXTERNAL_USER_DEFAULT_ROLE, $rolesNames) && $data['user_type'] == User::USER_TYPE_INTERNAL) {
-            return $this->backWithError('danger', __('User type cannot be "Internal" when assigning the "External User" role. Please change the type or the role.'));
+            return $this->backWithMessage('danger', __('User type cannot be "Internal" when assigning the "External User" role. Please change the type or the role.'));
         }
 
         // An external user cannot have any role except the external user role
         $rolesExceptExternal = array_diff($rolesNames, [User::EXTERNAL_USER_DEFAULT_ROLE]);
         if (count($rolesExceptExternal) != 0 && $data['user_type'] == User::USER_TYPE_EXTERNAL) {
-            return $this->backWithError('danger', __('A user of type "External" can only have the role "External User".'));
+            return $this->backWithMessage('danger', __('A user of type "External" can only have the role "External User".'));
         }
 
         DB::beginTransaction();

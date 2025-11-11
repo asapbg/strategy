@@ -502,7 +502,8 @@ MyModal.prototype.loadModalBody = function (_myModal) {
 // available params:
 //
 //===============================
-function MyS2Ajax(selectDom, selectPlaceholder, selectUrl) {
+function MyS2Ajax(selectDom, selectPlaceholder, selectUrl, dependsOn) {
+    //console.log(dependsOn);
     selectDom.select2({
         allowClear: true,
         templateResult: select2OptionFilter,
@@ -516,6 +517,9 @@ function MyS2Ajax(selectDom, selectPlaceholder, selectUrl) {
             data: function (params) {
                 if ($(this).data('types2ajax') == 'pris_doc') {
                     let legalActTypeFilterId = $("#legal_act_type_filter_new").length ? "#legal_act_type_filter_new" : "#legal_act_type_filter";
+                    if (dependsOn) {
+                        legalActTypeFilterId = dependsOn;
+                    }
                     var query = {
                         actType: typeof $(this).data('legalacttype') != 'undefined'
                             ? parseInt($(this).data('legalacttype'))
@@ -951,7 +955,7 @@ $(document).ready(function (e) {
 
     if ($('.select2-autocomplete-ajax').length) {
         $('.select2-autocomplete-ajax').each(function () {
-            MyS2Ajax($(this), $(this).data('placeholders2'), $(this).data('urls2'));
+            MyS2Ajax($(this), $(this).data('placeholders2'), $(this).data('urls2'), $(this).data('dependsOn'));
         });
     }
 
