@@ -149,7 +149,15 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label"
-                       for="field_of_actions_id">{{ __('validation.attributes.field_of_actions_id') }}<span
+                       for="field_of_actions_id">
+                    @if($item?->fieldOfAction->parent?->id == \App\Models\FieldOfAction::CATEGORY_AREA)
+                        {{ trans_choice('custom.area', 1) }}
+                    @elseif($item?->fieldOfAction->parent?->id == \App\Models\FieldOfAction::CATEGORY_MUNICIPAL)
+                        {{ __('custom.municipalities') }}
+                    @else
+                        {{ trans_choice('custom.field_of_actions', 1) }}
+                    @endif
+                    <span
                         class="required">*</span></label>
                 <div class="col-12">
                     <select id="field_of_actions_id" name="field_of_actions_id" class="cl-child form-control form-control-sm select2 select2-no-clear

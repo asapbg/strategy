@@ -45,7 +45,15 @@
                 </a>
             </div>
             <div class="col-md-4 mb-4">
-                <h3 class="mb-2 fs-18">{{ trans_choice('custom.field_of_actions', 1) }}</h3>
+                <h3 class="mb-2 fs-18">
+                    @if($item->fieldOfAction->parent?->id == \App\Models\FieldOfAction::CATEGORY_AREA)
+                        {{ trans_choice('custom.area', 1) }}
+                    @elseif($item->fieldOfAction->parent?->id == \App\Models\FieldOfAction::CATEGORY_MUNICIPAL)
+                        {{ __('custom.municipalities') }}
+                    @else
+                        {{ trans_choice('custom.field_of_actions', 1) }}
+                    @endif
+                </h3>
                 <a href="#" class="main-color text-decoration-none">
                   <span class="obj-icon-info">
                     <i class="{{ $item->fieldOfAction ? $item->fieldOfAction->icon_class : 'fas fa-certificate' }} me-2 main-color" title="{{ trans_choice('custom.field_of_actions', 1) }}"></i>
