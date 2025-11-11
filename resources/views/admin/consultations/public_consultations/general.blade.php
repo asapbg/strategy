@@ -149,7 +149,15 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label"
-                       for="field_of_actions_id">{{ __('validation.attributes.field_of_actions_id') }}<span
+                       for="field_of_actions_id">
+                    @if($item?->fieldOfAction?->parent?->id == \App\Models\FieldOfAction::CATEGORY_AREA)
+                        {{ trans_choice('custom.area', 1) }}
+                    @elseif($item?->fieldOfAction?->parent?->id == \App\Models\FieldOfAction::CATEGORY_MUNICIPAL)
+                        {{ __('custom.municipalities') }}
+                    @else
+                        {{ trans_choice('custom.field_of_actions', 1) }}
+                    @endif
+                    <span
                         class="required">*</span></label>
                 <div class="col-12">
                     <select id="field_of_actions_id" name="field_of_actions_id" class="cl-child form-control form-control-sm select2 select2-no-clear
@@ -205,7 +213,7 @@
                     <select id="pris_id" name="pris_id" data-types2ajax="pris_doc"
                             data-legalacttype="{{ \App\Models\LegalActType::TYPE_DECREES }}"
                             data-urls2="{{ route('admin.select2.ajax', 'pris_doc') }}"
-                            data-placeholders2="{{ __('custom.search_pris_doc_js_placeholder') }}"
+                            data-placeholders2="233/2024"
                             class="form-control form-control-sm select2-autocomplete-ajax @error('pris_id'){{ 'is-invalid' }}@enderror">
                         <option value=""
                                 @if(old('pris_id', ($item->id && $pris ? $item->pris_id : 0)) == 0) selected @endif>---
@@ -217,6 +225,7 @@
                     @error('pris_id')
                     <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
+                    <p class="text-muted">{{ __('custom.search_pris_doc_js_placeholder') }}</p>
                 </div>
             </div>
         </div>
@@ -253,8 +262,7 @@
                 <div class="col-12">
                     <select name="legislative_program_id"
                             class="form-control form-control-sm select2 @error('legislative_program_id'){{ 'is-invalid' }}@enderror">
-                        <option value="0"
-                                @if(old('legislative_program_id', ($item->id ? $item->legislative_program_id : 0)) == 0) selected @endif>
+                        <option value="">
                             ---
                         </option>
                         @if(isset($legislativePrograms) && $legislativePrograms->count())
@@ -274,7 +282,7 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-12 control-label" for="legislative_program_row_id">Законопроект от законодателната
-                    програма</label>
+                    програма<span class="required">*</span></label>
                 @php($institutionid = $item->id ? ($item->importer_institution_id) : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->id :0))
                 <select id="legislative_program_row_id" name="legislative_program_row_id" data-types2ajax="lp_record_pc"
                         data-institution="{{ $institutionid }}"
@@ -303,13 +311,11 @@
 
         <div class="col-md-12 my-3" id="operational_programs">
             <div class="form-group" id="operational_program_id">
-                <label class="col-sm-12 control-label" for="operational_program_id">Законопроект от оперативна
-                    програма</label>
+                <label class="col-sm-12 control-label" for="operational_program_id">Подзаконов нормативен акт от оперативната програма<span class="required">*</span></label>
                 <div class="col-12">
                     <select name="operational_program_id"
                             class="form-control form-control-sm select2 @error('operational_program_id'){{ 'is-invalid' }}@enderror">
-                        <option value="0"
-                                @if(old('operational_program_id', ($item->id ? $item->operational_program_id : 0)) == 0) selected @endif>
+                        <option value="">
                             ---
                         </option>
                         @if(isset($operationalPrograms) && $operationalPrograms->count())
@@ -329,7 +335,7 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-12 control-label"
-                       for="operational_program_row_id">{{ trans_choice('custom.operational_programs_rows', 1) }}</label>
+                       for="operational_program_row_id">Проект на нормативен акт от оперативната програма <span class="required">*</span></label>
                 @php($institutionid = $item->id ? ($item->importer_institution_id) : (auth()->user() && auth()->user()->institution ? auth()->user()->institution->id :0))
                 <select id="operational_program_row_id" name="operational_program_row_id"
                         data-types2ajax="op_record_pc" data-urls2="{{ route('admin.select2.ajax', 'op_record_pc') }}"

@@ -25,6 +25,9 @@
                                             {!! fileIcon($doc->content_type) !!} {{ $doc->{'description_'.$doc->locale} }} - {{ __('custom.'.$doc->locale) }} | {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }} | {{ $doc->user ? $doc->user->fullName() : '' }}
                                         </a>
                                         <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">{{ __('custom.preview') }}</button>
+                                        <a class="ml-2" type="button" href="{{ route('admin.delete.file', ['file' => $doc]) }}">
+                                            <i class="fas fa-trash me-1 text-danger" role="button" data-toggle="tooltip" title="" data-original-title="Изтрий"></i>
+                                        </a>
                                     </div>
                                 @endif
                                 @if($item->documentsAtt->count())

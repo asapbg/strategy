@@ -522,4 +522,23 @@ class  UsersController extends Controller
 
         return response()->json(['status' => 'success', 'user' => $user]);
     }
+
+    public function verify(Request $request, User $user) {
+        try {
+
+            $user->update([
+                'email_verified_at' => Carbon::now(),
+                'activity_status' => User::STATUS_ACTIVE,
+            ]);
+
+            return to_route('admin.users')
+                ->with('success', trans_choice('custom.users', 1)." ".__('messages.updated_successfully_m'));
+        }
+        catch (\Exception $e) {
+
+            Log::error($e);
+            return to_route('admin.users')->with('danger', __('messages.system_error'));
+
+        }
+    }
 }

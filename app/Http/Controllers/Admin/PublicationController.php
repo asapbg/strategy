@@ -219,6 +219,11 @@ class PublicationController extends AdminController
                 'value' => $request->input('category'),
                 'options' => PublicationCategory::optionsList(true, $type)->pluck('name','id')->toArray(),
                 'col' => 'col-md-4'
+            ),
+            'type' => array(
+                'type' => 'hidden',
+                'value' => $request->input('type'),
+                'col' => 'd-none'
             )
         );
     }

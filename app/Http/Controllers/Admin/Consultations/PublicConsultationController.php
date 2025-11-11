@@ -6,12 +6,14 @@ use App\Enums\DocTypesEnum;
 use App\Enums\DynamicStructureTypesEnum;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Enums\PublicConsultationTimelineEnum;
+use App\Exports\CommentsExport;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\PublicConsultationContactStoreRequest;
 use App\Http\Requests\PublicConsultationContactsUpdateRequest;
 use App\Http\Requests\PublicConsultationDocStoreRequest;
 use App\Http\Requests\PublicConsultationKdStoreRequest;
 use App\Http\Requests\PublicConsultationSubDocUploadRequest;
+use App\Http\Requests\StorePublicConsultationOtherSourceCommentRequest;
 use App\Http\Requests\StorePublicConsultationProposalReport;
 use App\Http\Requests\StorePublicConsultationRequest;
 use App\Jobs\SendSubscribedUserEmailJob;
@@ -49,6 +51,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class PublicConsultationController extends AdminController
@@ -160,8 +163,8 @@ class PublicConsultationController extends AdminController
 
         $programProjects = ProgramProject::with(['translation'])->get();
         $linkCategories = LinkCategory::with(['translation'])->get();
-        $operationalPrograms = OperationalProgram::get();
-        $legislativePrograms = LegislativeProgram::get();
+        $operationalPrograms = OperationalProgram::orderByDesc('id')->get();
+        $legislativePrograms = LegislativeProgram::orderByDesc('id')->get();
 
         $documents = [];
         foreach ($item->documents as $document) {
@@ -171,7 +174,7 @@ class PublicConsultationController extends AdminController
 
 //        $pris = Pris::Decrees()->get();
         $pris = $item->pris;
-        $laws = Law::with(['translations'])->get();
+        $laws = Law::with(['translations'])->whereActive(true)->orderByTranslation('name')->get();
 
 //        $diffInDays = null;
 //        if($item->id){
@@ -187,10 +190,14 @@ class PublicConsultationController extends AdminController
             ->unique()
             ->toArray();
 
+        $otherSourceComments = $item->documents()->where('doc_type', DocTypesEnum::PC_OTHER_SOURCE_COMMENTS->value)
+            ->where('locale', app()->getLocale())
+            ->get();
+
         return $this->view(self::EDIT_VIEW, compact('item', 'storeRouteName', 'listRouteName', 'translatableFields',
             'consultationLevels', 'actTypes', 'programProjects', 'linkCategories',
             'operationalPrograms', 'legislativePrograms', 'kdRows', 'dsGroups', 'kdValues', 'polls', 'documents', 'userInstitutionLevel',
-            'fieldsOfActions', 'institutionLevels', 'isAdmin', 'institutions', 'pris', 'laws', 'subDocumentsTypes'));
+            'fieldsOfActions', 'institutionLevels', 'isAdmin', 'institutions', 'pris', 'laws', 'subDocumentsTypes', 'otherSourceComments'));
     }
 
     public function store(Request $request, PublicConsultation $item)
@@ -223,8 +230,18 @@ class PublicConsultationController extends AdminController
             return back()->withInput()->withErrors(['open_from' => 'Минимланият период за обществена консултация е 14 дни']);
         }
 
+        if( $to->diffInDays($from) <= PublicConsultation::SHORT_DURATION_DAYS ) {
+            if(!isset($validated['short_term_reason_bg']) || empty(isset($validated['short_term_reason_bg']))){
+                return back()->withInput()->withErrors(['short_term_reason_bg' => 'Моля да посочите \'Причина за кратък срок\'']);
+            }
+        }
+
         if (!$id && Carbon::parse($from)->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
             return back()->withInput()->withErrors(['open_from' => 'Консултацията може да стартира най-скоро с днешна дата']);
+        }
+
+        if ($id && !$item->contactPersons()->count()) {
+            return $this->backWithError('danger', 'Моля, въведете поне един служител в таб "Контактна информация"');
         }
 
         DB::beginTransaction();
@@ -949,6 +966,48 @@ class PublicConsultationController extends AdminController
         }
     }
 
+    public function addOtherSourceComment(StorePublicConsultationOtherSourceCommentRequest $request)
+    {
+        try {
+            $validated = $request->validated();
+            $doc_type = \App\Enums\DocTypesEnum::PC_OTHER_SOURCE_COMMENTS->value;
+            $pc = PublicConsultation::find((int)$validated['id']);
+
+            $dir = File::PUBLIC_CONSULTATIONS_OTHER_SOURCE_COMMENTS_UPLOAD_DIR;
+
+            foreach (config('available_languages') as $lang) {
+                $code = $lang['code'];
+                $file = $request->file('file_' . $doc_type . '_' . $code);
+
+                $description = $validated['filename_' . $doc_type . '_' . $code];
+
+                $fileNameToStore = round(microtime(true)) . '.' . $file->getClientOriginalExtension();
+                $file->storeAs($dir, $fileNameToStore, 'public_uploads');
+
+                $newFile = new File([
+                    'id_object' => $pc->id,
+                    'code_object' => File::CODE_OBJ_PUBLIC_CONSULTATION,
+                    'filename' => $fileNameToStore,
+                    'doc_type' => $doc_type,
+                    'content_type' => $file->getClientMimeType(),
+                    'path' => $dir . $fileNameToStore,
+                    'description_' . $code => $description,
+                    'sys_user' => $request->user()->id,
+                    'locale' => $code,
+                    'source' => $validated['file_source_' . $code]
+                ]);
+
+                $newFile->save();
+            }
+
+            return redirect(route(self::EDIT_ROUTE, $pc) . '#ct-comments')
+                ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            Log::error('Error save proposal report public consultation' . $e);
+            return redirect(url()->previous() . '#ct-comments')->withInput(request()->all())->with('danger', __('messages.system_error'));
+        }
+    }
+
     public function publish(Request $request, PublicConsultation $item)
     {
         if ($request->user()->cannot('publish', $item)) {
@@ -1017,6 +1076,18 @@ class PublicConsultationController extends AdminController
             return redirect(url()->previous())->with('danger', __('messages.system_error'));
 
         }
+    }
+
+    public function exportComments(PublicConsultation $item)
+    {
+        $comments = $item->comments;
+
+        $exportData = [
+            'title' => 'Коментари към обществена консултация '.$item->title,
+            'rows' => $item->comments
+        ];
+
+        return Excel::download(new CommentsExport($exportData), 'public_consultation_comments.xlsx');
     }
 
     /**

@@ -45,7 +45,15 @@
                 </a>
             </div>
             <div class="col-md-4 mb-4">
-                <h3 class="mb-2 fs-18">{{ trans_choice('custom.field_of_actions', 1) }}</h3>
+                <h3 class="mb-2 fs-18">
+                    @if($item->fieldOfAction->parent?->id == \App\Models\FieldOfAction::CATEGORY_AREA)
+                        {{ trans_choice('custom.area', 1) }}
+                    @elseif($item->fieldOfAction->parent?->id == \App\Models\FieldOfAction::CATEGORY_MUNICIPAL)
+                        {{ __('custom.municipalities') }}
+                    @else
+                        {{ trans_choice('custom.field_of_actions', 1) }}
+                    @endif
+                </h3>
                 <a href="#" class="main-color text-decoration-none">
                   <span class="obj-icon-info">
                     <i class="{{ $item->fieldOfAction ? $item->fieldOfAction->icon_class : 'fas fa-certificate' }} me-2 main-color" title="{{ trans_choice('custom.field_of_actions', 1) }}"></i>
@@ -202,8 +210,8 @@
                                         @if($att->doc_type == $doc->doc_type.'00' && $att->locale == app()->getLocale())
                                             @php($foundBaseDoc = true)
                                             <li class="ms-5 list-unstyled @if(!$foundBaseDocSub) mt-2 @endif">
-                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                                    {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($doc->created_at) }}
+                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $att->id }}" data-url="{{ route('modal.file_preview', ['id' => $att->id]) }}">
+                                                    {!! fileIcon($att->content_type) !!} <span class="font-italic"></span>{{ $att->{'description_'.app()->getLocale()} }} - {{ displayDate($att->created_at) }}
                                                 </a>
                                             </li>
                                             @php($foundBaseDocSub = 1)

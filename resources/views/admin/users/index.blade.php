@@ -136,6 +136,15 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
+                                        @if(!$user->email_verified_at)
+                                            <a href="javascript:;"
+                                               class="btn btn-sm btn-secondary"
+                                               onclick="showModalConfirm('{{route('admin.users.verify', $user)}}', 'Сигурни ли сте, че искате ръчно да потвърдите ел. поща на {{ $user->fullName() }}', 'Ръчно потвърждаване на ел. поща')"
+                                               data-toggle="tooltip"
+                                               title="Ръчно потвърждаване на ел. поща">
+                                                <i class="fa fa-user-check"></i>
+                                            </a>
+                                        @endif
                                         <a href="{{route('admin.users.edit',$user->id)}}"
                                            class="btn btn-sm btn-info"
                                            data-toggle="tooltip"

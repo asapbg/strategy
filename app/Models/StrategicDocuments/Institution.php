@@ -102,7 +102,7 @@ class Institution extends ModelActivityExtend implements TranslatableContract
         $date = databaseDate($date);
         $name = $this->name;
         $hName = $this->historyNames->filter(function ($item) use ($date) {
-            return $item->valid_from <= $date && (is_null($item->valid_till) || $item->valid_till > $date);
+            return $item->valid_from <= $date && (is_null($item->valid_till) || $item->valid_till > $date) && !$item->current;
         });
         if ($hName->count() > 0) {
             $text = __('The name of the institution has been changed.');

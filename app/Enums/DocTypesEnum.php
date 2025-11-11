@@ -52,6 +52,8 @@ enum DocTypesEnum: int
     case OGP_VERSION_AFTER_CONSULTATION = 19; // Файл към OGP
     case OGP_REPORT_EVALUATION = 20; // Доклади за независима оценка
 
+    case PC_OTHER_SOURCE_COMMENTS = 22;
+
     // Return enum name by value
 
     public static function keyByValue($searchVal): string
@@ -308,6 +310,12 @@ enum DocTypesEnum: int
                 $rules = [
                     'bg' => ['nullable', 'required_without:message', 'mimes:pdf', 'max:'.config('filesystems.max_upload_file_size')],
                     'en' => ['nullable', 'mimes:pdf', 'max:'.config('filesystems.max_upload_file_size')],
+                ];
+                break;
+            case self::PC_OTHER_SOURCE_COMMENTS->value:
+                $rules = [
+                    'bg' => ['required', 'mimes:doc,docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
+                    'en' => ['required', 'mimes:doc,docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
                 ];
                 break;
             default:
