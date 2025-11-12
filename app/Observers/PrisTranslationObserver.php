@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Jobs\SendSubscribedUserEmailJob;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\CustomRole;
+use App\Models\LegalActType;
 use App\Models\Pris;
 use App\Models\PrisTranslation;
 use App\Models\User;
@@ -103,6 +104,13 @@ class PrisTranslationObserver
     {
         Log::error('Observer pris translation event:'.$event);
         $pris = $prisTranslation->parent;
+
+        if ($pris->legal_act_type_id == LegalActType::TYPE_ORDER) {
+            Log::error('Observer pris email sending stopped because its an order.');
+
+            return;
+        }
+
         if($event == 'created' || $event == 'updated'){
             $moderators = null;
             $administrators = null;
@@ -116,11 +124,6 @@ class PrisTranslationObserver
                     ->where('subscribable_id', '=', $pris->id)
                     ->get();
             } else{
-                $administrators = User::whereActive(true)
-                    ->hasRole(CustomRole::ADMIN_USER_ROLE)
-                    ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
-                    ->get();
-
                 $subscribedUsers = UserSubscribe::where('id', 0)->get();
                 //get users by model filter
                 $filterSubscribtions = UserSubscribe::where('subscribable_type', Pris::class)
@@ -173,10 +176,6 @@ class PrisTranslationObserver
                         ->where('subscribable_id', '=', $pc->id)
                         ->get();
                 } else{
-                    $administrators = User::whereActive(true)
-                        ->hasRole(CustomRole::ADMIN_USER_ROLE)
-                        ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
-                        ->get();
                     $subscribedUsers = UserSubscribe::where('id', 0)->get();
                     //get users by model filter
                     $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
