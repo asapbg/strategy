@@ -35,9 +35,9 @@ class FixPublicConsultationComments extends Command
         $pcWithoutComment = PublicConsultation::select('id','old_id')
             ->withCount('commentsWithTrashed')
             ->whereNotNull('old_id')
-            ->where('old_id', '>', 9517)
+            //->where('old_id', '>', 9517)
             //->whereDoesntHave('comments')
-            //->whereIn('old_id', [9517])
+            ->whereIn('old_id', [9457])
             ->get();
 
         if ($pcWithoutComment->count() == 0) {
@@ -61,6 +61,7 @@ class FixPublicConsultationComments extends Command
                       where pcomments.consultationid = $pc->old_id
                    order by pcomments.datecreated asc
                 ");
+            //dd(collect($oldDbComments)->count());
             if (!sizeof($oldDbComments)) {
                 //$this->comment("No comments found for public consultation with old ID $pc->old_id");
                 continue;
