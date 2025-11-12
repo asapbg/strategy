@@ -28,7 +28,7 @@ return [
     'public_consultation.importer' => 'Вносител',
     'public_consultation.importer_pc' => 'Институция/орган, провела консултацията',
     'public_consultation.type_consultation' => 'Тип консултация',
-    'public_consultation.contact_persons' => 'Лица за контакт',
+    'public_consultation.contact_persons' => 'Контактна информация',
     'public_consultation.responsible_institution' => 'Отговорна институция',
     'public_consultation.short_term_motive_label' => 'Мотиви за кратък срок',
     'public_consultation.base_documents' => 'Пакет основни документи',
