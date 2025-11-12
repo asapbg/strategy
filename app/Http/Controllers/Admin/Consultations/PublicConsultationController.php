@@ -241,7 +241,7 @@ class PublicConsultationController extends AdminController
         }
 
         if ($id && !$item->contactPersons()->count()) {
-            return $this->backWithError('danger', 'Моля, въведете поне един служител в таб "Контактна информация"');
+            return $this->backWithMessage('danger', 'Моля, въведете поне един служител в таб "Контактна информация"');
         }
 
         DB::beginTransaction();
