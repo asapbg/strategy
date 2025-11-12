@@ -893,10 +893,9 @@ $(document).ready(function (e) {
             if ($(this).data('resource-delete-url')) {
                 $($(this).data('target')).find('form').attr('action', $(this).data('resource-delete-url'));
             }
-
-            if ($(this).data('title_singular')) {
-                $('#modal_title_singular').html($(this).data('title_singular'));
-                $('#modal_btn_title_singular').html($(this).data('title_singular'));
+            if ($(this).data('resource-title')) {
+                $('#modal_title_singular').html($(this).data('resource-title'));
+                $('#modal_btn_title_singular').html($(this).data('resource-title'));
             }
 
             $($(this).data('target')).find('span.resource-name').html($(this).data('resource-name'));

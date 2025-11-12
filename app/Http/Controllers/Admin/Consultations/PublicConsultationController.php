@@ -1091,6 +1091,53 @@ class PublicConsultationController extends AdminController
     }
 
     /**
+     * Delete file with its timeline event
+     *
+     * @param Request $request
+     * @param File $file
+     * @return RedirectResponse
+     */
+    public function deleteFile(Request $request, File $file)
+    {
+        if ($request->user()->cannot('delete', $file)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+        try {
+            $file->delete();
+            Timeline::where('object_type', File::class)
+                ->where('object_id', $file->id)
+                ->delete();
+            return $this->backWithMessage('success', __('custom.the_record') . " " . __('messages.deleted_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->backWithMessage('danger', __('messages.system_error'));
+
+        }
+    }
+
+    /**
+     * Delete publication's message
+     *
+     * @param Request $request
+     * @param Comments $message
+     * @return RedirectResponse
+     */
+    public function deleteMessage(Request $request, Comments $message)
+    {
+//        if ($request->user()->cannot('delete', $message)) {
+//            abort(Response::HTTP_FORBIDDEN);
+//        }
+        try {
+            $message->delete();
+            return $this->backWithMessage('success', __('custom.the_record') . " " . __('messages.deleted_successfully_m'));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->backWithMessage('danger', __('messages.system_error'));
+
+        }
+    }
+
+    /**
      * @param $id
      * @param array $with
      */

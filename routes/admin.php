@@ -126,6 +126,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/consultations/public-consultations/{item}/delete',    'destroy')->name('consultations.public_consultations.delete');
         Route::get('/consultations/public-consultations/publish/{item}',    'publish')->name('consultations.public_consultations.publish');
         Route::get('/consultations/public-consultations/unpublish/{item}',  'unPublish')->name('consultations.public_consultations.unpublish');
+        Route::post('/consultations/public-consultations/files/{file}/delete','deleteFile')->name('consultations.public_consultations.delete.file');
+        Route::post('/consultations/public-consultations/messages/{message}/delete','deleteMessage')->name('consultations.public_consultations.delete.message');
     });
 
     // Pages

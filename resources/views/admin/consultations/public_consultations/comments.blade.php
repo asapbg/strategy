@@ -116,7 +116,18 @@
     @php($hasProposalReport = false)
     @if($item->message)
         @php($hasProposalReport = true)
-        <p>{!! $item->message->content !!}</p>
+        <p>
+            <a class="btn btn-sm btn-danger mt-2 d-inline-block js-toggle-delete-resource-modal" type="button"
+               data-target="#modal-delete-resource"
+               data-resource-id="{{ $item->message->id }}"
+               data-resource-title="Съобщението"
+               data-resource-name="Съобщението"
+               data-resource-delete-url="{{ route('admin.consultations.public_consultations.delete.message', ['message' => $item->message]) }}"
+            >
+                <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+            </a>
+            {!! $item->message->content !!}
+        </p>
     @endif
     @if(isset($documents) && count($documents))
         @foreach(config('available_languages') as $lang)
@@ -139,6 +150,15 @@
                         >
                             {{ __('custom.preview') }}
                         </button>
+                        <a class="btn btn-sm btn-danger mt-2 js-toggle-delete-resource-modal" type="button"
+                           data-target="#modal-delete-resource"
+                           data-resource-id="{{ $doc->id }}"
+                           data-resource-title="Документа"
+                           data-resource-name="Документа"
+                           data-resource-delete-url="{{ route('admin.consultations.public_consultations.delete.file', ['file' => $doc]) }}"
+                        >
+                            <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                        </a>
                     </div>
                 @endforeach
                 @if(!$found)

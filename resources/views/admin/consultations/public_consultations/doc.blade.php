@@ -143,8 +143,7 @@
                     </a>
                     <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $oldFile->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $oldFile->id]) }}">{{ __('custom.preview') }}</button>
                     <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $oldFile->id]) }}">
-                        <i class="fas fa-trash me-1" role="button"
-                           data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                        <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                     </a>
                 </div>
             @endforeach
