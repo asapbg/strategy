@@ -350,6 +350,11 @@
             });
         @endif
 
+        if ($('#institution_id').val()) {
+            let selectedOpt = $('#institution_id').find('option:selected');
+            consultationLevel = parseInt(selectedOpt.data('level'));
+        }
+
         //Init and preset form
         onDateChange();
         controlForm();
