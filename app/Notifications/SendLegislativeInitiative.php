@@ -53,7 +53,7 @@ class SendLegislativeInitiative extends Notification
 //                . PHP_EOL . 'Автор на предложението: ' . $this->legislativeInitiative->user->fullName()
 //                . PHP_EOL . 'Институция, отговорна за нормативния акт: ' . ($this->legislativeInitiative->law && $this->legislativeInitiative->law->institutions->count() ? join(';', $this->legislativeInitiative->law->institutions->pluck('name')->toArray()) : '---')
 //                . PHP_EOL . 'Линк към законодателната инициатива: ' . route('legislative_initiatives.view', $this->legislativeInitiative)
-//                . PHP_EOL . 'Този имейл е автоматично генериран, моля не отговаряйте. В случай, че имейлът не е предназначен за Вас, моля да го игнорирате. Ако прецените, че е необходимо, може да се свържете с администратора на Портала за обществени консултации, чрез секция „Контакти“.',
+//                . PHP_EOL . 'Този имейл е автоматично генериран, моля не отговаряйте. В случай, че имейлът не е предназначен за Вас моля да го игнорирате. Ако прецените, че е необходимо, може да се свържете с администратора на Портала за обществени консултации, чрез секция „Контакти“.',
             'message' => 'Уважаеми госпожи и господа,'
                 . PHP_EOL . 'Това предложение за промени в '. $this->legislativeInitiative->law?->name . ' е направено от '. $this->legislativeInitiative->user->fullName() .'като е подписано с квалифициран електронен подпис.'
                 . PHP_EOL . 'Предложението е направено на основание чл. 18 от Закона за нормативните актове чрез Портала за обществени консултации.'
