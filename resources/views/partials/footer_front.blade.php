@@ -42,7 +42,7 @@
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <a class="p-0 text-light text-decoration-none" href="https://www.strategy.bg/" title="{{ __('site.old_portal_link') }}">
+                            <a class="p-0 text-light text-decoration-none" href="https://www.old.strategy.bg/" title="{{ __('site.old_portal_link') }}">
                                 {{ __('site.old_portal_link') }}
                             </a>
                         </div>
