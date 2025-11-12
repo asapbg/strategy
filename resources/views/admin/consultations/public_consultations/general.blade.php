@@ -541,9 +541,10 @@
 
                     $('#field_of_actions_id').val('{{ old('field_of_actions_id', ($item->id ? $item->field_of_actions_id : 0)) }}').trigger('change');
 
+                    let isFoaDefined = typeof foa != 'undefined';
+
                     $('#field_of_actions_id option').each(function () {
-                        if (typeof foa != 'undefined') {
-                            console.log(foa.indexOf(parseInt($(this).attr('value'))), parseInt($(this).attr('value')));
+                        if (isFoaDefined) {
                             if (foa.indexOf(parseInt($(this).attr('value'))) != -1) {
                                 $(this).attr('disabled', false);
                             } else {
@@ -553,8 +554,16 @@
                             $(this).attr('disabled', true);
                         }
                     });
-                });
 
+                    /**
+                     * If fields of actions isn't defined and the selected option length is zero
+                     * then that means it came from the modal where institutions without fields of actions are shown.
+                     * In the select only the institutions that have fields of actions are shown.
+                     */
+                    if (!isFoaDefined && selectedOpt.length == 0) {
+                        alert('Избраната институция няма области на политики. Моля, въведете такива в номенклатурата за институции или се обърнете към администратор.');
+                    }
+                });
 
                 $('#institution_id').trigger('change');
             });
