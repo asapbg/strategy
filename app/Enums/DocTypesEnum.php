@@ -302,8 +302,8 @@ enum DocTypesEnum: int
         {
             case self::PC_CONSOLIDATED_ACT_VERSION->value:
                 $rules = [
-                    'bg' => ['nullable', 'mimes:doc,docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
-                    'en' => ['nullable', 'mimes:doc,docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
+                    'bg' => ['nullable', 'mimes:doc,docx,pdf,zip,rar', 'max:'.config('filesystems.max_upload_file_size')],
+                    'en' => ['nullable', 'mimes:doc,docx,pdf,zip,rar', 'max:'.config('filesystems.max_upload_file_size')],
                     ];
                 break;
             case self::PC_COMMENTS_REPORT->value:
@@ -314,14 +314,14 @@ enum DocTypesEnum: int
                 break;
             case self::PC_OTHER_SOURCE_COMMENTS->value:
                 $rules = [
-                    'bg' => ['required', 'mimes:doc,docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
-                    'en' => ['required', 'mimes:doc,docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
+                    'bg' => ['required', 'mimes:doc,docx,pdf,zip,rar', 'max:'.config('filesystems.max_upload_file_size')],
+                    'en' => ['required', 'mimes:doc,docx,pdf,zip,rar', 'max:'.config('filesystems.max_upload_file_size')],
                 ];
                 break;
             default:
                 $rules = [
-                    'bg' => ['nullable', 'mimes:doc,docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
-                    'en' => ['nullable', 'mimes:doc,docx,pdf', 'max:'.config('filesystems.max_upload_file_size')],
+                    'bg' => ['nullable', 'mimes:doc,docx,pdf,zip,rar', 'max:'.config('filesystems.max_upload_file_size')],
+                    'en' => ['nullable', 'mimes:doc,docx,pdf,zip,rar', 'max:'.config('filesystems.max_upload_file_size')],
                 ];
         }
 

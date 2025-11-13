@@ -421,6 +421,7 @@ if (!function_exists('fileIcon')) {
                 break;
             case 'application/rar':
             case 'application/x-rar':
+            case 'application/x-zip-compressed':
                 $icon = '<i class="fas fa-file-zipper text-primary me-1"></i>';
                 break;
         }
