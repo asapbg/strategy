@@ -235,7 +235,20 @@ class StrategicDocumentsController extends Controller
                 $query->where('name', 'like', '%Отчети%')
                     ->orWhere('name', 'like', '%Доклади%');
             })
+            ->orderBy('ord')
             ->get();
+
+        if (!$strategicDocumentFiles->count()) {
+            $strategicDocumentFiles = StrategicDocumentFile::with('translations')
+                ->where('strategic_document_id', $id)
+                ->where('locale', config('app.default_lang'))
+                ->whereDoesntHave('documentType.translations', function ($query) {
+                    $query->where('name', 'like', '%Отчети%')
+                        ->orWhere('name', 'like', '%Доклади%');
+                })
+                ->orderBy('ord')
+                ->get();
+        }
 
         $actNumber = $strategicDocument->pris?->doc_num ?? $strategicDocument->strategic_act_number;
         $reportsAndDocs = $strategicDocument->files()->where('locale', $locale)->whereHas('documentType.translations', function ($query) {

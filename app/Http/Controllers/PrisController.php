@@ -313,8 +313,14 @@ class PrisController extends Controller
         $this->composeBreadcrumbs($extraBreadCrumbs, $item);
         $this->setSeo($item->mcDisplayName, '', '', array('title' => $item->mcDisplayName, 'img' => Pris::DEFAULT_IMG));
 
+        $prisFiles = $item->files->where('locale', app()->getLocale());
+
+        if (!$prisFiles->count()) {
+            $prisFiles = $item->files->where('locale', config('app.default_lang'));
+        }
+
         return $this->view('site.pris.view',
-            compact('item', 'pageTitle', 'pageTopContent', 'menuCategories', 'menuCategoriesArchive', 'hasSubscribeEmail', 'hasSubscribeRss')
+            compact('item', 'pageTitle', 'pageTopContent', 'menuCategories', 'menuCategoriesArchive', 'hasSubscribeEmail', 'hasSubscribeRss', 'prisFiles')
         );
     }
 

@@ -238,59 +238,57 @@
                 </div>
                 @endif
 
-                @if($item->files->count())
+                @if($prisFiles->count())
                     <div class="row mb-0 mt-5">
                         <div class="mb-2">
                             <h2 class="mb-1">{{ __('custom.files') }}</h2>
                         </div>
                     </div>
-                    @foreach($item->files as $f)
-                        @if($f->locale == $locale)
-                            <div class="row p-1">
-                                <div class="accordion" id="accordionExample">
+                    @foreach($prisFiles as $f)
+                        <div class="row p-1">
+                            <div class="accordion" id="accordionExample">
 
-                                    <div class="card custom-card">
-                                        <div class="card-header" id="heading{{ $f->id }}">
-                                            <h2 class="mb-0">
-                                                <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start @if(!$loop->first) collapsed @endif" type="button" data-toggle="collapse" data-target="#collapse{{ $f->id }}" aria-expanded="@if($loop->first){{ 'true' }}@else{{ 'false' }}@endif" aria-controls="collapse{{ $f->id }}">
-                                                  <i class="me-1 bi bi-file-earmark-text fs-18"></i>  {{ $f->{'description_'.$locale} }}
-                                                </button>
-                                            </h2>
-                                        </div>
+                                <div class="card custom-card">
+                                    <div class="card-header" id="heading{{ $f->id }}">
+                                        <h2 class="mb-0">
+                                            <button class="px-0 btn text-decoration-none fs-18 btn-link btn-block text-start @if(!$loop->first) collapsed @endif" type="button" data-toggle="collapse" data-target="#collapse{{ $f->id }}" aria-expanded="@if($loop->first){{ 'true' }}@else{{ 'false' }}@endif" aria-controls="collapse{{ $f->id }}">
+                                              <i class="me-1 bi bi-file-earmark-text fs-18"></i>  {{ $f->{'description_'.$f->locale} }}
+                                            </button>
+                                        </h2>
+                                    </div>
 
-                                        <div id="collapse{{ $f->id }}" class="collapse @if($loop->first) show @endif" aria-labelledby="heading{{ $f->id }}" data-parent="#accordionExample">
-                                            <div class="card-body">
-                                                <div class="row mb-2">
-                                                    <div class="col-md-6">
-                                                        <div class="text-start">
-                                                            <span class="text-start me-3">
-                                                                <strong>{{ __('custom.date_created') }}:</strong> {{ displayDate($f->created_at) }} {{ __('custom.year_short') }}.
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 text-end">
-                                                        <a href="{{ route('download.file', $f) }}" class="btn btn-primary">{{ __('custom.download') }}</a>
+                                    <div id="collapse{{ $f->id }}" class="collapse @if($loop->first) show @endif" aria-labelledby="heading{{ $f->id }}" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-md-6">
+                                                    <div class="text-start">
+                                                        <span class="text-start me-3">
+                                                            <strong>{{ __('custom.date_created') }}:</strong> {{ displayDate($f->created_at) }} {{ __('custom.year_short') }}.
+                                                        </span>
                                                     </div>
                                                 </div>
-                                                {!! fileHtmlContent($f) !!}
-                                                <div class="row mt-2">
-                                                    <div class="col-md-6">
-                                                        <div class="text-start">
-                                                            <span class="text-start me-3">
-                                                                <strong>{{ __('custom.date_created') }}:</strong> {{ displayDate($f->created_at) }} {{ __('custom.year_short') }}.
-                                                            </span>
-                                                        </div>
+                                                <div class="col-md-6 text-end">
+                                                    <a href="{{ route('download.file', $f) }}" class="btn btn-primary">{{ __('custom.download') }}</a>
+                                                </div>
+                                            </div>
+                                            {!! fileHtmlContent($f) !!}
+                                            <div class="row mt-2">
+                                                <div class="col-md-6">
+                                                    <div class="text-start">
+                                                        <span class="text-start me-3">
+                                                            <strong>{{ __('custom.date_created') }}:</strong> {{ displayDate($f->created_at) }} {{ __('custom.year_short') }}.
+                                                        </span>
                                                     </div>
-                                                    <div class="col-md-6 text-end">
-                                                        <a href="{{ route('download.file', $f) }}" class="btn btn-primary">{{ __('custom.download') }}</a>
-                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 text-end">
+                                                    <a href="{{ route('download.file', $f) }}" class="btn btn-primary">{{ __('custom.download') }}</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endif
+                        </div>
                     @endforeach
                 @endif
                 </div>

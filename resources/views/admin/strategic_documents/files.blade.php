@@ -174,9 +174,14 @@
                                 <i class="fas fa-download me-1" role="button"
                                    data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
                             </a>
-                            <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id, 'disk' => 'public_uploads']).'?is_sd_file=1' }}">
-                                <i class="fas fa-trash me-1" role="button"
-                                   data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                            <a class="btn btn-sm btn-danger js-toggle-delete-resource-modal" type="button"
+                               data-target="#modal-delete-resource"
+                               data-resource-id="{{ $f->id }}"
+                               data-resource-title="Документа"
+                               data-resource-name="Документа"
+                               data-resource-delete-url="{{ route('admin.delete.file', ['file' => $f->id, 'disk' => 'public_uploads']).'?is_sd_file=1' }}"
+                            >
+                                <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                             </a>
                         </td>
                     </tr>
@@ -184,3 +189,4 @@
         </tbody>
     </table>
 @endif
+

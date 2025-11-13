@@ -219,14 +219,14 @@
                 </div>
 
 
-                @if($strategicDocument->filesByLocale->count())
+                @if($strategicDocumentFiles->count())
                     <div class="row mb-4 mt-4">
                         {{--                        <h3 class="mb-3">{{ trans_choice('custom.files', 2) }}</h3>--}}
                         <div class="row table-light">
                             <div class="col-12 mb-2">
                                 <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ trans_choice('custom.files', 2) }}</p>
                                 <ul class="list-group list-group-flush">
-                                    @foreach ($strategicDocument->filesByLocale as $f)
+                                    @foreach ($strategicDocumentFiles as $f)
                                         <li class="list-group-item">
                                             <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)"
                                                title="{{ __('custom.preview') }}" data-file="{{ $f->id }}"

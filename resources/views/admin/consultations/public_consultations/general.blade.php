@@ -149,7 +149,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-12 control-label"
-                       for="field_of_actions_id">
+                       for="field_of_actions_id" id="fieldOfActionLabel">
                     @if($item?->fieldOfAction?->parent?->id == \App\Models\FieldOfAction::CATEGORY_AREA)
                         {{ trans_choice('custom.area', 1) }}
                     @elseif($item?->fieldOfAction?->parent?->id == \App\Models\FieldOfAction::CATEGORY_MUNICIPAL)
@@ -522,6 +522,9 @@
                     let selectedOpt = $(this).find('option:selected');
                     let foa = selectedOpt.data('foa');
                     let level = parseInt(selectedOpt.data('level'));
+                    let municipalityLabel = '{{ __('custom.municipalities') }}';
+                    let areaLabel = '{{ trans_choice('custom.area', 1) }}';
+                    let defaultLabel = '{{ trans_choice('custom.field_of_actions', 1) }}';
 
                     $('#operational_program_row_id').data('institution', $('#institution_id').val());
                     $('#legislative_program_row_id').data('institution', $('#institution_id').val());
@@ -529,6 +532,14 @@
 
                     $('#nomenclature_level').val(level);
                     $('#levelLabel').html(levelsLabel[level]);
+
+                    if (level === 4) {
+                        $('#fieldOfActionLabel').html(municipalityLabel);
+                    } else if (level === 3){
+                        $('#fieldOfActionLabel').html(areaLabel);
+                    } else {
+                        $('#fieldOfActionLabel').html(defaultLabel);
+                    }
 
                     $('#act_type_id').val('{{ old('act_type_id', ($item->id ? $item->act_type_id : 0)) }}').trigger('change');
                     $('#act_type_id option').each(function () {
