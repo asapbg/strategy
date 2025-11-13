@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up()
     {
-        $ministryOfTransport = \App\Filters\Pris\Institution::where('eik', '=', '000695388')->first();
+        $ministryOfTransport =  \App\Models\StrategicDocuments\Institution::where('eik', '=', '000695388')->first();
         \App\Models\Consultations\PublicConsultation::where('id', 11691)->update(['importer_institution_id' => $ministryOfTransport->id]);
         \App\Models\PrisChangePris::where('pris_id', 167717)->whereNull('changed_pris_id')->delete();
 
