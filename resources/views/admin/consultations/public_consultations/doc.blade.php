@@ -25,8 +25,14 @@
                                             {!! fileIcon($doc->content_type) !!} {{ $doc->{'description_'.$doc->locale} }} - {{ __('custom.'.$doc->locale) }} | {{ __('custom.version_short').' '.$doc->version }} | {{ displayDate($doc->created_at) }} | {{ $doc->user ? $doc->user->fullName() : '' }}
                                         </a>
                                         <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">{{ __('custom.preview') }}</button>
-                                        <a class="ml-2" type="button" href="{{ route('admin.delete.file', ['file' => $doc]) }}">
-                                            <i class="fas fa-trash me-1 text-danger" role="button" data-toggle="tooltip" title="" data-original-title="Изтрий"></i>
+                                        <a class="btn btn-sm btn-danger ml-2 js-toggle-delete-resource-modal" type="button"
+                                           data-target="#modal-delete-resource"
+                                           data-resource-id="{{ $doc->id }}"
+                                           data-resource-title="Документа"
+                                           data-resource-name="Документа"
+                                           data-resource-delete-url="{{ route('admin.delete.file', ['file' => $doc->id]) }}"
+                                        >
+                                            <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                                         </a>
                                     </div>
                                 @endif
@@ -35,8 +41,7 @@
                                     @foreach($item->documentsAtt as $att)
                                         @if($att->doc_type == $docType.'00' && $att->locale == $lang['code'])
                                             @if(!$f)
-                                                    <div>
-                                                        <p><strong>Приложения:</strong></p>
+                                                <div><p><strong>Приложения:</strong></p>
                                             @endif
                                             @php($f = 1)
                                             <div class="mb-2">
@@ -44,8 +49,14 @@
                                                     {!! fileIcon($att->content_type) !!} {{ $att->{'description_'.$att->locale} }} | {{ displayDate($att->created_at) }} | {{ $att->user ? $att->user->fullName() : '' }}
                                                 </a>
                                                 <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">{{ __('custom.preview') }}</button>
-                                                <a class="ml-2" type="button" href="{{ route('admin.delete.file', ['file' => $att]) }}">
-                                                    <i class="fas fa-trash me-1 text-danger" role="button" data-toggle="tooltip" title="" data-original-title="Изтрий"></i>
+                                                <a class="btn btn-sm btn-danger ml-2 js-toggle-delete-resource-modal" type="button"
+                                                   data-target="#modal-delete-resource"
+                                                   data-resource-id="{{ $doc->id }}"
+                                                   data-resource-title="Приложението"
+                                                   data-resource-name="Приложението"
+                                                   data-resource-delete-url="{{ route('admin.delete.file', ['file' => $att->id]) }}"
+                                                >
+                                                    <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                                                 </a>
                                             </div>
                                         @endif
@@ -142,7 +153,13 @@
                         {!! fileIcon($oldFile->content_type) !!} {{ $oldFile->{'description_'.$oldFile->locale} }} - {{ __('custom.'.$oldFile->locale) }} | {{ __('custom.version_short').' '.$oldFile->version }} | {{ displayDate($oldFile->created_at) }} | {{ $oldFile->user ? $oldFile->user->fullName() : '' }}
                     </a>
                     <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $oldFile->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $oldFile->id]) }}">{{ __('custom.preview') }}</button>
-                    <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $oldFile->id]) }}">
+                    <a class="btn btn-sm btn-danger js-toggle-delete-resource-modal" type="button"
+                       data-target="#modal-delete-resource"
+                       data-resource-id="{{ $oldFile->id }}"
+                       data-resource-title="Документа"
+                       data-resource-name="Документа"
+                       data-resource-delete-url="{{ route('admin.delete.file', ['file' => $oldFile->id]) }}"
+                    >
                         <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                     </a>
                 </div>

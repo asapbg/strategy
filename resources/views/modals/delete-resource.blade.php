@@ -20,8 +20,8 @@
             </div>
 
             <div class="modal-body">
-                {{ __('custom.are_you_sure_to_delete') }} {{ mb_strtolower($resource) }}
-                <b><span id="resource_label" class="resource-name"></span></b> ?
+                {{ __('custom.are_you_sure_to_delete') }}
+                <b><span id="resource_label" class="resource-name">{{ mb_strtolower($resource) }}</span></b> ?
             </div>
 
             <div class="modal-footer">

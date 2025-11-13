@@ -104,8 +104,10 @@
         @endforeach
     </div>
 
-    <div class="col-md-2">
-        <button class="btn btn-sm btn-success" type="submit">{{ __('custom.save') }}</button>
+    <div class="row">
+        <div class="col-md-2">
+            <button class="btn btn-sm btn-success" type="submit">{{ __('custom.save') }}</button>
+        </div>
     </div>
 </form>
 
