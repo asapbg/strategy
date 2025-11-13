@@ -52,6 +52,9 @@
             </div>
         </div>
     </section>
+
+    @includeIf('modals.delete-resource', ['resource' => '$title_singular'])
+
 @endsection
 @push('scripts')
     <script type="text/javascript">
