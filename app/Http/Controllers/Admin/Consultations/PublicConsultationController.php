@@ -50,6 +50,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
@@ -425,7 +426,7 @@ class PublicConsultationController extends AdminController
                     }
 
                     $newVersion = ($version + 1);
-                    $fileNameToStore = round(microtime(true)) . '.' . $file->getClientOriginalExtension();
+                    $fileNameToStore = round(microtime(true)) . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
                     $file->storeAs($dir, $fileNameToStore, 'public_uploads');
                     $newFile = new File([
                         'id_object' => $item->id,
