@@ -539,21 +539,40 @@
                         }
                     });
 
-                    $('#field_of_actions_id').val('{{ old('field_of_actions_id', ($item->id ? $item->field_of_actions_id : 0)) }}').trigger('change');
+                    let oldOrEditValue = '{{ old('field_of_actions_id', ($item->id ? $item->field_of_actions_id : 0)) }}';
+
+                    $('#field_of_actions_id').val(oldOrEditValue).trigger('change');
 
                     let isFoaDefined = typeof foa != 'undefined';
-
+                    let selectVal = undefined;
                     $('#field_of_actions_id option').each(function () {
+                        let optionVal = parseInt($(this).attr('value'));
                         if (isFoaDefined) {
-                            if (foa.indexOf(parseInt($(this).attr('value'))) != -1) {
+                            if (foa.indexOf(optionVal) != -1) {
                                 $(this).attr('disabled', false);
                             } else {
                                 $(this).attr('disabled', true);
                             }
+
+                            if ([3, 4].includes(level)) {
+                                // Area
+                                if (level === 3 && optionVal === 2) {
+                                    selectVal = optionVal;
+                                }
+                                // Municipality
+                                else if (level === 4 && optionVal === 3) {
+                                    selectVal = optionVal;
+                                }
+                            }
                         } else {
                             $(this).attr('disabled', true);
                         }
+
                     });
+
+                    if (oldOrEditValue === '0') {
+                        $('#field_of_actions_id').val(selectVal).trigger('change');
+                    }
 
                     /**
                      * If fields of actions isn't defined and the selected option length is zero
