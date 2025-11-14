@@ -46,7 +46,7 @@ return [
     'start_of_execution' => 'Start of execution',
     'end_of_execution' => 'End of execution',
     'plan_sublevel' => 'Measure sublevel',
-    'subject_area_no' => 'Subject area no:number',
+    'subject_area_no' => 'Subject area №:number',
     'subject_area' => 'Subject Area',
     'npo_partner' => 'Partners for the implementation of the measure',
     'responsible_administration' => 'Lead institution/organisation',

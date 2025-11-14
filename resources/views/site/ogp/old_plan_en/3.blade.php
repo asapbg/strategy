@@ -82,10 +82,10 @@
                                                         <div class="row ">
                                                             <div class="document-info-body">
                                                                 <hr class="custom-hr mb-2">
-                                                                <h3 class="fs-18">{{ trans_choice('custom.arrangement', 1) }}: {{ $arrange['name'] }}</h3>
+                                                                <h3 class="fs-18">{{ trans_choice('custom.arrangement', 1) }}: {{ $arrange['Title'] }}</h3>
                                                                 <hr class="custom-hr mb-2">
                                                                 @foreach($arrange as $fname => $fvalue)
-                                                                    @if($fvalue != 'name')
+                                                                    @if($fvalue != 'Title')
                                                                         <p>
                                                                             <strong>{{ $fname }}:</strong> {!! $fvalue !!}
                                                                         </p>
@@ -105,6 +105,22 @@
             </div>
         @endif
 
+        @if(isset($planData['evaluations']) && sizeof($planData['evaluations']))
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h4 class="custom-left-border mb-3">{{ __('ogp.self_evaluation_and_report') }}</h4>
+                </div>
+                <div class="col-md-12 pt-3">
+                    @foreach($planData['evaluations'] as $f)
+                        <a class="main-color text-decoration-none preview-file-modal d-block" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-url="{{ route('modal.file_preview_static_page').'?path='.$f['path'] }}">
+                            {!! $f['icon'] !!} {{ $f['name'] }}
+                        </a>
+                        {{--                        <a class="d-inline-block w-100" href="{{ route('ogp.national_action_plans.old.file').'?file='.$f['path'] }}" target="_blank">{!! $f['icon'] !!} {{ $f['name'] }}</a>--}}
+                        {{--                <a download="{{ asset($f['path']) }}" href="#" target="_blank">{{ $f['name'] }}</a>--}}
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
 </div>
 @endsection
