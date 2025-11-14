@@ -19,7 +19,7 @@ class FileOcr
         $this->file = $file;
         $this->pdf_to_text_env_path = config('file_to_text.pdf_env_path') ?? '/usr/bin/pdftotext';
         $this->doc_to_text_env_path = config('file_to_text.doc_env_path') ?? '/usr/sbin/antiword';
-        $this->doc_to_docx_env_path = config('file_to_text.doc_to_docx_env_path') ?? '/usr/sbin/antiword';
+        $this->doc_to_docx_env_path = config('file_to_text.doc_to_docx_env_path') ?? '/usr/bin/soffice';
     }
 
     public function extractText(): bool
