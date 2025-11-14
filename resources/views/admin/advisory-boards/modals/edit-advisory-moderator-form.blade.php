@@ -143,7 +143,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="password">
-                                    {{ __('validation.attributes.password') }}<span class="required">*</span>
+                                    {{ __('validation.attributes.password') }}
                                 </label>
                                 <div class="col-12">
                                     <input type="password" id="password" name="password" class="form-control passwords"

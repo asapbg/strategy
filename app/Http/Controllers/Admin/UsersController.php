@@ -498,7 +498,7 @@ class  UsersController extends Controller
             $validated['user_type'] = User::USER_TYPE_INTERNAL;
 
             $user = User::make($validated);
-            $user->password = bcrypt($validated['password']);
+            $user->password = bcrypt($validated['password'] ?? Str::random());
             $user->email_verified_at = Carbon::now();
             $user->password_changed_at = Carbon::now();
             $user->save();
