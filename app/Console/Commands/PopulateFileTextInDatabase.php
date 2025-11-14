@@ -32,25 +32,19 @@ class PopulateFileTextInDatabase extends Command
     public function handle()
     {
         $files = File::select('files.*')
-            ->whereNull('file_text')
             ->join('pris', 'pris.id', '=',  'files.id_object')
-            ->where('files.locale', '=', 'bg')
             ->whereNull('pris.deleted_at')
+            ->where('pris.active', true)
+            ->where('pris.asap_last_version', true)
+            ->where('files.locale', '=', 'bg')
+            ->whereNull('file_text')
             ->where('code_object', File::CODE_OBJ_PRIS)
+            ->whereNotIn('content_type', ['application/vnd.ms-excel','application/x-rar','image/tiff'])
             ->orderBy('files.id')
-            //->take(50)
+            ->take(5)
             ->get();
-//        $files = DB::select("
-//            select files.*
-//              from files
-//        inner join pris on pris.id = files.id_object
-//             where file_text is null
-//               and pris.deleted_at is null
-//               and code_object = 5
-//               and files.deleted_at is null
-//          order by files.id asc
-//             limit 5
-//        ");
+        //dd($files->toArray());
+
         foreach ($files as $file) {
             $ocr = new FileOcr($file);
             $ocr->extractText();
