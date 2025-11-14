@@ -19,6 +19,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Str;
@@ -341,10 +342,8 @@ class Controller extends BaseController
                 default => '',
             };
 
-            $fileIds = [];
             foreach ($this->languages as $lang) {
 
-                $default = $lang['default'];
                 $code = $lang['code'];
 
                 if (!isset($validated['file_'.$code])) {
@@ -358,8 +357,13 @@ class Controller extends BaseController
                     $file = isset($validated['file_'.$code]) && $validated['file_'.$code] ? $validated['file_'.$code] : $validated['file_bg'];
                     $desc = isset($validated['description_'.$code]) && !empty($validated['description_'.$code]) ? $validated['description_'.$code] : ($validated['description_'.config('app.default_lang')] ?? null);
                 }
+
                 $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $extension = mb_strtolower($file->getClientOriginalExtension());
+                $fileNameToStore = round(microtime(true)).'.'.$extension;
+                if (empty($desc)) {
+                    $desc = str_replace(".$extension", '', $file->getClientOriginalName());
+                }
                 $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
                 $newFile = new File([
                     'id_object' => $objectId,
@@ -375,14 +379,9 @@ class Controller extends BaseController
                     'is_visible' => isset($validated['is_visible']) ? (int)$validated['is_visible'] : 0
                 ]);
                 $newFile->save();
-                $fileIds[] = $newFile->id;
                 $ocr = new FileOcr($newFile->refresh());
                 $ocr->extractText();
             }
-
-//            File::find($fileIds[0])->update(['lang_pair' => $fileIds[1]]);
-//            File::find($fileIds[1])->update(['lang_pair' => $fileIds[0]]);
-
 
             switch ((int)$typeObject) {
                 case File::CODE_OBJ_PRIS:
@@ -432,8 +431,7 @@ class Controller extends BaseController
 
     /**
      * @param LanguageFileUploadRequest $request
-     * @param File $file
-     * @param $objectId
+     * @param File $fileRecord
      * @param $typeObject
      * @param int $docType
      * @param bool $redirect
@@ -458,26 +456,28 @@ class Controller extends BaseController
             };
 
             $code = $fileRecord->locale;
+            $desc = $validated['description_'.$code];
 
             $data = [
                 'code_object' => $typeObjectToSave,
                 'doc_type' => (int)$docType > 0 ? $docType : null,
-//                'filename' => $fileNameToStore,
-//                'content_type' => $file->getClientMimeType(),
-//                'path' => $pDir.$fileNameToStore,
-                'description_'.$code => $validated['description_'.$code],
+                'description_'.$code => $desc,
                 'sys_user' => $request->user()->id,
                 'locale' => $code,
-//                'version' => ($version + 1).'.0',
                 'is_visible' => isset($validated['is_visible']) ? (int)$validated['is_visible'] : 0
             ];
 
             if (isset($validated['file_'.$code])) {
                 $file = $validated['file_'.$code];
 
-                $fileNameToStore = round(microtime(true)).'.'.$file->getClientOriginalExtension();
+                $extension = mb_strtolower($file->getClientOriginalExtension());
+                if (empty($desc)) {
+                    $desc = str_replace(".$extension", '', $file->getClientOriginalName());
+                }
+                $fileNameToStore = round(microtime(true)).'.'.$extension;
                 $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
 
+                $data['description_'.$code] = $desc;
                 $data['filename'] = $fileNameToStore;
                 $data['content_type'] = $file->getClientMimeType();
                 $data['path'] = $pDir.$fileNameToStore;
