@@ -22,7 +22,7 @@
                                 </label>
 
                                 <div class="col-12">
-                                    <select class="form-control form-control-sm select2" id="institution_id" name="institution_id">
+                                    <select class="form-control form-control-sm select2" data-dropdown-parent="#modal-edit-advisory-moderator" id="institution_id" name="institution_id">
                                         <option value="">---</option>
 
                                         @if(isset($institutions) && $institutions->count())
