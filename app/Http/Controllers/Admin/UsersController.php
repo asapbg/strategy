@@ -22,6 +22,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
@@ -174,7 +175,7 @@ class  UsersController extends Controller
                 Mail::to($data['email'])->send(new UsersChangePassword($user));
             } else {
                 $message = trans_choice('custom.users', 1)." {$data['email']} ".__('messages.created_successfully_m');
-                $user->password = bcrypt($data['password']);
+                $user->password = bcrypt($data['password'] ?? Str::random());
                 $user->email_verified_at = Carbon::now();
                 $user->password_changed_at = Carbon::now();
             }
