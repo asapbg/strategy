@@ -20,6 +20,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Log;
 
 class AdvisoryBoardModeratorController extends AdminController
@@ -148,7 +149,7 @@ class AdvisoryBoardModeratorController extends AdminController
             $validated['user_type'] = User::USER_TYPE_INTERNAL;
 
             $user = User::make($validated);
-            $user->password = bcrypt($validated['password']);
+            $user->password = bcrypt($validated['password'] ?? Str::random());
             $user->email_verified_at = Carbon::now();
             $user->password_changed_at = Carbon::now();
             $user->save();

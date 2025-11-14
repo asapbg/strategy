@@ -22,7 +22,7 @@
                                 </label>
 
                                 <div class="col-12">
-                                    <select class="form-control form-control-sm select2" id="institution_id" name="institution_id">
+                                    <select class="form-control form-control-sm select2" data-dropdown-parent="#modal-edit-advisory-moderator" id="institution_id" name="institution_id">
                                         <option value="">---</option>
 
                                         @if(isset($institutions) && $institutions->count())
@@ -143,7 +143,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="password">
-                                    {{ __('validation.attributes.password') }}<span class="required">*</span>
+                                    {{ __('validation.attributes.password') }}
                                 </label>
                                 <div class="col-12">
                                     <input type="password" id="password" name="password" class="form-control passwords"

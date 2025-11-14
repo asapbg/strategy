@@ -19,11 +19,11 @@ enum OldNationalPlanEnum: int
     {
         $keyName = '';
         foreach (self::options() as $key => $val) {
-            if( $val == $searchVal) {
+            if ($val == $searchVal) {
                 $keyName = $key;
             }
         }
-        return __('custom.old_pan_names.'.$keyName);
+        return __('custom.old_pan_names.' . $keyName);
     }
 
 
@@ -62,7 +62,7 @@ enum OldNationalPlanEnum: int
                     'en' => array(
                         [
                             'path' => 'old_ogp_plan/1/PLAN-BG-ENGlast_0-1.pdf',
-                            'name' => 'Оперативен план (EN)',
+                            'name' => 'Operational plan (EN)',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     )
@@ -80,7 +80,18 @@ enum OldNationalPlanEnum: int
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     ),
-                    'en' => array(),
+                    'en' => array(
+                        [
+                            'path' => 'old_ogp_plan/2/OGP-selfassessment.pdf',
+                            'name' => 'Government report',
+                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+                        ],
+                        [
+                            'path' => 'old_ogp_plan/2/bulgaria_rev.pdf',
+                            'name' => 'Independent researcher\'s report',
+                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+                        ],
+                    ),
                 ),
                 'content' => array(
                     'bg' => '<p>През месец юни 2012 г. Министерският съвет прие Оперативен план с конкретни мерки за изпълнение на поетите ангажименти на Република България към Глобалната инициатива по "Партньорството за открито управление".<br>При разработването на конкретните мерки по оперативния план водещите принципи са били четирите ключови принципа на откритото управление: прозрачност, участие на гражданите, отчетност и технологично обновление.<br>Планът е разработен за период до декември 2013 г. и включва конкретни мерки, очаквани резултати от тяхното изпълнение, отговорни институции, срок, източници на финансиране и измерими индикатори.<br>Мерките, за изпълнение на поетите ангажименти, във връзка с присъединяването на Република България към Глобалната инициатива "Партньорство за открито управление", са в приоритетните направления, предвидени в Плана за действие:</p>
@@ -89,11 +100,16 @@ enum OldNationalPlanEnum: int
                                 <li>Повишаване на фирмената отчетност и отговорност.</li>
                             </ul>
                             <p>Предвидени са и общи мерки за подобряване на условията за прилагането на принципите за открито управление.</p>',
-                    'en' => array(),
+                    'en' => '<p>In June 2012, the Council of Ministers adopted an Operational Plan with specific measures for the implementation of the commitments undertaken by the Republic of Bulgaria to the Global Initiative on the "Open Government Partnership".<br>In developing the specific measures under the Operational Plan, the guiding principles were the four key principles of open government: transparency, citizen participation, accountability and technological innovation.<br>The Plan was developed for the period until December 2013 and includes specific measures, expected results from their implementation, responsible institutions, deadline, sources of funding and measurable indicators.<br>The measures for the implementation of the commitments undertaken in connection with the accession of the Republic of Bulgaria to the Global Initiative on the "Open Government Partnership" are in the priority areas provided for in the Action Plan:</p>
+                            <ul>
+                                <li>More effective management of public funds/resources;</li>
+                                <li>Increasing corporate accountability and responsibility.</li>
+                            </ul>
+                            <p>General measures are also envisaged to improve the conditions for the implementation of open governance principles.</p>',
                 ),
                 'ogDescription' => array(
                     'bg' => 'През месец юни 2012 г. Министерският съвет прие Оперативен план с конкретни мерки за изпълнение на поетите ангажименти на Република България към Глобалната инициатива по "Партньорството за открито управление".',
-                    'en' => 'През месец юни 2012 г. Министерският съвет прие Оперативен план с конкретни мерки за изпълнение на поетите ангажименти на Република България към Глобалната инициатива по "Партньорството за открито управление".',
+                    'en' => 'In June 2012, the Council of Ministers adopted an Operational Plan with specific measures for the implementation of the commitments undertaken by the Republic of Bulgaria to the Global Initiative on the "Open Government Partnership".',
                 ),
                 'arrangements' => array(
                     'bg' => array(
@@ -384,7 +400,294 @@ enum OldNationalPlanEnum: int
                             'indicators' => 'Одобрен от МС ЗИД на Закона за достъп до обществена информация',
                         ]
                     ),
-                    'en' => array(),
+                    'en' => array(
+                        [
+                            'name' => 'New Strategy for Government Debt Management for the period 2012–2014',
+                            'expect_result' => 'Synthesized general guidelines for government debt management policy over a three-year period. Ensuring conditions for transparency and accountability in government debt management.',
+                            'institution' => 'Ministry of Finance',
+                            'end_deadline' => '2012',
+                            'finance' => 'Budget of the Ministry of Finance',
+                            'indicators' => 'Approved new Strategy for Government Debt Management for the period 2012–2014',
+                        ],
+                        [
+                            'name' => 'Development of a comprehensive Vision for establishing a mechanism for financing the civil sector and a Strategy for supporting the development of civil organizations in the Republic of Bulgaria.',
+                            'expect_result' => 'Identifying financing opportunities for organizations for which there is no legally established practice for partnership with the state and municipalities; achieving greater transparency in the use of budget funds intended for NGOs.',
+                            'institution' => 'Minister for EU Funds Management;<br>Ministry of Finance',
+                            'end_deadline' => '2012',
+                            'finance' => '',
+                            'indicators' => 'Developed Vision and Strategy for the development of civil organizations in the Republic of Bulgaria',
+                        ],
+                        [
+                            'name' => 'Amendments to budget legislation to establish fiscal rules and procedures for more effective and transparent public finance management, including introduction of the so-called “Citizen’s Budget” containing a brief description of changes made in policies and in the financing of sectors important to citizens.',
+                            'expect_result' => 'Legally regulated fiscal rules and procedures ensuring sustainability of public finances, more efficient management and compliance with fiscal goals, as well as providing accessibility and transparency for society, including preparation and publication of a “Citizen’s Budget”.',
+                            'institution' => '',
+                            'end_deadline' => 'According to the deadlines in the Council of Ministers’ legislative program for the second half of 2012. For the “Citizen’s Budget” – according to the deadlines set in the budget procedure for preparing the State Budget Act.',
+                            'finance' => '',
+                            'indicators' => 'Prepared and published “Citizen’s Budget”.',
+                        ],
+                        [
+                            'name' => 'Publication of financial statements and performance reports of ministries and agencies, including their secondary budget-spending units (SBSUs).',
+                            'expect_result' => 'Improved accountability and budget transparency, and clearer responsibility for the use of resources and the results achieved.',
+                            'institution' => 'Ministry of Finance and all primary budget-spending units (PBSUs).',
+                            'end_deadline' => 'According to the deadlines established in the regulatory acts – for periodic financial statements and reports on the degree of implementation of policies and programs of PBSUs developing program budgets.',
+                            'finance' => 'Budgets of the PBSUs',
+                            'indicators' => 'Published reports.',
+                        ],
+                        [
+                            'name' => 'Publication of information on tax expenditures (preferences) by the Ministry of Finance.',
+                            'expect_result' => 'Budget transparency',
+                            'institution' => 'Ministry of Finance',
+                            'end_deadline' => '2012',
+                            'finance' => 'Budget of the Ministry of Finance',
+                            'indicators' => 'Implemented information system.',
+                        ],
+                        [
+                            'name' => 'Publication of information on tax-audit acts issued by the National Revenue Agency after completed audits.',
+                            'expect_result' => 'Ensuring publicity and transparency through informing the public while complying with legal requirements for protection of tax, social security, and other legally protected information.',
+                            'institution' => 'Ministry of Finance<br>NRA',
+                            'end_deadline' => 'Ongoing. After the 20th of the month following each quarter.',
+                            'finance' => '',
+                            'indicators' => 'Number of issued audit acts.<br>Average amount of additionally assessed liabilities per audit act.<br>Published information.',
+                        ],
+                        [
+                            'name' => 'New National Strategy for the Development of the Mining Industry',
+                            'expect_result' => 'Increased transparency of the policy for management of underground natural resources.',
+                            'institution' => 'Ministry of Economy, Energy and Tourism',
+                            'end_deadline' => '2012',
+                            'finance' => 'Budget of the MEET',
+                            'indicators' => 'Strategy approved by the Council of Ministers',
+                        ],
+                        [
+                            'name' => 'New Law on Underground Resources',
+                            'expect_result' => 'Introduction of new measures ensuring the application of best European and global practices in the management of underground resources.',
+                            'institution' => 'Ministry of Economy, Energy and Tourism',
+                            'end_deadline' => '2013',
+                            'finance' => 'Budget of the MEET',
+                            'indicators' => 'Draft Law on Underground Resources approved by the Council of Ministers',
+                        ],
+                        [
+                            'name' => 'Public online information system on the location, mineral groups, and status of reserves/resources of underground natural resources with established deposits; specialized maps and registers of permits for exploration and concessions for extraction.',
+                            'expect_result' => 'Encouraging citizens to use technologies;<br>Ensuring publicity and transparency through informing the public;<br>Guaranteeing citizens’ rights to receive official copies and extracts from the database.',
+                            'institution' => 'Ministry of Economy, Energy and Tourism',
+                            'end_deadline' => '2012',
+                            'finance' => 'Budget of the MEET',
+                            'indicators' => 'Available information system',
+                        ],
+                        [
+                            'name' => 'Transparency in the management of underground resources through involvement of independent highly qualified experts in tender and competitive procedures for granting rights; acceptance of geological reports; and control of activities related to exploration and extraction.',
+                            'expect_result' => 'Encouraging civic participation in governance;<br>Ensuring transparency in administrative activities;<br>Guaranteeing citizens’ rights to obtain official copies and extracts from the database.',
+                            'institution' => 'Ministry of Economy, Energy and Tourism',
+                            'end_deadline' => '2012',
+                            'finance' => 'Budget of the MEET',
+                            'indicators' => 'Practice incorporated into the National Strategy for Development of the Mining Industry, including measures for encouraging civic participation.<br>Normative introduction in the Law on Underground Resources.',
+                        ],
+                        [
+                            'name' => 'Impact assessment of regulatory acts significantly affecting the business environment, including ex-post impact assessment, selected jointly with business.',
+                            'expect_result' => 'Encouraging civic participation in governance;<br>Improving business environment with active participation of businesses.',
+                            'institution' => 'All central government institutions',
+                            'end_deadline' => 'Ongoing',
+                            'finance' => 'Budgets of the institutions',
+                            'indicators' => 'Prepared impact assessments',
+                        ],
+                        [
+                            'name' => 'Accountability and transparency of healthcare providers through the development of a National Health Information System and ensuring citizen access via an electronic identifier. Quality of medical services will be subject to continuous institutional and public control.',
+                            'expect_result' => 'Accountability and transparency of healthcare providers.<br>Improvement of healthcare services through innovative technologies for optimizing efficiency at all levels.',
+                            'institution' => 'Ministry of Health and National Health Insurance Fund',
+                            'end_deadline' => '2013',
+                            'finance' => 'EU funds and state budget',
+                            'indicators' => 'Developed National Health Information System;<br>Ensured citizen access via electronic identifier',
+                        ],
+                        [
+                            'name' => 'Outsourcing activities from the state to business.<br>Analysis of practices in self-regulated sectors and identification of sectors where regulation may be transferred from the state to business.',
+                            'expect_result' => 'Encouraging civic participation in governance;<br>Increasing business responsibility',
+                            'institution' => 'Ministry of Economy, Energy and Tourism',
+                            'end_deadline' => '2013',
+                            'finance' => 'Budget of the MEET',
+                            'indicators' => 'Prepared legislative changes<br>Number of analyses carried out',
+                        ],
+                        [
+                            'name' => 'Improving consultation practices with business through active dialogue during policy formation and implementation.',
+                            'expect_result' => 'Encouraging civic participation in governance; Increasing business responsibility through its involvement in policy development. Public feedback.',
+                            'institution' => 'All central government institutions',
+                            'end_deadline' => 'Ongoing',
+                            'finance' => 'Budgets of the institutions',
+                            'indicators' => 'Held meetings, working groups, completed public consultations, etc.',
+                        ],
+                        [
+                            'name' => 'Increasing public awareness of the principles of corporate social responsibility (CSR)',
+                            'expect_result' => 'Formation of a society-specific CSR context',
+                            'institution' => 'MEET<br>MLSP',
+                            'end_deadline' => '2012–2013',
+                            'finance' => 'Institutional budgets',
+                            'indicators' => 'Number of organized seminars, conferences',
+                        ],
+                        [
+                            'name' => 'Legislative measures to encourage socially responsible investments, production, and management in SMEs',
+                            'expect_result' => 'Prerequisite for sustainable growth',
+                            'institution' => 'MEET',
+                            'end_deadline' => '2012–2013',
+                            'finance' => 'Budget of the institution',
+                            'indicators' => 'Number of legislative changes with preferences for enterprises',
+                        ],
+                        [
+                            'name' => 'Initiation of an annual ranking for enterprises with the most responsible corporate behaviour; Criteria: socially engaged investments, achieved energy and resource savings, number of jobs, contribution to municipal development.',
+                            'expect_result' => 'Creating incentives for CSR in enterprises',
+                            'institution' => 'MEET and MLSP in partnership with NAMRB',
+                            'end_deadline' => '2013',
+                            'finance' => 'Institutional budgets',
+                            'indicators' => 'Number of nominated companies;<br>Types of media coverage and publicity',
+                        ],
+                        [
+                            'name' => 'Encouraging compliance with environmental legislation – an important factor for the competitiveness of production enterprises.',
+                            'expect_result' => 'Involving more companies in environmentally responsible production',
+                            'institution' => 'MEET<br>MLSP in partnership with NAMRB',
+                            'end_deadline' => '2013',
+                            'finance' => 'Institutional budgets',
+                            'indicators' => 'Established adequate incentives for companies',
+                        ],
+                        [
+                            'name' => 'Organizing discussion forums at national and local level to promote CSR opportunities among a broad range of businesses and to present CSR best practices.',
+                            'expect_result' => 'Encouraging civic participation in governance;<br>Involving more companies in CSR initiatives',
+                            'institution' => 'Ministry of Labour and Social Policy',
+                            'end_deadline' => '2012',
+                            'finance' => 'Budget of the MLSP',
+                            'indicators' => 'Organized forums',
+                        ],
+                        [
+                            'name' => 'Integrating environmental prevention instruments into corporate policies by increasing business awareness, including regarding environmental management systems ISO 14001, EMAS, and the EU Ecolabel scheme',
+                            'expect_result' => 'Encouraging civic participation in governance;<br>Involving more companies in environmental protection initiatives',
+                            'institution' => 'All institutions',
+                            'end_deadline' => '2013',
+                            'finance' => 'Institutional budgets',
+                            'indicators' => 'Information events',
+                        ],
+                        [
+                            'name' => 'Improving the Unified Portal for access to electronic administrative services and upgrading it with the functions of the Single Point of Contact.',
+                            'expect_result' => '<ul>
+                                 <li>Promoting e-government and increasing public and business trust;</li>
+                                 <li>Implementation of the Services Directive;</li>
+                                 <li>Training of selected target groups within the administration;</li>
+                                 <li>Improved e-government portal providing information through various communication channels.</li>
+                            </ul>',
+                            'institution' => 'MTITS',
+                            'end_deadline' => '2013',
+                            'finance' => 'OPAC project',
+                            'indicators' => '<ul>
+                             <li>Improved portal on the centralized platform;</li>
+                             <li>Number of implemented electronic administrative services.</li>
+                         </ul>',
+                        ],
+                        [
+                            'name' => 'Updating the content of the interoperability registers (Register of Registers and Data – RRD, Register of Electronic Services – RES, Register of Information Objects – RIO, Register of Standards, List of Accredited Entities, and List of Certified Systems and Products) of e-government.',
+                            'expect_result' => '<ul>
+                                <li>Reducing administrative costs for information exchange and system interaction;</li>
+                                <li>Creating conditions for more effective public administration;</li>
+                                <li>Improving central e-government systems;</li>
+                                <li>Improving processes for delivering electronic administrative services;</li>
+                                <li>Enhancing interoperability and enabling European-level integration.</li>
+                             </ul>',
+                            'institution' => 'MTITS',
+                            'end_deadline' => '2013',
+                            'finance' => 'OPAC project',
+                            'indicators' => '<ul>
+                              <li>Built platform for creation, storage, archiving and management of electronic documents, data, and content in administration;</li>
+                              <li>Developed monitoring and management system for OSIS.</li>
+                         </ul>',
+                        ],
+                        [
+                            'name' => 'Ensuring operational support for the Unified Portal for access to electronic administrative services.',
+                            'expect_result' => '',
+                            'institution' => 'MTITS',
+                            'end_deadline' => '2013',
+                            'finance' => 'OPAC project',
+                            'indicators' => 'Developed centralized system for monitoring and managing information security and interoperability.',
+                        ],
+                        [
+                            'name' => 'Ensuring operational support for the Interoperability Registers (RRD, RES, RIO, Register of standards, List of accredited entities, List of certified systems and products).',
+                            'expect_result' => '',
+                            'institution' => 'MTITS',
+                            'end_deadline' => '2013',
+                            'finance' => 'OPAC project',
+                            'indicators' => 'Registered primary and composite e-services in the e-government registers.',
+                        ],
+                        [
+                            'name' => 'Development of the Administrative Information System of the Cadastre (KAIS)',
+                            'expect_result' => '<ul>
+                                <li>Provision of electronic and composite administrative services by the Agency for Geodesy, Cartography and Cadastre (AGCC) through software compliant with the Electronic Governance Act;</li>
+                                <li>Development of internal rules for document flow management and an electronic system for complaints, suggestions, and signals;</li>
+                                <li>Optimization and accessibility of services for visually impaired users;</li>
+                                <li>Optimization and access for foreign-language users through online transliteration.</li>
+                           </ul>',
+                            'institution' => 'Agency for Geodesy, Cartography and Cadastre',
+                            'end_deadline' => '2013',
+                            'finance' => 'OPAC project',
+                            'indicators' => 'Developed and implemented Information System for electronic and composite services from AGCC',
+                        ],
+                        [
+                            'name' => 'Development of a National Health Information System, electronic health record, electronic prescription, electronic referral, etc.',
+                            'expect_result' => 'Development of e-health;<br>Improvement of quality, control, and transparency in the provision of health services',
+                            'institution' => 'Ministry of Health and National Health Insurance Fund',
+                            'end_deadline' => '2013',
+                            'finance' => 'EU funds and state budget',
+                            'indicators' => 'Developed National Health Information System, electronic health record, e-prescription, e-referral and other e-health services',
+                        ],
+                        [
+                            'name' => 'Ensuring citizen access to the system through an electronic identifier, which may also be used for access to electronic health services',
+                            'expect_result' => 'Development of e-health<br>Access to all electronic services for citizens',
+                            'institution' => 'MTITS',
+                            'end_deadline' => '2013',
+                            'finance' => 'OPAC project',
+                            'indicators' => 'Created unified electronic identifier enabling citizens to access e-services, including e-health services',
+                        ],
+                        [
+                            'name' => 'Development of the Council of Ministers’ website to expand the scope of information accessible to citizens, set good practices for openness and transparency, and create standards for information resources used in the CM administration.',
+                            'expect_result' => 'Ensuring publicity and transparency through information',
+                            'institution' => 'Council of Ministers Administration',
+                            'end_deadline' => '2012',
+                            'finance' => 'Budget of the CM',
+                            'indicators' => 'Improved CM website',
+                        ],
+                        [
+                            'name' => 'Publicity of the rules governing the secondary budget-spending units of the CM, as well as their financial results and performance reports.',
+                            'expect_result' => 'Improved accountability and budget transparency, clearer responsibility for resources used and results achieved.',
+                            'institution' => 'Council of Ministers Administration',
+                            'end_deadline' => 'According to the deadlines in regulations – for periodic financial statements and program implementation reports',
+                            'finance' => 'Budget of the CM',
+                            'indicators' => 'Improved CM website',
+                        ],
+                        [
+                            'name' => 'Control over compliance with legal requirements for publicity and information, and publication of results from inspections on the CM website',
+                            'expect_result' => 'Increased publicity and citizen awareness',
+                            'institution' => 'Council of Ministers Administration',
+                            'end_deadline' => 'Ongoing',
+                            'finance' => '',
+                            'indicators' => 'Number of inspections conducted and publications of results',
+                        ],
+                        [
+                            'name' => 'Improvement and publicity of the Public Consultation Portal (www.strategy.bg) for broader use',
+                            'expect_result' => 'Ensuring publicity and transparency through information',
+                            'institution' => 'Council of Ministers Administration',
+                            'end_deadline' => '2012',
+                            'finance' => '',
+                            'indicators' => 'Improved Public Consultation Portal',
+                        ],
+                        [
+                            'name' => 'Expanding public use of the information system for management and monitoring of EU Structural and Cohesion Funds.',
+                            'expect_result' => 'Expanding possibilities for re-use of system data, including in file formats allowing easy machine processing.',
+                            'institution' => 'Council of Ministers Administration',
+                            'end_deadline' => '2013',
+                            'finance' => '',
+                            'indicators' => 'Expanded volume of publicly available information on indicator achievement under projects and operational programs',
+                        ],
+                        [
+                            'name' => 'Drafting amendments to the Access to Public Information Act to create unified parameters/standards for preparing and publishing up-to-date information from public administrations',
+                            'expect_result' => 'Improved publicity and transparency through information',
+                            'institution' => 'Ministry of Justice, relevant institutions, CM Administration, in partnership with NGOs',
+                            'end_deadline' => 'First half of 2013',
+                            'finance' => '',
+                            'indicators' => 'Draft amendments to the Access to Public Information Act approved by the CM',
+                        ]
+                    ),
                 )
             ),
             self::SECOND->value => array(
@@ -429,12 +732,12 @@ enum OldNationalPlanEnum: int
                     'en' => array(
                         [
                             'path' => '/old_ogp_plan/1/OGP-second-plan-Bulgaria-final-Revised-July-8-2015-1.pdf',
-                            'name' => 'Втори план за действие на Република България по инициативата “Партньорство за открито управление” (EN)',
+                            'name' => 'Second Action Plan of the Republic of Bulgaria under the Open Government Partnership Initiative',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                         [
                             'path' => 'old_ogp_plan/2/NAP2_New_Commitments_EN_Final.pdf',
-                            'name' => 'Нови ангажименти в рамките на Втория план за действие на Република България за участие в Инициативата „Партньорство за открито управление“',
+                            'name' => 'New commitments within the framework of the Second Action Plan of the Republic of Bulgaria for participation in the Open Government Partnership Initiative',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     )
@@ -443,12 +746,12 @@ enum OldNationalPlanEnum: int
                     'bg' => array(
                         [
                             'path' => 'old_ogp_plan/2/Interim_Self-Assessment_Report_BG.pdf',
-                            'name' => 'Отчет на правителството',
+                            'name' => 'Government report',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                         [
                             'path' => 'old_ogp_plan/2/Bulgaria_EoT_2014-2016_BUL.pdf',
-                            'name' => 'Отчет на независимия изследовател',
+                            'name' => 'Independent researcher\'s report',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     ),
@@ -609,11 +912,135 @@ enum OldNationalPlanEnum: int
                             през месец май 2014 г. в гр. Дъблин, Ирландия.'
                         ]
                     ),
-                    'en' => array(),
+                    'en' => array(
+                        [
+                            'title' => 'Introduction',
+                            'content' => 'Bulgaria joined the “Open Government Partnership” initiative in 2012. By participating
+        in the initiative, the Bulgarian government wished—and continues to wish—to play an active
+        role in building a society based on greater transparency in governance, citizen participation,
+        responsibility, accountability, and technological innovation. Bulgaria’s participation in the
+        initiative is viewed as an effective tool for cooperation and exchange of good practices with
+        countries that have recognized achievements in the field of open government.<br>
+        In the initial stage of its participation in the initiative, Bulgaria decided to direct its efforts toward
+        achieving more effective management of public resources and increasing corporate
+        responsibility. The country achieved good results, especially in terms of publicity and a higher
+        level of accountability of public authorities. The publication of information on various aspects
+        of administrative activities, as well as the public consultation of draft legislation and strategic
+        documents, has already become an obligation for public authorities—but more importantly, it
+        is increasingly becoming a recognized necessity that ensures better policy implementation
+        outcomes. Some of the commitments included in the first action plan will also be incorporated
+        into the 2013–2015 action plan because they provide ongoing value for society.<br>
+        Another set of topics included in Bulgaria’s first action plan under the “Open Government
+        Partnership” initiative—particularly those related to promoting corporate social
+        responsibility—turned out to have relatively limited impact, mostly due to weak public
+        awareness of the benefits of this approach and the fact that the business sector, rather than the
+        government, plays the leading role in the process.<br>
+        During the dialogue with NGOs in preparing the second action plan for the “Open Government
+        Partnership” initiative, several directions emerged in which the government should focus its
+        efforts to uphold the principles of open government. New challenges have come to the
+        forefront—areas that had not been sufficiently addressed until now but are increasingly in the
+        public spotlight. Among this new set of priority issues is the topic of open data.<br>
+        Although this is a relatively new topic for Bulgaria, there is a clear understanding of the need to
+        respond to the call from active NGOs to promote the principle of open data in governance.
+        The government aims to become an active participant and give momentum to the provision of
+        open data by institutions. The potential of open data to generate new business opportunities is
+        undeniable. The measures included in the plan in the field of open data are few in number, but
+        they represent the first necessary step in introducing the concept of open data into governance
+        as a tool for achieving the key principles of open government—transparency and citizen
+        participation.'
+                        ],
+                        [
+                            'title' => 'Efforts undertaken within the “Open Government Partnership” initiative so far',
+                            'content' => 'The Republic of Bulgaria officially joined the initiative in April 2012. By protocol
+        decision of 11 April 2012, the Council of Ministers approved the First Action Plan related to
+        Bulgaria’s accession to the Global “Open Government Partnership” initiative. The same
+        decision tasked the Secretary of the Development Council at the Council of Ministers with
+        presenting an Operational Plan for implementing the commitments in the Action Plan, adopted
+        by the Council of Ministers on 29 June 2012.<br>
+        The first plan was developed jointly with NGOs and covered the period until December 2013.
+        The measures for fulfilling the commitments made upon Bulgaria’s accession to the Global “Open
+        Government Partnership” initiative fall into the following priority areas:
+        – More effective management of public funds/resources;
+        – Increasing corporate accountability and responsibility.
+        Overall coordination and communication on the implementation of the Action Plan is carried
+        out interactively on the public consultation portal in the “Open Government Partnership”
+        section: http://www.strategy.bg.<br>
+        To meet the commitment of achieving higher budget transparency, two new strategic
+        documents and a package of amendments to budget legislation were adopted over the past
+        year. All acts were coordinated with the NGO sector and citizens. The improved regulatory
+        framework provides the necessary conditions for transparent, sustainable, and more effective
+        management of public funds. In response to public expectations for transparency and access to
+        information, institutions regularly publish up-to-date data on their spending on their websites.<br>
+        The government undertook legislative changes to introduce mandatory impact assessments for
+        legislation. This step creates conditions for higher levels of responsibility and transparency in
+        the work of institutions and the administration when drafting legislation.<br>
+        Amendments to the Public Procurement Act were prepared with the aim of full transparency
+        and control in the conduct and execution of procurement procedures and to facilitate access for
+        small and medium-sized enterprises to the public procurement market.
+        Implementing e-government is a priority in state governance. Over the past year, a package of
+        projects has been implemented that will give new momentum to e-government. Special
+        attention has been given to e-healthcare, with the introduction of the electronic patient record
+        beginning in April 2013. A system for better coordination and integration of services across the
+        entire healthcare chain and for the exchange of health data is also being introduced.<br>
+        The Ministry of Economy and Energy initiated the development of a new Strategy for the
+        Development of the Mining Industry and a new Underground Resources Act to ensure the
+        transparent management of underground resources. These projects are subject to broad
+        discussion between the government, industry associations, NGOs, and citizens through working
+        groups and online consultations.
+        Dialogue between institutions, social partners, NGOs, and civic movements is a priority for the
+        government. In the second half of 2013, the active work of the National Council for
+        Tripartite Cooperation—an advisory and debate forum between the government, employers,
+        and trade unions—was restored. Each ministry also has a Public Council chaired by the
+        respective minister, with participation from industry associations, NGOs, and civic groups. More
+        than 50 ad-hoc working groups with active participation from business and citizens work on
+        current issues.
+        An independent expert, under the Independent Reporting Mechanism, prepared a review of the
+        implementation of the measures in Bulgaria’s first action plan and made recommendations for
+        commitments to be included in the Second Action Plan. The assessment shows that Bulgaria
+        fulfilled almost all commitments. For some commitments, recommendations were made for
+        monitoring or further development in the Second Action Plan (such as the Debt Management
+        Strategy, the Strategy for Civil Organizations, the Underground Resources Act, and amendments
+        to the Access to Public Information Act).<br>
+        By protocol decision of 27 November 2013, the Council of Ministers approved the
+        self-assessment report on the Action Plan for Bulgaria’s participation in the Global “Open
+        Government Partnership” initiative. The government assigned the Minister of Regional
+        Development to be responsible for coordination and participation in the initiative.<br>
+        The government will continue working to address challenges related to improving cooperation
+        between the administration and civil society, enhancing administrative services and the legal
+        framework, and increasing the openness of the administration through improved access to
+        information and data.
+        The new plan will build on measures begun under the first action plan and in accordance with
+        recommendations from the Independent Reporting Mechanism Progress Report, Bulgaria
+        2012–2013. Measures will continue to improve citizen participation in policymaking, budget
+        transparency, the provision of accessible financial information, improved management of
+        natural resources, better access to public information, and improved regulatory impact analysis
+        on SMEs, reducing administrative burden and fostering economic growth.'
+                        ],
+                        [
+                            'title' => 'Process for developing the national action plan',
+                            'content' => 'Under the leadership of the Minister of Regional Development, an inter-agency working
+        group was formed to prepare Bulgaria’s Second Action Plan under the “Open Government
+        Partnership” initiative.
+        On the public consultation website www.strategy.bg, in its special “Open Government
+        Partnership” section, the opportunity was provided for NGOs and civil society to submit
+        proposals for commitments to be included in the Second Action Plan. Proposals could also be
+        discussed in the online discussion panel for the initiative on www.strategy.bg. Meetings of the
+        inter-agency working group were held to discuss the Second Action Plan and the proposals
+        received from civil society. Joint meetings between the inter-agency group, businesses, NGOs,
+        civil society, and local authorities were also organized. The draft plan is published on the public
+        consultation website. The proposals submitted by NGOs during preparation are also available
+        there. A contact person from the Ministry of Regional Development was appointed to liaise with
+        the NGO sector during the preparation of the document.<br>
+        The measures in the second action plan were developed based on proposals from NGOs and
+        civil society, representatives of public administration, recommendations from the Independent
+        Reporting Mechanism assessment for Bulgaria, as well as the guidance provided during the
+        regional meeting for Europe among OGP countries held in May 2014 in Dublin, Ireland.'
+                        ]
+                    ),
                 ),
                 'ogDescription' => array(
                     'bg' => 'България се присъедини към Инициативата „Партньорство за открито управление“ през 2012 г. С участието си в инициативата българското правителство желаеше и продължава да желае да играе активна роля за изграждане на общество',
-                    'en' => 'България се присъедини към Инициативата „Партньорство за открито управление“ през 2012 г. С участието си в инициативата българското правителство желаеше и продължава да желае да играе активна роля за изграждане на общество',
+                    'en' => 'Bulgaria joined the Open Government Partnership Initiative in 2012. By participating in the initiative, the Bulgarian government wanted and continues to want to play an active role in building a society',
                 ),
                 'arrangements' => array(
                     'bg' => array(
@@ -1030,7 +1457,418 @@ enum OldNationalPlanEnum: int
                             )
                         ],
                     ),
-                    'en' => array(),
+                    'en' => array(
+                        [
+                            'name' => 'Close partnership between the administration and civil society',
+                            'leading_institution' => 'Leading institution for the overall implementation of the commitment: Council of Ministers Administration. For the implementation of the individual measures:
+        <br>Measure 1: Ministry of Justice and Council of Ministers Administration
+        <br>Measure 2: Council of Ministers Administration and central administration
+        <br>Measure 3: Ministry of Justice, Council of Ministers Administration',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'Low level of engagement and participation of civil society in the decision-making process',
+                            'base_goal' => 'Improvement of the process of participation of citizens and civil organizations in drafting normative acts; Improving the partnership between the administration, civil society, and business through the mechanism of public councils functioning within individual institutions, and ensuring greater publicity and transparency.',
+                            'challenge' => 'Strengthening public morality',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Amendments to the Law on Normative Acts: proportionate adaptation of the minimum mandatory period from 14 to 30 days for conducting public consultations on draft normative documents, depending on the importance of the issue and the stakeholders involved, and in accordance with good European practices; improved transparency and procedure for discussing draft normative acts.',
+                                    'exist' => 'New commitment',
+                                    'from_date' => 'July 2014',
+                                    'to_date' => '2016',
+                                ],
+                                [
+                                    'name' => 'Improved procedure for the participation of citizens and civil organizations in public consultations:
+                <ul>
+                    <li>Publishing online information about: the composition of the councils; invitations, agendas, minutes, information on decisions taken during meetings and their implementation; periodic public reports on their activities. (the information will be published on the portal of the consultative councils – www.saveti.government.bg).</li>
+                    <li>Development of clear rules, procedures, and criteria for the selection/appointment of representatives of civil organizations to consultative and public councils</li>
+                </ul>',
+                                    'exist' => 'Continuation of an existing commitment',
+                                    'from_date' => 'July 2014',
+                                    'to_date' => '2016',
+                                ],
+                            )
+                        ],
+                        [
+                            'name' => 'Improvement of public services and legislative framework<br>Better budget transparency
+            <ul>
+                <li>Openness, transparency, and accountability in the management of public debt</li>
+                <li>Increasing the accessibility, clarity, and understanding of information published by the Ministry of Finance for the public</li>
+            </ul>',
+                            'leading_institution' => 'Ministry of Finance',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'The commitment ensures that the public is informed on important aspects related to debt issues and allows for ensuring publicity and predictability of policies implemented in this area',
+                            'base_goal' => 'Synthesizing the main directions of debt policy over a medium-term period in the context of effective management of sovereign obligations, as well as providing detailed information in various breakdowns on the state and dynamics of public debt',
+                            'challenge' => 'Improvement of public services<br>More effective management of public funds',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Implementation of the Public Debt Management Strategy 2012-2014',
+                                    'exist' => 'Existing',
+                                    'from_date' => 'January 2012',
+                                    'to_date' => 'December 2014',
+                                ],
+                                [
+                                    'name' => 'Development, approval by the Council of Ministers, and implementation of the Public Debt Management Strategy 2015-2017',
+                                    'exist' => 'Existing',
+                                    'from_date' => 'December 2014',
+                                    'to_date' => 'December 2017',
+                                ],
+                                [
+                                    'name' => 'Publishing the "Public Debt" bulletin on the Ministry of Finance website',
+                                    'exist' => 'Existing',
+                                    'from_date' => 'Monthly',
+                                    'to_date' => '',
+                                ],
+                                [
+                                    'name' => 'Publishing the Annual Overview of the state of public debt on the Ministry of Finance website',
+                                    'exist' => 'Existing',
+                                    'from_date' => 'Annually',
+                                    'to_date' => '',
+                                ],
+                                [
+                                    'name' => 'Publishing official information on the consolidated debt and guarantees of the "Public Administration" sector on the Ministry of Finance website',
+                                    'exist' => 'New commitment',
+                                    'from_date' => 'From January 1, 2014',
+                                    'to_date' => 'Every three months/annually',
+                                ],
+                            )
+                        ],
+                        [
+                            'name' => 'Improvement of public services and legislative framework<br>Better budget transparency
+            <ul>
+                <li>Openness, transparency, and accountability in the management of public debt</li>
+                <li>Increasing the accessibility, clarity, and understanding of information published by the Ministry of Finance for the public</li>
+            </ul>',
+                            'leading_institution' => 'Ministry of Finance',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'The information published by the Ministry of Finance is understandable to only a limited number of narrowly specialized users',
+                            'base_goal' => 'Providing the information published by the Ministry of Finance in a form accessible to a broader group of users',
+                            'challenge' => 'Improvement of public services<br>More effective management of public funds',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Survey among users on the accessibility, clarity, and understanding of information published by the Ministry of Finance for the public',
+                                    'exist' => 'New commitment',
+                                    'from_date' => 'September 2014',
+                                    'to_date' => 'December 2014',
+                                ],
+                                [
+                                    'name' => 'Development of a concept to improve accessibility, clarity, and understanding of information published by the Ministry of Finance for the public',
+                                    'exist' => 'New commitment',
+                                    'from_date' => 'January 2015',
+                                    'to_date' => 'May 2015',
+                                ],
+                                [
+                                    'name' => 'Implementation of measures from the concept to improve accessibility, clarity, and understanding of information published by the Ministry of Finance for the public',
+                                    'exist' => 'New commitment',
+                                    'from_date' => 'June 2015',
+                                    'to_date' => 'January 2016',
+                                ],
+                            )
+                        ],
+                        [
+                            'name' => 'Improvement of public services and legislative framework<br>Better management of natural resources',
+                            'leading_institution' => 'Ministry of Economy and Energy',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'There is a need to increase public trust in the management of natural resources, improve social responsibility, and prevent social conflicts through greater transparency and public oversight.',
+                            'base_goal' => 'Ensuring transparency in the control of licenses for exploration and research, or for research and granted concessions for extraction of mineral resources, and ensuring public access to the results.',
+                            'challenge' => 'Improvement of public services',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Adopted Law amending and supplementing the Mineral Resources Act',
+                                    'exist' => 'Existing commitment',
+                                    'from_date' => '2012',
+                                    'to_date' => '2014',
+                                ],
+                                [
+                                    'name' => 'Adopted Regulation on the scope and procedure for carrying out and accepting the results of control over granted licenses for exploration and research, or for research and granted concessions for extraction of mineral resources',
+                                    'exist' => 'Existing commitment',
+                                    'from_date' => '2014',
+                                    'to_date' => '2015',
+                                ]
+                            )
+                        ],
+                        [
+                            'name' => 'Improvement of public services and legislative framework<br>Better assessment of the impact of regulations – introduction of SME test',
+                            'leading_institution' => 'Ministry of Economy and Energy,<br>Administration of the Council of Ministers',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'Lack of sufficient analysis of the impact of regulations on the activities of small and medium-sized enterprises (SMEs) in Bulgaria, which represent 99% of all businesses in the country',
+                            'base_goal' => 'Analysis of the impact of regulations on SMEs, reducing the administrative burden on small and medium-sized businesses',
+                            'challenge' => 'Improvement of public services',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Law amending and supplementing regulations, which introduces the obligation to apply the SME test',
+                                    'exist' => 'New commitment',
+                                    'from_date' => '2014',
+                                    'to_date' => '2015',
+                                ],
+                                [
+                                    'name' => 'Draft Methodology for conducting the SME test',
+                                    'exist' => 'New commitment',
+                                    'from_date' => '2014',
+                                    'to_date' => '2015',
+                                ],
+                                [
+                                    'name' => 'SME test form',
+                                    'exist' => 'New commitment',
+                                    'from_date' => '2014',
+                                    'to_date' => '2015',
+                                ]
+                            )
+                        ],
+                        [
+                            'name' => 'More efficient public fund management<br>Civic participation, openness, and transparency in the development of a draft new Law on State Fees',
+                            'leading_institution' => 'Administration of the Council of Ministers',
+                            'other_person' => 'Ministry of Finance and Ministry of Economy and Energy, with the participation of civil society',
+                            'problem_question' => 'There is a need to:
+        <ul>
+            <li>Improve the effectiveness and efficiency of the policy regarding fees</li>
+            <li>Ensure effective coordination within the administration and partnership with businesses and the non-governmental sector on matters related to fee policy</li>
+            <li>Ensure transparency and provide conditions for monitoring and control over the implementation of fee policy</li>
+        </ul>',
+                            'base_goal' => 'Good governance through a new fee policy, ensuring avoidance of unjustified financial burden on citizens and businesses. Implementation of an effective and efficient socio-economic policy through fees determined based on an established system of principles and clear rules.',
+                            'challenge' => 'More efficient public fund management<br>Improvement of public services',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Draft Law on State Fees',
+                                    'exist' => 'New within the initiative',
+                                    'from_date' => 'March 2013',
+                                    'to_date' => 'September 2014',
+                                ],
+                                [
+                                    'name' => 'Draft Specialized Methodology for Impact Assessment when introducing or updating state fees',
+                                    'exist' => 'New within the initiative',
+                                    'from_date' => 'March 2013',
+                                    'to_date' => 'September 2014',
+                                ],
+                                [
+                                    'name' => 'Draft Methodology for determining the amount of fees',
+                                    'exist' => 'New within the initiative',
+                                    'from_date' => 'March 2013',
+                                    'to_date' => 'September 2014',
+                                ],
+                                [
+                                    'name' => 'Draft Unified Fee Tariff',
+                                    'exist' => 'New within the initiative',
+                                    'from_date' => 'March 2013',
+                                    'to_date' => 'September 2014',
+                                ],
+                            )
+                        ],
+                        [
+                            'name' => 'Administrative openness<br>Use of open data',
+                            'leading_institution' => 'Administration of the Council of Ministers, Ministry of Transport, Information Technology and Communications, all other administrations',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'The topic of open data is new for most countries and governments, including Bulgaria. The Bulgarian administration is making targeted efforts to increase accountability and transparency in its work by using the opportunities offered by new technologies. In the coming years, in line with EU policy, additional efforts are needed to introduce open data into administration. In this process, the appropriate steps will be taken.',
+                            'base_goal' => 'Introduce the principles of open data in the work of the administration and start initiatives for applying open data in dialogue with the non-governmental sector, business, and civil society.',
+                            'challenge' => 'Improvement of public services <br>Strengthening public ethics',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Amendment and supplementation of the Access to Public Information Act.
+                        <br>The changes aim to:
+                        <br>Increase administrative openness and facilitate access to public information through:
+                        <ul>
+                            <li>Expansion and detailing of obligations to publish information;</li>
+                            <li>Strengthening coordination and control over the implementation of the law;</li>
+                            <li>Transposition of Directive 2013/37/EC amending Directive 2003/98/EC on the re-use of public sector information – planned changes and future actions</li>
+                        </ul>',
+                                    'exist' => 'New commitment',
+                                    'from_date' => '2014',
+                                    'to_date' => 'July 2015',
+                                ],
+                                [
+                                    'name' => 'Development of technical guidelines for providing public information held by institutions in open format',
+                                    'exist' => 'New commitment',
+                                    'from_date' => '2014',
+                                    'to_date' => '2015',
+                                ],
+                                [
+                                    'name' => 'Prioritization of information in open format (registers, reports, etc.) – report on prioritized registers, reports, statistical data, etc., that can be provided in open format',
+                                    'exist' => 'New commitment',
+                                    'from_date' => '2015',
+                                    'to_date' => '2015',
+                                ],
+                                [
+                                    'name' => 'Initiate procedure to join the Council of Europe Convention on Access to Official Documents',
+                                    'exist' => 'New commitment',
+                                    'from_date' => '2014',
+                                    'to_date' => '2016',
+                                ],
+                            )
+                        ],
+                        [
+                            'name' => 'Enhanced system for managing the risk of conflicts of interest',
+                            'leading_institution' => 'Ministry of Justice, Council of Ministers (CoM)',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'The current system covers a relatively narrow group of individuals required to submit conflict of interest and asset declarations, and the amount of information collected through these declarations is insufficient. There is no consistent practice for verifying the declared data.',
+                            'base_goal' => 'Higher level of prevention of conflicts of interest',
+                            'challenge' => 'Strengthening public ethics',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Introduction of a new structure for processing conflict of interest and asset declarations, which includes the following main new principles and elements:
+                        <ul>
+                            <li>Full digitalization of processing both types of declarations;</li>
+                            <li>Coverage of civil servants from central and territorial administration through electronic declarations;</li>
+                            <li>Expansion of the information collected through declarations to improve risk analysis and detect corrupt activities;</li>
+                            <li>Assignment of responsibilities for collection and initial processing of declarations to inspectorates and regional administration;</li>
+                            <li>Audit and verification powers for declarations of senior state positions, as well as extended powers regarding tax and banking secrecy;</li>
+                            <li>Assignment of auditing declarations with identified risk to the National Revenue Agency (NRA) for civil servants</li>
+                        </ul>',
+                                    'exist' => 'Yes',
+                                    'from_date' => '01.12.2015',
+                                    'to_date' => '31.12.2016',
+                                ],
+                            )
+                        ],
+                        [
+                            'name' => 'Introduction of the concept and practice of problem-solving courts in Bulgaria',
+                            'leading_institution' => 'Ministry of Justice',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'The Bulgarian court system gives the impression of "technocratic," strictly "letter-of-the-law" adjudication. Although the consequences of judicial decisions extend beyond the court, it is not integrated with other local public institutions essential for the effective protection of vulnerable social groups and the reduction of social inequality – such as healthcare, social services, public order, education, culture, etc. Judges often lack the skills to adequately address representatives of various vulnerable social groups (e.g., children, drug addicts, people with mental health issues, etc.) involved in judicial proceedings, or if such skills exist, they are developed only intuitively.',
+                            'base_goal' => 'The need to develop an understanding of the court as an organization within a specific social context. This is especially important for first-instance courts.',
+                            'challenge' => 'Improving public services',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Development of a methodology for judges to work with individuals from vulnerable social groups, based on empirical research and knowledge provided by American experts/judges using the "problem-solving courts" model. Specific measurable indicators can include:
+                        <ul>
+                            <li>Number of participating experts;</li>
+                            <li>Number of participating judges;</li>
+                            <li>Availability of methodology;</li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>',
+                                    'exist' => 'Yes',
+                                    'from_date' => '01.06.2015',
+                                    'to_date' => '31.12.2016',
+                                ],
+                            )
+                        ],
+                        [
+                            'name' => 'Introduction of a system for conducting electronic public procurements',
+                            'leading_institution' => 'Ministry of Economy',
+                            'other_person' => 'Yes, Ministry of Transport, IT and Communications, Ministry of Finance, Ministry of Health, Council of Ministers, ESIMS, NSORB, etc.',
+                            'problem_question' => 'The current system for public procurements carries a risk of abuses due to a still strong subjective element, insufficient transparency, and lack of standardized workflows in certain stages of the procedures.',
+                            'base_goal' => 'Facilitated access and reduced bureaucratic requirements and costs for businesses participating in public procurement procedures, and creating opportunities for effective public oversight to prevent abuses.',
+                            'challenge' => 'Improving public services<br>More efficient management of public funds',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Amendments to the Public Procurement Act regulating the conduct of public procurement procedures electronically',
+                                    'exist' => 'New',
+                                    'from_date' => '01.03.2015',
+                                    'to_date' => '01.03.2016',
+                                ],
+                                [
+                                    'name' => 'Introduction of a Unified National Portal for electronic public procurements, with phased implementation of different stages of the electronic procurement process
+                    <br>Implementation of a module for electronic announcements',
+                                    'exist' => '',
+                                    'from_date' => '01.01.2016',
+                                    'to_date' => '31.12.2016',
+                                ]
+                            )
+                        ],
+                        [
+                            'name' => 'Improving the usability of data published from the Electronic Budget Payments System (SEBRA)',
+                            'leading_institution' => 'Ministry of Finance, Council of Ministers',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'Currently published data are in heterogeneous formats and provide an overly aggregated picture of payments, which creates a barrier for use by a wider range of users, as it requires additional expertise and resources for secondary processing.',
+                            'base_goal' => 'Achieving a higher level of fiscal transparency and accountability',
+                            'challenge' => 'Strengthening public ethics<br>More efficient management of public funds',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Introduction of a unified format for publishing data from different agencies and a single point for downloading the data',
+                                    'exist' => 'New within the initiative',
+                                    'from_date' => '01.06.2015',
+                                    'to_date' => '31.12.2015',
+                                ],
+                            )
+                        ],
+                        [
+                            'name' => 'Improving the follow-up control over the awarding and execution of public procurement contracts and introducing a unified consistent practice for control and accountability',
+                            'leading_institution' => 'Ministry of Finance, ADFI',
+                            'other_person' => 'Yes',
+                            'problem_question' => 'The follow-up control practice is too heterogeneous, and there is a lack of consistent effort to analyze identified violations in order to outline high-risk areas and address recurring breaches.',
+                            'base_goal' => 'Improving follow-up control over the awarding and execution of public procurement contracts and introducing a unified consistent practice for control and accountability',
+                            'challenge' => 'Improving public ethics<br>More efficient management of public funds',
+                            'progress' => [
+                                'Transparency' => 'Yes',
+                                'Accountability ' => 'Yes',
+                                'Public participation' => 'Yes'
+                            ],
+                            'check_arrangements' => array(
+                                [
+                                    'name' => 'Development of a manual to unify follow-up control (avoiding overlapping inspections and ensuring uniform treatment of violations by oversight bodies)',
+                                    'exist' => 'New within the initiative',
+                                    'from_date' => '01.06.2015',
+                                    'to_date' => '31.12.2015',
+                                ],
+                                [
+                                    'name' => 'Analysis of identified violations (including conflicts of interest) related to public procurement and the sanctions imposed in this regard',
+                                    'exist' => 'New within the initiative',
+                                    'from_date' => '01.06.2015',
+                                    'to_date' => '31.12.2015',
+                                ],
+                                [
+                                    'name' => 'Introduction of indicators and a system for periodic reporting of violations in the practice of imposed administrative sanctions',
+                                    'exist' => 'New within the initiative',
+                                    'from_date' => 'July 2014',
+                                    'to_date' => 'December 2016',
+                                ]
+                            )
+                        ],
+                    ),
                 )
             ),
             self::THIRD->value => array(
@@ -1038,14 +1876,14 @@ enum OldNationalPlanEnum: int
                     'bg' => array(
                         [
                             'path' => '/old_ogp_plan/3/Трети_план_ПОУ-2.pdf',
-                            'name' => 'Трети национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018 (БГ)',
+                            'name' => 'Трети национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     ),
                     'en' => array(
                         [
                             'path' => '/old_ogp_plan/3/NAP3-Bulgaria_EN_0.pdf',
-                            'name' => 'Трети национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018 (БГ)',
+                            'name' => 'Third National Action Plan within the framework of the Open Government Partnership initiative 1 July 2016 – 30 June 2018',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     )
@@ -1063,15 +1901,26 @@ enum OldNationalPlanEnum: int
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     ),
-                    'en' => array(),
+                    'en' => array(
+                        [
+                            'path' => 'old_ogp_plan/3/Доклад_за_самооценка_на_администрацията_БГ.pdf',
+                            'name' => 'Government report',
+                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+                        ],
+                        [
+                            'path' => 'old_ogp_plan/3/Bulgaria_End-of-Term_Report_2016-2018_BUL.pdf',
+                            'name' => 'Independent researcher\'s report',
+                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+                        ],
+                    ),
                 ),
                 'content' => array(
                     'bg' => '<p>Третият Национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018 г. е приет с Решение № 570 на Министерския съвет от 11 юли 2016 г. Преди приемането на плана беше обявен график за неговата подготовка и беше проведена онлайн обществена консултация на Портала за обществена консултации.</p>',
-                    'en' => array(),
+                    'en' => '<p>The Third National Action Plan within the framework of the Open Government Partnership initiative July 1, 2016 - June 30, 2018 was adopted by Decision No. 570 of the Council of Ministers of July 11, 2016. Before the adoption of the plan, a schedule for its preparation was announced and an online public consultation was held on the Public Consultation Portal.</p>',
                 ),
                 'ogDescription' => array(
                     'bg' => 'Третият Национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018 г. е приет с Решение № 570 на Министерския съвет от 11 юли 2016 г.',
-                    'en' => 'Третият Национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018 г. е приет с Решение № 570 на Министерския съвет от 11 юли 2016 г.',
+                    'en' => 'The Third National Action Plan within the framework of the Open Government Partnership initiative July 1, 2016 - June 30, 2018 was adopted by Decision No. 570 of the Council of Ministers of July 11, 2016.',
                 ),
                 'arrangements' => array(
                     'bg' => array(
@@ -1564,13 +2413,503 @@ enum OldNationalPlanEnum: int
                             ],
                         )
                     ),
-                    'en' => array(),
+                    'en' => array(
+                        'Electronic Governance' => array(
+                            [
+                                'commitment' => 'The Bulgarian government will improve access to and quality of public services through the implementation of e-governance tools',
+                                'arrangements' => array(
+                                    [
+                                        'Title' => 'Enhancement of existing and introduction of new electronic services by the National Revenue Agency (NRA)',
+                                        'Context' => 'Currently, the NRA offers the most electronic services in the public administration, but some services still require in-person visits, which consumes time and represents an administrative burden for taxpayers.',
+                                        'Main Goal' => 'Expand the scope and quality of NRA electronic services to further reduce bureaucratic obstacles through citizen-oriented services and improve internal business processes.',
+                                        'Ambition' => 'Simplify procedures and improve approaches oriented to taxpayers’ needs.',
+                                        'Relevance to Key Challenges' => 'This measure addresses the key challenge of improving public service efficiency.',
+                                        'Responsible Institution' => 'National Revenue Agency',
+                                        'Other Public Institutions Involved' => 'Ministry of Finance',
+                                        'Other Stakeholders' => 'Business associations, employers’ organizations',
+                                        'Expected Impact' => 'Easier and convenient access to NRA services; reduced administrative burden for citizens and businesses; economic benefits from time and resource savings; improved process management and higher efficiency of the revenue administration.',
+                                        'Timeline' => 'Ongoing',
+                                    ],
+                                    [
+                                        'Title' => 'Development of a sectoral e-Government Strategy in the Ministry of Environment and Water (MOEW) and Roadmap for 2016–2020 in accordance with the National e-Government Strategy 2014–2020',
+                                        'Context' => 'Environmental management faces challenges such as climate change adaptation, resource efficiency, biodiversity loss prevention, and promoting eco-friendly societal behavior. E-governance plays a key role in managing these processes, providing timely information, and enabling public participation.',
+                                        'Main Goal' => 'Develop targeted, accessible, predictable, efficient, and effective e-governance for the benefit of society and the environment.',
+                                        'Ambition' => 'Achieve flexibility and efficiency in environmental measures, shorten document processing times, ensure public access, and transparency in procedures.',
+                                        'Relevance to Key Challenges' => 'Addresses challenges in modern natural resource management, improving public services, and governance integrity. Digitization enhances transparency and accountability.',
+                                        'Responsible Institution' => 'Ministry of Environment and Water, Directorate “Human Resources, Information Services, Public Relations and Protocol”',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'NGOs, business, local communities',
+                                        'Expected Impact' => 'Consistency and predictability in implementing e-governance in environmental management; improved internal procedures and consolidated data sources.',
+                                        'Timeline' => 'October 2016',
+                                    ],
+                                    [
+                                        'Title' => 'Implementation of a public electronic register of installations and sources of volatile organic compounds, with two electronic services – registration application and application for changes in registered installations',
+                                        'Context' => 'Maintaining a public electronic register now allows applications for registration or changes to be submitted electronically.',
+                                        'Main Goal' => 'Achieve higher-quality service for businesses, improve public awareness, and increase transparency regarding air quality management.',
+                                        'Ambition' => 'Provide modern services and ensure transparency in regulatory compliance.',
+                                        'Relevance to Key Challenges' => 'Enhances public service efficiency and governance integrity; improves public access and engagement in monitoring air pollution.',
+                                        'Responsible Institution' => 'Executive Environment Agency, Regional Environmental and Water Inspectorates',
+                                        'Other Public Institutions Involved' => 'Ministry of Environment and Water',
+                                        'Other Stakeholders' => 'Facility operators, local communities, civic organizations',
+                                        'Expected Impact' => 'Reduced processing times, improved flexibility and efficiency of internal procedures, broader access, and transparent stakeholder interaction.',
+                                        'Timeline' => 'July 2016',
+                                    ],
+                                    [
+                                        'Title' => 'Implementation of a Waste Management Information System (WMIS) allowing electronic submission, record-keeping, and information provision',
+                                        'Context' => 'Waste management generates public interest and often leads to conflicts among communities, operators, and authorities. Lack of consolidated electronic information exacerbates conflicts and complicates dialogue.',
+                                        'Main Goal' => 'Leverage technology to provide more information about waste management and reduce administrative burden on businesses.',
+                                        'Ambition' => 'Create a system enabling timely addressing of potential issues and broadening information access for the public.',
+                                        'Relevance to Key Challenges' => 'Improves public services and resource management through digitization; enhances public accountability and access to waste management information.',
+                                        'Responsible Institution' => 'Executive Environment Agency',
+                                        'Other Public Institutions Involved' => 'Ministry of Environment and Water, Regional Inspectorates',
+                                        'Other Stakeholders' => 'Civic organizations, local communities, businesses',
+                                        'Expected Impact' => 'Better monitoring of waste management companies; easier application submission; broader availability of electronic information.',
+                                        'Timeline' => 'December 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Development and implementation of healthcare software applications for real-time information processing – e-referrals, e-prescriptions, etc.',
+                                        'Context' => 'Electronic healthcare services are rare in Bulgaria, resulting in administrative burden for medical professionals and delays for patients.',
+                                        'Main Goal' => 'Optimize and digitize healthcare processes to improve service quality and control over public healthcare spending.',
+                                        'Ambition' => 'Significantly reduce administrative burden for doctors and improve patient service.',
+                                        'Relevance to Key Challenges' => 'Improves public services and enables more effective monitoring of public health expenditure.',
+                                        'Responsible Institution' => 'Ministry of Health',
+                                        'Other Public Institutions Involved' => 'National Health Insurance Fund',
+                                        'Other Stakeholders' => 'Patient organizations, General Practitioners’ Association',
+                                        'Expected Impact' => 'Reduced time to issue referrals and prescriptions; tracking of visits and prescriptions; better planning and patient access.',
+                                        'Timeline' => 'December 2018',
+                                    ],
+                                    [
+                                        'Title' => 'Transform primary registration of Non-Profit Legal Entities (NPLE) from judicial to administrative and centralize the NPLE registry via full digitization',
+                                        'Context' => 'Previously, NPLEs were registered through courts, requiring more time and resources, and the registry was fragmented and poorly updated.',
+                                        'Main Goal' => 'Consolidate NPLE information and simplify registration; ensure accessible and verifiable information.',
+                                        'Ambition' => 'Full digitization of the registry within the Registry Agency and provision of electronic services for NGOs.',
+                                        'Relevance to Key Challenges' => 'Enhances public services and simplifies registration, promoting civic organization.',
+                                        'Responsible Institution' => 'Registry Agency',
+                                        'Other Public Institutions Involved' => 'Ministry of Justice',
+                                        'Other Stakeholders' => 'Center for the Study of Democracy',
+                                        'Expected Impact' => 'Simplified and accelerated registration procedure; access to a complete electronic NGO registry.',
+                                        'Timeline' => 'June 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Integration of the Management Information System for EU Funds (MIS EF) with National Statistical Institute datasets',
+                                        'Context' => 'The EU Funds Management Information System holds project and beneficiary information, but there are gaps in monitoring and integrated data use.',
+                                        'Main Goal' => 'Provide statistical data on program indicators for better performance and efficiency assessment of EU-funded programs.',
+                                        'Ambition' => 'Timely assessment of program impact to maximize benefits.',
+                                        'Relevance to Key Challenges' => 'Supports more efficient public resource management and provides detailed information on government program execution.',
+                                        'Responsible Institution' => 'Administration of Council of Ministers, Central Coordination Unit',
+                                        'Other Public Institutions Involved' => 'National Statistical Institute',
+                                        'Other Stakeholders' => 'Beneficiaries of operational programs',
+                                        'Expected Impact' => 'Generation of detailed statistical reports; clear evaluation of program outcomes; better targeting of funds; transparency.',
+                                        'Timeline' => 'December 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Upgrade core systems of Customs Agency to provide data and services to external systems',
+                                        'Context' => 'The Customs Agency offers electronic services mainly for the trade sector, but existing services are on old platforms requiring updates for accessibility and EU compliance.',
+                                        'Main Goal' => 'Ensure usability and accessibility of services for citizens and businesses.',
+                                        'Ambition' => 'Reduce administrative obstacles and integrate Customs systems with external software.',
+                                        'Relevance to Key Challenges' => 'Improves public services and efficient resource management through automated internal control.',
+                                        'Responsible Institution' => 'Customs Agency',
+                                        'Other Public Institutions Involved' => 'Ministry of Finance',
+                                        'Other Stakeholders' => 'Private sector',
+                                        'Expected Impact' => 'Integration with EU components; stable internal systems; convenient electronic services for citizens and businesses.',
+                                        'Timeline' => 'June 2018',
+                                    ],
+                                    [
+                                        'Title' => 'Implementation of the Electronic Public Procurement Information System (e-Procurement) with all modules including electronic evaluation and offer submission',
+                                        'Context' => 'Public procurement procedures are sensitive in Bulgaria and currently not fully automated, requiring manual preparation and submission of bids.',
+                                        'Main Goal' => 'Simplify procurement procedures and ensure objective, transparent evaluation and contract awarding.',
+                                        'Ambition' => 'Fully electronic public procurement process',
+                                        'Relevance to Key Challenges' => 'Digitization and transparency improve public services, integrity of institutions, business environment, and public resource management.',
+                                        'Responsible Institution' => 'Public Procurement Agency',
+                                        'Other Public Institutions Involved' => 'Ministry of Finance',
+                                        'Other Stakeholders' => 'Contracting authorities and business entities participating in procurement',
+                                        'Expected Impact' => 'Electronic process for all procurement stages; standardized processes and templates; improved control and optimized registry management.',
+                                        'Timeline' => 'June 2018',
+                                    ]
+                                )
+                            ]
+                        ),
+                        'Access to Information' => array(
+                            [
+                                'commitment' => 'The Bulgarian government will continue improving access to information by constantly expanding the scope of published public information and widely digitizing information provision processes',
+                                'arrangements' => array(
+                                    [
+                                        'Title' => 'Coordination and support in revising internal rules for implementing the Access to Public Information Act (APIA), ensuring compliance with APIA amendments through clear mechanisms and responsibilities for proactive publication and internal control.',
+                                        'Context' => 'Public institutions have been required to adopt and publish internal rules for APIA since 2008. By 2015, 482 out of 576 administrations had such rules. Amendments in December 2015 introduced new obligations, including proactive publication, electronic provision of information, and reuse of information, requiring review of internal rules and clear responsibilities.',
+                                        'Main Goal' => 'Standardize and improve the organization of public information provision processes and internal control.',
+                                        'Ambition' => 'Transparent process for information provision and easier access for citizens.',
+                                        'Relevance to Key Challenges' => 'Provides a framework to improve public information processes, enhance transparency, and strengthen institutional integrity.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'All public bodies under APIA',
+                                        'Other Stakeholders' => 'Access to Information Program',
+                                        'Expected Impact' => 'Accelerated alignment of internal rules with legal requirements.',
+                                        'Timeline' => 'June 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Training on APIA amendments for all public administration employees, especially units responsible for APIA compliance and online publication.',
+                                        'Context' => 'In 2016, APIA amendments introduced new obligations for proactive publication, expanded categories of information to be published online, and required institutions to maintain updated lists of information for publication. A central web-based platform for public information access will be developed.',
+                                        'Main Goal' => 'Increase administrative capacity to implement APIA and provide public information.',
+                                        'Ambition' => 'Promote a proactive approach to publishing public information.',
+                                        'Relevance to Key Challenges' => 'Improves access to information by increasing the skills and capacity of civil servants, enhancing institutional integrity.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'Institute of Public Administration',
+                                        'Other Stakeholders' => 'Access to Information Program',
+                                        'Expected Impact' => 'Enhanced skills and motivation of civil servants for providing public information and using the Information Access Platform.',
+                                        'Timeline' => 'December 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Maintenance of public electronic registers by the State Gambling Commission (SGC) for gambling operators, production/distribution activities, gaming equipment service and import, revoked/refused licenses, and approved gaming equipment. Update and maintain a list of websites offering gambling without a license.',
+                                        'Context' => 'The gambling sector is dynamic and regulated. SGC maintains publicly accessible registers to provide transparency on licensed and regulated gambling activities. Lists of unlicensed online operators protect citizens and revenue collection.',
+                                        'Main Goal' => 'Transparency of licensed gambling activity and prevention of illegal gambling. Improve the business environment and increase budget revenues.',
+                                        'Ambition' => 'Protect legal gambling operators and citizens.',
+                                        'Relevance to Key Challenges' => 'Improves public services and management of public resources; enhances access to information about SGC activities.',
+                                        'Responsible Institution' => 'State Gambling Commission',
+                                        'Other Public Institutions Involved' => 'Ministry of Finance',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Promotes legitimate operators; transparency in SGC operations; better control of gambling activities.',
+                                        'Timeline' => 'Ongoing',
+                                    ],
+                                    [
+                                        'Title' => 'Publishing annual priorities of the National Revenue Agency (NRA), main results of NRA activities, and results of sociological surveys related to NRA work.',
+                                        'Context' => 'The NRA is in constant contact with citizens and businesses. It provides comprehensive information on services, forms, guidance, rights and obligations, and freely available electronic services, leveraging modern ICT tools.',
+                                        'Main Goal' => 'Increase transparency of NRA activities and reduce administrative burden for taxpayers.',
+                                        'Ambition' => 'Maintain citizen- and business-oriented approaches.',
+                                        'Relevance to Key Challenges' => 'Improves public services and public resource management; increases transparency of NRA operations.',
+                                        'Responsible Institution' => 'National Revenue Agency',
+                                        'Other Public Institutions Involved' => 'Ministry of Finance',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Improved predictability of business environment; services aligned with user needs; enhanced citizen oversight of NRA activities.',
+                                        'Timeline' => 'June 2018',
+                                    ],
+                                    [
+                                        'Title' => 'Publishing analyses/studies funded by ESIF to support information exchange, harmonize practices, and map resources by topics for improved access to information.',
+                                        'Context' => 'ESIF management and expenditure systems contain common rules and principles. Sharing lessons learned and best practices across programs and projects helps beneficiaries prepare better projects and improve execution.',
+                                        'Main Goal' => 'Support beneficiaries in preparing high-quality projects and improving project management and funding utilization.',
+                                        'Ambition' => 'Greater consistency, administrative interaction, and information exchange for transparency and uniform ESIF management.',
+                                        'Relevance to Key Challenges' => 'Enhances guidance for beneficiaries, improves public resource management, and supports effective application of rules and best practices.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers, Central Coordination Unit',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Harmonized publication practices; wider access to analytical expertise accumulated from ESIF-funded programs and projects.',
+                                        'Timeline' => 'Ongoing',
+                                    ],
+                                    [
+                                        'Title' => 'Create a registry of all independent regulatory, supervisory, and control bodies appointed by the National Assembly, with information on institutional websites, powers, mandates, members, legal basis, and decisions.',
+                                        'Context' => 'Many regulatory and supervisory bodies exist in Bulgaria, but consolidated information on their functions, powers, and decisions is lacking.',
+                                        'Main Goal' => 'Facilitate access to information about regulatory bodies and increase transparency.',
+                                        'Ambition' => 'Enable more active citizen oversight of regulatory and supervisory bodies.',
+                                        'Relevance to Key Challenges' => 'Enhances public access to information and transparency, strengthening institutional integrity and public resource management.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'Center for Liberal Strategies, Bulgarian Institute for Legal Initiatives',
+                                        'Expected Impact' => 'Structured and consolidated information; more effective citizen oversight of regulatory bodies.',
+                                        'Timeline' => 'June 2018',
+                                    ],
+                                    [
+                                        'Title' => 'Develop an information system for the collection, digitization, and storage of the national state archive at the National Institute for Immovable Cultural Heritage (NIICH), and implement electronic services for citizens and government employees through a digital public archive and electronic register of immovable cultural and archaeological heritage.',
+                                        'Context' => 'Currently, Bulgaria lacks a well-structured digital system for the National Documentary Archive Fund. Information is collected digitally but not systematically archived, causing delays and inefficiencies.',
+                                        'Main Goal' => 'Expand access to public information and increase citizen engagement in monitoring and preserving immovable cultural heritage.',
+                                        'Ambition' => 'Complete update and accessibility of cultural heritage information.',
+                                        'Relevance to Key Challenges' => 'Provides extended access to information and enhances citizen oversight; improves public services and institutional integrity.',
+                                        'Responsible Institution' => 'Ministry of Culture',
+                                        'Other Public Institutions Involved' => 'National Institute for Immovable Cultural Heritage',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Updated, complete, and electronically accessible archive; improved information exchange; electronic services for citizens and municipalities to facilitate heritage preservation and control.',
+                                        'Timeline' => 'December 2017',
+                                    ]
+                                )
+                            ]
+                        ),
+                        'Open Cities' => array(
+                            [
+                                'commitment' => 'The Bulgarian government will cooperate with and encourage local authorities to implement and develop open governance practices at the local level',
+                                'arrangements' => array(
+                                    [
+                                        'Title' => 'Adoption of a local open data program, including a list of databases and a timeline for their release',
+                                        'Context' => 'Efforts to publish public information in open, machine-readable formats are mostly focused at the central level, with few examples of proactive publication by municipalities. Meanwhile, there is strong demand for municipal data, which has potential to unlock economic and social benefits.',
+                                        'Main Goal' => 'Expand the open data policy and create new opportunities for citizen participation at the local level.',
+                                        'Ambition' => 'Gradually involve large cities in the open data initiative and unlock the economic and social potential of public information in open format.',
+                                        'Relevance to Key Challenges' => 'Improves access to information and expands open data publication. Aims to provide better local public services, more efficient use of public resources, and increased integrity of local authorities.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'National Association of Municipalities in Bulgaria',
+                                        'Other Stakeholders' => 'Sofia Municipality, NGO Links Association',
+                                        'Expected Impact' => 'Increased transparency of municipal policies, data-based products and services, and more active citizen involvement in designing municipal public services and decision-making processes at the local level.',
+                                        'Timeline' => 'December 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Enhancing transparency of local public finances – pilot implementation of a “citizen budget” in Sofia Municipality',
+                                        'Context' => 'Most Bulgarian municipalities actively publish budget information, but it is often too complex, requiring specialized expertise to analyze. This discourages citizen participation in such an important area as municipal finances.',
+                                        'Main Goal' => 'Encourage citizen participation by providing understandable information on municipal budgets, also called a “citizen budget.”',
+                                        'Ambition' => 'Introduce the practice of preparing a “citizen budget” at the municipal level.',
+                                        'Relevance to Key Challenges' => 'Promotes more active and informed citizen participation in municipal budget management and control. Supports more effective management of public resources.',
+                                        'Responsible Institution' => 'Sofia Municipality',
+                                        'Other Public Institutions Involved' => 'National Association of Municipalities in Bulgaria',
+                                        'Other Stakeholders' => 'Municipalities',
+                                        'Expected Impact' => 'Better understanding of citizens’ expectations, development of capacity to present complex financial information in an accessible way, improved communication, and more active citizen participation in managing municipal budgets.',
+                                        'Timeline' => 'June 2017',
+                                    ]
+                                )
+                            ]
+                        ),
+                        'Civic Participation' => array(
+                            [
+                                'commitment' => 'The Bulgarian government will enhance dialogue with civil society through innovative forms of interaction, allowing feedback and co-creation in policy-making',
+                                'arrangements' => array(
+                                    [
+                                        'Title' => 'Improve the quality of public consultations by enhancing the functionalities of the Public Communication Portal; develop unified standards for selecting members of public and advisory councils, ensuring transparency of their activities and clear mechanisms for implementing their decisions; collaborate with civil society to prepare training programs for civil servants on organizing effective public consultations; develop practical guidelines/manuals for citizen engagement and feedback on proposals.',
+                                        'Context' => 'Amendments to the Law on Normative Acts introduce higher requirements for the quality of public consultations. Past experience indicates weaknesses in public discussions that need to be addressed to increase stakeholder participation and the quality of consultation outcomes. Civil servants’ skills must be improved, and the portal upgraded to reflect new requirements, especially for feedback, crowdsourcing, and document search.',
+                                        'Main Goal' => 'Improve the quality of public consultations and actively engage stakeholders in policy-making and drafting of normative acts.',
+                                        'Ambition' => 'Leverage new technologies to broaden participation in public consultations.',
+                                        'Relevance to Key Challenges' => 'Enhancing procedures and channels increases stakeholder participation and trust, thereby improving institutional integrity.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'Institute of Public Administration, Council for Administrative Reform',
+                                        'Other Stakeholders' => 'Bulgarian Center for Non-Profit Law, Forum “Civic Initiatives”',
+                                        'Expected Impact' => 'Increased stakeholder participation, higher quality consultations, improved internal procedures, and enhanced civil servant skills for public discussion facilitation.',
+                                        'Timeline' => 'December 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Introduce national e-petition capability for national and local civic initiatives and reduce bureaucracy and personal data collection, including amending the Law on Direct Citizen Participation',
+                                        'Context' => 'Currently, the law does not allow e-petitions for national or local initiatives, only for European Citizens’ Initiatives.',
+                                        'Main Goal' => 'Activate civic participation by simplifying procedures for organizing national and local civic initiatives.',
+                                        'Ambition' => 'Expand opportunities for Bulgarian citizens to influence governance.',
+                                        'Relevance to Key Challenges' => 'New technologies facilitate citizen self-organization for more active decision-making participation and improve institutional integrity.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'Bulgarian Center for Non-Profit Law, Forum “Civic Initiatives”',
+                                        'Expected Impact' => 'Promote citizen self-organization and initiatives; reduce bureaucratic barriers to direct participation.',
+                                        'Timeline' => 'June 2018',
+                                    ],
+                                    [
+                                        'Title' => 'Create a permanent platform for joint monitoring and evaluation of the implementation of the Open Government Partnership (OGP) plans with stakeholders',
+                                        'Context' => 'Stakeholder involvement in monitoring OGP action plan implementation is currently unsystematic and relies on active civil society participation. Due to low awareness and lack of clear mechanisms, few civil society representatives are involved.',
+                                        'Main Goal' => 'Stimulate active participation and improve quality of implementation through structured monitoring of national OGP action plans.',
+                                        'Ambition' => 'Continuously improve implementation quality and engage all stakeholders in monitoring and evaluation.',
+                                        'Relevance to Key Challenges' => 'A permanent monitoring mechanism increases information availability, ensures predictable dialogue, creates sustainable cooperation, and fosters civic participation, improving institutional integrity.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'Relevant ministries responsible for measures in the plans',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Increased transparency, broader stakeholder participation, identification and correction of weaknesses, and strategic approach to implementation and evaluation.',
+                                        'Timeline' => 'October 2016',
+                                    ],
+                                    [
+                                        'Title' => 'Pilot a new method for analyzing complex and open issues in policy-making for ESIF management using design-thinking: conduct a seminar with stakeholders focused on environmental and climate policies as cross-cutting policy areas',
+                                        'Context' => 'Collaborative approaches (co-design, design-thinking) are still underused in Bulgaria for complex policy formulation. Conventional methods dominate, which are static and limit creativity.',
+                                        'Main Goal' => 'Introduce innovative consultation models and improve the quality of policy-making.',
+                                        'Ambition' => 'Promote a collaborative culture in policy formulation and implementation.',
+                                        'Relevance to Key Challenges' => 'Collaborative methods promote equality and balanced consultation, sharing opinions, and stimulating civic participation, improving institutional integrity and resource management.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers, Central Coordination Unit',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Developed skills in applying design-thinking for complex policy issues; stimulated stakeholder creativity; promoted innovative consultation approaches.',
+                                        'Timeline' => 'December 2016',
+                                    ],
+                                    [
+                                        'Title' => 'Develop and organize forums for drafting a Corporate Social Responsibility (CSR) strategy',
+                                        'Context' => 'CSR initiatives exist mainly through company self-organization and are not systematically encouraged by public institutions.',
+                                        'Main Goal' => 'Establish clear mechanisms to promote CSR in collaboration with businesses.',
+                                        'Ambition' => 'Ensure systematic CSR promotion and leverage business resources for better social services.',
+                                        'Relevance to Key Challenges' => 'Encourages collaborative approaches, stakeholder engagement, and transparency in strategic document development, enhancing institutional integrity and social service delivery.',
+                                        'Responsible Institution' => 'Ministry of Labour and Social Policy',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'Business organizations',
+                                        'Expected Impact' => 'Facilitate CSR initiatives by businesses; improve cooperation between state and business in social services; provide predictability and systematization of CSR incentives.',
+                                        'Timeline' => 'June 2018',
+                                    ]
+                                )
+                            ],
+                            [
+                                'commitment' => 'The Bulgarian government will improve the environment and take steps to support the development of civil society organizations',
+                                'arrangements' => array(
+                                    [
+                                        'Title' => 'Update the Strategy for Supporting the Development of Civil Society Organizations and adopt a new plan and responsible institution for its implementation',
+                                        'Context' => 'The previous strategy has expired and there is currently no institution responsible for updating and implementing it.',
+                                        'Main Goal' => 'Create conditions for effective functioning of civil society organizations and their active participation in decision-making, policy formulation, and governance oversight.',
+                                        'Ambition' => 'A viable civil sector that actively improves governance, delivers effective services, and increases expertise.',
+                                        'Relevance to Key Challenges' => 'Aims to provide conditions for civil society development and strengthen partnerships between civil society and national and local institutions, improving institutional integrity.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'Bulgarian Center for Non-Profit Law, Forum “Civic Initiatives”',
+                                        'Expected Impact' => 'Support for the development of civil society organizations.',
+                                        'Timeline' => 'December 2017',
+                                    ]
+                                )
+                            ]
+                        ),
+                        'Honest Governance (Integrity)' => array(
+                            [
+                                'commitment' => 'The Bulgarian government will work to increase integrity in governance and improve internal and external control over institutional activities',
+                                'arrangements' => array(
+                                    [
+                                        'Title' => 'Create a public registry for budgetary and project control in e-governance',
+                                        'Context' => 'E-governance implementation in Bulgaria is a large-scale priority. Several high-value projects are planned as part of the initiative.',
+                                        'Main Goal' => 'Ensure transparency through public access to all project ideas within e-governance.',
+                                        'Relevance to Key Challenges' => 'Improves information access and exchange, transparency, and accountability in e-governance projects. Enhances institutional integrity and more effective public resource management.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'Agency for E-Government (to be established)',
+                                        'Other Stakeholders' => 'IT sector companies',
+                                        'Expected Impact' => 'Improved project traceability; prevention of activity duplication; effective citizen oversight.',
+                                        'Timeline' => 'December 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Implement a universal ISAC “Corruption Risk Analysis” system',
+                                        'Context' => 'Anti-corruption units across government sectors need tools to analyze potential risks for public office holders. Current processes are fragmented and manually intensive. The system will automate risk analysis using multiple sources and registers, with periodic and ad-hoc checks and public aggregated reports.',
+                                        'Main Goal' => 'Improve internal control processes and reduce corruption risk.',
+                                        'Ambition' => 'Fully automated control process.',
+                                        'Relevance to Key Challenges' => 'The system enables active citizen oversight and informed participation in preventing corruption and conflicts of interest, improving institutional integrity and resource management.',
+                                        'Responsible Institution' => 'Ministry of Justice',
+                                        'Other Public Institutions Involved' => 'Center for Prevention and Counteraction of Corruption and Organized Crime',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Consolidated and more effective corruption risk analysis; public reports increase citizen pressure.',
+                                        'Timeline' => 'September 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Professional and psychological suitability assessment for appointments and promotions in the Customs Agency (draft regulation submitted to Ministry of Finance)',
+                                        'Context' => 'Customs employees perform duties critical to national security and public order. Article 10, paragraph 11 of the Customs Law sets high standards, requiring professional and psychological assessment to ensure integrity, impartiality, and proper training. The procedure combines competence tests with psychological evaluation to select candidates capable of maintaining high integrity standards.',
+                                        'Main Goal' => 'Effectively prevent unauthorized practices and reduce corruption risk through personnel selection and internal control measures.',
+                                        'Ambition' => 'Make the Customs Agency a model for effectively handling corruption pressure.',
+                                        'Relevance to Key Challenges' => 'Enhances institutional integrity and more effective management of public resources.',
+                                        'Responsible Institution' => 'Customs Agency',
+                                        'Other Public Institutions Involved' => 'Ministry of Finance',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Reduced corruption risk; active prevention of corrupt practices; more effective agency performance.',
+                                        'Timeline' => 'Ongoing',
+                                    ],
+                                    [
+                                        'Title' => 'Ensure transparency of Customs Agency operations and management through multiple citizen reporting channels ("hotline", National Anti-Corruption Council system, email, written submissions, suggestion boxes) and take appropriate actions on received reports and suggestions',
+                                        'Context' => 'Corruption prevention is a key priority for the Customs Agency and essential for effective operation.',
+                                        'Main Goal' => 'Engage the public in preventing corruption and expand available communication channels.',
+                                        'Responsible Institution' => 'Customs Agency',
+                                        'Other Public Institutions Involved' => 'Ministry of Finance',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Improved transparency; increased reporting; better feedback; improved internal procedures.',
+                                        'Timeline' => 'June 2018',
+                                    ],
+                                    [
+                                        'Title' => 'Amend Public Procurement Law to require prior verification of candidates for contracts above a threshold and disclosure of the ultimate owner',
+                                        'Context' => 'Public procurement, especially for large infrastructure projects, is highly sensitive. Lack of clarity on company ownership undermines trust and fosters corruption.',
+                                        'Main Goal' => 'Enhance internal control over public spending and reduce corruption risk in procurement; ensure transparency regarding company ownership.',
+                                        'Ambition' => 'Improve business environment and reduce opportunities for non-transparent companies to gain unfair advantage.',
+                                        'Relevance to Key Challenges' => 'Increases procurement transparency, accountability, and institutional integrity; ensures more effective public resource management.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'Ministry of Justice',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Prevent public distrust; limit shell companies’ participation; provide a tool against corruption and misuse of public funds; enable authorities and financial institutions to verify real owners.',
+                                        'Timeline' => 'June 2018',
+                                    ]
+                                )
+                            ]
+                        ),
+                        'Open Data' => array(
+                            [
+                                'commitment' => 'The Bulgarian government will continue efforts to publish public information in open formats by implementing measures to improve data quality and encourage broad usage by stakeholders',
+                                'arrangements' => array(
+                                    [
+                                        'Title' => 'Upgrade and improve the Open Data Portal with new functionalities – organizational hierarchy, improved search, issue tracker for datasets, automated data upload tools, low-quality data alerts, certificates for high-performing institutions, feedback options, etc.',
+                                        'Context' => 'The portal is currently in demo version and lacks several key functionalities.',
+                                        'Main Goal' => 'Enhance the Open Data Portal and improve data quality through automated processes for publishing public information in machine-readable formats.',
+                                        'Ambition' => 'Improved usability of the portal and the published data',
+                                        'Relevance to Key Challenges' => 'Enhanced usability, extended functionalities, and better data quality encourage active use by civil society and businesses, supporting informed decision-making and policy formulation. Improves institutional integrity, resource management, and public services.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Higher quality and usability of datasets; increased user engagement and communication; more data-based services and products.',
+                                        'Timeline' => 'December 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Publish data from ISUN2020 on programs and projects, including progress updates',
+                                        'Context' => 'Data are already on the portal but require continuous updating and improvement.',
+                                        'Main Goal' => 'Increase usability of published information and broaden the user base.',
+                                        'Ambition' => 'Enable active public oversight of EU-funded programs and projects.',
+                                        'Relevance to Key Challenges' => 'Expands accessible machine-readable information. Improves institutional integrity, resource management, and public services.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers, Central Coordination Unit',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Improved analysis and visualization quality; better data-driven planning; increased transparency and stakeholder engagement.',
+                                        'Timeline' => 'Ongoing',
+                                    ],
+                                    [
+                                        'Title' => 'Conduct public events to promote the benefits of open data and gather examples of economic and social impact',
+                                        'Context' => 'Despite progress in publishing public information in open formats, usage remains limited as users are not fully familiar with the portal or data skills.',
+                                        'Main Goal' => 'Increase use of open data in policy formulation, services, products, and institutional oversight.',
+                                        'Ambition' => 'Generate tangible economic and social benefits from open data publication.',
+                                        'Relevance to Key Challenges' => 'Encourages citizen and business engagement in data-driven product and service development. Enhances institutional integrity and resource management.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'Data owners',
+                                        'Other Stakeholders' => 'IT specialists, analysts, media',
+                                        'Expected Impact' => 'Increased interest in datasets; new data-based products and services; creation of a user ecosystem.',
+                                        'Timeline' => 'Ongoing',
+                                    ],
+                                    [
+                                        'Title' => 'Prepare and distribute a manual for working with open data',
+                                        'Context' => 'Data skills are relatively new, and few policy decisions currently rely on open data.',
+                                        'Main Goal' => 'Encourage public officials to use data in their duties and improve their data processing and analysis skills.',
+                                        'Ambition' => 'More active use of data in policy development.',
+                                        'Relevance to Key Challenges' => 'Improves user data skills and accessibility of published open data. Supports institutional integrity, resource management, and public services.',
+                                        'Responsible Institution' => 'Administration of the Council of Ministers',
+                                        'Other Public Institutions Involved' => 'Institute of Public Administration',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Improved data analysis and processing skills among public officials.',
+                                        'Timeline' => 'June 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Update, maintain, and develop GIS applications for the register of protected areas in Bulgaria',
+                                        'Context' => 'GIS applications are critical for environmental management, but currently only one application exists for protected areas.',
+                                        'Main Goal' => 'Improve decision-making and targeting of conservation measures. Engage citizens in protection and management.',
+                                        'Ambition' => 'Provide high-quality information services for internal and external users.',
+                                        'Relevance to Key Challenges' => 'Increases available information and mapping, enhances transparency, and allows civil society oversight of environmental decision-making.',
+                                        'Responsible Institution' => 'Ministry of Environment and Waters, Directorate "National Nature Protection Service"',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'More timely and effective conservation actions; engagement of environmental organizations and citizens; creation of visualizations and scenario tracking.',
+                                        'Timeline' => 'May 2018',
+                                    ],
+                                    [
+                                        'Title' => 'Publish a macroeconomic forecast table twice a year',
+                                        'Context' => 'Currently published in PDF, not machine-readable format.',
+                                        'Main Goal' => 'Increase financial transparency and accountability.',
+                                        'Ambition' => 'Expand the scope of data published in the Open Data Portal.',
+                                        'Relevance to Key Challenges' => 'Enhances volume, quality, and usability of financial information. Supports more effective resource management.',
+                                        'Responsible Institution' => 'Ministry of Finance',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Simplifies data processing; increases transparency and accountability; improves accuracy of analyses.',
+                                        'Timeline' => 'Annually, semi-annually in April and October',
+                                    ],
+                                    [
+                                        'Title' => 'Publish open data on migration processes',
+                                        'Context' => 'Data are not in open, machine-readable formats.',
+                                        'Main Goal' => 'Facilitate data processing and activate citizen participation on migration issues.',
+                                        'Ambition' => 'Develop applications to address societal concerns.',
+                                        'Relevance to Key Challenges' => 'Enables analysis and informed policy participation. Supports institutional integrity and resource management.',
+                                        'Responsible Institution' => 'Ministry of Interior',
+                                        'Other Public Institutions Involved' => 'None',
+                                        'Other Stakeholders' => 'Institute for Public Environment Development',
+                                        'Expected Impact' => 'Active stakeholder engagement; increased awareness of migration processes; data-driven policy formulation.',
+                                        'Timeline' => 'June 2017',
+                                    ],
+                                    [
+                                        'Title' => 'Further develop the EISPP and provide public access to core system data in line with Open Data initiatives and KAO provision',
+                                        'Context' => 'Judicial system data are valuable for analysts, media, and citizens but are not published in machine-readable formats.',
+                                        'Main Goal' => 'Increase transparency and effectiveness of the judicial system.',
+                                        'Ambition' => 'Gradually build citizen trust in judicial authorities.',
+                                        'Relevance to Key Challenges' => 'Expands available public information, enhances usability and quality, and improves public services and institutional integrity.',
+                                        'Responsible Institution' => 'Supreme Judicial Council',
+                                        'Other Public Institutions Involved' => 'Ministry of Justice',
+                                        'Other Stakeholders' => 'None',
+                                        'Expected Impact' => 'Data-driven decision-making; identification of systemic weaknesses; stakeholder engagement in judicial reform.',
+                                        'Timeline' => 'June 2018',
+                                    ],
+                                )
+                            ],
+                        )
+
+                    ),
                 )
             ),
 
         );
 
-        if($id){
+        if ($id) {
             return array(
                 'files' => $data[$id]['files'][$lang] ?? [],
                 'evaluations' => $data[$id]['evaluations'][$lang] ?? [],
@@ -1578,7 +2917,7 @@ enum OldNationalPlanEnum: int
                 'ogDescription' => $data[$id]['ogDescription'][$lang] ?? [],
                 'arrangements' => $data[$id]['arrangements'][$lang] ?? [],
             );
-        } else{
+        } else {
             return $data;
         }
     }
