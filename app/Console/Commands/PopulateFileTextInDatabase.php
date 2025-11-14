@@ -41,7 +41,7 @@ class PopulateFileTextInDatabase extends Command
             ->where('code_object', File::CODE_OBJ_PRIS)
             ->whereNotIn('content_type', ['application/vnd.ms-excel','application/x-rar','image/tiff'])
             ->orderBy('files.id')
-            ->take(5)
+            //->take(5)
             ->get();
         //dd($files->toArray());
 
