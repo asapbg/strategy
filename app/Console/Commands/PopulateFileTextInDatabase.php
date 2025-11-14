@@ -39,7 +39,16 @@ class PopulateFileTextInDatabase extends Command
             ->where('files.locale', '=', 'bg')
             ->whereNull('file_text')
             ->where('code_object', File::CODE_OBJ_PRIS)
-            ->whereNotIn('content_type', ['application/vnd.ms-excel','application/x-rar','image/tiff'])
+            ->whereNotIn('content_type', [
+                'application/vnd.ms-excel',
+                'application/x-rar',
+                'image/tiff',
+                'image/gif',
+                'image/jpeg',
+                'application/zip',
+                'application/x-7z-compressed',
+                'application/vnd.ms-powerpoint'
+            ])
             ->orderBy('files.id')
             //->take(5)
             ->get();
