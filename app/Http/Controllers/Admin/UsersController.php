@@ -529,10 +529,9 @@ class  UsersController extends Controller
 
             $user->update([
                 'email_verified_at' => Carbon::now(),
-                'activity_status' => User::STATUS_ACTIVE,
             ]);
 
-            return to_route('admin.users')
+            return to_route('admin.users', ['page' => request('page', 1)])
                 ->with('success', trans_choice('custom.users', 1)." ".__('messages.updated_successfully_m'));
         }
         catch (\Exception $e) {
