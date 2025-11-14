@@ -320,7 +320,7 @@
                                                                             {{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }}
                                                                             {{ $pris->actType->name_single }} {{ $pris->regNum }} {{ $pris->pivot->connect_text ? "({$pris->pivot->connect_text})" : "" }}
                                                                         </a>
-                                                                        <i class="text-info fas fa-edit  connection d-none"
+                                                                        <i class="text-info fas fa-edit edit_connection"
                                                                            data-pris="{{ $item->id }}"
                                                                            data-connection-id="{{ $pris->pivot->id }}"
                                                                            data-url="{{ route('admin.pris.connection.edit', ['pris_id' => $item->id, 'id' => $pris->pivot->id]) }}"
@@ -329,6 +329,7 @@
                                                                         <i class="text-danger fas fa-trash js-toggle-delete-resource-modal"
                                                                            data-target="#modal-delete-resource"
                                                                            data-resource-id="{{ $item->id }}"
+                                                                           data-resource-title="Документа"
                                                                            data-resource-name="Документа"
                                                                            data-resource-delete-url="{{ route('admin.pris.disconnect', ['pris_id' => $item->id, 'id' => $pris->pivot->id]) }}"
                                                                            role="button">
@@ -342,7 +343,7 @@
                                                                             {{ $pris->pivot->old_connect_type ?? $pris->pivot->connect_type ? __('custom.pris.change_enum.reverse.'.\App\Enums\PrisDocChangeTypeEnum::keyByValue($pris->pivot->connect_type)) : ''  }}
                                                                             {{ $pris->actType->name_single }} {{ $pris->regNum }} {{ $pris->pivot->connect_text ? "({$pris->pivot->connect_text})" : "" }}
                                                                         </a>
-                                                                        <i class="text-info fas fa-edit  connection d-none"
+                                                                        <i class="text-info fas fa-edit edit_connection"
                                                                            data-pris="{{ $item->id }}"
                                                                            data-connection-id="{{ $pris->pivot->id }}"
                                                                            data-url="{{ route('admin.pris.connection.edit', ['pris_id' => $item->id, 'id' => $pris->pivot->id]) }}"
@@ -351,6 +352,7 @@
                                                                         <i class="text-danger fas fa-trash js-toggle-delete-resource-modal"
                                                                            data-target="#modal-delete-resource"
                                                                            data-resource-id="{{ $item->id }}"
+                                                                           data-resource-title="Документа"
                                                                            data-resource-name="Документа"
                                                                            data-resource-delete-url="{{ route('admin.pris.disconnect', ['pris_id' => $item->id, 'id' => $pris->pivot->id]) }}"
                                                                            role="button">
@@ -362,7 +364,7 @@
                                                                         <i class="text-primary fas fa-link mr-2"></i>
 
                                                                         {{ $pris->full_text }}
-                                                                        <i class="text-info fas fa-edit  connection d-none"
+                                                                        <i class="text-info fas fa-edit edit_connection"
                                                                            data-pris="{{ $item->id }}"
                                                                            data-connection-id="{{ $pris->id }}"
                                                                            data-url="{{ route('admin.pris.connection.edit', ['pris_id' => $item->id, 'id' => $pris->id]) }}"
@@ -371,6 +373,7 @@
                                                                         <i class="text-danger fas fa-trash js-toggle-delete-resource-modal"
                                                                            data-target="#modal-delete-resource"
                                                                            data-resource-id="{{ $item->id }}"
+                                                                           data-resource-title="Документа"
                                                                            data-resource-name="Документа"
                                                                            data-resource-delete-url="{{ route('admin.pris.disconnect', ['pris_id' => $item->id, 'id' => $pris->id]) }}"
                                                                            role="button">
@@ -381,7 +384,7 @@
                                                                     <div id="disconnect_text_{{ $item->id }}">
                                                                         <i class="text-primary fas fa-link mr-2"></i>
                                                                         {{ $pris->full_text }}
-                                                                        <i class="text-info fas fa-edit  connection d-none"
+                                                                        <i class="text-info fas fa-edit edit_connection"
                                                                            data-pris="{{ $item->id }}"
                                                                            data-connection-id="{{ $pris->id }}"
                                                                            data-url="{{ route('admin.pris.connection.edit', ['pris_id' => $item->id, 'id' => $pris->id]) }}"
@@ -390,6 +393,7 @@
                                                                         <i class="text-danger fas fa-trash js-toggle-delete-resource-modal"
                                                                            data-target="#modal-delete-resource"
                                                                            data-resource-id="{{ $item->id }}"
+                                                                           data-resource-title="Документа"
                                                                            data-resource-name="Документа"
                                                                            data-resource-delete-url="{{ route('admin.pris.disconnect', ['pris_id' => $item->id, 'id' => $pris->id]) }}"
                                                                            role="button">
@@ -513,7 +517,13 @@
                                                 >
                                                     {{ __('custom.preview') }}
                                                 </button>
-                                                <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
+                                                <a class="btn btn-sm btn-danger ml-2 js-toggle-delete-resource-modal" type="button"
+                                                   data-target="#modal-delete-resource"
+                                                   data-resource-id="{{ $f->id }}"
+                                                   data-resource-title="Документа"
+                                                   data-resource-name="Документа"
+                                                   data-resource-delete-url="{{ route('admin.delete.file', ['file' => $f->id]) }}"
+                                                >
                                                     <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                                                 </a>
                                             </div>

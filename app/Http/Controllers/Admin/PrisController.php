@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\PrisDocChangeTypeEnum;
 use App\Http\Requests\PrisStoreRequest;
 use App\Models\Consultations\PublicConsultation;
+use App\Models\File;
 use App\Models\LegalActType;
 use App\Models\Pris;
 use App\Models\PrisChangePris;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
+use App\Services\FileOcr;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -142,6 +144,13 @@ class PrisController extends AdminController
         $institutions = optionsFromModel(Institution::simpleOptionsList());
         $publicConsultations = PublicConsultation::optionsList();
         $translatableFields = Pris::translationFieldsProperties();
+
+//        $file = $item->files->where('id', 1231481)->first();
+//        if ($file) {
+//            $ocr = new FileOcr($file);
+//            $ocr->extractText();
+//        }
+        //dd($item->files);
         //$tags = Tag::optionsList();
         return $this->view(self::EDIT_VIEW,
             compact('item', 'storeRouteName', 'listRouteName', 'legalActTypes', 'institutions', 'publicConsultations', 'translatableFields')
@@ -333,6 +342,7 @@ class PrisController extends AdminController
         }
 
         if (isset($validated['connectIds'])) {
+            $pris->changedDocs()->detach($validated['connectIds']);
             foreach ($validated['connectIds'] as $connectId) {
                 $connectDoc = Pris::find($connectId);
                 $connect_type = "";
