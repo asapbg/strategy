@@ -85,10 +85,17 @@ class StoreUsersRequest extends FormRequest
      */
     public static function passwordRequestValidationRules()
     {
-        return [
-            'password'              => ['required', 'confirmed',
-                Password::min(6)->numbers()->letters()->symbols()],
-            'password_confirmation' => ['required','same:password']
-        ];
+        if (request()->get('user_type') == User::USER_TYPE_EXTERNAL) {
+            return [
+                'password'              => ['required', 'confirmed',
+                    Password::min(6)->numbers()->letters()->symbols()],
+                'password_confirmation' => ['required','same:password']
+            ];
+        } else {
+            return [
+                'password'              => ['nullable'],
+                'password_confirmation' => ['nullable']
+            ];
+        }
     }
 }

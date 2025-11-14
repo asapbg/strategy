@@ -17,7 +17,7 @@
                                     <label class="col-sm-12 control-label" for="user_type">
                                         {{ __('validation.attributes.user_type') }}<span class="required">*</span>
                                     </label>
-                                    <select class="form-control form-control-sm" name="user_type">
+                                    <select class="form-control form-control-sm" name="user_type" id="user_type">
                                         <option value="{{ \App\Models\User::USER_TYPE_INTERNAL }}">{{ trans_choice('custom.internal_users', 1) }}</option>
                                     </select>
                                 </div>
@@ -159,7 +159,7 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label" for="password">
-                                        {{ __('validation.attributes.password') }}<span class="required">*</span>
+                                        {{ __('validation.attributes.password') }}<span id="passwordRequired" class="required">*</span>
                                     </label>
                                     <div class="col-12">
                                         <input type="password" name="password" class="form-control passwords"
@@ -226,6 +226,8 @@
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function (){
+            let internalType = '{{ \App\Models\User::USER_TYPE_INTERNAL }}';
+
             $('.roles').on('change', function (){
                 let selectedRoles = $('.roles:checked').map(function () {
                     return $(this).data('institution')
@@ -236,6 +238,14 @@
                     $('#institution_select').addClass('d-none');
                 }
             });
+
+            $('#user_type').on('change', function () {
+                if ($(this).val() == internalType) {
+                    $('#passwordRequired').addClass('d-none');
+                } else {
+                    $('#passwordRequired').removeClass('d-none');
+                }
+            }).trigger('change');
         });
     </script>
 @endpush
