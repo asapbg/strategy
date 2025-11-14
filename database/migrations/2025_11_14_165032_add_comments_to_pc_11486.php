@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -14,7 +12,7 @@ return new class extends Migration
      */
     public function up()
     {
-        $sqlFilePath = database_path('data/comments_pc_11486');
+        $sqlFilePath = database_path('data/comments_pc_11486.sql');
 
         $sql = file_get_contents($sqlFilePath);
 
@@ -28,8 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('pc_11486', function (Blueprint $table) {
-            //
-        });
+
     }
 };
