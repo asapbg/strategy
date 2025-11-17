@@ -332,9 +332,8 @@
                         @if(isset($otherComments) && $otherComments->count())
                             @foreach($otherComments as $doc)
                                 <li class="list-group-item">
-                                    <p>{{ __('custom.channel') }}: {{ $doc->source }}</p>
                                     <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
-                                        {!! fileIcon($doc->content_type) !!} {{ $doc->description }} | {{ displayDate($doc->created_at) }}
+                                        {!! fileIcon($doc->content_type) !!} {{ $doc->description }} | {{ displayDate($doc->created_at) }} - {{ __('custom.source') }}: {{ $doc->source }}
                                     </a>
                                 </li>
                             @endforeach
