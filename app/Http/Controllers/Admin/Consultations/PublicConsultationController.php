@@ -1112,7 +1112,7 @@ class PublicConsultationController extends AdminController
             Timeline::where('object_type', File::class)
                 ->where('object_id', $file->id)
                 ->delete();
-            return $this->backWithMessage('success', __('custom.the_record') . " " . __('messages.deleted_successfully_m'));
+            return redirect(url()->previous() . '#ct-comments')->withInput($request->all())->with('success', __('custom.the_record') . " " . __('messages.deleted_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             return $this->backWithMessage('danger', __('messages.system_error'));
@@ -1134,7 +1134,7 @@ class PublicConsultationController extends AdminController
 //        }
         try {
             $message->delete();
-            return $this->backWithMessage('success', __('custom.the_record') . " " . __('messages.deleted_successfully_m'));
+            return redirect(url()->previous() . '#ct-comments')->withInput($request->all())->with('success', __('custom.the_record') . " " . __('messages.deleted_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             return $this->backWithMessage('danger', __('messages.system_error'));

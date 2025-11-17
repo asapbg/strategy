@@ -183,14 +183,14 @@
     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
         <thead>
         <tr>
-            <th colspan="4" class="text-center">
+            <th colspan="5" class="text-center">
                 <h3 class="fw-bold">{{ trans_choice('custom.comments', 2) }}</h3>
             </th>
         </tr>
         @if($fPdf || $fCsv)
             <tr>
                 <th colspan="2" style="border: 1px solid #1c3050;">Авт. генерирани коментари след края на консултацията:</th>
-                <th colspan="2" style="border: 1px solid #1c3050;">
+                <th colspan="3" style="border: 1px solid #1c3050;">
                     @if($fPdf)
                         <a class="mr-3" style="font-size: 16px" href="{{ route('download.file', $fPdf) }}" target="_blank" title="{{ __('custom.download') }}">
                             {!! fileIcon($fPdf->content_type) !!} {{ $fPdf->{'description_'.$fPdf->locale} }}
@@ -206,7 +206,7 @@
         @endif
         <tr>
             <th colspan="2">Експорт на коментари в реално време</th>
-            <th colspan="2">
+            <th colspan="3">
                 <a href="{{ route('admin.consultations.public_consultations.export_comments', ['item' => $item]) }}" download>
                     <i class="fas fa-file-excel text-success me-1"></i>
                     Excel
@@ -218,6 +218,7 @@
             <th>{{ __('validation.attributes.content') }}</th>
             <th>{{ __('custom.created_at') }}</th>
             <th>{{ trans_choice('custom.users', 1)  }}</th>
+            <th>{{ __('custom.actions') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -241,6 +242,17 @@
                                 {{ __('custom.anonymous') }}
                             @endif
                         </td>
+                        <td>
+                            <a class="btn btn-sm btn-danger mt-2 d-inline-block js-toggle-delete-resource-modal" type="button"
+                               data-target="#modal-delete-resource"
+                               data-resource-id="{{ $c->id }}"
+                               data-resource-title="Коментара"
+                               data-resource-name="Коментара"
+                               data-resource-delete-url="{{ route('admin.consultations.public_consultations.delete.message', ['message' => $c]) }}"
+                            >
+                                <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
             @endif
@@ -260,6 +272,7 @@
             <th>ID</th>
             <th>Файл</th>
             <th>Канал</th>
+            <th>Действия</th>
         </tr>
         </thead>
         <tbody>
@@ -274,6 +287,17 @@
                     </td>
                     <td>
                         {{ $otherSourceComment->source }}
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-danger mt-2 js-toggle-delete-resource-modal" type="button"
+                           data-target="#modal-delete-resource"
+                           data-resource-id="{{ $otherSourceComment->id }}"
+                           data-resource-title="Документа"
+                           data-resource-name="Документа"
+                           data-resource-delete-url="{{ route('admin.consultations.public_consultations.delete.file', ['file' => $otherSourceComment]) }}"
+                        >
+                            <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                        </a>
                     </td>
                 </tr>
             @endforeach
