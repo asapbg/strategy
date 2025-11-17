@@ -1424,4 +1424,5 @@ return [
     'login_users'                      => 'Вход за потребители',
     'login_administrators'             => 'Вход за администрации',
     'period_search'                    => 'Търсене по период',
+    'channel'                          => 'Канал',
 ];

@@ -519,7 +519,7 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
         $documentTypes = $forPublic ? DocTypesEnum::docsByActTypePublic($this->act_type_id) : DocTypesEnum::docsByActType($this->act_type_id);
         foreach ($documentTypes as $docType) {
             $doc = PublicConsultation::select([
-                'files.id', 'files.doc_type', 'files.content_type', 'files.created_at', 'files.version',
+                'files.id', 'files.doc_type', 'files.content_type', 'files.created_at', 'files.version', 'files.source',
                 DB::raw('files.description_' . app()->getLocale() . ' as description')
             ])
                 ->join('files', function ($j) use ($docType) {

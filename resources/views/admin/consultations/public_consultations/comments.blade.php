@@ -59,7 +59,7 @@
 <hr>
 
 <form class="mb-5" method="POST" enctype="multipart/form-data" action="{{ route('admin.consultations.public_consultations.other_source_comment.store') }}">
-    <h3><strong>Прикачване на коментар от друг канал</strong></h3>
+    <h3><strong>Прикачване на становище от друг канал</strong></h3>
     @csrf
 
     <input type="hidden" name="id" value="{{ $item->id }}">
@@ -253,7 +253,7 @@
         <thead>
         <tr>
             <th colspan="4" class="text-center">
-                <h3 class="fw-bold">Коментари от други канали</h3>
+                <h3 class="fw-bold">Становища от други канали</h3>
             </th>
         </tr>
         <tr>

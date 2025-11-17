@@ -1389,4 +1389,5 @@ return [
     'period_search'                    => 'Period search',
     'login_users'                      => 'User login',
     'login_administrators'             => 'Administration login',
+    'channel'                          => 'Channel',
 ];

@@ -170,7 +170,8 @@ enum DocTypesEnum: int
                         self::PC_KD_PDF->value,
                     ],
                     'report' => [
-                        self::PC_COMMENTS_REPORT->value
+                        self::PC_COMMENTS_REPORT->value,
+                        self::PC_OTHER_SOURCE_COMMENTS->value,
                     ],
                 ];
                 break;
@@ -191,7 +192,8 @@ enum DocTypesEnum: int
                     self::PC_KD_PDF->value,
                 ],
                 'report' => [
-                    self::PC_COMMENTS_REPORT->value
+                    self::PC_COMMENTS_REPORT->value,
+                    self::PC_OTHER_SOURCE_COMMENTS->value,
                 ],
             ];
                 break;
@@ -204,7 +206,8 @@ enum DocTypesEnum: int
                     ],
                     'kd' => [],
                     'report' => [
-                        self::PC_COMMENTS_REPORT->value
+                        self::PC_COMMENTS_REPORT->value,
+                        self::PC_OTHER_SOURCE_COMMENTS->value,
                     ],
                 ];
         }
@@ -268,6 +271,7 @@ enum DocTypesEnum: int
                     self::PC_CONSOLIDATED_ACT_VERSION->value,
                     self::PC_OTHER_DOCUMENTS->value,
                     self::PC_COMMENTS_REPORT->value,
+                    self::PC_OTHER_SOURCE_COMMENTS->value,
                     self::PC_KD_PDF->value,
                 ];
                 break;
@@ -282,6 +286,7 @@ enum DocTypesEnum: int
                     self::PC_CONSOLIDATED_ACT_VERSION->value,
                     self::PC_OTHER_DOCUMENTS->value,
                     self::PC_COMMENTS_REPORT->value,
+                    self::PC_OTHER_SOURCE_COMMENTS->value,
                     self::PC_KD_PDF->value,
                 ];
                 break;
@@ -290,6 +295,7 @@ enum DocTypesEnum: int
                     self::PC_DRAFT_ACT->value,
                     self::PC_OTHER_DOCUMENTS->value,
                     self::PC_COMMENTS_REPORT->value,
+                    self::PC_OTHER_SOURCE_COMMENTS->value,
                 ];
         }
 
