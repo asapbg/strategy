@@ -14,6 +14,7 @@
                             <th>{{ __('validation.attributes.content') }}</th>
                             <th>{{ __('custom.created_at') }}</th>
                             <th>{{ trans_choice('custom.users', 1)  }}</th>
+                            <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -37,6 +38,17 @@
                                         @else
                                             {{ __('custom.anonymous') }}
                                         @endif
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-danger mt-2 d-inline-block js-toggle-delete-resource-modal" type="button"
+                                           data-target="#modal-delete-resource"
+                                           data-resource-id="{{ $item->id }}"
+                                           data-resource-title="Коментара"
+                                           data-resource-name="Коментара"
+                                           data-resource-delete-url="{{ route('admin.consultations.public_consultations.delete.message', ['message' => $item]) }}"
+                                        >
+                                            <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
