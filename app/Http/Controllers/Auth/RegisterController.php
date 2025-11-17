@@ -67,6 +67,7 @@ class RegisterController extends Controller
             'is_org' => ['required', 'boolean'],
             'email' => ['required', 'string', 'email', 'max:255', new UniqueEmail()],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'accept_terms_conditions' => ['required']
         ];
         if (!$data['is_org']) {
             $rules['first_name'] = ['required', 'string', 'max:255'];

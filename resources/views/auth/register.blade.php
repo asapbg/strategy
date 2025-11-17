@@ -131,6 +131,17 @@
                         </span>
                     @enderror
                 </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="checkbox" class="me-2" name="accept_terms_conditions" id="accept_terms_conditions" value="1">
+                        <label for="accept_terms_conditions">{!! __('custom.accept_terms_conditions') !!}</label>
+                        @error('accept_terms_conditions')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
                 <div class="mb-4">
                     <a href="{{ route('login') }}">
                         {{ __('auth.already_have_account') }}
@@ -220,6 +231,9 @@
                         required: true,
                         minlength: 8,
                         maxlength: 16,
+                    },
+                    accept_terms_conditions: {
+                        required: true,
                     }
                 },
                 company: {
@@ -241,6 +255,9 @@
                         required: true,
                         minlength: 8,
                         maxlength: 16,
+                    },
+                    accept_terms_conditions: {
+                        required: true,
                     }
                 }
             }

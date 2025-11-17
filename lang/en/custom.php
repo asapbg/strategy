@@ -1390,4 +1390,5 @@ return [
     'login_users'                      => 'User login',
     'login_administrators'             => 'Administration login',
     'channel'                          => 'Channel',
+    'accept_terms_conditions'          => 'I am familiar with the privacy policy',
 ];

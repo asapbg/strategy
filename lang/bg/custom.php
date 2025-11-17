@@ -1425,4 +1425,5 @@ return [
     'login_administrators'             => 'Вход за администрации',
     'period_search'                    => 'Търсене по период',
     'channel'                          => 'Канал',
+    'accept_terms_conditions'          => 'Запознат съм с политиката за поверителност'
 ];
