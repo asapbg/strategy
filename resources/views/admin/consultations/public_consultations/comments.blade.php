@@ -68,7 +68,7 @@
         @foreach(config('available_languages') as $lang)
             @php($fieldName = 'filename_'.$docTypeOtherSourceComment.'_'.$lang['code'])
             <div class="col-md-6 mb-3">
-                <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} <span class="required">*</span> </label>
+                <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if($lang['code'] == config('app.default_lang'))<span class="required">*</span>@endif </label>
                 <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" id="{{ $fieldName }}" type="text" name="{{ $fieldName }}">
                 @error($fieldName)
                 <span class="text-danger">{{ $message }}</span>
@@ -95,7 +95,7 @@
         @foreach(config('available_languages') as $lang)
             @php($fieldName = 'file_source_'.$lang['code'])
             <div class="col-md-6 mb-3">
-                <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} <span class="required">*</span> </label>
+                <label for="{{ $fieldName }}" class="form-label">{{ __('validation.attributes.'.$fieldName) }} @if($lang['code'] == config('app.default_lang'))<span class="required">*</span>@endif </label>
                 <input class="form-control form-control-sm @error($fieldName) is-invalid @enderror" id="{{ $fieldName }}" type="text" name="{{ $fieldName }}">
                 @error($fieldName)
                 <span class="text-danger">{{ $message }}</span>

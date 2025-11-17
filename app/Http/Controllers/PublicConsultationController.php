@@ -109,6 +109,18 @@ class PublicConsultationController extends Controller
         $breadcrumbs[] = ['name' => $item->title, 'url' => ''];
         $this->setBreadcrumbsFull($breadcrumbs);
 
+        $otherComments = $item->documents()
+            ->where('doc_type', DocTypesEnum::PC_OTHER_SOURCE_COMMENTS->value)
+            ->where('locale', app()->getLocale())
+            ->get();
+
+        if (!$otherComments->count()) {
+            $otherComments = $item->documents()
+                ->where('doc_type', DocTypesEnum::PC_OTHER_SOURCE_COMMENTS->value)
+                ->where('locale', config('app.default_lang'))
+                ->get();
+        }
+
         $documents = $item->lastDocumentsByLocaleAndSection(true);
         $documentsImport = $item->lastDocumentsByLocaleImport();
         $timeline = $item->orderTimeline();
@@ -120,7 +132,7 @@ class PublicConsultationController extends Controller
         $hasSubscribeRss = true;
 
         return $this->view('site.public_consultations.view',
-            compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl')
+            compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'otherComments')
         );
     }
 

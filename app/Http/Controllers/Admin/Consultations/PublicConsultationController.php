@@ -980,6 +980,10 @@ class PublicConsultationController extends AdminController
                 $code = $lang['code'];
                 $file = $request->file('file_' . $doc_type . '_' . $code);
 
+                if (!$file) {
+                   continue;
+                }
+
                 $description = $validated['filename_' . $doc_type . '_' . $code];
 
                 $fileNameToStore = round(microtime(true)) . '.' . $file->getClientOriginalExtension();

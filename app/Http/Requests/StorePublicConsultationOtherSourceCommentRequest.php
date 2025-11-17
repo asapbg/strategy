@@ -31,8 +31,8 @@ class StorePublicConsultationOtherSourceCommentRequest extends FormRequest
 
         foreach (config('available_languages') as $lang){
             $rules["file_{$doc_type}_{$lang['code']}"] = DocTypesEnum::validationRules($doc_type, $lang['code']);
-            $rules["filename_{$doc_type}_{$lang['code']}"] = ['required', 'string'];
-            $rules["file_source_{$lang['code']}"] = ['required', 'string'];
+            $rules["filename_{$doc_type}_{$lang['code']}"] = [ ($lang['code'] == config('app.default_lang') ? 'required' : 'nullable'), 'string'];
+            $rules["file_source_{$lang['code']}"] = [ ($lang['code'] == config('app.default_lang') ? 'required' : 'nullable'), 'string'];
         }
 
         return $rules;
