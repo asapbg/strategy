@@ -273,6 +273,7 @@ class CommonController extends Controller
     public function deleteFile(Request $request, $file, $disk = 'public_uploads')
     {
         $sdFile = $request->get('is_sd_file') ?? 0;
+        $delete_en = $request->get('delete_en') ?? 0;
         $user = $request->user();
 
         $file = $sdFile ? StrategicDocumentFile::find((int)$file) : File::find((int)$file);
@@ -307,6 +308,31 @@ class CommonController extends Controller
                 Storage::disk($disk)->delete($file->path, $file->filename);
             }
         }
+
+        if ($delete_en && $file->locale == config('app.default_lang')) {
+            $enFiles = File::where('id_object', $file->id_object)
+                ->where('code_object', $file->code_object)
+                ->where('doc_type', $file->doc_type)
+                ->where('locale', 'en')
+                ->get();
+
+            if ($enFiles->count() == 1) {
+                $enFile = File::where('id_object', $file->id_object)
+                    ->where('code_object', $file->code_object)
+                    ->where('doc_type', $file->doc_type)
+                    ->where('locale', 'en')
+                    ->first();
+
+                $enFile->delete();
+
+                if (!File::where('id', '<>', $enFile->id)->where('path', '=', $enFile->path)->count()) {
+                    if (Storage::disk($disk)->has($enFile->path)) {
+                        Storage::disk($disk)->delete($enFile->path, $enFile->filename);
+                    }
+                }
+            }
+        }
+
         return redirect($route)->with('success', 'Файлът е изтрит успешно');
     }
 

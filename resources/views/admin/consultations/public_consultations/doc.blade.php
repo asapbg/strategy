@@ -30,7 +30,7 @@
                                            data-resource-id="{{ $doc->id }}"
                                            data-resource-title="Документа"
                                            data-resource-name="Документа"
-                                           data-resource-delete-url="{{ route('admin.delete.file', ['file' => $doc->id]) }}"
+                                           data-resource-delete-url="{{ route('admin.delete.file', ['file' => $doc->id, 'delete_en' => 1]) }}"
                                         >
                                             <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                                         </a>
