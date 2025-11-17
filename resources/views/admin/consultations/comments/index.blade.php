@@ -66,6 +66,7 @@
         </div>
     </section>
 
+    @includeIf('modals.delete-resource', ['resource' => $title_singular])
 @endsection
 
 
