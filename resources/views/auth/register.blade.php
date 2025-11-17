@@ -131,10 +131,18 @@
                         </span>
                     @enderror
                 </div>
+                @php
+                $privacyPolicyPage = \App\Models\Page::with(['translations'])
+                    ->isActive()
+                    ->where('system_name', \App\Models\Page::PRIVACY_POLICY)
+                    ->first();
+                @endphp
                 <div class="mb-3">
                     <div class="input-group">
                         <input type="checkbox" class="me-2" name="accept_terms_conditions" id="accept_terms_conditions" value="1">
-                        <label for="accept_terms_conditions">{!! __('custom.accept_terms_conditions') !!}</label>
+                        <label for="accept_terms_conditions">
+                            {!! __('custom.accept_terms_conditions', ['link' => ($privacyPolicyPage ? route('page.view', ['slug' => $privacyPolicyPage->slug]) : '#')]) !!}
+                        </label>
                         @error('accept_terms_conditions')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
