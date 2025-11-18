@@ -50,14 +50,16 @@ class PopulateFileTextInDatabase extends Command
                 'application/vnd.ms-powerpoint'
             ])
             ->orderBy('files.id', 'desc')
-            //->take(2)
+            ->take(20)
             ->get();
         //dd($files->toArray());
 
         foreach ($files as $file) {
-            $ocr = new FileOcr($file);
-            $ocr->extractText();
-            $this->info("Text updated for File ID $file->id, File path: ".Storage::disk('public_uploads')->path($file->path));
+            if (Storage::disk('public_uploads')->exists($file->path)) {
+                $ocr = new FileOcr($file);
+                $ocr->extractText();
+                $this->info("Text updated for File ID $file->id, File path: ".Storage::disk('public_uploads')->path($file->path));
+            }
         }
 
         return Command::SUCCESS;

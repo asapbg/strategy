@@ -91,13 +91,11 @@ class FileOcr
                 if ($this->file->content_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                     $output_dir = str_replace(DIRECTORY_SEPARATOR . "{$this->file->filename}", '', $file);
                     $command = escapeshellarg($this->doc_to_docx_env_path) . ' --headless --convert-to doc --outdir ' . $output_dir . ' ' . $file;
-                    //dd($command);
                     shell_exec($command);
                     //$res = shell_exec($command. ' 2>&1');dd($res);
                     $delete_after_conversion = true;
                     $file = str_replace("docx", 'doc', $file);
                     $file_path = str_replace("docx", 'doc', $file_path);
-                    //if (!file_exists($file)) {sleep(2);}
                 }
                 $text = shell_exec($this->doc_to_text_env_path . ' -m UTF-8 -w 0 ' . $file);
                 //$text = shell_exec($this->doc_to_text_env_path.' -m UTF-8 -w 0 '.$file. ' 2>&1');dd($text);
