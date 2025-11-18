@@ -51,7 +51,7 @@ class PopulateFileTextInDatabase extends Command
                 'application/vnd.ms-powerpoint'
             ])
             ->orderBy('files.id', 'desc')
-            ->take(20)
+            ->take(2)
             ->get();
         //dd($files->toArray());
 

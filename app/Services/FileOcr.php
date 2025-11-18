@@ -33,7 +33,7 @@ class FileOcr
                 $extracted = true;
                 break;
             case 'application/msword':
-//            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                 $this->docExtract();
                 $extracted = true;
                 break;
@@ -69,8 +69,8 @@ class FileOcr
                 }
                 $this->file->file_text = $text;
                 $this->file->save();
-                if (isset($delete_after_conversion) && file_exists($file_path)) {
-                    unlink($file_path);
+                if (isset($delete_after_conversion) && file_exists($file_path) && !str_contains($file_path, 'pdf')) {
+                    //unlink($file_path);
                 }
             }
         } catch (\Exception $e) {
@@ -93,22 +93,22 @@ class FileOcr
                     $command = escapeshellarg($this->doc_to_docx_env_path) . ' --headless --convert-to doc --outdir ' . $output_dir . ' ' . $file;
                     //shell_exec($command);
                     $res = shell_exec($command. ' 2>&1');
-                    Log::error("Command for conversion $command, result: $res");
+                    //Log::error("Command for conversion $command, result: $res");
                     $delete_after_conversion = true;
-                    Log::error("Original file $file");
+                    //Log::error("Original file $file");
                     $file = str_replace("docx", 'doc', $file);
-                    Log::error("Converted file $file");
+                    //Log::error("Converted file $file");
                     $file_path = str_replace("docx", 'doc', $file_path);
                 }
-                //$text = shell_exec($this->doc_to_text_env_path . ' -m UTF-8 -w 0 ' . $file);
-                $text = shell_exec($this->doc_to_text_env_path.' -m UTF-8 -w 0 '.$file. ' 2>&1');
-                Log::error("Result from reading text: $text");
+                $text = shell_exec($this->doc_to_text_env_path . ' -m UTF-8 -w 0 ' . $file);
+                //$text = shell_exec($this->doc_to_text_env_path.' -m UTF-8 -w 0 '.$file. ' 2>&1');
+                //Log::error("Result from reading text: $text");
                 $clearText = html_entity_decode(trim($text));
                 //dd($clearText);
                 $this->file->file_text = mb_convert_encoding($clearText, mb_detect_encoding($clearText), 'UTF-8');
                 $this->file->save();
-                if ($delete_after_conversion && file_exists($file_path)) {
-                    unlink($file_path);
+                if ($delete_after_conversion && file_exists($file_path) && str_contains($file_path, 'doc')) {
+                    //unlink($file_path);
                 }
             }
         } catch (\Exception $e) {

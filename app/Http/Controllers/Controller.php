@@ -362,8 +362,8 @@ class Controller extends BaseController
 
                 $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
                 $extension = $file->getClientOriginalExtension();
-                $file_name = str_replace(".$extension", '', $file->getClientOriginalName());
-                $fileNameToStore = $file_name.'.'.$extension;
+                $file_name = transliterate_new(str_replace(".$extension", '', $file->getClientOriginalName()));
+                $fileNameToStore = $file_name.'.'.mb_strtolower($extension);
                 if (empty($desc)) {
                     $desc = $file_name;
                 }
