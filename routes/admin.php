@@ -257,17 +257,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(UsersController::class)->group(function () {
-        Route::get('/users', 'index')->name('users')->middleware('can:viewAny,App\Models\User');
-        Route::get('/users/create', 'create')->name('users.create');
-        Route::post('/users/store', 'store')->name('users.store');
-        Route::get('/users/{user}/edit', 'edit')->name('users.edit');
+        Route::get('/users',                'index')->name('users')->middleware('can:viewAny,App\Models\User');
+        Route::get('/users/create',         'create')->name('users.create');
+        Route::post('/users/store',         'store')->name('users.store');
+        Route::get('/users/{user}/edit',    'edit')->name('users.edit');
         Route::post('/users/{user}/update', 'update')->name('users.update');
         Route::post('/users/{user}/delete', 'destroy')->name('users.delete');
         Route::post('/users/{user}/restore','restore')->name('users.restore')->withTrashed();
-        Route::get('/users/export', 'export')->name('users.export');
-        Route::get('/users/change-requests', 'index')->name('users')->middleware('can:viewAny,App\Models\User');
-
-        Route::get('/{user}/verify',     'verify')->name('users.verify');
+        Route::get('/users/export',         'export')->name('users.export');
+        Route::get('/users/change-requests','index')->name('users')->middleware('can:viewAny,App\Models\User');
+        Route::get('/{user}/verify',        'verify')->name('users.verify');
     });
 
     Route::controller(\App\Http\Controllers\Admin\UserChangeRequestController::class)->group(function () {

@@ -139,7 +139,7 @@
                                         @if(!$user->email_verified_at)
                                             <a href="javascript:;"
                                                class="btn btn-sm btn-secondary"
-                                               onclick="showModalConfirm('{{route('admin.users.verify', ['user' => $user, 'page' => request('page')])}}', 'Сигурни ли сте, че искате ръчно да потвърдите ел. поща на {{ $user->fullName() }}', 'Ръчно потвърждаване на ел. поща')"
+                                               onclick="showModalConfirm('{{route('admin.users.verify', ['user' => $user])}}', 'Сигурни ли сте, че искате ръчно да потвърдите ел. поща на {{ $user->fullName() }}', 'Ръчно потвърждаване на ел. поща')"
                                                data-toggle="tooltip"
                                                title="Ръчно потвърждаване на ел. поща.">
                                                 <i class="fa fa-user-check"></i>

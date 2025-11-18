@@ -525,19 +525,19 @@ class  UsersController extends Controller
     }
 
     public function verify(Request $request, User $user) {
+
         try {
 
             $user->update([
                 'email_verified_at' => Carbon::now(),
             ]);
 
-            return to_route('admin.users', ['page' => request('page', 1)])
-                ->with('success', trans_choice('custom.users', 1)." ".__('messages.updated_successfully_m'));
+            return $this->backWithMessage('success', trans_choice('custom.users', 1)." ".__('messages.updated_successfully_m'));
         }
         catch (\Exception $e) {
 
             Log::error($e);
-            return to_route('admin.users')->with('danger', __('messages.system_error'));
+            return $this->backWithMessage('danger', __('messages.system_error'));
 
         }
     }
