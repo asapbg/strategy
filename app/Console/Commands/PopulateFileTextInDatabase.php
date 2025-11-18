@@ -37,7 +37,7 @@ class PopulateFileTextInDatabase extends Command
             ->where('pris.active', true)
             ->where('pris.asap_last_version', true)
             ->where('files.locale', '=', 'bg')
-            ->whereNull('file_text')
+            ->whereRaw("(file_text is null or file_text = '')")
             ->where('code_object', File::CODE_OBJ_PRIS)
             ->whereNotIn('content_type', [
                 'application/vnd.ms-excel',
@@ -49,8 +49,8 @@ class PopulateFileTextInDatabase extends Command
                 'application/x-7z-compressed',
                 'application/vnd.ms-powerpoint'
             ])
-            ->orderBy('files.id')
-            //->take(5)
+            ->orderBy('files.id', 'desc')
+            //->take(2)
             ->get();
         //dd($files->toArray());
 
