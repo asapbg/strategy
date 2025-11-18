@@ -164,3 +164,6 @@ table .toggle i { color: #269740 }
     position: relative;
     z-index: 1000;
 }
+.pagination {
+    overflow: auto;
+}

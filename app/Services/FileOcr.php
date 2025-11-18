@@ -69,7 +69,7 @@ class FileOcr
                 }
                 $this->file->file_text = $text;
                 $this->file->save();
-                if (isset($delete_after_conversion)) {
+                if (isset($delete_after_conversion) && file_exists($file_path)) {
                     unlink($file_path);
                 }
             }
@@ -85,7 +85,8 @@ class FileOcr
     {
         try {
             if (Storage::disk('public_uploads')->exists($this->file->path)) {
-                $file = escapeshellarg(Storage::disk('public_uploads')->path($this->file->path));
+                $file_path = Storage::disk('public_uploads')->path($this->file->path);
+                $file = escapeshellarg($file_path);
                 $delete_after_conversion = false;
                 if ($this->file->content_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                     $output_dir = str_replace(DIRECTORY_SEPARATOR . "{$this->file->filename}", '', $file);
@@ -95,6 +96,7 @@ class FileOcr
                     //$res = shell_exec($command. ' 2>&1');dd($res);
                     $delete_after_conversion = true;
                     $file = str_replace("docx", 'doc', $file);
+                    $file_path = str_replace("docx", 'doc', $file_path);
                     //if (!file_exists($file)) {sleep(2);}
                 }
                 $text = shell_exec($this->doc_to_text_env_path . ' -m UTF-8 -w 0 ' . $file);
@@ -103,8 +105,8 @@ class FileOcr
                 //dd($clearText);
                 $this->file->file_text = mb_convert_encoding($clearText, mb_detect_encoding($clearText), 'UTF-8');
                 $this->file->save();
-                if ($delete_after_conversion) {
-                    unlink($file);
+                if ($delete_after_conversion && file_exists($file_path)) {
+                    unlink($file_path);
                 }
             }
         } catch (\Exception $e) {

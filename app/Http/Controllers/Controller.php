@@ -589,7 +589,14 @@ class Controller extends BaseController
     }
 
     public function canAccessOrders($request) {
-        if (app()->environment('local')) {
+        $asap_users = [
+            'admin@asap.bg',
+            'service-user@asap.bg',
+        ];
+        if (
+            app()->environment('local')
+            || ($request->user() && in_array($request->user()->email, $asap_users))
+        ) {
             return true;
         }
         return env('COUNCIL_OF_MINSTERS_IP_RANGE') // If the environment variable is set
