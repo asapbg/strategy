@@ -93,7 +93,7 @@ class FileOcr
                     $command = escapeshellarg($this->doc_to_docx_env_path) . ' --headless --convert-to doc --outdir ' . $output_dir . ' ' . $file;
                     //shell_exec($command);
                     $res = shell_exec($command. ' 2>&1');
-                    Log::error($res);
+                    Log::error("Command for conversion $command, result: $res");
                     $delete_after_conversion = true;
                     Log::error("Original file $file");
                     $file = str_replace("docx", 'doc', $file);
@@ -102,7 +102,7 @@ class FileOcr
                 }
                 //$text = shell_exec($this->doc_to_text_env_path . ' -m UTF-8 -w 0 ' . $file);
                 $text = shell_exec($this->doc_to_text_env_path.' -m UTF-8 -w 0 '.$file. ' 2>&1');
-                Log::error($text);
+                Log::error("Result from reading text: $text");
                 $clearText = html_entity_decode(trim($text));
                 //dd($clearText);
                 $this->file->file_text = mb_convert_encoding($clearText, mb_detect_encoding($clearText), 'UTF-8');
