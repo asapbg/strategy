@@ -163,6 +163,7 @@ class PrisController extends AdminController
      */
     public function store(PrisStoreRequest $request)
     {
+        increase_file_manipulations_ini_settings();
         $validated = $request->validated();
         $id = $validated['id'];
         $item = $id ? $this->getRecord($id) : new Pris();

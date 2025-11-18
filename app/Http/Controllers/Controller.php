@@ -325,6 +325,7 @@ class Controller extends BaseController
      * @return Application|RedirectResponse|Redirector|void
      */
     public function uploadFileLanguages(LanguageFileUploadRequest $request, $objectId, $typeObject, $docType = 0, $redirect = true) {
+        increase_file_manipulations_ini_settings();
         try {
             $typeObjectToSave = $typeObject == File::CODE_OBJ_AB_PAGE ? File::CODE_OBJ_PAGE : $typeObject;
             $validated = $request->all();
@@ -440,6 +441,7 @@ class Controller extends BaseController
      * @return Application|RedirectResponse|Redirector|void
      */
     public function updateFileLanguages(LanguageFileUploadRequest $request, File $fileRecord, $typeObject, $docType = 0, $redirect = true) {
+        increase_file_manipulations_ini_settings();
         try {
             $typeObjectToSave = $typeObject == File::CODE_OBJ_AB_PAGE ? File::CODE_OBJ_PAGE : $typeObject;
             $validated = $request->all();
