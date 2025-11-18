@@ -104,7 +104,7 @@ class FileOcr
                 $this->file->file_text = mb_convert_encoding($clearText, mb_detect_encoding($clearText), 'UTF-8');
                 $this->file->save();
                 if ($delete_after_conversion && file_exists($file_path)) {
-                    unlink($file_path);
+                    //unlink($file_path);
                 }
             }
         } catch (\Exception $e) {
