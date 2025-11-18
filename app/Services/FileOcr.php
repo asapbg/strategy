@@ -33,7 +33,7 @@ class FileOcr
                 $extracted = true;
                 break;
             case 'application/msword':
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+//            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                 $this->docExtract();
                 $extracted = true;
                 break;
