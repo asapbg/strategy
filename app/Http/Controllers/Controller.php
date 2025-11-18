@@ -341,6 +341,7 @@ class Controller extends BaseController
 
                 default => '',
             };
+            $pDir .= $objectId.DIRECTORY_SEPARATOR;
 
             foreach ($this->languages as $lang) {
 
@@ -359,10 +360,11 @@ class Controller extends BaseController
                 }
 
                 $version = File::where('locale', '=', $code)->where('id_object', '=', $objectId)->where('code_object', '=', File::CODE_OBJ_PRIS)->count();
-                $extension = mb_strtolower($file->getClientOriginalExtension());
-                $fileNameToStore = round(microtime(true)).'.'.$extension;
+                $extension = $file->getClientOriginalExtension();
+                $file_name = str_replace(".$extension", '', $file->getClientOriginalName());
+                $fileNameToStore = $file_name.'.'.$extension;
                 if (empty($desc)) {
-                    $desc = str_replace(".$extension", '', $file->getClientOriginalName());
+                    $desc = $file_name;
                 }
                 $file->storeAs($pDir, $fileNameToStore, 'public_uploads');
                 $newFile = new File([

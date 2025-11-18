@@ -254,11 +254,19 @@ class PublicConsultationController extends AdminController
             $oldOpenFrom = $item->open_from;
             $oldOpenTo = $item->open_to;
 
-            $validated['operational_program_row_id'] = isset($validated['operational_program_row_id']) && (int)$validated['operational_program_row_id'] > 0 ? $validated['operational_program_row_id'] : null;
-            $validated['legislative_program_row_id'] = isset($validated['legislative_program_row_id']) && (int)$validated['legislative_program_row_id'] > 0 ? $validated['legislative_program_row_id'] : null;
+            $validated['operational_program_row_id'] = isset($validated['operational_program_row_id']) && (int)$validated['operational_program_row_id'] > 0
+                ? $validated['operational_program_row_id']
+                : null;
+            $validated['legislative_program_row_id'] = isset($validated['legislative_program_row_id']) && (int)$validated['legislative_program_row_id'] > 0
+                ? $validated['legislative_program_row_id']
+                : null;
 
-            $validated['operational_program_id'] = isset($validated['operational_program_id']) && (int)$validated['operational_program_id'] > 0 ? $validated['operational_program_id'] : null;
-            $validated['legislative_program_id'] = isset($validated['legislative_program_id']) && (int)$validated['legislative_program_id'] > 0 ? $validated['legislative_program_id'] : null;
+            $validated['operational_program_id'] = isset($validated['operational_program_id']) && (int)$validated['operational_program_id'] > 0
+                ? $validated['operational_program_id']
+                : null;
+            $validated['legislative_program_id'] = isset($validated['legislative_program_id']) && (int)$validated['legislative_program_id'] > 0
+                ? $validated['legislative_program_id']
+                : null;
 
             $validated['pris_id'] = isset($validated['pris_id']) && $validated['pris_id'] > 0 ? $validated['pris_id'] : null;
             $validated['law_id'] = isset($validated['law_id']) && $validated['law_id'] > 0 ? $validated['law_id'] : null;
@@ -293,7 +301,9 @@ class PublicConsultationController extends AdminController
 
             //START Timeline
             $delete = $update = false;
-            $programType = isset($validated['legislative_program_id']) ? LegislativeProgramRow::class : (isset($validated['operational_program_id']) ? OperationalProgramRow::class : null);
+            $programType = isset($validated['legislative_program_id'])
+                ? LegislativeProgramRow::class
+                : (isset($validated['operational_program_id']) ? OperationalProgramRow::class : null);
             $programRowID = $validated['operational_program_row_id'] ?? ($validated['legislative_program_row_id'] ?? null);
 
             //Check if changes

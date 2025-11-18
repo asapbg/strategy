@@ -49,7 +49,7 @@ class FileOcr
         try {
             $file_path = Storage::disk('public_uploads')->path($this->file->path);
             if ($this->file->content_type == 'text/rtf') {
-                $output_dir = str_replace("/{$this->file->filename}", '', $file_path);
+                $output_dir = str_replace(DIRECTORY_SEPARATOR."{$this->file->filename}", '', $file_path);
                 $command = escapeshellarg($this->doc_to_docx_env_path).' --headless --invisible --norestore --convert-to pdf --outdir ' . $output_dir . ' ' . escapeshellarg($file_path);
                 //dd($command);
                 shell_exec($command);
@@ -63,6 +63,9 @@ class FileOcr
                 ->setPdf($file_path)
                 ->setOptions(["-enc UTF-8"])
                 ->text();
+            if (empty($text)) {
+                $text = null;
+            }
             $this->file->file_text = $text;
             $this->file->save();
             if (isset($delete_after_conversion)) {
@@ -82,8 +85,9 @@ class FileOcr
             $file = escapeshellarg(Storage::disk('public_uploads')->path($this->file->path));
             $delete_after_conversion = false;
             if ($this->file->content_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                $output_dir = str_replace("/{$this->file->filename}", '', $file);
+                $output_dir = str_replace(DIRECTORY_SEPARATOR."{$this->file->filename}", '', $file);
                 $command = escapeshellarg($this->doc_to_docx_env_path).' --headless --convert-to doc --outdir ' . $output_dir . ' ' . $file;
+                //dd($command);
                 shell_exec($command);
                 //$res = shell_exec($command. ' 2>&1');dd($res);
                 $delete_after_conversion = true;

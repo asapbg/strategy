@@ -669,14 +669,21 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
 
         $description_field = 'description_' . app()->getLocale();
         //TODO PublicConsultationTimelineEnum::PRESENTING_IN_NA->value
-        foreach ([PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value,
-                     PublicConsultationTimelineEnum::FILE_CHANGE->value,
-                     PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value
-                 ] as $e) {
+        $event_types = [
+            PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value,
+            PublicConsultationTimelineEnum::FILE_CHANGE->value,
+            PublicConsultationTimelineEnum::PUBLISH_PROPOSALS_REPORT->value
+        ];
+        foreach ($event_types as $event_type) {
             $found = 0;
             if ($events->count()) {
+                //dd($events->toArray());
                 foreach ($events as $event) {
-                    if ($e == $event->event_id) {
+                    if ($event_type == $event->event_id) {
+                        if ($event_type == PublicConsultationTimelineEnum::FILE_CHANGE->value && $event->object->version == 1.
+                        ) {
+                            continue;
+                        }
                         switch ($event->event_id) {
                             case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
                                 $label = $event->object instanceof OperationalProgramRow ? __('custom.op_project_timeline_label') : __('custom.lp_project_timeline_label');
@@ -717,15 +724,15 @@ class PublicConsultation extends ModelActivityExtend implements TranslatableCont
                 }
             }
 
-            if (!$found && $e != PublicConsultationTimelineEnum::FILE_CHANGE->value) {
-                $label = __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue($e));
-                $description = __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue($e) . '.description');
+            if (!$found && $event_type != PublicConsultationTimelineEnum::FILE_CHANGE->value) {
+                $label = __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue($event_type));
+                $description = __('custom.timeline.' . \App\Enums\PublicConsultationTimelineEnum::keyByValue($event_type) . '.description');
                 $eData = [
                     'label' => $label,
                     'isActive' => false,
                     'description' => $description
                 ];
-                switch ($e) {
+                switch ($event_type) {
                     case PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value:
                         $eData['type'] = PublicConsultationTimelineEnum::INCLUDE_TO_PROGRAM->value;
                         if (!$this->old_id) {
