@@ -37,9 +37,10 @@ class PopulateFileTextInDatabase extends Command
             ->where('pris.active', true)
             ->where('pris.asap_last_version', true)
             ->where('files.locale', '=', 'bg')
-            ->whereRaw("(file_text is null or file_text = '')")
+            ->where('files.file_text', 'ilike', 'I can\'t open \'/home%')
+            //->whereRaw("(file_text is null or file_text = '')")
             ->where('code_object', File::CODE_OBJ_PRIS)
-            ->whereIn('id_object', [167933, 167939])
+            //->whereIn('id_object', [167933, 167939])
             ->whereNotIn('content_type', [
                 'application/vnd.ms-excel',
                 'application/x-rar',
@@ -51,9 +52,8 @@ class PopulateFileTextInDatabase extends Command
                 'application/vnd.ms-powerpoint'
             ])
             ->orderBy('files.id', 'desc')
-            ->take(10)
+            //->take(10)
             ->get();
-        //dd($files->toArray());
 
         foreach ($files as $file) {
             if (Storage::disk('public_uploads')->exists($file->path)) {
