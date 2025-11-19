@@ -517,7 +517,7 @@
                                                 >
                                                     {{ __('custom.preview') }}
                                                 </button>
-                                                <input type="hidden" id="file_text_{{ $f->id }}" value="{{ $f->file_text }}">
+{{--                                                <input type="hidden" id="file_text_{{ $f->id }}" value="{{ $f->file_text }}">--}}
                                                 <a class="btn btn-sm btn-danger ml-2 js-toggle-delete-resource-modal" type="button"
                                                    data-target="#modal-delete-resource"
                                                    data-resource-id="{{ $f->id }}"
