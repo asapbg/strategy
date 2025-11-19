@@ -71,7 +71,7 @@ class FileOcr
                 $this->file->file_text = $text;
                 $this->file->save();
                 if (isset($delete_after_conversion) && file_exists($file_path) && str_contains($file_path, '.pdf')) {
-                    unlink($file_path);
+                    //unlink($file_path);
                 }
             }
         } catch (\Exception $e) {
@@ -101,11 +101,13 @@ class FileOcr
                 //$text = shell_exec($this->doc_to_text_env_path.' -m UTF-8 -w 0 '.$file. ' 2>&1');
                 //Log::error("Result from reading text: $text");
                 $clearText = html_entity_decode(trim($text));
-                //dd($clearText);
+                if (empty($clearText)) {
+                    $clearText = null;
+                }
                 $this->file->file_text = mb_convert_encoding($clearText, mb_detect_encoding($clearText), 'UTF-8');
                 $this->file->save();
                 if (isset($conversion_file_path) && file_exists($conversion_file_path)) {
-                    unlink($conversion_file_path);
+                    //unlink($conversion_file_path);
                 }
             }
         } catch (\Exception $e) {

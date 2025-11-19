@@ -39,7 +39,7 @@ class PopulateFileTextInDatabase extends Command
             ->where('files.locale', '=', 'bg')
             ->whereRaw("(file_text is null or file_text = '')")
             ->where('code_object', File::CODE_OBJ_PRIS)
-            //->whereIn('id_object', [167933, 167939])
+            ->whereIn('id_object', [167933, 167939])
             ->whereNotIn('content_type', [
                 'application/vnd.ms-excel',
                 'application/x-rar',
@@ -51,7 +51,7 @@ class PopulateFileTextInDatabase extends Command
                 'application/vnd.ms-powerpoint'
             ])
             ->orderBy('files.id', 'desc')
-            //->take(10)
+            ->take(10)
             ->get();
         //dd($files->toArray());
 
