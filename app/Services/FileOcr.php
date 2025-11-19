@@ -55,7 +55,7 @@ class FileOcr
                     //dd($command);
                     //shell_exec($command);
                     $res = shell_exec($command. ' 2>&1');
-                    Log::error("Command for conversion $command, result: $res");
+                    Log::channel('info')->info("Command for conversion $command, result: $res");
                     $delete_after_conversion = true;
                     $file_path = str_contains($file_path, 'doc')
                         ? str_replace("doc", 'pdf', $file_path)
@@ -71,7 +71,7 @@ class FileOcr
                 $this->file->file_text = $text;
                 $this->file->save();
                 if (isset($delete_after_conversion) && file_exists($file_path) && str_contains($file_path, '.pdf')) {
-                    //unlink($file_path);
+                    unlink($file_path);
                 }
             }
         } catch (\Exception $e) {
@@ -93,7 +93,7 @@ class FileOcr
                     $command = escapeshellarg($this->doc_to_docx_env_path) . ' --headless --invisible --norestore --convert-to doc --outdir ' . $output_dir . ' ' . $file;
                     //shell_exec($command);
                     $res = shell_exec($command. ' 2>&1');
-                    Log::error("Command for conversion $command, result: $res");
+                    Log::channel('info')->info("Command for conversion $command, result: $res");
                     $file = str_replace("docx", 'doc', $file);
                     $conversion_file_path = str_replace("docx", 'doc', $file_path);
                 }
@@ -107,7 +107,7 @@ class FileOcr
                 $this->file->file_text = mb_convert_encoding($clearText, mb_detect_encoding($clearText), 'UTF-8');
                 $this->file->save();
                 if (isset($conversion_file_path) && file_exists($conversion_file_path)) {
-                    //unlink($conversion_file_path);
+                    unlink($conversion_file_path);
                 }
             }
         } catch (\Exception $e) {
