@@ -69,7 +69,7 @@ class File extends ModelActivityExtend
     const MAX_UPLOAD_FILE_SIZE = 30720;
     const ALLOWED_IMAGES_EXTENSIONS = ['jpeg', 'jpg', 'png'];
     const ALLOWED_FILE_EXTENSIONS = ['doc', 'docx', 'xsl', 'xls', 'xlsx', 'pdf', 'jpeg', 'jpg', 'png', 'zip', 'rar'];
-    const ALLOWED_FILE_PRIS = ['doc', 'docx', 'xsl', 'xls', 'xlsx', 'pdf', 'zip', 'rar'];
+    const ALLOWED_FILE_PRIS = ['doc', 'docx', 'xsl', 'xls', 'xlsx', 'pdf', 'zip', 'rar', 'rtf'];
     const ALLOWED_FILE_STRATEGIC_DOC = ['doc', 'docx', 'pdf'];
     const ALLOWED_FILE_LP_OO = ['doc', 'docx', 'pdf'];
 

@@ -373,7 +373,7 @@ class Controller extends BaseController
                     'code_object' => $typeObjectToSave,
                     'doc_type' => (int)$docType > 0 ? $docType : null,
                     'filename' => $fileNameToStore,
-                    'content_type' => $file->getClientMimeType(),
+                    'content_type' => $file->getMimeType(),
                     'path' => $pDir.$fileNameToStore,
                     'description_'.$code => $desc,
                     'sys_user' => $request->user()->id,
