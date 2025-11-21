@@ -84,7 +84,6 @@
                                         <div class="form-group">
                                             <label class="col-sm-12 control-label" for="hyperlink_{{ $code }}">
                                                 {{ __('Order information') }} ({{ $code_upper }})
-                                                @if($default)<span class="required">*</span>@endif
                                             </label>
                                             <div class="col-md-12 col-sm-12 col-xs-12">
                                                 <input type="text" name="hyperlink_{{ $code }}" id="hyperlink_{{ $code }}"

@@ -35,6 +35,9 @@ class StoreExecutorRequest extends FormRequest
         foreach (Executor::TRANSLATABLE_FIELDS as $field) {
             foreach (AdminController::getLanguages() as $lang) {
                 $condition = ($lang['default']) ? 'required' : 'nullable';
+                if (in_array($field,["hyperlink","contractor_name"])) {
+                    $condition = 'nullable';
+                }
                 $rules[$field."_".$lang['code']] = [$condition, 'string', 'min:3'];
             }
         }
