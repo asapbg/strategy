@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AdvisoryBoard\AdvBoardNewsController;
+use App\Http\Controllers\Admin\AdvisoryBoard\AdvBoardPageController;
+use App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardContactsController;
+use App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMemberController;
+use App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMessagesController;
 use App\Http\Controllers\Admin\Consultations\LegislativeProgramController;
 use App\Http\Controllers\Admin\Consultations\OperationalProgramController;
 use App\Http\Controllers\Admin\Consultations\PublicConsultationController;
@@ -76,16 +80,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     // Consultations
-    Route::controller(LegislativeProgramController::class)->group(function () {
-        Route::get('/legislative-programs', 'index')->name('consultations.legislative_programs.index')->middleware('can:viewAny,App\Models\Consultations\LegislativeProgram');
-        Route::get('/legislative-programs/edit/{item?}', 'edit')->name('consultations.legislative_programs.edit');
-        Route::get('/legislative-programs/{item}/view', 'show')->name('consultations.legislative_programs.view');
-        Route::get('/legislative-programs/remove-row/{item}/{row}', 'removeRow')->name('consultations.legislative_programs.remove_row');
-        Route::match(['post', 'put'], '/legislative-programs/store', 'store')->name('consultations.legislative_programs.store');
-        Route::get('/legislative-programs/publish/{item}', 'publish')->name('consultations.legislative_programs.publish');
-        Route::get('/legislative-programs/unpublish/{item}', 'unPublish')->name('consultations.legislative_programs.unpublish');
-        Route::get('/legislative-programs/{program}/remove-file/{file}', 'deleteFile')->name('consultations.legislative_programs.delete.file');
-        Route::post('/legislative-programs/{item}/delete', 'destroy')->name('consultations.legislative_programs.delete');
+    Route::controller(LegislativeProgramController::class)->as('consultations.legislative_programs.')->group(function () {
+        Route::get('/legislative-programs',                         'index')->name('index')->middleware('can:viewAny,App\Models\Consultations\LegislativeProgram');
+        Route::get('/legislative-programs/edit/{item?}',            'edit')->name('edit');
+        Route::get('/legislative-programs/{item}/view',             'show')->name('view');
+        Route::get('/legislative-programs/remove-row/{item}/{row}', 'removeRow')->name('remove_row');
+        Route::match(['post', 'put'], '/legislative-programs/store', 'store')->name('store');
+        Route::get('/legislative-programs/publish/{item}',          'publish')->name('publish');
+        Route::get('/legislative-programs/unpublish/{item}',        'unPublish')->name('unpublish');
+        Route::get('/legislative-programs/{program}/remove-file/{file}', 'deleteFile')->name('delete.file');
+        Route::post('/legislative-programs/{item}/delete',          'destroy')->name('delete');
     });
 
     Route::controller(OperationalProgramController::class)->group(function () {
@@ -313,15 +317,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     // Polls
     Route::controller(PollController::class)->group(function () {
-        Route::get('/polls', 'index')->name('polls.index')->middleware('can:viewAny,App\Models\Poll');
-        Route::get('/polls/edit/{id}', 'edit')->name('polls.edit');
-        Route::get('/polls/result/{item}', 'preview')->name('polls.preview');
+        Route::get('/polls',                'index')->name('polls.index')->middleware('can:viewAny,App\Models\Poll');
+        Route::get('/polls/edit/{id}',      'edit')->name('polls.edit');
+        Route::get('/polls/result/{item}',  'preview')->name('polls.preview');
         Route::match(['post', 'put'], '/polls/store', 'store')->name('polls.store');
         Route::post('/polls/{item}/delete', 'destroy')->name('polls.delete');
-        Route::post('/poll/question', 'createQuestion')->name('polls.question.create');
-        Route::post('/poll/question/edit', 'editQuestion')->name('polls.question.edit');
+        Route::post('/poll/question',       'createQuestion')->name('polls.question.create');
+        Route::post('/poll/question/edit',  'editQuestion')->name('polls.question.edit');
         Route::get('/poll/question/delete/{id}', 'questionDelete')->where('id', '([1-9]+[0-9]*)')->name('polls.question.delete');
-        Route::post('/poll/question/delete', 'questionConfirmDelete')->name('polls.question.delete.confirm');
+        Route::post('/poll/question/delete','questionConfirmDelete')->name('polls.question.delete.confirm');
     });
 
     Route::controller(InstitutionController::class)->prefix('nomenclature')->group(function () {
@@ -334,7 +338,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('/institutions/history-name/{id}/update',   'updateHistoryName')->name('strategic_documents.institutions.history-name.update');
         Route::post('/institutions/policy',                     'storePolicy')->name('strategic_documents.institutions.policy.store');
         Route::get('/institutions/policy/{item}/delete/{policy}','deletePolicy')->name('strategic_documents.institutions.policy.delete');
-        Route::get('/institutions/remove/link',                 'removeLink')->name('strategic_documents.institutions.link.remove');
+        Route::match(['post', 'get'], '/institutions/remove/link','removeLink')->name('strategic_documents.institutions.link.remove');
         Route::match(['post', 'put'], '/institutions/store/{item?}','store')->name('strategic_documents.institutions.store');
     });
 
@@ -598,7 +602,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         });
 
     // Settings
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardContactsController::class)
+    Route::controller(AdvisoryBoardContactsController::class)
         ->prefix('/advisory-boards/contacts')
         ->name('advisory-boards.contacts.')
         ->group(function () {
@@ -606,27 +610,27 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         });
 
     // Messages
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMessagesController::class)->prefix('/advisory-boards')->group(function () {
-        Route::get( '/messages', 'index')->name('advisory-boards.messages');
-        Route::get( '/messages/view/{item}', 'show')->name('advisory-boards.messages.view');
-        Route::match(['get', 'post'], '/messages/create', 'send')->name('advisory-boards.messages.send');
+    Route::controller(AdvisoryBoardMessagesController::class)->prefix('/advisory-boards')->group(function () {
+        Route::get( '/messages',                        'index')->name('advisory-boards.messages');
+        Route::get( '/messages/view/{item}',            'show')->name('advisory-boards.messages.view');
+        Route::match(['get', 'post'], '/messages/create','send')->name('advisory-boards.messages.send');
     });
 
     // Publications
     Route::controller(AdvBoardNewsController::class)->prefix('/advisory-boards/news')->group(function () {
-        Route::get('/', 'index')->name('advisory-boards.news.index')->middleware('can:viewAnyAdvBoard,App\Models\Publication');
-        Route::get('/edit/{item?}', 'edit')->name('advisory-boards.news.edit');
+        Route::get('/',                                 'index')->name('advisory-boards.news.index')->middleware('can:viewAnyAdvBoard,App\Models\Publication');
+        Route::get('/edit/{item?}',                     'edit')->name('advisory-boards.news.edit');
         Route::match(['post', 'put'], '/store/{item?}', 'store')->name('advisory-boards.news.store');
-        Route::post('/{item}/delete', 'destroy')->name('advisory-boards.news.delete');
+        Route::post('/{item}/delete',                   'destroy')->name('advisory-boards.news.delete');
     });
 
     // Pages
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvBoardPageController::class)->prefix('/advisory-boards/page')->group(function () {
-        Route::match(['get', 'put'], '/base-information', 'info')->name('advisory-boards.page.info');
-        Route::match(['get', 'put'],'/documents', 'documents')->name('advisory-boards.page.documents');
+    Route::controller(AdvBoardPageController::class)->prefix('/advisory-boards/page')->group(function () {
+        Route::match(['get', 'put'], '/base-information',   'info')->name('advisory-boards.page.info');
+        Route::match(['get', 'put'],'/documents',           'documents')->name('advisory-boards.page.documents');
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {
+    Route::controller(AdvisoryBoardMemberController::class)->prefix('/advisory-boards/members')->group(function () {
         Route::post('/ajax-store',      'ajaxStore')    ->name('advisory-boards.members.store');
         Route::get('{member}/edit',     'ajaxEdit')     ->name('advisory-boards.members.edit');
         Route::post('/ajax-update',     'ajaxUpdate')   ->name('advisory-boards.members.update');
