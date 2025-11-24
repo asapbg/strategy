@@ -48,13 +48,13 @@
                                                 <a class="mr-3 ml-3" href="{{ route('admin.download.file', $att) }}" target="_blank" title="{{ __('custom.download') }}">
                                                     {!! fileIcon($att->content_type) !!} {{ $att->{'description_'.$att->locale} }} | {{ displayDate($att->created_at) }} | {{ $att->user ? $att->user->fullName() : '' }}
                                                 </a>
-                                                <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $doc->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $doc->id]) }}">{{ __('custom.preview') }}</button>
+                                                <button type="button" class="btn btn-sm btn-outline-info preview-file-modal" data-file="{{ $att->id }}" data-url="{{ route('admin.preview.file.modal', ['id' => $att->id]) }}">{{ __('custom.preview') }}</button>
                                                 <a class="btn btn-sm btn-danger ml-2 js-toggle-delete-resource-modal" type="button"
                                                    data-target="#modal-delete-resource"
-                                                   data-resource-id="{{ $doc->id }}"
+                                                   data-resource-id="{{ $att->id }}"
                                                    data-resource-title="Приложението"
                                                    data-resource-name="Приложението"
-                                                   data-resource-delete-url="{{ route('admin.delete.file', ['file' => $att->id]) }}"
+                                                   data-resource-delete-url="{{ route('admin.delete.file', ['file' => $att->id, 'delete_en' => 1]) }}"
                                                 >
                                                     <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                                                 </a>

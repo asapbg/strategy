@@ -501,10 +501,6 @@ class PublicConsultationController extends AdminController
                 $code = $lang['code'];
 
                 if (!isset($validated['file_' . $code])) {
-                    continue;
-                }
-
-                if (!isset($validated['file_' . $code])) {
                     $file = $validated['file_bg'];
                     $desc = $validated['description_bg'] ?? null;
                 } else {
