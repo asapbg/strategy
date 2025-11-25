@@ -118,12 +118,18 @@
         @endif
         <div class="col-md-6">
             <div class="form-group">
-                <label class="col-auto control-label">{{ trans_choice('custom.consultation_level', 1) }}: </label> <span
-                    id="levelLabel">@if(!$isAdmin || $item->id)
-                        {{ $item->id ? $item->nomenclatureLevelLabel : (isset($userInstitutionLevel) ? __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($userInstitutionLevel)) : '---') }}
-                    @else
-                        {{ '---' }}
-                    @endif</span>
+                <label class="col-auto control-label">{{ trans_choice('custom.consultation_level', 1) }}: </label>
+                    <span id="levelLabel">
+                        @if(!$isAdmin || $item->id)
+                            {{
+                                $item->id
+                                    ? $item->nomenclatureLevelLabel
+                                    : (isset($userInstitutionLevel) ? __('custom.nomenclature_level.'.\App\Enums\InstitutionCategoryLevelEnum::keyByValue($userInstitutionLevel)) : '---')
+                            }}
+                        @else
+                            {{ '---' }}
+                        @endif
+                    </span>
             </div>
         </div>
         @if($item->id)

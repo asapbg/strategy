@@ -113,25 +113,25 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::match(['get', 'put'], '/consultations/legislative-programs/info', 'lpInfo')->name('consultations.legislative_programs.info');
     });
 
-    Route::controller(PublicConsultationController::class)->prefix('consultations')->as('consultations.')->group(function () {
-        Route::get('/public-consultations',                         'index')->name('public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
-        Route::get('/public-consultations/edit/{item?}',            'edit')->name('public_consultations.edit');
-        Route::get('/public-consultations/export-comments/{item}',   'exportComments')->name('public_consultations.export_comments');
-        Route::match(['post', 'put'], '/public-consultations/store/{item?}', 'store')->name('public_consultations.store');
-        Route::post('/public-consultations/store-kd',               'storeKd')->name('public_consultations.store.kd');
-        Route::post('/public-consultations/store-doc',              'storeDocs')->name('public_consultations.store.documents');
-        Route::post('/public-consultations/store-subdoc',           'storeSubDocs')->name('public_consultations.store.sub_documents');
-        Route::post('/public-consultations/add-contact',            'addContact')->name('public_consultations.add.contact');
-        Route::post('/public-consultations/remove-contact',         'removeContact')->name('public_consultations.remove.contact');
-        Route::post('/public-consultations/update-contact',         'updateContacts')->name('public_consultations.update.contacts');
-        Route::post('/public-consultations/add-poll',               'attachPoll')->name('public_consultations.poll.attach');
-        Route::post('/public-consultations/add-proposal-report',    'addProposalReport')->name('public_consultations.proposal_report.store');
-        Route::post('/public-consultations/add-other-source-comment','addOtherSourceComment')->name('public_consultations.other_source_comment.store');
-        Route::post('/public-consultations/{item}/delete',          'destroy')->name('public_consultations.delete');
-        Route::get('/public-consultations/publish/{item}',          'publish')->name('public_consultations.publish');
-        Route::get('/public-consultations/unpublish/{item}',        'unPublish')->name('public_consultations.unpublish');
-        Route::post('/public-consultations/files/{file}/delete',    'deleteFile')->name('public_consultations.delete.file');
-        Route::post('/public-consultations/messages/{message}/delete','deleteMessage')->name('public_consultations.delete.message');
+    Route::controller(PublicConsultationController::class)->prefix('consultations/public-consultations')->as('consultations.')->group(function () {
+        Route::get('',                              'index')->name('public_consultations.index')->middleware('can:viewAny,App\Models\Consultations\PublicConsultation');
+        Route::get('/edit/{item?}',                 'edit')->name('public_consultations.edit');
+        Route::get('/export-comments/{item}/{type}','exportComments')->name('public_consultations.export_comments');
+        Route::match(['post', 'put'], '/store/{item?}', 'store')->name('public_consultations.store');
+        Route::post('/store-kd',                    'storeKd')->name('public_consultations.store.kd');
+        Route::post('/store-doc',                   'storeDocs')->name('public_consultations.store.documents');
+        Route::post('/store-subdoc',                'storeSubDocs')->name('public_consultations.store.sub_documents');
+        Route::post('/add-contact',                 'addContact')->name('public_consultations.add.contact');
+        Route::post('/remove-contact',              'removeContact')->name('public_consultations.remove.contact');
+        Route::post('/update-contact',              'updateContacts')->name('public_consultations.update.contacts');
+        Route::post('/add-poll',                    'attachPoll')->name('public_consultations.poll.attach');
+        Route::post('/add-proposal-report',         'addProposalReport')->name('public_consultations.proposal_report.store');
+        Route::post('/add-other-source-comment',    'addOtherSourceComment')->name('public_consultations.other_source_comment.store');
+        Route::post('/{item}/delete',               'destroy')->name('public_consultations.delete');
+        Route::get('/publish/{item}',               'publish')->name('public_consultations.publish');
+        Route::get('/unpublish/{item}',             'unPublish')->name('public_consultations.unpublish');
+        Route::post('/files/{file}/delete',         'deleteFile')->name('public_consultations.delete.file');
+        Route::post('/messages/{message}/delete',   'deleteMessage')->name('public_consultations.delete.message');
     });
 
     // Pages

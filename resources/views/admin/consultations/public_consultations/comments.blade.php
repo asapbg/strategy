@@ -207,9 +207,13 @@
         <tr>
             <th colspan="2">Експорт на коментари в реално време</th>
             <th colspan="3">
-                <a href="{{ route('admin.consultations.public_consultations.export_comments', ['item' => $item]) }}" download>
+                <a href="{{ route('admin.consultations.public_consultations.export_comments', ['item' => $item,'type' => 'excel']) }}" download>
                     <i class="fas fa-file-excel text-success me-1"></i>
                     Excel
+                </a>
+                <a href="{{ route('admin.consultations.public_consultations.export_comments', ['item' => $item,'type' => 'word']) }}" download>
+                    <i class="fas fa-file-word text-info me-1"></i>
+                    Word
                 </a>
             </th>
         </tr>

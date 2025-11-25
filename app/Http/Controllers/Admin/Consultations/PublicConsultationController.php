@@ -44,6 +44,7 @@ use App\Models\UserSubscribe;
 use App\Services\FileOcr;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +54,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class PublicConsultationController extends AdminController
@@ -1089,16 +1091,72 @@ class PublicConsultationController extends AdminController
         }
     }
 
-    public function exportComments(PublicConsultation $item)
+    /**
+     * @param PublicConsultation $item
+     * @param $type
+     * @return BinaryFileResponse|RedirectResponse
+     */
+    public function exportComments(PublicConsultation $item, $type)
     {
         $comments = $item->comments;
 
-        $exportData = [
-            'title' => 'Коментари към обществена консултация '.$item->title,
-            'rows' => $item->comments
-        ];
+        if ($type == 'excel') {
+            $exportData = [
+                'title' => 'Коментари към обществена консултация '.$item->title,
+                'rows' => $comments
+            ];
 
-        return Excel::download(new CommentsExport($exportData), 'public_consultation_comments.xlsx');
+            try {
+
+                return Excel::download(new CommentsExport($exportData), 'public_consultation_comments.xlsx');
+
+            } catch (Exception $e) {
+
+                Log::error($e);
+
+                return $this->backWithMessage('danger', __('msg.system_error'));
+            }
+        }
+        if ($type == 'word') {
+            $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+            $section = $phpWord->addSection();
+
+            $phpWord->setDefaultFontName('Times New Roman');
+            $phpWord->setDefaultFontSize('14');
+
+            $centered = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER];
+            $indent   = ['indentation' => ['left' => 300]];
+
+            $section->addText('Коментари към обществена консултация '.$item->title, ['size' => 16, 'bold' => true], array_merge($centered, ['spaceAfter' => 15]));
+
+            $section->addTextBreak(2);
+
+            foreach ($comments as $comment) {
+                $author = $comment->user_id ? $comment->author->fullName() : 'Анонимен';
+                $section->addText('Автор       : '.$author, ['size' => 13], ['spaceAfter' => 10]);
+                $section->addText('Дата         : '.displayDate($comment->created_at), ['size' => 13], ['spaceAfter' => 10]);
+                $section->addText('Коментар: '.htmlToText($comment->content), ['size' => 13], ['spaceAfter' => 10]);
+                $section->addTextBreak();
+            }
+
+            $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord);
+
+            $file_name = "public_consultation_comments.docx";
+
+            try {
+
+                $objWriter->save(storage_path("app/public/$file_name"));
+
+            } catch (Exception $e) {
+
+                Log::error($e);
+
+                return $this->backWithMessage('danger', __('msg.system_error'));
+            }
+
+            return response()->download(storage_path("app/public/$file_name"))->deleteFileAfterSend();
+        }
     }
 
     /**
