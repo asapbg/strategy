@@ -46,6 +46,7 @@ class PrisStoreRequest extends FormRequest
             'publish' => ['nullable', 'numeric'],
             'decision_protocol' => ['nullable', 'numeric', 'exists:pris,id'],
             'protocol_point' => ['nullable', 'numeric', 'gt:0'],
+            'published_at' => ['nullable'],
         ];
 
         if (request()->isMethod('put')) {

@@ -57,8 +57,27 @@
                                     <a href="{{ route( $editRouteName , [$item->id]) }}"
                                        class="btn btn-sm btn-info mr-2"
                                        data-toggle="tooltip"
-                                       title="{{ __('custom.edit') }}">
+                                       title="{{ __('custom.edit') }}"
+                                    >
                                         <i class="fa fa-edit"></i>
+                                    </a>
+                                @endcan
+                                @can('publish', $item)
+                                    <a href="{{ route('admin.pris.publish', $item) }}"
+                                       class="btn btn-sm btn-success mr-2"
+                                       data-toggle="tooltip"
+                                       title="{{ __('custom.publish') }}"
+                                    >
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                @endcan
+                                @can('unPublish', $item)
+                                    <a href="{{ route('admin.pris.unpublish', $item) }}"
+                                       class="btn btn-sm btn-secondary mr-2"
+                                       data-toggle="tooltip"
+                                       title="{{ __('custom.unpublish') }}"
+                                    >
+                                        <i class="fas fa-eye-slash"></i>
                                     </a>
                                 @endcan
                                 @can('delete', $item)
@@ -69,7 +88,9 @@
                                        data-resource-name="{{ $item->regNum }} ({{ $item->legal_act_type_id ? $item->actType->name : '---' }})"
                                        data-resource-delete-url="{{ route('admin.pris.delete', $item) }}"
                                        data-toggle="tooltip"
-                                       title="{{ __('custom.delete') }}"><i class="fas fa-trash"></i>
+                                       title="{{ __('custom.delete') }}"
+                                    >
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 @endcan
                             </td>

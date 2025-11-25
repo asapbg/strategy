@@ -446,6 +446,24 @@
                                                 </div>
                                             </div>
 
+                                            <div class="row mb-2">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
+                                                        <select id="active"
+                                                                name="published_at"
+                                                                class="form-select @error('active'){{ 'is-invalid' }}@enderror"
+                                                        >
+                                                            <option value="" @if(!old('published_at', $item->id ? $item->published_at : 0 )) selected @endif>
+                                                                {{ __('custom.draft') }}
+                                                            </option>
+                                                            <option value="{{ now() }}" @if(old('published_at', $item->id ? $item->published_at : 0 )) selected @endif>
+                                                                {{ __('custom.public_f') }}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             @if($item->id)
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-group">
@@ -462,17 +480,16 @@
                                             @endif
                                         </div>
 
-                                        <div class="form-group row">
-                                            <div class="col-md-6 col-md-offset-3">
+                                        <div class="row">
+                                            <div class="form-group">
                                                 <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
                                                 @can('publish', $item)
                                                     <button id="save" type="submit" class="btn btn-success" name="publish" value="1">{{ __('custom.publish') }}</button>
                                                 @endcan
-                                                <a href="{{ route($listRouteName) }}"
-                                                   class="btn btn-primary">{{ __('custom.cancel') }}</a>
+                                                <a href="{{ route($listRouteName) }}" class="btn btn-primary">{{ __('custom.cancel') }}</a>
                                             </div>
                                         </div>
-                                        <br/>
+
                                     </form>
                                 </div>
                             </div>

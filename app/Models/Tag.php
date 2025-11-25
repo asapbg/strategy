@@ -79,7 +79,8 @@ class Tag extends ModelActivityExtend implements TranslatableContract
             $q->where('tag.id', '<>', (int)$filters['exclude']);
         }
 
-        $q->whereNull('tag.deleted_at');
+        $q->where('tag.active', true)
+            ->whereNull('tag.deleted_at');
 
         return $q->get();
     }

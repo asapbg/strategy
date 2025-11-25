@@ -103,4 +103,16 @@ class PrisPolicy
     {
         return $user->canAny(['manage.*','manage.pris']) && empty($pris->published_at);
     }
+
+    /**
+     * Determine whether the user can update the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Pris  $pris
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function unPublish(User $user, Pris $pris)
+    {
+        return $user->canAny(['manage.*','manage.pris']) && !empty($pris->published_at);
+    }
 }

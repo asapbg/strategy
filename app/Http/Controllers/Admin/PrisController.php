@@ -11,6 +11,7 @@ use App\Models\Pris;
 use App\Models\PrisChangePris;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Tag;
+use App\Observers\PrisObserver;
 use App\Services\FileOcr;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -106,6 +107,7 @@ class PrisController extends AdminController
                 $query->where('pris.legal_act_type_id', '<>', LegalActType::TYPE_ORDER);
             })
             ->FilterBy($requestFilter)
+            ->orderBy('pris.published_at', 'desc')
             ->orderBy('pris.doc_date', 'desc')
             ->paginate($paginate);
         $toggleBooleanModel = 'Pris';
@@ -164,6 +166,7 @@ class PrisController extends AdminController
     public function store(PrisStoreRequest $request)
     {
         increase_file_manipulations_ini_settings();
+
         $validated = $request->validated();
         $id = $validated['id'];
         $item = $id ? $this->getRecord($id) : new Pris();
@@ -177,14 +180,26 @@ class PrisController extends AdminController
         //dd($tags_from_list, $tags);
         DB::beginTransaction();
         try {
+            $real_update = false;
             $fillable = $this->getFillableValidated($validated, $item);
-            if (isset($validated['publish']) && $validated['publish']) {
+            if ((isset($validated['publish']) && $validated['publish']) || $validated['published_at']) {
                 $fillable['published_at'] = Carbon::now()->format('Y-m-d H:i:s');
             }
             $fillable['in_archive'] = Carbon::parse($validated['doc_date'])->format('Y-m-d') > '1989-12-31' ? 0 : 1;
             $item->fill($fillable);
 
             $item->save();
+            $translation = $item->translation;
+            $this->storeTranslateOrNew(Pris::TRANSLATABLE_FIELDS, $item, $validated);
+
+            $dirty = $item->getDirty();
+            $t_dirty = $translation?->getDirty() ?? [];
+            unset($dirty['updated_at'], $t_dirty['updated_at']);
+            $old_published_at = $item->getOriginal('published_at');
+            $old_public_consultation_id = (int)$item->getOriginal('public_consultation_id');
+            if (count($dirty) || count($t_dirty)) {
+                $real_update = true;
+            }
 
             $tags = $validated['tags'] ?? [];
             $tags_from_list = explode(',', $validated['tags_list']);
@@ -211,20 +226,33 @@ class PrisController extends AdminController
                 $tags[] = $tag->id;
             }
 
+            if ($item->tags->count() != count($tags)) {
+                $real_update = true;
+            }
             $item->tags()->sync($tags);
             if (!empty($validated['institutions'])) {
+                if ($item->institutions->count() != count($validated['institutions'])) {
+                    $real_update = true;
+                }
                 $item->institutions()->sync($validated['institutions']);
             }
+            $observer = new PrisObserver();
+            if ($real_update && $item->published_at) {
+                $event = !$old_published_at && !empty($item->published_at) ? 'created' : 'updated';
+                //$observer->sendEmails($item, $event);
+            }
+            if (!$old_public_consultation_id && $item->public_consultation_id) {
+                //$observer->sendEmails($item, 'updated_with_pc');
+            }
 
-            $this->storeTranslateOrNew(Pris::TRANSLATABLE_FIELDS, $item, $validated);
             DB::commit();
 
-            return to_route(self::EDIT_ROUTE, $item->id)
-                ->with('success', trans_choice('custom.pris_documents', 1) . " " . ($id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m')));
+            $message = $id ? __('messages.updated_successfully_m') : __('messages.created_successfully_m');
+            return to_route(self::EDIT_ROUTE, $item->id)->with('success', trans_choice('custom.pris_documents', 1) . " " . $message);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Save pris document error: ' . $e);
-            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            return $this->backWithMessage('danger', __('messages.system_error'));
         }
     }
 
@@ -596,5 +624,40 @@ class PrisController extends AdminController
             abort(Response::HTTP_NOT_FOUND);
         }
         return $pris;
+    }
+
+    public function publish(Request $request, Pris $item)
+    {
+        if ($request->user()->cannot('publish', $item)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+
+            $item->published_at = now();
+            $item->save();
+            return redirect(route(self::LIST_ROUTE))
+                ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            logError('Publish consultation program (ID ' . $item->id . ')', $e);
+            return back()->with('danger', __('messages.system_error'));
+        }
+    }
+
+    public function unPublish(Request $request, Pris $item)
+    {
+        if ($request->user()->cannot('unPublish', $item)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+            $item->published_at = null;
+            $item->save();
+            return redirect(route(self::LIST_ROUTE))
+                ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.updated_successfully_f'));
+        } catch (\Exception $e) {
+            logError('Publish consultation (ID ' . $item->id . ')', $e);
+            return back()->with('danger', __('messages.system_error'));
+        }
     }
 }
