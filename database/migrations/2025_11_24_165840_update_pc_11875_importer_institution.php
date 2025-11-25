@@ -15,9 +15,13 @@ return new class extends Migration
     {
         $importer = \App\Models\StrategicDocuments\InstitutionTranslation::where('name', 'Общинска администрация - Търговище')->first();
         if ($importer) {
-            \App\Models\Consultations\PublicConsultation::where('id', 11875)->update(['importer_institution_id' => $importer->institution_id]);
-        } else {
-            \App\Models\Consultations\PublicConsultation::where('id', 11875)->update(['importer_institution_id' => 501]);
+            \App\Models\Consultations\PublicConsultation::where('id', 11875)->update([
+                'importer_institution_id' => $importer->institution_id,
+                'responsible_institution_id' => $importer->institution_id,
+                'field_of_actions_id' => 293,
+                'consultation_level_id' => 4,
+                'act_type_id' => 11,
+            ]);
         }
     }
 
