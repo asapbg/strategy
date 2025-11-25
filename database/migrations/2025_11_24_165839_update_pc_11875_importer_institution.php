@@ -15,7 +15,9 @@ return new class extends Migration
     {
         $importer = \App\Models\StrategicDocuments\InstitutionTranslation::where('name', 'Общинска администрация - Търговище')->first();
         if ($importer) {
-            \App\Models\Consultations\PublicConsultation::where('id', 11875)->update(['importer_institution_id' => $importer->id]);
+            \App\Models\Consultations\PublicConsultation::where('id', 11875)->update(['importer_institution_id' => $importer->institution_id]);
+        } else {
+            \App\Models\Consultations\PublicConsultation::where('id', 11875)->update(['importer_institution_id' => 501]);
         }
     }
 
