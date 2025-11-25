@@ -529,6 +529,7 @@ class  UsersController extends Controller
         try {
 
             $user->update([
+                'activity_status' => User::STATUS_ACTIVE,
                 'email_verified_at' => Carbon::now(),
             ]);
 
