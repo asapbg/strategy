@@ -136,7 +136,7 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        @if(!$user->email_verified_at)
+                                        @if(!$user->email_verified_at || $user->activity_status == \App\Models\User::STATUS_REG_IN_PROCESS)
                                             <a href="javascript:;"
                                                class="btn btn-sm btn-secondary"
                                                onclick="showModalConfirm('{{route('admin.users.verify', ['user' => $user])}}', 'Сигурни ли сте, че искате ръчно да потвърдите ел. поща на {{ $user->fullName() }}', 'Ръчно потвърждаване на ел. поща')"
