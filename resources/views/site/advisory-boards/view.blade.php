@@ -209,7 +209,7 @@
             @endif
 
             <!-- Секретариат -->
-            @if(!empty($item->secretariat))
+            @if(!empty($item->secretariat?->description) || !empty($item->secretariat?->siteFiles) && $item->secretariat->siteFiles->count() > 0)
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
@@ -223,48 +223,6 @@
                                 @foreach($item->secretariat->siteFiles as $file)
                                     @includeIf('site.partial.file', ['file' => $file, 'no_second_active_status' => true])
                                 @endforeach
-                            @endif
-
-                            @if($item->moderators->count() > 0)
-                                <p>{{ trans_choice('custom.moderators', 2) }}</p>
-
-                                <ul>
-                                    @foreach($item->moderators as $moderator)
-                                        <li>
-                                            {{ $moderator->user?->fullName() }}
-
-                                            @if($moderator->user?->job)
-                                                {{ __('custom.with') . ' ' . Str::lower(__('validation.attributes.job')) . ' ' . $moderator->user?->job }}
-                                            @endif
-
-                                            @if($moderator->user?->institution)
-                                                {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.institution')) . ' ' . $moderator->user->institution->name }}
-                                            @endif
-
-                                            @if($moderator->user?->unit)
-                                                {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.unit')) . ' ' . $moderator->user->unit }}
-                                            @endif
-
-                                            @if(!empty($moderator->user?->email) || !empty($moderator->user?->phone))
-                                                | {{ __('custom.for') . ' ' . Str::lower(trans_choice('custom.contacts', 2)) }}:
-
-                                                @if(!empty($moderator->user?->email))
-                                                    <a href="mailto:{{ $moderator->user?->email }}" class="text-decoration-none">
-                                                        <i class="fa-solid fa-envelope ms-1"></i>
-                                                        {{ $moderator->user?->email }}
-                                                    </a>
-                                                @endif
-
-                                                @if(!empty($moderator->user?->phone))
-                                                    <a href="#" class="text-decoration-none">
-                                                        <i class="fa-solid fa-phone ms-1"></i>
-                                                        {{ $moderator->user?->phone }}
-                                                    </a>
-                                                @endif
-                                            @endif
-                                        </li>
-                                    @endforeach
-                                </ul>
                             @endif
                         </div>
                     </div>
@@ -412,7 +370,11 @@
             @endif
 
             <!-- Информация за модератора „Консултативен съвет“ -->
-            @if(($item->moderatorInformation && !empty($item->moderatorInformation->description)) || ($item->moderatorFiles && $item->moderatorFiles->count()))
+            @if(
+                ($item->moderatorInformation && !empty($item->moderatorInformation->description))
+                || ($item->moderatorFiles && $item->moderatorFiles->count())
+                || $item->moderators->count()
+            )
                 <div class="row mb-4 ks-row">
                     <div class="col-md-12">
                         <div class="custom-card p-3">
@@ -426,6 +388,47 @@
                                 @foreach($item->moderatorInformation->filesByLocale as $file)
                                     @includeIf('site.partial.file', ['file' => $file, 'no_second_active_status' => true])
                                 @endforeach
+                            @endif
+                            @if($item->moderators->count() > 0)
+                                <p>{{ trans_choice('custom.moderators', 2) }}</p>
+
+                                <ul>
+                                    @foreach($item->moderators as $moderator)
+                                        <li>
+                                            {{ $moderator->user?->fullName() }}
+
+                                            @if($moderator->user?->job)
+                                                {{ __('custom.with') . ' ' . Str::lower(__('validation.attributes.job')) . ' ' . $moderator->user?->job }}
+                                            @endif
+
+                                            @if($moderator->user?->institution)
+                                                {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.institution')) . ' ' . $moderator->user->institution->name }}
+                                            @endif
+
+                                            @if($moderator->user?->unit)
+                                                {{ __('custom.from') . ' ' . Str::lower(__('validation.attributes.unit')) . ' ' . $moderator->user->unit }}
+                                            @endif
+
+                                            @if(!empty($moderator->user?->email) || !empty($moderator->user?->phone))
+                                                | {{ __('custom.for') . ' ' . Str::lower(trans_choice('custom.contacts', 2)) }}:
+
+                                                @if(!empty($moderator->user?->email))
+                                                    <a href="mailto:{{ $moderator->user?->email }}" class="text-decoration-none">
+                                                        <i class="fa-solid fa-envelope ms-1"></i>
+                                                        {{ $moderator->user?->email }}
+                                                    </a>
+                                                @endif
+
+                                                @if(!empty($moderator->user?->phone))
+                                                    <a href="#" class="text-decoration-none">
+                                                        <i class="fa-solid fa-phone ms-1"></i>
+                                                        {{ $moderator->user?->phone }}
+                                                    </a>
+                                                @endif
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
                             @endif
                         </div>
                     </div>
