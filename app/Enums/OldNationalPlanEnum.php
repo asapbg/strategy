@@ -30,7 +30,7 @@ enum OldNationalPlanEnum: int
     public static function fromDateByValue($searchVal): string
     {
         $dates = [
-            self::FIRST->value => '01.01.2013',
+            self::FIRST->value => '01.06.2012',
             self::SECOND->value => '01.01.2014',
             self::THIRD->value => '01.07.2016',
         ];
@@ -82,12 +82,12 @@ enum OldNationalPlanEnum: int
                     ),
                     'en' => array(
                         [
-                            'path' => 'old_ogp_plan/2/OGP-selfassessment.pdf',
+                            'path' => 'old_ogp_plan/2/Bulgarian self-assessement Report 1st Action Plan.pdf',
                             'name' => 'Government report',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                         [
-                            'path' => 'old_ogp_plan/2/bulgaria_rev.pdf',
+                            'path' => 'old_ogp_plan/2/IRM report -Bulgarian 1 Action Plan.pdf',
                             'name' => 'Independent researcher\'s report',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
@@ -755,7 +755,18 @@ enum OldNationalPlanEnum: int
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     ),
-                    'en' => array(),
+                    'en' => array(
+                        [
+                            'path' => 'old_ogp_plan/2/Bulgarian self-assesment Report 2nd Action Plan.pdf',
+                            'name' => 'Government report',
+                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+                        ],
+                        [
+                            'path' => 'old_ogp_plan/2/IRM Report - Bulgaria 2nd Action Plan.pdf',
+                            'name' => 'Independent researcher\'s report',
+                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
+                        ],
+                    ),
                 ),
                 'content' => array(
                     'bg' => array(

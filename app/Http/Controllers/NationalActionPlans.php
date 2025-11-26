@@ -78,7 +78,11 @@ class NationalActionPlans extends Controller
         $planId = $id;
         $planData = OldNationalPlanEnum::planData($id, app()->getLocale());
 
-        $this->setSeo(OldNationalPlanEnum::nameByValue($id),  $planData['ogDescription'], '', array('title' => OldNationalPlanEnum::nameByValue($id), 'description' => $planData['ogDescription'], 'img' => OgpPlan::DEFAULT_IMG));
+        $this->setSeo(
+            OldNationalPlanEnum::nameByValue($id),  $planData['ogDescription'],
+            '',
+            array('title' => OldNationalPlanEnum::nameByValue($id), 'description' => $planData['ogDescription'], 'img' => OgpPlan::DEFAULT_IMG)
+        );
 
         return $this->view('site.ogp.old_plan_'.app()->getLocale().'.'.$id, compact('pageTitle', 'status', 'planName', 'planId', 'planData'));
     }
