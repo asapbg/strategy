@@ -44,4 +44,9 @@ class Executor extends ModelActivityExtend implements TranslatableContract
     {
         return $this->belongsTo(Institution::class);
     }
+
+    public function setContractDateAttribute($value)
+    {
+        $this->attributes['contract_date'] = databaseDate($value);
+    }
 }
