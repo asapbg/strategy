@@ -229,11 +229,11 @@
                 </div>
                 <div class="col-md-12 pt-3">
                     @foreach($planData['evaluations'] as $f)
-                        <a class="main-color text-decoration-none preview-file-modal d-block" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-url="{{ route('modal.file_preview_static_page').'?path='.$f['path'] }}">
+                        <a class="main-color text-decoration-none preview-file-modal d-block" role="button" href="javascript:void(0)"
+                           title="{{ __('custom.preview') }}" data-url="{{ route('modal.file_preview_static_page').'?path='.$f['path'] }}"
+                        >
                             {!! $f['icon'] !!} {{ $f['name'] }}
                         </a>
-{{--                        <a class="d-inline-block w-100" href="{{ route('ogp.national_action_plans.old.file').'?file='.$f['path'] }}" target="_blank">{!! $f['icon'] !!} {{ $f['name'] }}</a>--}}
-                        {{--                <a download="{{ asset($f['path']) }}" href="#" target="_blank">{{ $f['name'] }}</a>--}}
                     @endforeach
                 </div>
             </div>
