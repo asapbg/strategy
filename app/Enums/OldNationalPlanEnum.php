@@ -82,12 +82,12 @@ enum OldNationalPlanEnum: int
                     ),
                     'en' => array(
                         [
-                            'path' => 'old_ogp_plan/2/Bulgarian self-assessement Report 1st Action Plan.pdf',
+                            'path' => 'old_ogp_plan/2/Bulgarian-self-assessement-Report-1st-Action-Plan.pdf',
                             'name' => 'Government report',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                         [
-                            'path' => 'old_ogp_plan/2/IRM report -Bulgarian 1 Action Plan.pdf',
+                            'path' => 'old_ogp_plan/2/IRM-report-Bulgarian-1-Action-Plan.pdf',
                             'name' => 'Independent researcher\'s report',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
@@ -757,12 +757,12 @@ enum OldNationalPlanEnum: int
                     ),
                     'en' => array(
                         [
-                            'path' => 'old_ogp_plan/2/Bulgarian self-assesment Report 2nd Action Plan.pdf',
+                            'path' => 'old_ogp_plan/2/Bulgarian-self-assesment-Report-2nd-Action-Plan.pdf',
                             'name' => 'Government report',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                         [
-                            'path' => 'old_ogp_plan/2/IRM Report - Bulgaria 2nd Action Plan.pdf',
+                            'path' => 'old_ogp_plan/2/IRM-Report-Bulgaria-2nd-Action-Plan.pdf',
                             'name' => 'Independent researcher\'s report',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
