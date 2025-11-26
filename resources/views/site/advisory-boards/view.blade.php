@@ -216,7 +216,7 @@
                             <h3 class="mb-2 fs-4">{{ __('custom.secretariat') }}</h3>
 
                             <p>
-                                {!! $item->secretariat->description !!}
+                                {!! $item->secretariat?->description !!}
                             </p>
 
                             @if(!empty($item->secretariat?->siteFiles) && $item->secretariat->siteFiles->count() > 0)
