@@ -5,7 +5,7 @@
     <form class="col-12" id="form" method="POST" action="{{ route('impact_assessment.tools.calc', ['calc' => \App\Enums\CalcTypesEnum::STANDARD_COST->value]) }}">
         @method('POST')
         @csrf
-        @if(Session::has('old') && sizeof(Session::get('old')))
+        @if(Session::has('old') && isset(Session::get('old')['items']))
             @php($old = Session::get('old'))
             @foreach($old['items'] as $k => $name)
                 @php($oldInputs = array(
@@ -21,7 +21,7 @@
         @endif
     </form>
 </div>
-@if(isset($old) && sizeof($old) && isset($old['results']))
+@if(isset($old['results']))
     <div class="row">
         <div class="col-12">
             <span class="fw-bold">{{ __('site.calc.standard.total') }}:</span>
