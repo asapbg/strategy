@@ -39,8 +39,8 @@ class AdminController extends Controller
     }
 
     /**
-     * @param $fields  //example model::TRANSLATABLE_FIELDS;
-     * @param $item   //model;
+     * @param $fields //example model::TRANSLATABLE_FIELDS;
+     * @param $item //model;
      * @param $validated //request validated
      */
     public function storeTranslateOrNew($fields, $item, $validated, $setDefaultIfEmpty = false)
@@ -49,22 +49,24 @@ class AdminController extends Controller
         foreach (config('available_languages') as $locale) {
             $mainLang = $locale['code'] == $defaultLang;
             foreach ($fields as $field) {
-                $fieldName = $field."_".$locale['code'];
-                $fieldNameDefault = $field."_".$defaultLang;
-                if(array_key_exists($fieldName, $validated)) {
+                $fieldName = $field . "_" . $locale['code'];
+                $fieldNameDefault = $field . "_" . $defaultLang;
+                $translation = $item->translateOrNew($locale['code']);
+                if (array_key_exists($fieldName, $validated)) {
                     if (!$validated[$fieldName]) {
                         $validated[$fieldName] = $validated[$fieldNameDefault];
                     }
-                    $item->translateOrNew($locale['code'])->{$field} = $validated[$fieldName];
-                } else if(!$mainLang && array_key_exists($fieldNameDefault, $validated)){
-                    if($setDefaultIfEmpty) {
+                    $translation->{$field} = $validated[$fieldName];
+                } else if (!$mainLang && array_key_exists($fieldNameDefault, $validated)) {
+                    if ($setDefaultIfEmpty) {
                         //by default set default language translation
-                        $item->translateOrNew($locale['code'])->{$field} = $validated[$fieldNameDefault];
-                    } else{
+                        $translation->{$field} = $validated[$fieldNameDefault];
+                    } else {
                         //do not set default language translation
-                        $item->translateOrNew($locale['code'])->{$field} = '';
+                        $translation->{$field} = '';
                     }
                 }
+                $translation->save();
             }
         }
 
@@ -76,11 +78,13 @@ class AdminController extends Controller
         $changes = array();
         foreach (config('available_languages') as $locale) {
             foreach ($fields as $field) {
-                $fieldName = $field."_".$locale['code'];
-                if((is_null($item) || !$item->id)
-                    || (!isset($validated[$fieldName]) && ($item->id && !empty($item->translate($locale['code'])?->{$field})) )
-                    || ($item->id && isset($validated[$fieldName]) && $item->translate($locale['code'])?->{$field} != $validated[$fieldName])){
-                    if(!isset($changes[$locale['code']])){
+                $fieldName = $field . "_" . $locale['code'];
+                if (
+                    (is_null($item) || !$item->id)
+                    || (!isset($validated[$fieldName]) && ($item->id && !empty($item->translate($locale['code'])?->{$field})))
+                    || ($item->id && isset($validated[$fieldName]) && $item->translate($locale['code'])?->{$field} != $validated[$fieldName])
+                ) {
+                    if (!isset($changes[$locale['code']])) {
                         $changes[$locale['code']] = array();
                     }
                     $changes[$locale['code']][$field] = ['old' => $item->id ? $item->translate($locale['code'])?->{$field} : '', 'new' => $validated[$fieldName]];
@@ -95,9 +99,11 @@ class AdminController extends Controller
     {
         $changes = array();
         foreach ($fields as $field) {
-            if((!isset($validated[$field]) && ($item->id && !empty($item->{$field})) )
+            if (
+                (!isset($validated[$field]) && ($item->id && !empty($item->{$field})))
                 || ($item->id && isset($validated[$field]) && $item->{$field} != $validated[$field])
-                || !$item->id){
+                || !$item->id
+            ) {
                 $changes[$field] = ['old' => $item->id ? $item->{$field} : '', 'new' => isset($validated[$field]) ? $validated[$field] : ''];
             }
         }
@@ -105,17 +111,18 @@ class AdminController extends Controller
     }
 
     //TODO Why we use only translation for current locale???
+
     /**
-     * @param $fields  //example $item->getFillable();
-     * @param $item   //model;
+     * @param $fields //example $item->getFillable();
+     * @param $item //model;
      * @param $validated //request validated
      */
     protected function storeTranslateOrNewCurrent($fields, $item, $validated)
     {
         $locale = app()->getLocale();
         foreach ($fields as $field) {
-            $fieldName = $field .'_'. $locale;
-            if(array_key_exists($fieldName, $validated)) {
+            $fieldName = $field . '_' . $locale;
+            if (array_key_exists($fieldName, $validated)) {
                 $item->translateOrNew($locale)->{$field} = $validated[$fieldName];
             }
         }
@@ -134,7 +141,7 @@ class AdminController extends Controller
         $modelFillable = $item->getFillable();
         $validatedFillable = $validated;
         foreach ($validatedFillable as $field => $value) {
-            if( !in_array($field, $modelFillable) ) {
+            if (!in_array($field, $modelFillable)) {
                 unset($validatedFillable[$field]);
             }
         }
@@ -144,12 +151,12 @@ class AdminController extends Controller
     protected function uploadFileTwoLanguages(Request $request, $prisId = 0)
     {
         $validator = Validator::make($request->all(), [
-            'file_bg' => ['required', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_PRIS)],
-            'file_en' => ['nullable', 'file', 'max:'.config('filesystems.max_upload_file_size'), 'mimes:'.implode(',', File::ALLOWED_FILE_PRIS)],
+            'file_bg' => ['required', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', File::ALLOWED_FILE_PRIS)],
+            'file_en' => ['nullable', 'file', 'max:' . config('filesystems.max_upload_file_size'), 'mimes:' . implode(',', File::ALLOWED_FILE_PRIS)],
         ]);
 
         $item = Pris::find((int)$prisId);
-        if( !$item ) {
+        if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
 
@@ -160,14 +167,14 @@ class AdminController extends Controller
      *
      * @param             $item
      * @param             $file
-     * @param int         $codeObject
-     * @param int         $docType
-     * @param string      $description
-     * @param string      $locale
+     * @param int $codeObject
+     * @param int $docType
+     * @param string $description
+     * @param string $locale
      * @param string|null $customName
      * @param string|null $resolutionCouncilMinisters // № Постановление на министерски съвет
-     * @param string|null $stateNewspaper             // № Държавен вестник
-     * @param string|null $effectiveAt                // В сила от (дата)
+     * @param string|null $stateNewspaper // № Държавен вестник
+     * @param string|null $effectiveAt // В сила от (дата)
      *
      * @return File
      */
