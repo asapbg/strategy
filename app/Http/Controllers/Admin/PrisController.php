@@ -189,11 +189,11 @@ class PrisController extends AdminController
             $item->fill($fillable);
 
             $item->save();
-            $original_trans = $item->translation->getOriginal();
+            $original_trans = $item->translation ? $item->translation->getOriginal() : [];
             $this->storeTranslateOrNew(Pris::TRANSLATABLE_FIELDS, $item, $validated);
 
             $dirty = $item->getDirty();
-            $new_trans = $item->translation->toArray() ?? [];
+            $new_trans = $item->translation ? $item->translation->toArray() : [];
             $t_dirty = array_diff_assoc($original_trans, $new_trans);
             unset($dirty['updated_at'], $t_dirty['updated_at']);
             $old_published_at = $item->getOriginal('published_at');

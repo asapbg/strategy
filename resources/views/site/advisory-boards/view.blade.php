@@ -381,10 +381,10 @@
                             <h3 class="mb-2 fs-4">{{ __('custom.advisory_board_moderator_info') }}</h3>
 
                             <p>
-                                {!! $item->moderatorInformation->description !!}
+                                {!! $item->moderatorInformation?->description !!}
                             </p>
 
-                            @if($item->moderatorInformation->filesByLocale->count())
+                            @if($item->moderatorInformation?->filesByLocale?->count())
                                 @foreach($item->moderatorInformation->filesByLocale as $file)
                                     @includeIf('site.partial.file', ['file' => $file, 'no_second_active_status' => true])
                                 @endforeach

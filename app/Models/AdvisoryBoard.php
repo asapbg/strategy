@@ -288,7 +288,7 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
         return Attribute::make(
             get: function () {
                 if ($this->file_id > 0) {
-                    return asset($this->mainImg->path);
+                    return asset($this->mainImg?->path);
                 }
                 return asset(self::DEFAULT_HEADER_IMG);
             }
