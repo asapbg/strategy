@@ -216,16 +216,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     //PRIS
     Route::controller(\App\Http\Controllers\Admin\PrisController::class)->group(function () {
-        Route::get('/pris',                         'index')->name('pris')->middleware('can:viewAny,App\Models\Pris');
-        Route::get('/pris/edit/{item}',             'edit')->name('pris.edit');
-        Route::post('/pris/connect-documents',      'connectDocuments')->name('pris.connect');
+        Route::get('/pris',                             'index')->name('pris')->middleware('can:viewAny,App\Models\Pris');
+        Route::get('/pris/edit/{item}',                 'edit')->name('pris.edit');
+        Route::post('/pris/connect-documents',          'connectDocuments')->name('pris.connect');
         Route::post('/pris/disconnect/{pris_id}/{id}',      'disconnectDocuments')->name('pris.disconnect');
         Route::get('/pris/edit/documents/{pris_id}/{id}',   'editConnectedDocuments')->name('pris.connection.edit');
         Route::post('/pris/update/documents/{pris_id}/{id}','updateConnectedDocuments')->name('pris.connection.update');
-        Route::match(['put', 'post'], '/pris/edit', 'store')->name('pris.store');
-        Route::post('/pris/{item}/delete',          'destroy')->name('pris.delete');
-        Route::get('/pris/tag/ajax-form/{item}',    'ajaxForm')->name('pris.tag.ajax.form');
-        Route::post('/pris/tag/ajax-store/{item}',  'ajaxStore')   ->name('pris.tag.ajax.create');
+        Route::match(['put', 'post'], '/pris/edit',     'store')->name('pris.store');
+        Route::post('/pris/{item}/delete',              'destroy')->name('pris.delete');
+        Route::get('/pris/tag/ajax-form/{item}',        'ajaxForm')->name('pris.tag.ajax.form');
+        Route::post('/pris/tag/ajax-store/{item}',      'ajaxStore')   ->name('pris.tag.ajax.create');
+        Route::get('/pris/publish/{item}',              'publish')->name('pris.publish');
+        Route::get('/pris/unpublish/{item}',            'unPublish')->name('pris.unpublish');
     });
 
     //Dynamic Structures
