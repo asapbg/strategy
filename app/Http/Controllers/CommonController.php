@@ -183,7 +183,7 @@ class CommonController extends Controller
         $can_access_orders = $this->canAccessOrders(request());
         if ($file->code_object == File::CODE_OBJ_PRIS) {
             $pris = Pris::find($file->id_object);
-            if ($pris->legal_act_type_id == LegalActType::TYPE_ORDER && !$can_access_orders) {
+            if ($pris && $pris->legal_act_type_id == LegalActType::TYPE_ORDER && !$can_access_orders) {
                 abort('403');
             }
         }
