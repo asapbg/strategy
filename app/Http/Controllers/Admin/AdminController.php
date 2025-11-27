@@ -46,12 +46,33 @@ class AdminController extends Controller
     public function storeTranslateOrNew($fields, $item, $validated, $setDefaultIfEmpty = false)
     {
         $defaultLang = config('app.default_lang');
+//        foreach (config('available_languages') as $locale) {
+//            $mainLang = $locale['code'] == $defaultLang;
+//            foreach ($fields as $field) {
+//                $fieldName = $field . "_" . $locale['code'];
+//                $fieldNameDefault = $field . "_" . $defaultLang;
+//                if (array_key_exists($fieldName, $validated)) {
+//                    if (!$validated[$fieldName]) {
+//                        $validated[$fieldName] = $validated[$fieldNameDefault];
+//                    }
+//                    $item->translateOrNew($locale['code'])->{$field} = $validated[$fieldName];
+//                } else if (!$mainLang && array_key_exists($fieldNameDefault, $validated)) {
+//                    if ($setDefaultIfEmpty) {
+//                        //by default set default language translation
+//                        $item->translateOrNew($locale['code'])->{$field} = $validated[$fieldNameDefault];
+//                    } else {
+//                        //do not set default language translation
+//                        $item->translateOrNew($locale['code'])->{$field} = '';
+//                    }
+//                }
+//            }
+//        }
         foreach (config('available_languages') as $locale) {
             $mainLang = $locale['code'] == $defaultLang;
+            $translation = $item->translateOrNew($locale['code']);
             foreach ($fields as $field) {
                 $fieldName = $field . "_" . $locale['code'];
                 $fieldNameDefault = $field . "_" . $defaultLang;
-                $translation = $item->translateOrNew($locale['code']);
                 if (array_key_exists($fieldName, $validated)) {
                     if (!$validated[$fieldName]) {
                         $validated[$fieldName] = $validated[$fieldNameDefault];
@@ -66,6 +87,8 @@ class AdminController extends Controller
                         $translation->{$field} = '';
                     }
                 }
+            }
+            if ($translation->id) {
                 $translation->save();
             }
         }
