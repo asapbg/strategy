@@ -93,9 +93,9 @@
                                     </div>
                                 </div>
 
-{{--                                <div class="status mt-2">--}}
-{{--                                    <span>{{ __('custom.status') }}: <span class="{{ $oldPlanStatus->css_class }}">{{ $oldPlanStatus->name }}</span></span>--}}
-{{--                                </div>--}}
+                                <div class="status mt-2">
+                                    <span>{{ __('custom.status') }}: <span class="{{ $oldPlanStatus->css_class }}">{{ $oldPlanStatus->name }}</span></span>
+                                </div>
                                 <div class="meta-consul mt-2">
                                         <span class="text-secondary">
                                         <span class="text-dark">{{ __('custom.deadline') }}: </span> {{ \App\Enums\OldNationalPlanEnum::fromDateByValue($oldPlan['id']) }} - {{ \App\Enums\OldNationalPlanEnum::toDateByValue($oldPlan['id']) }}

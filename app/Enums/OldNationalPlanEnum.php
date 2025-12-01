@@ -31,7 +31,7 @@ enum OldNationalPlanEnum: int
     {
         $dates = [
             self::FIRST->value => '01.06.2012',
-            self::SECOND->value => '01.01.2014',
+            self::SECOND->value => '01.07.2014',
             self::THIRD->value => '01.07.2016',
         ];
         return $dates[$searchVal];
@@ -41,7 +41,7 @@ enum OldNationalPlanEnum: int
     {
         $dates = [
             self::FIRST->value => '31.12.2013',
-            self::SECOND->value => '31.12.2015',
+            self::SECOND->value => '30.06.2016',
             self::THIRD->value => '30.06.2018',
         ];
         return $dates[$searchVal];
@@ -55,14 +55,14 @@ enum OldNationalPlanEnum: int
                     'bg' => array(
                         [
                             'path' => 'old_ogp_plan/1/Plan-BG.pdf',
-                            'name' => 'Оперативен план (БГ)',
+                            'name' => 'Първи национален план за действие по инициативата „Партньорство за открито управление“ 1 юни 2012 - 31 декември 2013',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     ),
                     'en' => array(
                         [
                             'path' => 'old_ogp_plan/1/PLAN-BG-ENGlast_0-1.pdf',
-                            'name' => 'Operational plan (EN)',
+                            'name' => 'First Action Plan within the Framework of the Open Government Partnership Initiative 1 june 2012 - 31 december 2013',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     )
@@ -695,7 +695,7 @@ enum OldNationalPlanEnum: int
                     'bg' => array(
                         [
                             'path' => 'old_ogp_plan/2/Втори-план-ПОУ-финал-одобрен-МС.pdf',
-                            'name' => 'Втори план за действие на Република България по инициативата “Партньорство за открито управление” (БГ)',
+                            'name' => 'Втори национален план за действие по инициативата „Партньорство за открито управление“ 1 юли 2014 - 30 юни 2016',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
 //                        [
@@ -732,7 +732,7 @@ enum OldNationalPlanEnum: int
                     'en' => array(
                         [
                             'path' => '/old_ogp_plan/1/OGP-second-plan-Bulgaria-final-Revised-July-8-2015-1.pdf',
-                            'name' => 'Second Action Plan of the Republic of Bulgaria under the Open Government Partnership Initiative',
+                            'name' => 'Second National Action Plan within the Framework of the Open Government Partnership Initiative 1 july 2014 - 30 june 2016',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                         [
@@ -746,12 +746,12 @@ enum OldNationalPlanEnum: int
                     'bg' => array(
                         [
                             'path' => 'old_ogp_plan/2/Interim_Self-Assessment_Report_BG.pdf',
-                            'name' => 'Government report',
+                            'name' => 'Отчет на правителството',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                         [
                             'path' => 'old_ogp_plan/2/Bulgaria_EoT_2014-2016_BUL.pdf',
-                            'name' => 'Independent researcher\'s report',
+                            'name' => 'Отчет на независимия изследовател',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     ),
@@ -1894,7 +1894,7 @@ enum OldNationalPlanEnum: int
                     'en' => array(
                         [
                             'path' => '/old_ogp_plan/3/NAP3-Bulgaria_EN_0.pdf',
-                            'name' => 'Third National Action Plan within the framework of the Open Government Partnership initiative 1 July 2016 – 30 June 2018',
+                            'name' => 'Third National Action Plan within the Framework of the Open Government Partnership Initiative 1 July 2016 – 30 June 2018',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     )
