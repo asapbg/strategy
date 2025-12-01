@@ -41,6 +41,7 @@ use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Admin\StrategicDocumentsController as AdminStrategicDocumentsController;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -111,7 +112,9 @@ class StrategicDocumentsController extends Controller
         $now = Carbon::now()->format('Y-m-d 00:00:00');
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
-        $categories = isset($rf['level']) ? $rf['level'] : [InstitutionCategoryLevelEnum::CENTRAL->value, InstitutionCategoryLevelEnum::AREA->value, InstitutionCategoryLevelEnum::MUNICIPAL->value];
+        $categories = isset($rf['level'])
+            ? $rf['level']
+            : [InstitutionCategoryLevelEnum::CENTRAL->value, InstitutionCategoryLevelEnum::AREA->value, InstitutionCategoryLevelEnum::MUNICIPAL->value];
         $items = [];
         $filter = $this->filtersTree($request, $rf);
         foreach ($categories as $cat) {
@@ -119,7 +122,7 @@ class StrategicDocumentsController extends Controller
                 $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.' . \App\Enums\InstitutionCategoryLevelEnum::keyByValue($cat))];
             }
 
-            $items[$cat]['items'] = \DB::select('
+            $items[$cat]['items'] = DB::select('
                 select
                     strategic_document.id as sd_id
                     ,max(strategic_document_translations.title) as sd_title
@@ -207,7 +210,6 @@ class StrategicDocumentsController extends Controller
 //                ->GroupBy('strategic_document.id', 'field_of_action_translations.name')
 //                ->get();
         }
-
         if ($request->ajax()) {
             return view('site.strategic_documents.list_tree', compact('items', 'editRouteName', 'deleteRouteName', 'filter'));
         }
@@ -531,7 +533,7 @@ class StrategicDocumentsController extends Controller
                     ['name' => '', 'value' => ''],
                     ['name' => trans_choice('custom.effective', 1), 'value' => 'active'],
                     ['name' => trans_choice('custom.expired', 1), 'value' => 'expired'],
-                    ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
+//                    ['name' => trans_choice('custom.in_process_of_consultation', 1), 'value' => 'public_consultation']
                 ),
                 'value' => request()->input('status'),
                 'default' => empty($currentRequest) ? 'active' : '',
