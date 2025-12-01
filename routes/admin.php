@@ -62,7 +62,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     Route::controller(\App\Http\Controllers\CommonController::class)->group(function () {
         Route::get('/download/{file}',                                              'downloadFile')->name('download.file');
         Route::get('/file-preview-modal/{id}',                                      'previewModalFile')->name('preview.file.modal');
-        Route::match(['post', 'put'], '/file/delete/{file}/{disk?}',                'deleteFile')->name('delete.file');
+        Route::match(['post', 'get'], '/file/delete/{file}/{disk?}',                'deleteFile')->name('delete.file');
         Route::post('/upload-file/{object_id}/{object_type}',                       'uploadFile')->name('upload.file');
         Route::post('/upload-file-lp-op/{object_id}/{object_type}/{row_num}/{row_month}','uploadFileLpOp')->name('upload.file.lp_op');
         Route::post('/upload-file-languages/{object_id}/{object_type}/{doc_type?}', 'uploadFileLanguages')->name('upload.file.languages');
@@ -142,12 +142,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 
     //Moderators Strategic documents
     Route::controller(\App\Http\Controllers\Admin\StrategicDocumentsModerators::class)->prefix('/strategic-documents/users')->group(function () {
-        Route::get('', 'index')->name('sd.users')->middleware('can:viewSdAny,App\Models\User');
-        Route::get('/create', 'create')->name('sd.users.create');
-        Route::post('/store', 'store')->name('sd.users.store');
-        Route::get('/{user}/edit', 'edit')->name('sd.users.edit');
-        Route::post('/{user}/update', 'update')->name('sd.users.update');
-        Route::get('/{user}/delete', 'destroy')->name('sd.users.delete');
+        Route::get('',                  'index')->name('sd.users')->middleware('can:viewSdAny,App\Models\User');
+        Route::get('/create',           'create')->name('sd.users.create');
+        Route::post('/store',           'store')->name('sd.users.store');
+        Route::get('/{user}/edit',      'edit')->name('sd.users.edit');
+        Route::post('/{user}/update',   'update')->name('sd.users.update');
+        Route::get('/{user}/delete',    'destroy')->name('sd.users.delete');
     });
 
     // Strategic Documents
@@ -676,7 +676,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{user}/update/', 'ajaxUpdate')->name('advisory-boards.moderator.update');
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)->prefix('/advisory-boards/{item}/meetings/')->group(function () {
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingsController::class)
+        ->prefix('/advisory-boards/{item}/meetings/')->group(function () {
         Route::post('/ajax-store',          'ajaxStore')        ->name('advisory-boards.meetings.store');
         Route::get('{meeting}/edit',        'ajaxEdit')         ->name('advisory-boards.meetings.edit');
         Route::post('/ajax-update',         'ajaxUpdate')       ->name('advisory-boards.meetings.update');
@@ -685,9 +686,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::post('{meeting}/restore',    'restore')          ->name('advisory-boards.meetings.restore')->withTrashed();
     });
 
-    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingDecisionController::class)->prefix('/advisory-boards/{item}/meeting/decisions')->group(function() {
-        Route::get('{decision}/edit',     'ajaxEdit')         ->name('advisory-boards.decisions.edit');
-        Route::post('/ajax-store', 'ajaxStore')->name('advisory-boards.decisions.store');
+    Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardMeetingDecisionController::class)
+        ->prefix('/advisory-boards/{item}/meeting/decisions')->group(function() {
+        Route::get('{decision}/edit',   'ajaxEdit')->name('advisory-boards.decisions.edit');
+        Route::post('/ajax-store',      'ajaxStore')->name('advisory-boards.decisions.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdvisoryBoard\AdvisoryBoardCustomController::class)->prefix('/advisory-boards/{item}/sections/')->group(function () {

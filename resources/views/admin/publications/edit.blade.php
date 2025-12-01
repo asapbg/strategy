@@ -221,26 +221,35 @@
                                                 <th>Име</th>
                                                 <th></th>
                                             </tr>
-                                            @foreach($item->files as $f)
+                                            @foreach($item->files as $file)
                                                 <tr>
-                                                    @if(in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))
-                                                        <td>{!! $f->preview !!}</td>
-                                                        <td>{!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
-                                                            - {{ __('custom.'.$f->locale) }}
-                                                            | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }} @if($f->id == $item->file_id) <i><strong>({{ __('validation.attributes.main_img') }})</strong></i> @endif</td>
+                                                    @if(in_array($file->content_type, App\Models\File::CONTENT_TYPE_IMAGES))
+                                                        <td>{!! $file->preview !!}</td>
                                                         <td>
-                                                            <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"
-                                                                    data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
+                                                            {!! fileIcon($file->content_type) !!} {{ $file->{'description_'.$file->locale} }}
+                                                            - {{ __('custom.'.$file->locale) }}
+                                                            | {{ displayDate($file->created_at) }} | {{ $file->user ? $file->user->fullName() : '' }}
+                                                            @if($file->id == $item->file_id) <i><strong>({{ __('validation.attributes.main_img') }})</strong></i> @endif
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $file->id }}"
+                                                                    data-url="{{ route('admin.preview.file.modal', ['id' => $file->id]) }}"
                                                             >
                                                                 <i class="fas fa-eye"></i>
                                                             </button>
-                                                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
-                                                                <i class="fas fa-download me-1" role="button"
-                                                                   data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                            <a class="btn btn-sm btn-secondary" type="button" target="_blank"
+                                                               href="{{ route('admin.download.file', ['file' => $file->id]) }}"
+                                                            >
+                                                                <i class="fas fa-download" role="button" data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
                                                             </a>
-                                                            <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
-                                                                <i class="fas fa-trash me-1" role="button"
-                                                                   data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                            <a class="btn btn-sm btn-danger js-toggle-delete-resource-modal" type="button"
+                                                               data-target="#modal-delete-resource"
+                                                               data-resource-id="{{ $file->id }}"
+                                                               data-resource-title="Файла"
+                                                               data-resource-name="Файла"
+                                                               data-resource-delete-url="{{ route('admin.delete.file', ['file' => $file->id]) }}"
+                                                            >
+                                                                <i class="fas fa-trash" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                                                             </a>
                                                         </td>
                                                     @else
@@ -248,23 +257,28 @@
                                                             <i class="fas fa-minus text-danger"></i>
                                                         </td>
                                                         <td>
-                                                            {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
-                                                            - {{ __('custom.'.$f->locale) }}
-                                                            | {{ displayDate($f->created_at) }} | {{ $f->user ? $f->user->fullName() : '' }}
+                                                            {!! fileIcon($file->content_type) !!} {{ $file->{'description_'.$file->locale} }}
+                                                            - {{ __('custom.'.$file->locale) }}
+                                                            | {{ displayDate($file->created_at) }} | {{ $file->user ? $file->user->fullName() : '' }}
                                                         </td>
                                                         <td>
-                                                            <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $f->id }}"
-                                                                    data-url="{{ route('admin.preview.file.modal', ['id' => $f->id]) }}"
+                                                            <button type="button" class="btn btn-sm btn-primary preview-file-modal" data-file="{{ $file->id }}"
+                                                                    data-url="{{ route('admin.preview.file.modal', ['id' => $file->id]) }}"
                                                             >
                                                                 <i class="fas fa-eye"></i>
                                                             </button>
-                                                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
-                                                                <i class="fas fa-download me-1" role="button"
+                                                            <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $file->id]) }}">
+                                                                <i class="fas fa-download" role="button"
                                                                    data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
                                                             </a>
-                                                            <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id]) }}">
-                                                                <i class="fas fa-trash me-1" role="button"
-                                                                   data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                            <a class="btn btn-sm btn-danger js-toggle-delete-resource-modal" type="button"
+                                                               data-target="#modal-delete-resource"
+                                                               data-resource-id="{{ $file->id }}"
+                                                               data-resource-title="Файла"
+                                                               data-resource-name="Файла"
+                                                               data-resource-delete-url="{{ route('admin.delete.file', ['file' => $file->id]) }}"
+                                                            >
+                                                                <i class="fas fa-trash" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                                                             </a>
                                                         </td>
                                                     @endif
@@ -282,12 +296,14 @@
                                     </div>
                                 </div>
                             @endif
-                    </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </section>
+
+    @includeIf('modals.delete-resource', ['resource' => ""])
 
 {{--    @push('scripts')--}}
 {{--        <script type="application/javascript">--}}
