@@ -33,7 +33,8 @@ class AuthorityAcceptingStrategic extends ModelActivityExtend implements Transla
     /**
      * Get the model name
      */
-    public function getModelName() {
+    public function getModelName()
+    {
         return $this->name;
     }
 
@@ -51,15 +52,17 @@ class AuthorityAcceptingStrategic extends ModelActivityExtend implements Transla
     {
         $q = DB::table('authority_accepting_strategic')
             ->select(['authority_accepting_strategic.id', 'authority_accepting_strategic_translations.name', 'authority_accepting_strategic.nomenclature_level_id as level'])
-            ->join('authority_accepting_strategic_translations', function ($j){
+            ->join('authority_accepting_strategic_translations', function ($j) {
                 $j->on('authority_accepting_strategic_translations.authority_accepting_strategic_id', '=', 'authority_accepting_strategic.id')
                     ->where('authority_accepting_strategic_translations.locale', '=', app()->getLocale());
-            });
+            })
+            ->where('authority_accepting_strategic.active', true);
 
 
         return $q->when($onlyWithLevel == true, function ($query) {
-            return $query->whereNotNull('authority_accepting_strategic.nomenclature_level_id');
-        })->orderBy('authority_accepting_strategic_translations.name', 'asc')
+                return $query->whereNotNull('authority_accepting_strategic.nomenclature_level_id');
+            })
+            ->orderBy('authority_accepting_strategic_translations.name', 'asc')
             ->get();
     }
 }
