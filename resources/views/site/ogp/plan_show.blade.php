@@ -62,8 +62,25 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-12 pt-3">
-{{--                <h3 class="mb-2 fs-5">{{ __('ogp.plan_sublevel') }}</h3>--}}
                 {!! $plan->content !!}
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                @if($plan->otherFilesByLang->count())
+                    <ul class="p-0">
+                        @foreach($plan->otherFilesByLang as $doc)
+                            <li class="list-group-item">
+                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)"
+                                   title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}"
+                                >
+                                    {!! fileIcon($doc->content_type) !!} {{ $doc->description }} | {{ displayDate($doc->created_at) }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
             </div>
         </div>
 
@@ -71,30 +88,29 @@
             <div class="col-md-12">
                 <h4 class="custom-left-border mb-3">{{ trans_choice('ogp.arrangements', 2) }}</h4>
                 <div class="accordion" id="accordionExample">
-                    @foreach($plan->areas as $row)
+                    @foreach($plan->areas as $area)
                         <div class="accordion-item mb-2">
                             <h2 class="accordion-header" id="heading_{{ $loop->iteration }}">
-{{--                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"--}}
                                 <button class="accordion-button text-dark fs-18 fw-600" type="button"
                                         data-toggle="collapse" data-target="#collapse-{{ $loop->iteration }}"
                                         aria-controls="collapse-{{ $loop->iteration }}">
-                                    {{ __('ogp.subject_area') }} - {{ $row->area->name }}
+                                    {{ __('ogp.subject_area') }} - {{ $area->area->name }}
                                 </button>
                             </h2>
-{{--                            @class(["accordion-collapse", "collapse", "show" => $loop->first])--}}
                             <div id="collapse-{{ $loop->iteration }}" @class(["accordion-collapse", "collapse"])
-                                 aria-labelledby="heading_{{ $loop->iteration }}" data-parent="#accordionExample" style="">
-                                @foreach($row->arrangements as $a)
+                                 aria-labelledby="heading_{{ $loop->iteration }}" data-parent="#accordionExample" style=""
+                            >
+                                @foreach($area->arrangements as $a)
                                     <div class="accordion-body">
                                         <div class="custom-card p-3 mb-2 pb-0">
                                             <div class="row ">
                                                 <div class="document-info-body">
     {{--                                                <div class="row mb-3">--}}
     {{--                                                    <div class="col-m-12">--}}
-    {{--                                                        <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $row->ogp_plan_id, 'planArea' => $row->ogp_area_id]) }}" class="float-end text-decoration-none">{{ __('custom.view') }} <i class="fas fa-arrow-right read-more"></i></a>--}}
+    {{--                                                        <a href="{{ route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->ogp_area_id]) }}" class="float-end text-decoration-none">{{ __('custom.view') }} <i class="fas fa-arrow-right read-more"></i></a>--}}
     {{--                                                    </div>--}}
     {{--                                                </div>--}}
-    {{--                                                @foreach($row->arrangements as $a)--}}
+    {{--                                                @foreach($area->arrangements as $a)--}}
                                                     <hr class="custom-hr mb-2">
                                                     <h3 class="fs-18">{{ __('ogp.ogp_plan_arrangement_description') }}</h3>
                                                     <hr class="custom-hr mb-2">
@@ -206,25 +222,25 @@
                 <div class="col-md-12">
                     <h4 class="custom-left-border mb-3">{{ __('ogp.national_plan_evaluation_section') }}</h4>
                     <div class="accordion" id="accordionExampleEvaluation">
-                        @foreach($plan->areas as $row)
+                        @foreach($plan->areas as $area)
                             @php($hasEvaluation = false)
-                            @php($uniqueEvaluation = $row->arrangements->unique('evaluation')->pluck('evaluation')->toArray())
-                            @php($uniqueEvaluationStatus = $row->arrangements->unique('evaluation_status')->pluck('evaluation_status')->toArray())
+                            @php($uniqueEvaluation = $area->arrangements->unique('evaluation')->pluck('evaluation')->toArray())
+                            @php($uniqueEvaluationStatus = $area->arrangements->unique('evaluation_status')->pluck('evaluation_status')->toArray())
                                 <div class="accordion-item mb-2">
                                     <h2 class="accordion-header" id="heading_evaluation_{{ $loop->iteration }}">
         {{--                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"--}}
                                         <button class="accordion-button text-dark fs-18 fw-600" type="button"
                                                 data-toggle="collapse" data-target="#collapse-evaluation-{{ $loop->iteration }}"
                                                 aria-controls="collapse-{{ $loop->iteration }}">
-                                            {{ __('ogp.subject_area_no', ['number' => $loop->iteration]) }} - {{ $row->area->name }}
+                                            {{ __('ogp.subject_area_no', ['number' => $loop->iteration]) }} - {{ $area->area->name }}
                                         </button>
                                     </h2>
         {{--                            @class(["accordion-collapse", "collapse", "show" => $loop->first])--}}
                                     <div id="collapse-evaluation-{{ $loop->iteration }}" @class(["accordion-collapse", "collapse"])
-                                    aria-labelledby="heading_evaluation_{{ $loop->iteration }}" data-parent="#accordionExampleEvaluation" style="">
-                                        @if($row->arrangements->count() && ((sizeof($uniqueEvaluation) > 1 || !is_null($uniqueEvaluation[0])) || (sizeof($uniqueEvaluationStatus) > 1 || !is_null($uniqueEvaluationStatus[0]))))
+                                        aria-labelledby="heading_evaluation_{{ $loop->iteration }}" data-parent="#accordionExampleEvaluation" style="">
+                                        @if($area->arrangements->count() && ((sizeof($uniqueEvaluation) > 1 || !is_null($uniqueEvaluation[0])) || (sizeof($uniqueEvaluationStatus) > 1 || !is_null($uniqueEvaluationStatus[0]))))
                                             @php($hasEvaluation = true)
-                                            @foreach($row->arrangements as $a)
+                                            @foreach($area->arrangements as $a)
                                                 <div class="accordion-body">
                                                     <div class="custom-card p-3 mb-2 pb-0">
                                                         <div class="row ">
@@ -268,10 +284,12 @@
                     @if($plan->reportEvaluationByLang->count())
                         <div class="col-12 mb-2">
                             <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ trans_choice('custom.documents', 2) }}</p>
-                            <ul class="list-group list-group-flush">
+                            <ul class="list-group list-group-flush p-0">
                                 @foreach($plan->reportEvaluationByLang as $doc)
-                                    <li class="list-group-item">
-                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}">
+                                    <li class="list-group-item px-0">
+                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)"
+                                           title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}"
+                                        >
                                             {!! fileIcon($doc->content_type) !!} {{ $doc->description }} | {{ displayDate($doc->created_at) }}
                                         </a>
                                     </li>
@@ -338,12 +356,10 @@
             <div class="row mb-4">
                 <div class="col-md-12">
                     <h4 class="custom-left-border mb-3">{{ __('custom.develop_plan_information') }}</h4>
-{{--                    <h3 class="mb-2 fs-5">{{ __('custom.develop_plan_information') }}</h3>--}}
                     <a href="{{ route('ogp.national_action_plans.develop_plan', ['id' => $plan->id]) }}" class="main-color text-decoration-none fs-18" target="_blank">
-                            <span class="obj-icon-info me-2">
-                                <i class="fas fa-arrow-right-from-bracket me-2 main-color"></i>
-                                {{ $plan->developPlan->name }}
-                            </span>
+                        <span class="obj-icon-info me-2">
+                            <i class="fas fa-arrow-right-from-bracket me-2 main-color"></i> {{ $plan->developPlan->name }}
+                        </span>
                     </a>
                 </div>
             </div>

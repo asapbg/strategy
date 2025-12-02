@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DocTypesEnum;
 use App\Enums\PageModulesEnum;
 use App\Enums\PublicationTypesEnum;
 use App\Http\Requests\LanguageFileUploadRequest;
@@ -403,7 +404,8 @@ class Controller extends BaseController
                     $route = url()->previous().'#ct-files';
                     break;
                 case File::CODE_OBJ_OGP:
-                    $route = route('admin.ogp.plan.edit', ['id' => $objectId]).'#report';
+                    $tab = $docType == DocTypesEnum::OGP_OTHER ? "#ct-files" : "#report";
+                    $route = route('admin.ogp.plan.edit', ['id' => $objectId]).$tab;
                     break;
                 default:
                     $route = '';

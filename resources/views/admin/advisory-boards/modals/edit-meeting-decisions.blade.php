@@ -37,7 +37,8 @@
                                     {{ __('validation.attributes.agenda') }}
                                 </label>
 
-                                <input type="text" class="form-control" id="agenda" name="agenda"/>
+                                <textarea class="form-control agenda" id="agenda" name="agenda" maxlength="1000"></textarea>
+                                <div>Символи: <span class="charCount">0 / 1000</span></div>
                             </div>
 
                             <div class="ajax-error text-danger mt-1 error_agenda"></div>
@@ -74,8 +75,7 @@
 
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('custom.cancel') }}</button>
-                <button type="button" class="btn btn-success"
-                        onclick="submitAjax(this, '{{ route('admin.advisory-boards.decisions.store', ['item' => $item]) }}')">
+                <button type="button" class="btn btn-success" onclick="submitAjax(this, '{{ route('admin.advisory-boards.decisions.store', ['item' => $item]) }}')">
                     <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
                     <span class="text">{{ __('custom.update') }}</span>
                 </button>

@@ -210,7 +210,23 @@ class OgpPlan extends ModelActivityExtend implements TranslatableContract, Feeda
         return $this->hasMany(File::class, 'id_object', 'id')
             ->where('code_object', '=', File::CODE_OBJ_OGP)
             ->where('doc_type', '=', DocTypesEnum::OGP_REPORT_EVALUATION->value)
-            //->where('locale', '=', app()->getLocale())
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function otherFiles(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_OGP)
+            ->where('doc_type', '=', DocTypesEnum::OGP_OTHER->value)
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function otherFilesByLang(): HasMany
+    {
+        return $this->hasMany(File::class, 'id_object', 'id')
+            ->where('code_object', '=', File::CODE_OBJ_OGP)
+            ->where('doc_type', '=', DocTypesEnum::OGP_OTHER->value)
+            ->where('locale', '=', app()->getLocale())
             ->orderBy('created_at', 'desc');
     }
 

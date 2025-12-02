@@ -11,7 +11,7 @@
                     @csrf
                     <input type="hidden" name="id" value="{{ $user->id }}">
                     <input type="hidden" name="user_type" value="{{ \App\Models\User::USER_TYPE_INTERNAL }}">
-                    <input type="hidden" name="roles[]" value="{{ $user->roles()->first()->id }}">
+                    <input type="hidden" name="roles[]" value="{{ $user->roles()->first()?->id }}">
 {{--                    <div class="form-group">--}}
 {{--                        <div class="col-12 pt-2">--}}
 {{--                            <label class="control-label" for="username">--}}

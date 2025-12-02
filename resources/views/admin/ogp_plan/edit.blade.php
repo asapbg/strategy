@@ -13,7 +13,14 @@
                     @if($evaluationEdit)
                         <li class="nav-item">
                             <a class="nav-link" id="report-tab" data-toggle="pill" href="#report" role="tab" aria-controls="report" aria-selected="false">
-                                {{ __('custom.report_evaluation') }}
+                                {{ __('ogp.self_evaluation_and_report') }}
+                            </a>
+                        </li>
+                    @endif
+                    @if($item->id)
+                        <li class="nav-item">
+                            <a class="nav-link" id="ct-files-tab" data-toggle="pill" href="#ct-files" role="tab" aria-controls="ct-files" aria-selected="false">
+                                {{ trans_choice('custom.files',2) }}
                             </a>
                         </li>
                     @endif
@@ -31,7 +38,66 @@
                     <div class="tab-pane fade active show" id="ct-general" role="tabpanel" aria-labelledby="ct-general-tab">
                         @include('admin.ogp_plan.tab.main_info', ['disabled' => !$mainInfoEdit])
                     </div>
-                    @if($evaluationEdit)
+                    @if($item->id)
+                        <div class="tab-pane fade" id="ct-files" role="tabpanel" aria-labelledby="ct-files-tab">
+                            <form class="row" action="{{ route('admin.upload.file.languages', ['object_id' => $item->id, 'object_type' => \App\Models\File::CODE_OBJ_OGP, 'doc_type' => \App\Enums\DocTypesEnum::OGP_OTHER]) }}"
+                                  method="post" name="form" id="form" enctype="multipart/form-data"
+                            >
+                                @csrf
+                                <input type="hidden" name="formats" value="ALLOWED_FILE_PAGE">
+                                @foreach(config('available_languages') as $lang)
+                                    <div class="col-md-6 mb-3">
+                                        <label for="description_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.display_name_'.$lang['code']) }}<span class="required">*</span> </label>
+                                        <input value="{{ old('description_'.$lang['code'], '') }}" class="form-control form-control-sm @error('description_'.$lang['code']) is-invalid @enderror" id="description_{{ $lang['code'] }}" type="text" name="description_{{ $lang['code'] }}">
+                                        @error('description_'.$lang['code'])
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                @endforeach
+                                @foreach(config('available_languages') as $lang)
+                                    <div class="col-md-6 mb-3">
+                                        <label for="file_{{ $lang['code'] }}" class="form-label">{{ __('validation.attributes.file_'.$lang['code']) }}<span class="required">*</span> </label>
+                                        <input class="form-control form-control-sm @error('file_'.$lang['code']) is-invalid @enderror" id="file_{{ $lang['code'] }}" type="file" name="file_{{ $lang['code'] }}">
+                                        @error('file_'.$lang['code'])
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                @endforeach
+                                <div class="col-md-4">
+                                    <br>
+                                    <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                                </div>
+                            </form>
+                            @if($item->otherFiles)
+                                <table class="table table-sm table-hover table-bordered mt-5">
+                                    <tbody>
+                                    <tr>
+                                        <th>{{ __('custom.name') }}</th>
+                                        <th></th>
+                                    </tr>
+                                    @foreach(config('available_languages') as $lang)
+                                        @php($code = $lang['code'])
+                                        @foreach($item->otherFiles as $f)
+                                            @if($code == $f->locale)
+                                                <tr>
+                                                    <td>{{ $f->{'description_'.$code} }} ({{ strtoupper($code) }})</td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-secondary" type="button" target="_blank" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
+                                                            <i class="fas fa-download me-1" role="button"
+                                                               data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
+                                                        </a>
+                                                        <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id, 'disk' => 'public_uploads']) }}">
+                                                            <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
+                        </div>
                         <div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
                             <div class="row mb-5">
                                 <h4 class="custom-left-border">Основна информация:</h4>
@@ -114,8 +180,7 @@
                                                                    data-toggle="tooltip" title="{{ __('custom.download') }}"></i>
                                                             </a>
                                                             <a class="btn btn-sm btn-danger" type="button" href="{{ route('admin.delete.file', ['file' => $f->id, 'disk' => 'public_uploads']) }}">
-                                                                <i class="fas fa-trash me-1" role="button"
-                                                                   data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
+                                                                <i class="fas fa-trash me-1" role="button" data-toggle="tooltip" title="{{ __('custom.delete') }}"></i>
                                                             </a>
                                                         </td>
                                                     </tr>

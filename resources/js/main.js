@@ -722,6 +722,12 @@ function fieldRequired(lField, isRequired) {
     return true;
 }
 
+function updateCharCount(input) {
+    const max = $(input).attr('maxlength');
+    const len = $(input).val().length;
+    $(input).parent().find('.charCount').text(len + ' / ' + max);
+}
+
 // ===========================
 // START Custom File validation
 //==========================
@@ -1258,6 +1264,10 @@ $(document).ready(function (e) {
             $(this).parent().parent().find('.full-length').removeClass('d-none');
         });
     }
+
+    $(document).on('input', '.agenda', function () {
+        updateCharCount($(this));
+    });
 
     if ($('.add_sd_document').length) {
         $('.add_sd_document').each(function (index, el) {

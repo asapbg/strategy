@@ -9,6 +9,7 @@ use App\Models\OgpPlanArea;
 use App\Models\OgpStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -36,38 +37,42 @@ class NationalActionPlans extends Controller
         $this->composeBreadcrumbs();
         $oldPlanStatus = OgpStatus::Final()->first();
         $nationalOldPlans = [
-            ['id' => OldNationalPlanEnum::THIRD->value,'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::THIRD->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::THIRD->value)],
-            ['id' => OldNationalPlanEnum::SECOND->value,'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::SECOND->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::SECOND->value)],
+            ['id' => OldNationalPlanEnum::THIRD->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::THIRD->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::THIRD->value)],
+            ['id' => OldNationalPlanEnum::SECOND->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::SECOND->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::SECOND->value)],
             ['id' => OldNationalPlanEnum::FIRST->value, 'url' => route('ogp.national_action_plans.show.old', OldNationalPlanEnum::FIRST->value), 'label' => OldNationalPlanEnum::nameByValue(OldNationalPlanEnum::FIRST->value)],
         ];
 
         $hasSubscribeEmail = $this->hasSubscription(null, OgpPlan::class, $request->all());
         $hasSubscribeRss = false;
-        $this->setSeo(__('site.seo_title'),  trans_choice('custom.national_action_plans', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.national_action_plans', 2), 'img' => OgpPlan::DEFAULT_IMG));
+        $this->setSeo(__('site.seo_title'), trans_choice('custom.national_action_plans', 2), '', array('title' => __('site.seo_title'), 'description' => trans_choice('custom.national_action_plans', 2), 'img' => OgpPlan::DEFAULT_IMG));
 
         return $this->view('site.ogp.plans', compact('pageTitle', 'items', 'route_view_name', 'oldPlanStatus', 'nationalOldPlans', 'rssUrl', 'hasSubscribeEmail', 'hasSubscribeRss', 'requestFilter'));
     }
 
     /**
      * @param Request $request
-     * @param OgpPlan $plan
+     * @param $id
+     * @return RedirectResponse|View
      */
     public function show(Request $request, $id)
     {
-        $plan = OgpPlan::Visible()->find($id);
-        if(!$plan){
+        $plan = OgpPlan::Visible()
+            ->with(['reportEvaluationByLang','otherFilesByLang','areas.arrangements.actions'])
+            ->find($id);
+        if (!$plan) {
             return back()->with('warning', __('messages.record_not_found'));
         }
         $pageTitle = $plan->name;
         $this->composeBreadcrumbs($plan);
         $this->setSeo($plan->name, '', '', array('title' => $plan->name, 'img' => OgpPlan::DEFAULT_IMG));
-        $this->setSeo($plan->name,  $plan->ogDescription, '', array('title' => $plan->name, 'img' => OgpPlan::DEFAULT_IMG));
+        $this->setSeo($plan->name, $plan->ogDescription, '', array('title' => $plan->name, 'img' => OgpPlan::DEFAULT_IMG));
 
         return $this->view('site.ogp.plan_show', compact('pageTitle', 'plan'));
     }
 
-    public function showOld(Request $request, $id){
-        if(!in_array($id, OldNationalPlanEnum::values())){
+    public function showOld(Request $request, $id)
+    {
+        if (!in_array($id, OldNationalPlanEnum::values())) {
             return back()->with('warning', __('messages.record_not_found'));
         }
         $pageTitle = OldNationalPlanEnum::nameByValue($id);
@@ -79,18 +84,18 @@ class NationalActionPlans extends Controller
         $planData = OldNationalPlanEnum::planData($id, app()->getLocale());
 
         $this->setSeo(
-            OldNationalPlanEnum::nameByValue($id),  $planData['ogDescription'],
+            OldNationalPlanEnum::nameByValue($id), $planData['ogDescription'],
             '',
             array('title' => OldNationalPlanEnum::nameByValue($id), 'description' => $planData['ogDescription'], 'img' => OgpPlan::DEFAULT_IMG)
         );
 
-        return $this->view('site.ogp.old_plan_'.app()->getLocale().'.'.$id, compact('pageTitle', 'status', 'planName', 'planId', 'planData'));
+        return $this->view('site.ogp.old_plan_' . app()->getLocale() . '.' . $id, compact('pageTitle', 'status', 'planName', 'planId', 'planData'));
     }
 
     public function export(Request $request, $id)
     {
         $plan = OgpPlan::Visible()->findOrFail($id);
-        if(!$plan){
+        if (!$plan) {
             return back()->with('warning', __('messages.record_not_found'));
         }
 
@@ -99,15 +104,16 @@ class NationalActionPlans extends Controller
             'content' => $plan->content,
             'rows' => $plan->areas
         ];
-        $fileName = 'national_plan_'.date('d_m_Y_H_i_s').'.pdf';
+        $fileName = 'national_plan_' . date('d_m_Y_H_i_s') . '.pdf';
 
         $pdf = PDF::loadView('exports.ogp_national_plan', ['data' => $exportData, 'isPdf' => true]);
         return $pdf->download($fileName);
     }
 
-    public function developPlan(Request $request, $id){
+    public function developPlan(Request $request, $id)
+    {
         $plan = OgpPlan::National()->find($id);
-        if(!$plan){
+        if (!$plan) {
             return back()->with('warning', __('messages.record_not_found'));
         }
 
@@ -120,8 +126,8 @@ class NationalActionPlans extends Controller
         ));
 
         $schedules = [];
-        if($item && $item->schedules->count()){
-            foreach ($item->schedules()->orderBy('start_date','desc')->get() as $event){
+        if ($item && $item->schedules->count()) {
+            foreach ($item->schedules()->orderBy('start_date', 'desc')->get() as $event) {
                 $schedules[] = array(
                     "id" => $event->id,
                     "title" => $event->name,
@@ -137,7 +143,7 @@ class NationalActionPlans extends Controller
         }
 
         $nationalPlanSection = true;
-        $this->setSeo(__('custom.dev_new_plan_title'),  $item->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
+        $this->setSeo(__('custom.dev_new_plan_title'), $item->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
 
         return $this->view('site.ogp.develop_new_action_plan.plan_show',
             compact('item', 'pageTitle', 'schedules', 'nationalPlanSection'));
@@ -145,17 +151,17 @@ class NationalActionPlans extends Controller
 
     public function areaDevelopPlan(Request $request, $id, OgpPlanArea $planArea)
     {
-        $item = OgpPlan::whereHas('developPlan', function ($q) use($planArea){
-            $q->whereHas('areas', function ($q) use($planArea){
+        $item = OgpPlan::whereHas('developPlan', function ($q) use ($planArea) {
+            $q->whereHas('areas', function ($q) use ($planArea) {
                 $q->where('id', '=', $planArea->id);
             });
         })->find((int)$id);
 
-        if(!$item || !$item->developPlan) {
+        if (!$item || !$item->developPlan) {
             return back()->with('warning', __('messages.record_not_found'));
         }
 
-        if(auth()->user()->cannot('viewPublic', $item->developPlan)) {
+        if (auth()->user()->cannot('viewPublic', $item->developPlan)) {
             return redirect(route('ogp.national_action_plans.show', ['id' => $item->id]))->with('warning', __('messages.no_rights_to_view_content'));
         }
         $pageTitle = __('custom.open_government_partnership');
@@ -166,10 +172,11 @@ class NationalActionPlans extends Controller
             ['name' => $planArea->area->name, 'url' => '']
         ));
         $nationalPlanSection = true;
-        $this->setSeo(__('custom.dev_new_plan_title'),  $item->developPlan->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
+        $this->setSeo(__('custom.dev_new_plan_title'), $item->developPlan->ogDescription, '', array('title' => __('custom.dev_new_plan_title'), 'img' => OgpPlan::DEFAULT_IMG));
 
         return $this->view('site.ogp.develop_new_action_plan.plan_area_show',
-            compact('plan', 'planArea', 'pageTitle', 'nationalPlanSection'));
+            compact('plan', 'planArea', 'pageTitle', 'nationalPlanSection')
+        );
     }
 
     /**
@@ -188,17 +195,18 @@ class NationalActionPlans extends Controller
      * @param $extraItems
      * @return void
      */
-    private function composeBreadcrumbs($item = null, $extraItems = []){
+    private function composeBreadcrumbs($item = null, $extraItems = [])
+    {
         $customBreadcrumbs = array(
             ['name' => __('custom.open_government_partnership'), 'url' => ''],
             ['name' => __('custom.national_action_plans'), 'url' => route('ogp.national_action_plans')]
         );
 
-        if($item){
+        if ($item) {
             $customBreadcrumbs[] = ['name' => $item->name, 'url' => !empty($extraItems) ? route('ogp.national_action_plans.show', $item->id) : null];
         }
-        if(!empty($extraItems)){
-            foreach ($extraItems as $eItem){
+        if (!empty($extraItems)) {
+            foreach ($extraItems as $eItem) {
                 $customBreadcrumbs[] = $eItem;
             }
         }

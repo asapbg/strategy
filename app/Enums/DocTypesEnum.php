@@ -50,7 +50,8 @@ enum DocTypesEnum: int
 
     case AB_MODERATOR = 17; // Файл към Информация за модератора „Консултативен съвет“
     case OGP_VERSION_AFTER_CONSULTATION = 19; // Файл към OGP
-    case OGP_REPORT_EVALUATION = 20; // Доклади за независима оценка
+    case OGP_REPORT_EVALUATION = 20; // Самооценка и доклад на независимия изследовател
+    case OGP_OTHER = 23; // Други файлове
 
     case PC_OTHER_SOURCE_COMMENTS = 22;
 

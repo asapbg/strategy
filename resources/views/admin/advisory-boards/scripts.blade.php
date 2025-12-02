@@ -275,6 +275,7 @@
                             }
                         }
                     }
+                    updateCharCount(form.querySelector('#agenda'));
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);

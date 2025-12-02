@@ -110,21 +110,18 @@
                     </div>
                 </div>
             </div>
-{{--            <div class="row">--}}
-{{--                <div class="col-6">--}}
-{{--                    @include('admin.partial.active_field')--}}
-{{--                </div>--}}
-{{--            </div>--}}
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
                         <label class="col-sm-12 control-label" for="status">{{ __('custom.status') }} <span class="required">*</span></label>
                         <div class="col-12">
                             <div class="input-group">
-                                <select @if($disabled && $evaluationEdit) disabled readonly @endif id="status" name="status" class="form-control form-control-sm @error('status'){{ 'is-invalid' }}@enderror">
+                                <select @if($disabled && $evaluationEdit) disabled readonly @endif id="status" name="status"
+                                        class="form-control form-control-sm @error('status'){{ 'is-invalid' }}@enderror"
+                                >
                                     <option></option>
                                     @foreach(\App\Models\OgpStatus::get() as $v)
-                                        @if(in_array($v->type, [\App\Enums\OgpStatusEnum::ACTIVE->value, \App\Enums\OgpStatusEnum::DRAFT->value]))
+                                        @if(in_array($v->type, [\App\Enums\OgpStatusEnum::ACTIVE->value, \App\Enums\OgpStatusEnum::DRAFT->value, \App\Enums\OgpStatusEnum::FINAL->value]))
                                             <option value="{{ $v->id }}" @if(old('status', $item->ogp_status_id ?? '') == $v->id) selected="selected" @endif>{{ $v->name }}</option>
                                         @endif
                                     @endforeach

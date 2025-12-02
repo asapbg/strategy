@@ -47,28 +47,28 @@ class Plans extends AdminController
 
     public function edit(Request $request, $id = 0): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
-        $evaluationEdit = false;
+        $evaluationEdit = true;
         $mainInfoEdit = true;
         $devPlanEdit = true;
-        $item = $id ? OgpPlan::find($id) : new OgpPlan();
+        $item = $id
+            ? OgpPlan::with(['reportEvaluation','otherFiles','areas.arrangements.actions'])->find($id)
+            : new OgpPlan();
 
         if ($request->user()->cannot($id ? 'update' : 'create', $item)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
-//        if($id && Carbon::parse($item->from_date)->format('Y-m-d') < Carbon::now()->format('Y-m-d')
-        if ($id && dateBefore($item->from_date)
-            && $item->status->type == OgpStatusEnum::ACTIVE->value) {
-            $evaluationEdit = true;
-        }
+//        if ($id && dateBefore($item->from_date) && $item->status->type == OgpStatusEnum::ACTIVE->value) {
+//            $evaluationEdit = true;
+//        }
 
-        if ($id && $item->status->type == OgpStatusEnum::ACTIVE->value) {
-            $mainInfoEdit = false;
-
-            if (dateAfter($item->from_date)) {
-                $devPlanEdit = false;
-            }
-        }
+//        if ($id && $item->status->type == OgpStatusEnum::ACTIVE->value) {
+//            $mainInfoEdit = false;
+//
+//            if (dateAfter($item->from_date)) {
+//                $devPlanEdit = false;
+//            }
+//        }
         $translatableFields = \App\Models\OgpPlan::translationFieldsProperties();
 
         $ogpArea = OgpArea::Active()->get();
@@ -79,8 +79,8 @@ class Plans extends AdminController
         })->NotNational()->get();
 
         return $this->view('admin.ogp_plan.' . ($id ? 'edit' : "create"),
-            compact('item', 'id', 'translatableFields', 'ogpArea', 'areas', 'evaluationEdit', 'mainInfoEdit',
-                'devPlanEdit', 'devPlans'));
+            compact('item', 'id', 'translatableFields', 'ogpArea', 'areas', 'evaluationEdit', 'mainInfoEdit', 'devPlanEdit', 'devPlans')
+        );
     }
 
     public function store(OgpPlanRequest $request): \Illuminate\Http\RedirectResponse
