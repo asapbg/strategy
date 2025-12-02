@@ -21,10 +21,12 @@ class AuthorityAcceptingStrategicController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
+        $active = $request->get('active') ?? 1;
         $paginate = $filter['paginate'] ?? AuthorityAcceptingStrategic::PAGINATE;
 
         $items = AuthorityAcceptingStrategic::with(['translation'])
             ->FilterBy($requestFilter)
+            ->whereActive($active)
             ->paginate($paginate);
         $toggleBooleanModel = 'AuthorityAcceptingStrategic';
         $editRouteName = self::EDIT_ROUTE;
