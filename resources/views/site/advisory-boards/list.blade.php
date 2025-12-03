@@ -2,6 +2,7 @@
 @include('site.partial.filter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'btn_add' => $addBtn, 'add_url' => route('admin.advisory-boards.create'), 'export_excel' => true, 'export_pdf' => true])
 @include('site.partial.sorter', ['ajax' => true, 'ajaxContainer' => '#listContainer', 'info' => __('site.sort_info_adv_board'), 'customRequestParam' => $customRequestParam ?? null])
 <input type="hidden" id="subscribe_model" value="App\Models\AdvisoryBoard">
+<input type="hidden" id="subscribe_route_name" value="{{ request()->route()->getName() }}">
 <div class="row mb-2">
     <div class="col-md-6 mt-2">
         <div class="info-consul text-start">

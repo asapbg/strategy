@@ -16,10 +16,12 @@ class AuthorityAdvisoryBoardController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
+        $active = $request->get('active') ?? 1;
         $paginate = $filter['paginate'] ?? AuthorityAdvisoryBoard::PAGINATE;
 
         $items = AuthorityAdvisoryBoard::with(['translation'])
             ->FilterBy($requestFilter)
+            ->whereActive($active)
             ->paginate($paginate);
         $toggleBooleanModel = 'AuthorityAdvisoryBoard';
         $editRouteName = 'admin.advisory-boards.nomenclature.authority-advisory-board.edit';
@@ -35,7 +37,7 @@ class AuthorityAdvisoryBoardController extends AdminController
      */
     public function edit(Request $request, AuthorityAdvisoryBoard $item)
     {
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', AuthorityAdvisoryBoard::class) ) {
+        if (($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', AuthorityAdvisoryBoard::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = 'admin.advisory-boards.nomenclature.authority-advisory-board.store';
@@ -48,24 +50,27 @@ class AuthorityAdvisoryBoardController extends AdminController
     {
         $id = $item->id;
         $validated = $request->validated();
-        if( ($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', AuthorityAdvisoryBoard::class) ) {
+        if (
+            ($id && $request->user()->cannot('update', $item))
+            || $request->user()->cannot('create', AuthorityAdvisoryBoard::class)
+        ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
         try {
             $fillable = $this->getFillableValidated($validated, $item);
+            $fillable['created_by'] = !$id ? $request->user()->id : null;
             $item->fill($fillable);
             $item->save();
             $this->storeTranslateOrNew(AuthorityAdvisoryBoard::TRANSLATABLE_FIELDS, $item, $validated);
 
-            if( $id ) {
-                return redirect(route('admin.advisory-boards.nomenclature.authority-advisory-board.edit', $item) )
-                    ->with('success', trans_choice('custom.nomenclature.authority_advisory_board', 1)." ".__('messages.updated_successfully_m'));
+            if ($id) {
+                return redirect(route('admin.advisory-boards.nomenclature.authority-advisory-board.edit', $item))
+                    ->with('success', trans_choice('custom.nomenclature.authority_advisory_board', 1) . " " . __('messages.updated_successfully_m'));
             }
 
             return to_route('admin.advisory-boards.nomenclature.authority-advisory-board')
-                ->with('success', trans_choice('custom.nomenclature.authority_advisory_board', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.nomenclature.authority_advisory_board', 1) . " " . __('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
@@ -92,11 +97,11 @@ class AuthorityAdvisoryBoardController extends AdminController
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
         $qItem = AuthorityAdvisoryBoard::query();
-        if( sizeof($with) ) {
+        if (sizeof($with)) {
             $qItem->with($with);
         }
         $item = $qItem->find((int)$id);
-        if( !$item ) {
+        if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
         return $item;

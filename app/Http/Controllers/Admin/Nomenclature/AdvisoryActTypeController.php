@@ -17,10 +17,12 @@ class AdvisoryActTypeController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
+        $active = $request->get('active') ?? 1;
         $paginate = $filter['paginate'] ?? AdvisoryActType::PAGINATE;
 
         $items = AdvisoryActType::with(['translation'])
             ->FilterBy($requestFilter)
+            ->whereActive($active)
             ->paginate($paginate);
         $toggleBooleanModel = 'AdvisoryActType';
         $editRouteName = 'admin.advisory-boards.nomenclature.advisory-act-type.edit';
@@ -57,6 +59,7 @@ class AdvisoryActTypeController extends AdminController
 
         try {
             $fillable = $this->getFillableValidated($validated, $item);
+            $fillable['created_by'] = !$id ? $request->user()->id : null;
             $item->fill($fillable);
             $item->save();
             $this->storeTranslateOrNew(AdvisoryActType::TRANSLATABLE_FIELDS, $item, $validated);

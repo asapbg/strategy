@@ -22,10 +22,9 @@ class TagController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
-        if( !$request->filled('search') && !$request->filled('active') ) {
-            $filter['status']['value'] = 1;
-            $requestFilter['status'] = 1;
-        }
+        $active = $request->get('active') ?? 1;
+        $filter['status']['value'] = $active;
+        $requestFilter['status'] = $active;
 
         $paginate = $filter['paginate'] ?? Tag::PAGINATE;
 
@@ -46,7 +45,7 @@ class TagController extends AdminController
      */
     public function edit(Request $request, Tag $item)
     {
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', LinkCategory::class) ) {
+        if (($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', LinkCategory::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
@@ -59,8 +58,8 @@ class TagController extends AdminController
     {
         $id = $item->id;
         $validated = $request->validated();
-        if( ($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', Tag::class) ) {
+        if (($id && $request->user()->cannot('update', $item))
+            || $request->user()->cannot('create', Tag::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -70,13 +69,13 @@ class TagController extends AdminController
             $item->save();
             $this->storeTranslateOrNew(Tag::TRANSLATABLE_FIELDS, $item, $validated);
 
-            if( $id ) {
-                return redirect(route(self::EDIT_ROUTE, $item) )
-                    ->with('success', trans_choice('custom.nomenclature.tags', 1)." ".__('messages.updated_successfully_m'));
+            if ($id) {
+                return redirect(route(self::EDIT_ROUTE, $item))
+                    ->with('success', trans_choice('custom.nomenclature.tags', 1) . " " . __('messages.updated_successfully_m'));
             }
 
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.nomenclature.tags', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.nomenclature.tags', 1) . " " . __('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
@@ -95,7 +94,7 @@ class TagController extends AdminController
             ),
             'status' => array(
                 'type' => 'select',
-                'options' => optionsStatusesFilter(true, '', __('custom.status').' ('.__('custom.any').')'),
+                'options' => optionsStatusesFilter(true, '', __('custom.status') . ' (' . __('custom.any') . ')'),
                 'default' => '',
                 'placeholder' => __('validation.attributes.status'),
                 'value' => $request->input('status'),
@@ -111,11 +110,11 @@ class TagController extends AdminController
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
         $qItem = Tag::query();
-        if( sizeof($with) ) {
+        if (sizeof($with)) {
             $qItem->with($with);
         }
         $item = $qItem->find((int)$id);
-        if( !$item ) {
+        if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
         return $item;

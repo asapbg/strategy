@@ -47,7 +47,8 @@ class AuthorityAdvisoryBoard extends ModelActivityExtend implements Translatable
             ->join('authority_advisory_board_translations', 'authority_advisory_board_translations.authority_advisory_board_id', '=', 'authority_advisory_board.id')
             ->where('authority_advisory_board_translations.locale', '=', app()->getLocale())
             ->whereNull('authority_advisory_board.deleted_at')
-            ->whereNull('authority_advisory_board.created_by')
+            ->where('authority_advisory_board.active', true)
+            //->whereNull('authority_advisory_board.created_by')
             ->orderBy('authority_advisory_board_translations.name', 'asc')
             ->get();
     }

@@ -23,10 +23,12 @@ class ActTypeController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
+        $active = $request->get('active') ?? 1;
         $paginate = $filter['paginate'] ?? ActType::PAGINATE;
 
         $items = ActType::with(['translation'])
             ->FilterBy($requestFilter)
+            ->whereActive($active)
             ->paginate($paginate);
         $toggleBooleanModel = 'ActType';
         $editRouteName = self::EDIT_ROUTE;

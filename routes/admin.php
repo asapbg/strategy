@@ -418,8 +418,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(ActTypeController::class)->group(function () {
-        Route::get('/nomenclature/act-type', 'index')->name('nomenclature.act_type')->middleware('can:viewAny,App\Models\ActType');
-        Route::get('/nomenclature/act-type/edit/{item?}', 'edit')->name('nomenclature.act_type.edit');
+        Route::get('/nomenclature/act-type',                'index')->name('nomenclature.act_type')->middleware('can:viewAny,App\Models\ActType');
+        Route::get('/nomenclature/act-type/edit/{item?}',   'edit')->name('nomenclature.act_type.edit');
         Route::match(['post', 'put'], '/nomenclature/act-type/store/{item?}', 'store')->name('nomenclature.act_type.store');
     });
 
@@ -442,8 +442,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(AuthorityAcceptingStrategicController::class)->group(function () {
-        Route::get('/nomenclature/authority-accepting-strategic', 'index')->name('nomenclature.authority_accepting_strategic')->middleware('can:viewAny,App\Models\AuthorityAcceptingStrategic');
-        Route::get('/nomenclature/authority-accepting-strategic/edit/{item?}', 'edit')->name('nomenclature.authority_accepting_strategic.edit');
+        Route::get('/nomenclature/authority-accepting-strategic',               'index')->name('nomenclature.authority_accepting_strategic')->middleware('can:viewAny,App\Models\AuthorityAcceptingStrategic');
+        Route::get('/nomenclature/authority-accepting-strategic/edit/{item?}',  'edit')->name('nomenclature.authority_accepting_strategic.edit');
         Route::match(['post', 'put'], '/nomenclature/authority-accepting-strategic/store/{item?}', 'store')->name('nomenclature.authority_accepting_strategic.store');
     });
 
@@ -583,8 +583,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
                 });
 
             Route::controller(AuthorityAdvisoryBoardController::class)->group(function () {
-                Route::get('/authority-advisory-board', 'index')->name('authority-advisory-board')->middleware('can:viewAny,App\Models\AuthorityAdvisoryBoard');
-                Route::get('/authority-advisory-board/edit/{item?}', 'edit')->name('authority-advisory-board.edit');
+                Route::get('/authority-advisory-board',                 'index')->name('authority-advisory-board')->middleware('can:viewAny,App\Models\AuthorityAdvisoryBoard');
+                Route::get('/authority-advisory-board/edit/{item?}',    'edit')->name('authority-advisory-board.edit');
                 Route::match(['post', 'put'], '/authority-advisory-board/store/{item?}', 'store')->name('authority-advisory-board.store');
             });
 

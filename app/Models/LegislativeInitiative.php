@@ -30,7 +30,7 @@ class LegislativeInitiative extends ModelActivityExtend implements Feedable
     const PAGINATE = 20;
     const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';
     const HOME_PAGINATE = 4;
-    const MODULE_NAME = ('custom.nomenclatures.legislative_initiative');
+    const MODULE_NAME = ('custom.legislative_initiatives');
 
     public $timestamps = true;
 

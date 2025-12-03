@@ -17,10 +17,12 @@ class AdvisoryChairmanTypeController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
+        $active = $request->get('active') ?? 1;
         $paginate = $filter['paginate'] ?? AdvisoryChairmanType::PAGINATE;
 
         $items = AdvisoryChairmanType::with(['translation'])
             ->FilterBy($requestFilter)
+            ->whereActive($active)
             ->paginate($paginate);
         $toggleBooleanModel = 'AdvisoryChairmanType';
         $editRouteName = 'admin.advisory-boards.nomenclature.advisory-chairman-type.edit';
@@ -36,7 +38,7 @@ class AdvisoryChairmanTypeController extends AdminController
      */
     public function edit(Request $request, AdvisoryChairmanType $item)
     {
-        if( ($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', AdvisoryChairmanType::class) ) {
+        if (($item && $request->user()->cannot('update', $item)) || $request->user()->cannot('create', AdvisoryChairmanType::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = 'admin.advisory-boards.nomenclature.advisory-chairman-type.store';
@@ -50,24 +52,25 @@ class AdvisoryChairmanTypeController extends AdminController
     {
         $id = $item->id;
         $validated = $request->validated();
-        if( ($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', AdvisoryChairmanType::class) ) {
+        if (($id && $request->user()->cannot('update', $item))
+            || $request->user()->cannot('create', AdvisoryChairmanType::class)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
         try {
             $fillable = $this->getFillableValidated($validated, $item);
+            $fillable['created_by'] = !$id ? $request->user()->id : null;
             $item->fill($fillable);
             $item->save();
             $this->storeTranslateOrNew(AdvisoryChairmanType::TRANSLATABLE_FIELDS, $item, $validated);
 
-            if( $id ) {
-                return redirect(route('admin.advisory-boards.nomenclature.advisory-chairman-type.edit', $item) )
-                    ->with('success', trans_choice('custom.nomenclature.advisory_chairman_type', 1)." ".__('messages.updated_successfully_m'));
+            if ($id) {
+                return redirect(route('admin.advisory-boards.nomenclature.advisory-chairman-type.edit', $item))
+                    ->with('success', trans_choice('custom.nomenclature.advisory_chairman_type', 1) . " " . __('messages.updated_successfully_m'));
             }
 
             return to_route('admin.advisory-boards.nomenclature.advisory-chairman-type')
-                ->with('success', trans_choice('custom.nomenclature.advisory_chairman_type', 1)." ".__('messages.created_successfully_m'));
+                ->with('success', trans_choice('custom.nomenclature.advisory_chairman_type', 1) . " " . __('messages.created_successfully_m'));
         } catch (\Exception $e) {
             Log::error($e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
@@ -93,11 +96,11 @@ class AdvisoryChairmanTypeController extends AdminController
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
         $qItem = AdvisoryChairmanType::query();
-        if( sizeof($with) ) {
+        if (sizeof($with)) {
             $qItem->with($with);
         }
         $item = $qItem->find((int)$id);
-        if( !$item ) {
+        if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
         return $item;

@@ -21,7 +21,7 @@ class LegislativeProgram extends ModelActivityExtend implements Feedable
     use FilterSort;
 
     const PAGINATE = 20;
-    const MODULE_NAME = ('custom.nomenclatures.legislative_program');
+    const MODULE_NAME = ('custom.legislative_program');
     public $timestamps = true;
     protected $table = 'legislative_program';
     const DEFAULT_IMG = 'images'.DIRECTORY_SEPARATOR.'ms-2023.jpg';

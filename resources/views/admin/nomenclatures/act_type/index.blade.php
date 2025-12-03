@@ -11,6 +11,8 @@
                 <div class="card-body table-responsive">
 
                     <div class="mb-3">
+                        @includeIf('partials.status', ['action' => 'App\Http\Controllers\Admin\Nomenclature\ActTypeController@index'])
+
                         <a href="{{ route($editRouteName) }}" class="btn btn-sm btn-success">
                             <i class="fas fa-plus-circle"></i> {{ __('custom.add') }} {{ $title_singular }}
                         </a>
@@ -22,6 +24,7 @@
                             <th>ID</th>
                             <th>{{ __('validation.attributes.name') }}</th>
                             <th>{{ trans_choice('custom.nomenclature.consultation_level', 1) }}</th>
+                            <th>{{__('custom.active_m')}}</th>
                             <th>{{ __('custom.actions') }}</th>
                         </tr>
                         </thead>
@@ -31,13 +34,21 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
-                                    <td>{{ $item->consultation_level_id ? \App\Enums\InstitutionCategoryLevelEnum::keyToLabel()[$item->consultation_level_id] ?? '' : '' }}</td>
+                                    <td>
+                                        {{ $item->consultation_level_id ? \App\Enums\InstitutionCategoryLevelEnum::keyToLabel()[$item->consultation_level_id] ?? '' : '' }}
+                                    </td>
+                                    <td>
+                                        @can('update', $item)
+                                            @includeIf('partials.toggle-boolean', ['object' => $item, 'model' => 'ActType'])
+                                        @endcan
+                                    </td>
                                     <td class="text-center">
                                         @can('update', $item)
                                             <a href="{{ route( $editRouteName , [$item->id]) }}"
                                                class="btn btn-sm btn-info"
                                                data-toggle="tooltip"
-                                               title="{{ __('custom.edit') }}">
+                                               title="{{ __('custom.edit') }}"
+                                            >
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         @endcan

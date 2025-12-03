@@ -117,7 +117,7 @@ class LegislativeInitiativeController extends AdminController
         //get law with active public consultation
         $lawWithPcDB = Law::with(['translation', 'pc' => function ($q) {
             $q->ActivePeriodPublic();
-        }])->get();
+        }])->Active()->get();
 
         if ($lawWithPcDB->count()) {
             foreach ($lawWithPcDB as $r) {

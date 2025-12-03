@@ -54,6 +54,7 @@ class StrategicActType extends ModelActivityExtend implements TranslatableContra
             ->select(['strategic_act_type.id', 'strategic_act_type_translations.name'])
             ->join('strategic_act_type_translations', 'strategic_act_type_translations.strategic_act_type_id', '=', 'strategic_act_type.id')
             ->where('strategic_act_type_translations.locale', '=', app()->getLocale())
+            ->where('strategic_act_type.active', true)
             ->orderBy('strategic_act_type_translations.name', 'asc')
             ->get();
     }

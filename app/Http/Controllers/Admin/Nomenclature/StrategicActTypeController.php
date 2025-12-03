@@ -22,10 +22,12 @@ class StrategicActTypeController extends AdminController
     {
         $requestFilter = $request->all();
         $filter = $this->filters($request);
+        $active = $request->get('active') ?? 1;
         $paginate = $filter['paginate'] ?? StrategicActType::PAGINATE;
 
         $items = StrategicActType::with(['translation'])
             ->FilterBy($requestFilter)
+            ->whereActive($active)
             ->paginate($paginate);
         $toggleBooleanModel = 'StrategicActType';
         $editRouteName = self::EDIT_ROUTE;
