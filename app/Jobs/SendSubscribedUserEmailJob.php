@@ -228,9 +228,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['text'] = $this->data['admin']['text'];
                 $this->data['subject'] = '[Strategy.bg] ' . $this->data['admin']['subject_text'] . (isset($this->data['modelName']) ? ': ' . $this->data['modelName'] : '');
                 $this->data['url'] = $this->data['admin']['url'];
-                $mail = config('app.env') != 'production'
-                    ? config('mail.local_to_mail')
-                    : $admin->email;
+                $mail = $admin->email;
 
                 Log::channel('emails')->info("Send email to administrator ".$admin->fullName(). " with email: $admin->email, for $log_email_subscription");
 
@@ -243,9 +241,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['text'] = $this->data['moderator']['text'];
                 $this->data['subject'] = '[Strategy.bg] ' . $this->data['moderator']['subject_text'] . (isset($this->data['modelName']) ? ': ' . $this->data['modelName'] : '');
                 $this->data['url'] = $this->data['moderator']['url'];
-                $mail = config('app.env') != 'production'
-                    ? config('mail.local_to_mail')
-                    : $moderator->email;
+                $mail = $moderator->email;
 
                 Log::channel('emails')->info("Send email to moderator ".$moderator->fullName(). " with email: $moderator->email, for $log_email_subscription");
 
