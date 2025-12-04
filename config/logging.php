@@ -120,9 +120,9 @@ return [
             'path' => storage_path('logs/info.log'),
         ],
 
-        'emails' => [
+        'notifications' => [
             'driver' => 'single',
-            'path' => storage_path('logs/emails.log'),
+            'path' => storage_path('logs/notifications.log'),
         ],
 
         'eauth' => [

@@ -1060,6 +1060,10 @@ class PublicConsultationController extends AdminController
 
             $item->active = 1;
             $item->save();
+
+            $observer = new PublicConsultationObserver();
+            $observer->sendEmails($item, "updated");
+
             return redirect(route(self::LIST_ROUTE))
                 ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {

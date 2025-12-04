@@ -603,6 +603,7 @@
 
                 <hr class="text-white">
                 @if(auth()->user()->hasRole([\App\Models\CustomRole::ADMIN_USER_ROLE, \App\Models\CustomRole::SUPER_USER_ROLE]))
+                    <li class="nav-header">{{ trans_choice('custom.activity_logs', 1) }}</li>
                     <li class="nav-item">
                         <a href="{{route('admin.activity-logs')}}"
                            class="nav-link @if(strstr(url()->current(), 'activity-logs')) active @endif">
@@ -612,7 +613,7 @@
                     </li>
                 @endif
                 @if($user->hasRole('super-admin'))
-                    <li class="nav-header">{{ trans_choice('custom.laravel_logs', 2) }}</li>
+                    <li class="nav-header">{{ trans_choice('custom.logs', 2) }}</li>
                     <li class="nav-item">
                         <a href="{{ route('admin.laravel-logs', [ 'log' => 'laravel' ]) }}"
                            class="nav-link @if(strstr(url()->current(), 'laravel-logs/laravel')) active @endif">
@@ -623,8 +624,15 @@
                     <li class="nav-item">
                         <a href="{{ route('admin.laravel-logs', [ 'log' => 'eauth' ]) }}"
                            class="nav-link @if(strstr(url()->current(), 'laravel-logs/eauth')) active @endif">
-                            <i class="fas fa-exclamation-circle"></i>
+                            <i class="fas fa-signature"></i>
                             <p>{{ trans_choice('custom.eauth_logs', 2) }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laravel-logs', [ 'log' => 'notifications' ]) }}"
+                           class="nav-link @if(strstr(url()->current(), 'laravel-logs/notifications')) active @endif">
+                            <i class="fas fa-envelope"></i>
+                            <p>{{ trans_choice('custom.notification_logs', 2) }}</p>
                         </a>
                     </li>
                 @endif

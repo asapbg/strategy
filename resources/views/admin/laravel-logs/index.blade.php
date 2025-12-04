@@ -12,7 +12,7 @@
                         <thead>
                         <tr>
                             <th style="width: 10%">{{ __('custom.date') }}</th>
-                            <th>{{ trans_choice('custom.laravel_logs', 1) }}</th>
+                            <th>{{ $title }}</th>
                         </tr>
                         </thead>
                         <tbody>

@@ -12,13 +12,18 @@ class LaravelLogController extends Controller
     {
         switch ($log) {
             case 'laravel':
-                $this->setTitles(trans_choice('custom.laravel_logs', 2));
+                $title = trans_choice('custom.laravel_logs', 2);
                 break;
 
             case 'eauth':
-                $this->setTitles(trans_choice('custom.eauth_logs', 2));
+                $title = trans_choice('custom.eauth_logs', 2);
+                break;
+
+            case 'notifications':
+                $title = trans_choice('custom.notification_logs', 2);
                 break;
         }
+        $this->setTitles($title);
 
         $log .= '.log';
 
@@ -28,7 +33,7 @@ class LaravelLogController extends Controller
 
         $file_path = Storage::disk('logs')->path($log);
         $current_page = $request->get('page', 1);
-        $per_page = 10;
+        $per_page = $log == 'notifications.log' ? 20 : 10;
         $start = ($current_page * $per_page) - $per_page;
 
         $laravel_errors = [];
@@ -76,7 +81,7 @@ class LaravelLogController extends Controller
         krsort($laravel_errors);
 
         return $this->view('admin.laravel-logs.index',
-            compact('laravel_errors', 'pages', 'current_page', 'per_page', 'errors_count', 'start')
+            compact('laravel_errors', 'pages', 'current_page', 'per_page', 'errors_count', 'start', 'title')
         );
     }
 }
