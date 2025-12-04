@@ -5,126 +5,45 @@ namespace App\Observers;
 use App\Jobs\SendSubscribedUserEmailJob;
 use App\Models\LegislativeInitiative;
 use App\Models\LegislativeInitiativeComment;
-use App\Models\UserSubscribe;
-use Illuminate\Support\Facades\Log;
 
 class LegislativeInitiativeCommentObserver
 {
     /**
      * Handle the LegislativeInitiativeComment "created" event.
      *
-     * @param  \App\Models\LegislativeInitiativeComment  $legislativeInitiativeComment
+     * @param \App\Models\LegislativeInitiativeComment $legislativeInitiativeComment
      * @return void
      */
     public function created(LegislativeInitiativeComment $legislativeInitiativeComment)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if (!env('DISABLE_OBSERVERS', false)) {
             $this->sendEmails($legislativeInitiativeComment, 'comment');
-            Log::info('Send subscribe email on comment to subscribed and author');
         }
 
-    }
-
-    /**
-     * Handle the LegislativeInitiativeComment "updated" event.
-     *
-     * @param  \App\Models\LegislativeInitiativeComment  $legislativeInitiativeComment
-     * @return void
-     */
-    public function updated(LegislativeInitiativeComment $legislativeInitiativeComment)
-    {
-        //
-    }
-
-    /**
-     * Handle the LegislativeInitiativeComment "deleted" event.
-     *
-     * @param  \App\Models\LegislativeInitiativeComment  $legislativeInitiativeComment
-     * @return void
-     */
-    public function deleted(LegislativeInitiativeComment $legislativeInitiativeComment)
-    {
-        //
-    }
-
-    /**
-     * Handle the LegislativeInitiativeComment "restored" event.
-     *
-     * @param  \App\Models\LegislativeInitiativeComment  $legislativeInitiativeComment
-     * @return void
-     */
-    public function restored(LegislativeInitiativeComment $legislativeInitiativeComment)
-    {
-        //
-    }
-
-    /**
-     * Handle the LegislativeInitiativeComment "force deleted" event.
-     *
-     * @param  \App\Models\LegislativeInitiativeComment  $legislativeInitiativeComment
-     * @return void
-     */
-    public function forceDeleted(LegislativeInitiativeComment $legislativeInitiativeComment)
-    {
-        //
     }
 
     /**
      * Send emails to all subscribers and author
      *
-     * @param LegislativeInitiativeComment  $legislativeInitiativeComment
+     * @param LegislativeInitiativeComment $legislativeInitiativeComment
      * @param $event
      * @return void
      */
-    private function sendEmails(LegislativeInitiativeComment  $legislativeInitiativeComment, $event): void
+    private function sendEmails(LegislativeInitiativeComment $legislativeInitiativeComment, $event): void
     {
-        $item = LegislativeInitiative::find($legislativeInitiativeComment->legislative_initiative_id);
-        $specialUser = $administrators = $moderators = null;
+        $legislativeInitiative = LegislativeInitiative::find($legislativeInitiativeComment->legislative_initiative_id);
 
-        //get users by model ID
-        $subscribedUsers = UserSubscribe::where('subscribable_type', LegislativeInitiative::class)
-            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-            ->where('subscribable_id', '=', $item->id)
-            ->get();
-
+        $specialUser = null;
         //Send to author if comment is not his
-        if($item->user && $item->author_id != $legislativeInitiativeComment->user_id){
-            $specialUser = $item->user;
-        }
-
-//        //get users by model filter
-//        $filterSubscribtions = UserSubscribe::where('subscribable_type', LegislativeInitiative::class)
-//            ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-//            ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-//            ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-//            ->whereNull('subscribable_id')
-//            ->get();
-//
-//        if($filterSubscribtions->count()){
-//            foreach ($filterSubscribtions as $fSubscribe){
-//                $filterArray = json_decode($fSubscribe->search_filters, true);
-//                if($filterArray){
-//                    $modelIds = LegislativeInitiative::list($filterArray)->pluck('id')->toArray();
-//                    if(in_array($item->id, $modelIds)){
-//                        $subscribedUsers->add($fSubscribe);
-//                    }
-//                }
-//            }
-//        }
-
-        if (!$administrators && !$moderators && $subscribedUsers->count() == 0 && is_null($specialUser)) {
-            return;
+        if ($legislativeInitiative->user && $legislativeInitiative->author_id != $legislativeInitiativeComment->user_id) {
+            $specialUser = $legislativeInitiative->user;
         }
 
         $data['event'] = $event;
-        $data['administrators'] = $administrators;
-        $data['moderators'] = $moderators;
-        $data['subscribedUsers'] = $subscribedUsers;
         $data['specialUser'] = $specialUser;
-        $data['modelInstance'] = $item;
-        $data['modelName'] = $item->facebookTitle;
+        $data['modelInstance'] = $legislativeInitiative;
+        $data['secondModelInstance'] = $legislativeInitiativeComment;
+        $data['modelName'] = $legislativeInitiative->facebookTitle;
         $data['markdown'] = 'legislative-initiative';
 
         SendSubscribedUserEmailJob::dispatch($data);

@@ -20,13 +20,13 @@ class AdvisoryBoardTranslationObserver
         if (!env('DISABLE_OBSERVERS', false)) {
             $advisoryBoard = $advisoryBoardTranslation->parent;
             if ($advisoryBoard->public) {
-                if (Setting::allowPostingToFacebook()) {
-                    $facebookApi = new Facebook();
-                    $facebookApi->postToFacebook($advisoryBoard);
-                }
-
-                //$this->sendEmails($advisoryBoard, 'created');
-                Log::info('Send subscribe email on creation');
+//                if (Setting::allowPostingToFacebook()) {
+//                    $facebookApi = new Facebook();
+//                    $facebookApi->postToFacebook($advisoryBoard);
+//                }
+//
+//                //$this->sendEmails($advisoryBoard, 'created');
+//                Log::info('Send subscribe email on creation');
             }
         }
     }

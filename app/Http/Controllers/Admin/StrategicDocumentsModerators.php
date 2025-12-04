@@ -34,12 +34,10 @@ class StrategicDocumentsModerators extends Controller
      */
     public function index(Request $request)
     {
-        $name = ($request->filled('name')) ? $request->get('name') : null;
-//        $username = ($request->filled('username')) ? $request->get('username') : null;
-        $email = ($request->filled('email')) ? $request->get('email') : null;
-        $role_id = ($request->filled('role_id')) ? $request->get('role_id') : null;
+        $name = $request->get('name');
+        $email = $request->get('email');
         $active = $request->filled('active') ? $request->get('active') : 1;
-        $paginate = $request->filled('paginate') ? $request->get('paginate') : User::PAGINATE;
+        $paginate = $request->get('paginate') ?? User::PAGINATE;
 
         $roles = Role::whereActive(true)
             ->whereIn('name', [CustomRole::MODERATOR_STRATEGIC_DOCUMENT])
@@ -70,7 +68,7 @@ class StrategicDocumentsModerators extends Controller
     /**
      * Show create User form
      *
-     * @return Response JSON formatted string
+     * @return View
      */
     public function create()
     {
@@ -83,6 +81,7 @@ class StrategicDocumentsModerators extends Controller
             ->orderBy('display_name', 'asc')->get();
         $rolesRequiredInstitutions = User::ROLES_WITH_INSTITUTION;
         $institutions = Institution::optionsList();
+
         return $this->view('admin.strategic_documents.users.create', compact('roles', 'rolesRequiredInstitutions', 'institutions'));
     }
 
@@ -102,10 +101,6 @@ class StrategicDocumentsModerators extends Controller
         $data = $request->except(['_token', 'password_confirmation', 'roles', 'sd']);
 
         $roles = $request->offsetGet('roles');
-//        $rolesNames = sizeof($roles) ? rolesNames($roles) : [];
-//        if (count(array_intersect($rolesNames, User::ROLES_WITH_INSTITUTION)) === 0) {
-//            unset($data['institution_id']);
-//        }
 
         DB::beginTransaction();
 

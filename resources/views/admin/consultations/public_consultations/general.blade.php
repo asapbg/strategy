@@ -11,20 +11,18 @@
         @if($item->id && !$item->old_id)
             <div class="col-md-2">
                 <div class="form-group">
-                    <label class="col-auto control-label">{{ trans_choice('custom.number', 1) }}
-                        : </label> {{ $item->reg_num }}
+                    <label class="col-auto control-label">{{ trans_choice('custom.number', 1) }}: </label> {{ $item->reg_num }}
                 </div>
             </div>
             <div class="col-md-10">
                 <div class="form-group">
-                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}
-                        : </label> @if($item->importerInstitution)
+                    <label class="col-auto control-label">{{ trans_choice('custom.importers', 1) }}: </label> @if($item->importerInstitution)
                         <a class="text-primary"
                            href="{{ route('admin.strategic_documents.institutions.edit', $item->importerInstitution) }}"
-                           target="_blank"><i
-                                class="fas fa-link mr-1 fs-6"></i>{{ $item->importerInstitution->name }} @if(!empty($item->importer))
-                                {{ '('.$item->importer.')' }}
-                            @endif</a>
+                           target="_blank"
+                        >
+                            <i class="fas fa-link mr-1 fs-6"></i>{{ $item->importerInstitution->name }} @if(!empty($item->importer)){{ '('.$item->importer.')' }}@endif
+                        </a>
                     @else
                         {{ '---' }}
                     @endif
@@ -32,8 +30,8 @@
             </div>
             <div class="col-md-10">
                 <div class="form-group">
-                    <label class="col-auto control-label">{{ __('custom.importer_address') }}
-                        : </label> {{ $item->importerInstitution ? (($item->importerInstitution->settlement ? $item->importerInstitution->settlement->ime.', ' : '').$item->importerInstitution->address) : '---'}}
+                    <label class="col-auto control-label">{{ __('custom.importer_address') }}: </label>
+                    {{ $item->importerInstitution ? (($item->importerInstitution->settlement ? $item->importerInstitution->settlement->ime.', ' : '').$item->importerInstitution->address) : '---'}}
                 </div>
             </div>
             <div class="col-md-10">
@@ -482,39 +480,27 @@
         @endif
     </div>
 
-    <div class="row">
-        {{--        <div class="col-md-3">--}}
-        {{--            <div class="form-group">--}}
-        {{--                <label class="col-sm-12 control-label" for="monitorstat">{{ __('validation.attributes.monitorstat') }}</label>--}}
-        {{--                <input type="text" id="monitorstat" name="monitorstat"--}}
-        {{--                       class="form-control form-control-sm @error('monitorstat'){{ 'is-invalid' }}@enderror"--}}
-        {{--                       value="{{ old('monitorstat', ($item->id ? $item->monitorstat : '')) }}">--}}
-        {{--                @error('monitorstat')--}}
-        {{--                <div class="text-danger mt-1">{{ $message }}</div>--}}
-        {{--                @enderror--}}
-        {{--            </div>--}}
-        {{--        </div>--}}
-        <div class="col-md-4">
-            <div class="form-group">
-                <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
-                <select id="active" name="active"
-                        class="form-control form-control-sm select2 @error('active'){{ 'is-invalid' }}@enderror">
-                    <option value="0"
-                            @if(!old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.draft') }}</option>
-                    <option value="1"
-                            @if(old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.public_f') }}</option>
+    <div class="row mb-3">
+        <div class="form-group">
+            <label class="col-sm-12 control-label" for="active">{{ __('custom.status') }}</label>
+            <div class="col-md-4">
+                <select id="active" name="active" class="form-control @error('active'){{ 'is-invalid' }}@enderror">
+                    <option value="0" @if(!old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.draft') }}</option>
+                    <option value="1" @if(old('active', $item->id ? $item->active : 0 )) selected @endif>{{ __('custom.public_f') }}</option>
                 </select>
             </div>
         </div>
     </div>
 
-    <div class="form-group row">
-        <div class="col-md-6 col-md-offset-3">
-            <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
-            <button id="save" type="submit" name="stay" value="1"
-                    class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
-            <a href="{{ route($listRouteName) }}"
-               class="btn btn-primary">{{ __('custom.cancel') }}</a>
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-6 col-md-offset-3">
+                <button id="save" type="submit" class="btn btn-success">{{ __('custom.save') }}</button>
+                <button id="save" type="submit" name="stay" value="1"
+                        class="btn btn-success">{{ __('custom.save_and_stay') }}</button>
+                <a href="{{ route($listRouteName) }}"
+                   class="btn btn-primary">{{ __('custom.cancel') }}</a>
+            </div>
         </div>
     </div>
 </form>

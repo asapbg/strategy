@@ -53,23 +53,23 @@ class LegislativeProgramController extends AdminController
 
     public function show(Request $request, LegislativeProgram $item)
     {
-        if( $request->user()->cannot('view', $item) ) {
+        if ($request->user()->cannot('view', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
 
         $data = $item->getTableData();
         $columns = DynamicStructureColumn::with(['translations'])->whereIn('id', json_decode($item->active_columns))->orderBy('ord', 'asc')->get();
         $listRouteName = self::LIST_ROUTE;
-        $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
+        $months = $item->id ? extractMonths($item->from_date, $item->to_date) : [];
 
         $rowFiles = [];
         $rFiles = $item->rowFiles->count() ? $item->rowFiles : [];
-        if( !empty($rFiles) ) {
+        if (!empty($rFiles)) {
             foreach ($rFiles as $f) {
-                if(!isset($rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale])){
-                    $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = array();
+                if (!isset($rowFiles[$f->pivot->row_num . '_' . $f->pivot->row_month . '_' . $f->locale])) {
+                    $rowFiles[$f->pivot->row_num . '_' . $f->pivot->row_month . '_' . $f->locale] = array();
                 }
-                $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale][] = $f;
+                $rowFiles[$f->pivot->row_num . '_' . $f->pivot->row_month . '_' . $f->locale][] = $f;
             }
         }
 
@@ -85,7 +85,7 @@ class LegislativeProgramController extends AdminController
      */
     public function edit(Request $request, LegislativeProgram|null $item)
     {
-        if( ($item->id && $request->user()->cannot('update', $item)) || (!$item->id && $request->user()->cannot('create', LegislativeProgram::class)) ) {
+        if (($item->id && $request->user()->cannot('update', $item)) || (!$item->id && $request->user()->cannot('create', LegislativeProgram::class))) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -95,16 +95,16 @@ class LegislativeProgramController extends AdminController
             : DynamicStructure::where('type', '=', DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->value)->where('active', '=', 1)->first()->columns;
         $storeRouteName = self::STORE_ROUTE;
         $listRouteName = self::LIST_ROUTE;
-        $months = $item->id ? extractMonths($item->from_date,$item->to_date) : [];
+        $months = $item->id ? extractMonths($item->from_date, $item->to_date) : [];
 
         $rowFiles = [];
         $rFiles = $item->rowFiles->count() ? $item->rowFiles : [];
-        if( !empty($rFiles) ) {
+        if (!empty($rFiles)) {
             foreach ($rFiles as $f) {
-                if(!isset($rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale])){
-                    $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale] = array();
+                if (!isset($rowFiles[$f->pivot->row_num . '_' . $f->pivot->row_month . '_' . $f->locale])) {
+                    $rowFiles[$f->pivot->row_num . '_' . $f->pivot->row_month . '_' . $f->locale] = array();
                 }
-                $rowFiles[$f->pivot->row_num.'_'.$f->pivot->row_month.'_'.$f->locale][] = $f;
+                $rowFiles[$f->pivot->row_num . '_' . $f->pivot->row_month . '_' . $f->locale][] = $f;
             }
         }
 
@@ -118,20 +118,20 @@ class LegislativeProgramController extends AdminController
         $validated = $request->validated();
         $id = (int)$validated['id'];
 
-        if( $request->isMethod('put') ) {
+        if ($request->isMethod('put')) {
             $item = $this->getRecord($id);
-            if( $request->user()->cannot('update', $item) ) {
+            if ($request->user()->cannot('update', $item)) {
                 abort(Response::HTTP_FORBIDDEN);
             }
         } else {
-            if( $request->user()->cannot('create', LegislativeProgram::class) ) {
+            if ($request->user()->cannot('create', LegislativeProgram::class)) {
                 abort(Response::HTTP_FORBIDDEN);
             }
             $item = new LegislativeProgram();
         }
         DB::beginTransaction();
         try {
-            if( !$id ) {
+            if (!$id) {
                 $activeColumns = DynamicStructure::where('type', '=', DynamicStructureTypesEnum::LEGISLATIVE_PROGRAM->value)
                     ->where('active', '=', 1)
                     ->first()->columns
@@ -141,15 +141,15 @@ class LegislativeProgramController extends AdminController
             }
 
             //update program
-            if( isset($validated['save']) ) {
+            if (isset($validated['save'])) {
                 $now = Carbon::now()->format('Y-m-d');
-                $item->from_date = databaseDate('01.'.$validated['from_date']);
-                $item->to_date = Carbon::parse('01.'.$validated['to_date'])->endOfMonth()->format('Y-m-d');
+                $item->from_date = databaseDate('01.' . $validated['from_date']);
+                $item->to_date = Carbon::parse('01.' . $validated['to_date'])->endOfMonth()->format('Y-m-d');
                 $item->actual = (int)($now > $item->from_date) && ($now < $item->to_date);
                 $item->save();
             }
             //update program
-            if( isset($validated['save']) ) {
+            if (isset($validated['save'])) {
                 if (isset($validated['col']) && sizeof($validated['col'])) {
                     foreach ($validated['col'] as $rowKey => $colIds) {
                         if (isset($validated['val']) && sizeof($validated['val'])
@@ -158,10 +158,10 @@ class LegislativeProgramController extends AdminController
                         ) {
                             foreach ($colIds as $key => $id) {
                                 $oldCol = $item->records()->where('id', '=', (int)$id)->first();
-                                if($oldCol) {
-                                    if($oldCol->dynamic_structures_column_id != config('lp_op_programs.lp_ds_col_institution_id')) {
+                                if ($oldCol) {
+                                    if ($oldCol->dynamic_structures_column_id != config('lp_op_programs.lp_ds_col_institution_id')) {
                                         $oldCol->update(['value' => $validated['val'][$rowKey][$key] ?? null]);
-                                    } else{
+                                    } else {
                                         $oldCol->institutions()->sync($validated['val'][$rowKey][$key] ?? []);
                                     }
                                 }
@@ -172,14 +172,14 @@ class LegislativeProgramController extends AdminController
             }
 
             //Add new row
-            if( isset($validated['new_row']) ) {
+            if (isset($validated['new_row'])) {
                 if (isset($validated['new_val_col']) && sizeof($validated['new_val_col'])) {
                     if (isset($validated['new_val']) && sizeof($validated['new_val'])) {
                         if (sizeof($validated['new_val_col']) === sizeof($validated['new_val'])) {
                             $rowNums = $item->records->pluck('row_num')->toArray();
                             $rowNums = empty($rowNums) ? 0 : max($rowNums);
                             foreach ($validated['new_val_col'] as $k => $dsColumnId) {
-                                $newColValue = $dsColumnId == config('lp_op_programs.lp_ds_col_institution_id') ? date('my') . substr(uniqid(), 9, 12) :  $validated['new_val'][$k];
+                                $newColValue = $dsColumnId == config('lp_op_programs.lp_ds_col_institution_id') ? date('my') . substr(uniqid(), 9, 12) : $validated['new_val'][$k];
                                 $dbRecord = new LegislativeProgramRow([
                                     'month' => $validated['month'],
                                     'legislative_program_id' => $item->id,
@@ -188,7 +188,7 @@ class LegislativeProgramController extends AdminController
                                     'row_num' => $rowNums + 1
                                 ]);
                                 $dbRecord->save();
-                                if( $dsColumnId == config('lp_op_programs.lp_ds_col_institution_id') ) {
+                                if ($dsColumnId == config('lp_op_programs.lp_ds_col_institution_id')) {
                                     $dbRecord->institutions()->sync($validated['new_val'][$k]);
                                 }
                             }
@@ -231,17 +231,17 @@ class LegislativeProgramController extends AdminController
 //            }
 
             //Upload files
-            if( isset($validated['save_files']) || isset($validated['stay_in_files']) ) {
-                foreach ($request->all() as $k => $v){
-                    if(!in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en', 'formats'])){
+            if (isset($validated['save_files']) || isset($validated['stay_in_files'])) {
+                foreach ($request->all() as $k => $v) {
+                    if (!in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en', 'formats'])) {
                         $request->offsetUnset($k);
                     }
                 }
-                foreach ($request->all() as $k => $v){
+                foreach ($request->all() as $k => $v) {
 
-                    if(in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en', 'formats'])){
+                    if (in_array($k, ['a_file_bg', 'a_file_en', 'a_description_bg', 'a_description_en', 'formats'])) {
                         $request->request->add([str_replace('a_', '', $k) => $v]);
-                        if($k != 'formats'){
+                        if ($k != 'formats') {
                             $request->offsetUnset($k);
                         }
                     }
@@ -251,8 +251,8 @@ class LegislativeProgramController extends AdminController
             }
 
             DB::commit();
-            return redirect(route(self::EDIT_ROUTE, $item) )
-                ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_f'));
+            return redirect(route(self::EDIT_ROUTE, $item))
+                ->with('success', trans_choice('custom.legislative_program', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
@@ -262,11 +262,11 @@ class LegislativeProgramController extends AdminController
 
     public function deleteFile(Request $request, LegislativeProgram $program, File $file)
     {
-        if( !$program || !$file ) {
+        if (!$program || !$file) {
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        if( $request->user()->cannot('update', $program) ) {
+        if ($request->user()->cannot('update', $program)) {
             abort(Response::HTTP_FORBIDDEN);
         }
 
@@ -275,35 +275,35 @@ class LegislativeProgramController extends AdminController
             $program->rowFiles()->detach($file->id);
             $file->delete();
             DB::commit();
-            return redirect(route(self::EDIT_ROUTE, $program) )
-                ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_f'));
+            return redirect(route(self::EDIT_ROUTE, $program))
+                ->with('success', trans_choice('custom.legislative_program', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Delete Legislative program file (fileId '.$file->id.') error: '.$e);
+            Log::error('Delete Legislative program file (fileId ' . $file->id . ') error: ' . $e);
             return back()->with('danger', __('messages.system_error'));
         }
     }
 
     public function removeRow(Request $request, LegislativeProgram $item, int $rowNum)
     {
-        if( !$item ) {
+        if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        if( $request->user()->cannot('update', $item) ) {
+        if ($request->user()->cannot('update', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
 
         $programId = $item->id;
         //TODO delete files also
         $item->records()->where('row_num', '=', $rowNum)->delete();
-        return redirect(route(self::EDIT_ROUTE, $programId) )
-            ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_f'));
+        return redirect(route(self::EDIT_ROUTE, $programId))
+            ->with('success', trans_choice('custom.legislative_program', 1) . " " . __('messages.updated_successfully_f'));
     }
 
     public function publish(Request $request, LegislativeProgram $item)
     {
-        if( $request->user()->cannot('publish', $item) ) {
+        if ($request->user()->cannot('publish', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
 
@@ -312,18 +312,18 @@ class LegislativeProgramController extends AdminController
             $item->public = 1;
             $item->save();
             DB::commit();
-            return redirect(route(self::LIST_ROUTE) )
-                ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_f'));
+            return redirect(route(self::LIST_ROUTE))
+                ->with('success', trans_choice('custom.legislative_program', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {
             DB::rollBack();
-            logError('Publish legislative program (ID '.$item->id.')', $e);
+            logError('Publish legislative program (ID ' . $item->id . ')', $e);
             return back()->with('danger', __('messages.system_error'));
         }
     }
 
     public function unPublish(Request $request, LegislativeProgram $item)
     {
-        if( $request->user()->cannot('unPublish', $item) ) {
+        if ($request->user()->cannot('unPublish', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
 
@@ -332,11 +332,11 @@ class LegislativeProgramController extends AdminController
             $item->public = 0;
             $item->save();
             DB::commit();
-            return redirect(route(self::LIST_ROUTE) )
-                ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.updated_successfully_f'));
+            return redirect(route(self::LIST_ROUTE))
+                ->with('success', trans_choice('custom.legislative_program', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {
             DB::rollBack();
-            logError('Publish legislative program (ID '.$item->id.')', $e);
+            logError('Publish legislative program (ID ' . $item->id . ')', $e);
             return back()->with('danger', __('messages.system_error'));
         }
     }
@@ -349,15 +349,14 @@ class LegislativeProgramController extends AdminController
      */
     public function destroy(Request $request, LegislativeProgram $item)
     {
-        if($request->user()->cannot('delete', $item)) {
+        if ($request->user()->cannot('delete', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
         try {
             $item->delete();
             return redirect(url()->previous())
-                ->with('success', trans_choice('custom.legislative_program', 1)." ".__('messages.deleted_successfully_f'));
-        }
-        catch (\Exception $e) {
+                ->with('success', trans_choice('custom.legislative_program', 1) . " " . __('messages.deleted_successfully_f'));
+        } catch (\Exception $e) {
             Log::error($e);
             return redirect(url()->previous())->with('danger', __('messages.system_error'));
 
@@ -376,11 +375,11 @@ class LegislativeProgramController extends AdminController
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
         $qItem = LegislativeProgram::query();
-        if( sizeof($with) ) {
+        if (sizeof($with)) {
             $qItem->with($with);
         }
         $item = $qItem->find((int)$id);
-        if( !$item ) {
+        if (!$item) {
             abort(Response::HTTP_NOT_FOUND);
         }
         return $item;

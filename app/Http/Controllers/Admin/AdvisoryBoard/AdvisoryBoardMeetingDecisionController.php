@@ -9,36 +9,14 @@ use App\Models\AdvisoryBoard;
 use App\Models\AdvisoryBoardMeetingDecision;
 use App\Services\Notifications;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Log;
 
 class AdvisoryBoardMeetingDecisionController extends AdminController
 {
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -95,18 +73,6 @@ class AdvisoryBoardMeetingDecisionController extends AdminController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\AdvisoryBoardMeetingDecision $advisoryBoardMeetingDecision
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show(AdvisoryBoardMeetingDecision $advisoryBoardMeetingDecision)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param AdvisoryBoard                $item
@@ -128,18 +94,6 @@ class AdvisoryBoardMeetingDecisionController extends AdminController
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateAdvisoryBoardMeetingDecisionRequest $request, AdvisoryBoardMeetingDecision $advisoryBoardMeetingDecision)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\AdvisoryBoardMeetingDecision $advisoryBoardMeetingDecision
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(AdvisoryBoardMeetingDecision $advisoryBoardMeetingDecision)
     {
         //
     }

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class NotifySubscribedUser extends Mailable
 {
@@ -58,6 +59,8 @@ class NotifySubscribedUser extends Mailable
 
         return $this->from($from, config('mail.from.name'))
             ->subject($this->data['subject'])
-            ->markdown("emails.subscriptions.$markdown", compact('user','modelInstance', 'url', 'text', 'secondModelInstance', 'showSubscriptionLink'));
+            ->markdown("emails.subscriptions.$markdown", compact(
+                'user','modelInstance', 'url', 'text', 'secondModelInstance', 'showSubscriptionLink')
+            );
     }
 }

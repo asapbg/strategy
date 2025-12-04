@@ -186,21 +186,21 @@ class PrisController extends AdminController
                 $fillable['published_at'] = Carbon::now()->format('Y-m-d H:i:s');
             }
             $fillable['in_archive'] = Carbon::parse($validated['doc_date'])->format('Y-m-d') > '1989-12-31' ? 0 : 1;
+
+            $translation = $item->translation;
+
             $item->fill($fillable);
-
-            $item->save();
-            $original_trans = $item->translation ? $item->translation->getOriginal() : [];
             $this->storeTranslateOrNew(Pris::TRANSLATABLE_FIELDS, $item, $validated);
+            $item->save();
 
-            $dirty = $item->getDirty();
-            $new_trans = $item->translation ? $item->translation->toArray() : [];
-            $t_dirty = array_diff_assoc($original_trans, $new_trans);
+            $dirty = $item->getChanges();
+            $t_dirty = $translation?->getChanges() ?? [];
             unset($dirty['updated_at'], $t_dirty['updated_at']);
-            $old_published_at = $item->getOriginal('published_at');
-            $old_public_consultation_id = (int)$item->getOriginal('public_consultation_id');
             if (count($dirty) || count($t_dirty)) {
                 $real_update = true;
             }
+            $old_published_at = $item->getOriginal('published_at');
+            $old_public_consultation_id = (int)$item->getOriginal('public_consultation_id');
 
             $tags = $validated['tags'] ?? [];
             $tags_from_list = explode(',', $validated['tags_list']);
@@ -237,13 +237,13 @@ class PrisController extends AdminController
                 }
                 $item->institutions()->sync($validated['institutions']);
             }
-            $observer = new PrisObserver();
             if ($real_update && $item->published_at) {
+                $observer = new PrisObserver();
                 $event = !$old_published_at && !empty($item->published_at) ? 'created' : 'updated';
                 //$observer->sendEmails($item, $event);
-            }
-            if (!$old_public_consultation_id && $item->public_consultation_id) {
-                //$observer->sendEmails($item, 'updated_with_pc');
+                if (!$old_public_consultation_id && $item->public_consultation_id) {
+                    //$observer->sendEmails($item, 'updated_with_pc');
+                }
             }
 
             DB::commit();

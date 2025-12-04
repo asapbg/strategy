@@ -168,18 +168,16 @@ class PublicConsultationController extends Controller
             return back()->with('warning', __('messages.unauthorized'));
         }
 
-        DB::beginTransaction();
         try {
             $pc->comments()->save(new Comments([
                 'object_code' => Comments::PC_OBJ_CODE,
                 'content' => $validated['content'],
                 'user_id' => $request->user() ? $request->user()->id : null,
             ]));
-            DB::commit();
+
             return redirect(route('public_consultation.view', ['id' => $pc->id]))
                 ->with('success', __('site.successful_send_comment'));
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error('Save comment error: ' . $e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
@@ -479,7 +477,7 @@ class PublicConsultationController extends Controller
         );
     }
 
-    public function fieldОfАctionsReport(Request $request)
+    public function fieldOfActionsReport(Request $request)
     {
         $rf = $request->all();
         $requestFilter = $request->all();
@@ -683,7 +681,7 @@ class PublicConsultationController extends Controller
         );
     }
 
-    public function fieldОfАctionsInstitutionReport(Request $request)
+    public function fieldOfActionsInstitutionReport(Request $request)
     {
         $rf = $request->all();
         $requestFilter = $request->all();
