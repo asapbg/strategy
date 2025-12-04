@@ -444,7 +444,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
             $moderators = User::whereActive(true)
                 ->whereActivityStatus(User::STATUS_ACTIVE)
                 ->hasRole([CustomRole::MODERATOR_PUBLIC_CONSULTATION])
-                ->where('users.id', '=', $modelInstance->user_id)
+                //->where('users.id', '=', $modelInstance->user_id)
                 ->get()
                 ->unique('id');
         }
