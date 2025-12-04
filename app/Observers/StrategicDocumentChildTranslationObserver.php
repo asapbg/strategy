@@ -15,17 +15,6 @@ class StrategicDocumentChildTranslationObserver
 {
 
     /**
-     * Handle the StrategicDocumentChildrenTranslation "created" event.
-     *
-     * @param  StrategicDocumentChildrenTranslation  $strategicDocumentChildrenTranslation
-     * @return void
-     */
-    public function created(StrategicDocumentChildrenTranslation  $strategicDocumentChildrenTranslation)
-    {
-
-    }
-
-    /**
      * Handle the PublicConsultation "updated" event.
      *
      * @param  StrategicDocumentChildrenTranslation  $strategicDocumentChildrenTranslation
@@ -40,8 +29,7 @@ class StrategicDocumentChildTranslationObserver
             unset($dirty['updated_at']);
 
             if (sizeof($dirty)) {
-                $this->sendEmails($strategicDocumentChildrenTranslation, 'updated');
-                Log::info('Send subscribe email on update');
+//                $this->sendEmails($strategicDocumentChildrenTranslation, 'updated');
             }
         }
 
@@ -137,38 +125,5 @@ class StrategicDocumentChildTranslationObserver
         $data['markdown'] = 'strategic-document';
 
         SendSubscribedUserEmailJob::dispatch($data);
-    }
-
-    /**
-     * Handle the PublicConsultation "deleted" event.
-     *
-     * @param  StrategicDocumentChildrenTranslation  $strategicDocumentChildrenTranslation
-     * @return void
-     */
-    public function deleted(StrategicDocumentChildrenTranslation  $strategicDocumentChildrenTranslation)
-    {
-        //
-    }
-
-    /**
-     * Handle the PublicConsultation "restored" event.
-     *
-     * @param  StrategicDocumentChildrenTranslation  $strategicDocumentChildrenTranslation
-     * @return void
-     */
-    public function restored(StrategicDocumentChildrenTranslation  $strategicDocumentChildrenTranslation)
-    {
-        //
-    }
-
-    /**
-     * Handle the PublicConsultation "force deleted" event.
-     *
-     * @param  StrategicDocumentChildrenTranslation  $strategicDocumentChildrenTranslation
-     * @return void
-     */
-    public function forceDeleted(StrategicDocumentChildrenTranslation  $strategicDocumentChildrenTranslation)
-    {
-        //
     }
 }

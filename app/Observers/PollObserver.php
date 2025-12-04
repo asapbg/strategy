@@ -5,9 +5,7 @@ namespace App\Observers;
 use App\Enums\PollStatusEnum;
 use App\Jobs\SendSubscribedUserEmailJob;
 use App\Models\Poll;
-use App\Models\UserSubscribe;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class PollObserver
 {
@@ -19,12 +17,11 @@ class PollObserver
      */
     public function created(Poll $poll)
     {
-//        if(!env('DISABLE_OBSERVERS', false)) {
-//            if ($poll->status != PollStatusEnum::INACTIVE->value && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d')) {
-//                $this->sendEmails($poll, 'created');
-//                Log::info('Send subscribe email on creation');
-//            }
-//        }
+        if (!env('DISABLE_OBSERVERS', false)) {
+            if ($poll->status != PollStatusEnum::INACTIVE->value && Carbon::parse($poll->start_date) <= Carbon::now()->format('Y-m-d')) {
+                $this->sendEmails($poll, 'created');
+            }
+        }
     }
 
     /**
@@ -40,54 +37,22 @@ class PollObserver
             $start_date = (int)$poll->getOriginal('start_date');
             $end_date = (int)$poll->getOriginal('end_date');
 
-            //Check for real changes
-            $dirty = $poll->getDirty(); //return all changed fields
-            //skip some fields in specific cases
+            $dirty = $poll->getDirty();
             unset($dirty['updated_at']);
 
             if (sizeof($dirty)
                 && (
                     (!$old_status && $poll->status && Carbon::parse($poll->start_date)->format('Y-m-d') <= Carbon::now()->format('Y-m-d'))
-                    || ($poll->status && ($start_date != $poll->start_date || $end_date != $poll->end_date) && Carbon::parse($start_date)->format('Y-m-d') <= Carbon::now()->format('Y-m-d'))
+                    ||
+                    (
+                        $poll->status && ($start_date != $poll->start_date || $end_date != $poll->end_date)
+                        && Carbon::parse($start_date)->format('Y-m-d') <= Carbon::now()->format('Y-m-d')
+                    )
                 )
             ) {
-                $this->sendEmails($poll, 'created');
-                Log::info('Send subscribe email on update');
+                $this->sendEmails($poll, 'updated');
             }
         }
-    }
-
-    /**
-     * Handle the Pris "deleted" event.
-     *
-     * @param  \App\Models\Poll  $poll
-     * @return void
-     */
-    public function deleted(Poll $poll)
-    {
-        //
-    }
-
-    /**
-     * Handle the Pris "restored" event.
-     *
-     * @param  \App\Models\Poll  $poll
-     * @return void
-     */
-    public function restored(Poll $poll)
-    {
-        //
-    }
-
-    /**
-     * Handle the Pris "force deleted" event.
-     *
-     * @param  \App\Models\Poll  $poll
-     * @return void
-     */
-    public function forceDeleted(Poll $poll)
-    {
-        //
     }
 
     /**
@@ -99,42 +64,11 @@ class PollObserver
      */
     private function sendEmails(Poll $poll, $event): void
     {
-        if($event == 'created') {
-            $administrators = null;
-            $moderators = null;
+        $data['event'] = $event;
+        $data['modelInstance'] = $poll;
+        $data['modelName'] = $poll->name;
+        $data['markdown'] = 'poll';
 
-            $subscribedUsers = UserSubscribe::where('id', 0)->get();//get users by model filter
-            $filterSubscribtions = UserSubscribe::where('subscribable_type', Poll::class)
-                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                ->whereNull('subscribable_id')
-                ->get();
-
-            if ($filterSubscribtions->count()) {
-                foreach ($filterSubscribtions as $fSubscribe) {
-                    $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-                    $modelIds = Poll::list($filterArray)->pluck('id')->toArray();
-
-                    if (in_array($poll->id, $modelIds)) {
-                        $subscribedUsers->add($fSubscribe);
-                    }
-                }
-            }
-
-            if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
-                return;
-            }
-
-            $data['event'] = $event;
-            $data['administrators'] = $administrators;
-            $data['moderators'] = $moderators;
-            $data['subscribedUsers'] = $subscribedUsers;
-            $data['modelInstance'] = $poll;
-            $data['modelName'] = $poll->name;
-            $data['markdown'] = 'poll';
-
-            SendSubscribedUserEmailJob::dispatch($data);
-        }
+        SendSubscribedUserEmailJob::dispatch($data);
     }
 }

@@ -17,6 +17,7 @@ use App\Models\StrategicActType;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocumentType;
+use App\Observers\StrategicDocumentObserver;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\CommonService;
 use App\Services\StrategicDocuments\FileService;
@@ -434,12 +435,24 @@ class StrategicDocumentsController extends AdminController
                 $validated['pris_act_id'] = null;
             }
 
-
+            $real_update = false;
+            $translation = $item->translation;
             $fillable = $this->getFillableValidated($validated, $item);
 
             $item->fill($fillable);
-            $item->save();
             $this->storeTranslateOrNew(StrategicDocument::TRANSLATABLE_FIELDS, $item, $validated);
+            $item->save();
+
+            $dirty = $item->getChanges();
+            $t_dirty = $translation?->getChanges() ?? [];
+            unset($dirty['updated_at'], $t_dirty['updated_at']);
+            if (count($dirty) || count($t_dirty)) {
+                $real_update = true;
+            }
+            if ($real_update && $item->active) {
+                $observer = new StrategicDocumentObserver();
+                $observer->sendEmails($item, "updated");
+            }
 
             if (count($fileRequests)) {
                 foreach ($fileRequests as $fileRequest) {
@@ -460,7 +473,7 @@ class StrategicDocumentsController extends AdminController
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Create/Update strategic document ID(' . $id . '): ' . $e);
-            return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
+            return $this->backWithMessage('danger', __('messages.system_error'));
         }
     }
 

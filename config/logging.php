@@ -119,10 +119,17 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/info.log'),
         ],
+
+        'emails' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/emails.log'),
+        ],
+
         'eauth' => [
             'driver' => 'single',
             'path' => storage_path('logs/eauth.log'),
         ],
+
         'strategy_api' => [
             'driver' => 'single',
             'path' => storage_path('logs/strategy_api.log'),

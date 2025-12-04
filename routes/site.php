@@ -100,8 +100,8 @@ use Illuminate\Support\Facades\Storage;
             return redirect(route('library.publications'));
         });
         Route::get('/library/publications/{type?}', 'publications')->name('library.publications');
-        Route::get('/library/news', 'news')->name('library.news');
-        Route::get('/library/{type}/{id}/details', 'details')->name('library.details');
+        Route::get('/library/news',                 'news')->name('library.news');
+        Route::get('/library/{type}/{id}/details',  'details')->name('library.details');
     });
 
     Route::controller(\App\Http\Controllers\PublicConsultationController::class)->group(function () {
@@ -131,8 +131,8 @@ use Illuminate\Support\Facades\Storage;
     });
 
     Route::controller(\App\Http\Controllers\LegislativeProgramController::class)->group(function () {
-        Route::get('/legislative-programs', 'index')->name('lp.index');
-        Route::get('/legislative-programs/{id}', 'show')->name('lp.view');
+        Route::get('/legislative-programs',     'index')->name('lp.index');
+        Route::get('/legislative-programs/{id}','show')->name('lp.view');
     });
 
     Route::controller(\App\Http\Controllers\StrategicDocumentsController::class)->group(function() {
@@ -204,7 +204,7 @@ use Illuminate\Support\Facades\Storage;
     });
 
     Route::controller(\App\Http\Controllers\LegislativeInitiativeCommentController::class)->prefix('/legislative-initiatives/comments/')->group(function () {
-        Route::post('store', 'store')->name('legislative_initiatives.comments.store');
+        Route::post('store',            'store')->name('legislative_initiatives.comments.store');
         Route::post('{comment}/delete', 'destroy')->name('legislative_initiatives.comments.delete');
     });
 
@@ -238,17 +238,17 @@ use Illuminate\Support\Facades\Storage;
     });
 
     Route::controller(\App\Http\Controllers\NationalActionPlans::class)->group(function () {
-        Route::get('ogp/national-action-plans', 'index')->name('ogp.national_action_plans');
-        Route::get('ogp/national-action-plans/{id}', 'show')->name('ogp.national_action_plans.show')->whereNumber('id');
-        Route::get('ogp/national-action-plans/old/{id}', 'showOld')->name('ogp.national_action_plans.show.old')->whereNumber('id');
-        Route::get('ogp/national-action-plans/old/file/download', function (){
+        Route::get('ogp/national-action-plans',                 'index')->name('ogp.national_action_plans');
+        Route::get('ogp/national-action-plans/{id}',            'show')->name('ogp.national_action_plans.show')->whereNumber('id');
+        Route::get('ogp/national-action-plans/old/{id}',        'showOld')->name('ogp.national_action_plans.show.old')->whereNumber('id');
+        Route::get('ogp/national-action-plans/{id}/export',     'export')->name('ogp.national_action_plans.export')->whereNumber('id');
+        Route::get('ogp/national-action-plans/{id}/develop-plan','developPlan')->name('ogp.national_action_plans.develop_plan');
+        Route::get('ogp/national-action-plans/{id}/develop-plan/area/view/{planArea}', 'areaDevelopPlan')->name('ogp.national_action_plans.develop_plan.area');
+        Route::get('ogp/national-action-plans/old/file/download', function () {
             return Storage::disk('public_uploads')->download(request()->get('file'));
         })->name('ogp.national_action_plans.old.file');
-        Route::get('ogp/national-action-plans/{id}/export', 'export')->name('ogp.national_action_plans.export')->whereNumber('id');
-        Route::get('ogp/national-action-plans/{id}/develop-plan', 'developPlan')->name('ogp.national_action_plans.develop_plan');
-        Route::get('ogp/national-action-plans/{id}/develop-plan/area/view/{planArea}', 'areaDevelopPlan')->name('ogp.national_action_plans.develop_plan.area');
-        //    Route::get('ogp/national-action-plans/{id}/export-old', 'exportOld')->name('ogp.national_action_plans.export.old')->whereNumber('id');
-//    Route::get('ogp/national-action-plans/{plan}/view/{planArea}', 'area')->name('ogp.national_action_plans.area');
+        //Route::get('ogp/national-action-plans/{id}/export-old', 'exportOld')->name('ogp.national_action_plans.export.old')->whereNumber('id');
+        //Route::get('ogp/national-action-plans/{plan}/view/{planArea}', 'area')->name('ogp.national_action_plans.area');
     });
 
     Route::controller(\App\Http\Controllers\RssController::class)->group(function (){

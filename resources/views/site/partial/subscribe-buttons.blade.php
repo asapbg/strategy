@@ -20,12 +20,16 @@
 {{--    @if(App\Models\User::isSubscribed(App\Models\UserSubscribe::CHANNEL_EMAIL))--}}
     @if(!isset($no_email_subscribe) || !$no_email_subscribe)
         @if(isset($hasSubscribeEmail) && $hasSubscribeEmail)
-            <button class="btn email-sub main-color unsubscribe" @if(isset($subscribe_params)) data-filter="{{ json_encode($subscribe_params) }}" @endif data-channel="{{ App\Models\UserSubscribe::CHANNEL_EMAIL }}">
+            <button class="btn email-sub main-color unsubscribe" @if(isset($subscribe_params)) data-filter="{{ json_encode($subscribe_params) }}" @endif
+                    data-channel="{{ App\Models\UserSubscribe::CHANNEL_EMAIL }}"
+            >
                 <i class="fas fa-envelope"></i><span>{{ __('custom.unsubscribe') }}</span>
             </button>
         @else
             <button data-subscribetitle="{{ __('custom.subscribe_title') }}" data-url="{{ route('subscribe.form') }}"
-                class="btn email-sub main-color subscribe" @if(isset($subscribe_params)) data-filter="{{ json_encode($subscribe_params) }}" @endif data-channel="{{ App\Models\UserSubscribe::CHANNEL_EMAIL }}">
+                    class="btn email-sub main-color subscribe" @if(isset($subscribe_params)) data-filter="{{ json_encode($subscribe_params) }}" @endif
+                    data-channel="{{ App\Models\UserSubscribe::CHANNEL_EMAIL }}"
+            >
                 <i class="fas fa-envelope"></i><span>{{ isset($subscribe_list) && $subscribe_list ? __('custom.subscribe_list') : __('custom.subscribe') }}</span>
             </button>
         @endif

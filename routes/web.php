@@ -22,7 +22,7 @@ Route::feeds();
 
 Route::get('/locale', \App\Http\Controllers\LocaleController::class)->name('change-locale');
 
-Route::get('/download/{file}', [\App\Http\Controllers\CommonController::class, 'downloadFile'])->whereNumber('file')->name('download.file');
+//Route::get('/download/{file}', [\App\Http\Controllers\CommonController::class, 'downloadFile'])->whereNumber('file')->name('download.file');
 Route::get('/strategy-document/download-file/{id}', [\App\Http\Controllers\StrategicDocumentsController::class, 'downloadDocFile'])->name('strategy-document.download-file');
 
 Route::prefix(app()->getLocale())->group(function (){
@@ -31,8 +31,8 @@ Route::prefix(app()->getLocale())->group(function (){
 
     Route::controller(\App\Http\Controllers\Auth\ForgotPasswordController::class)->group(function () {
         Route::get('/forgot-password',                'showLinkRequestForm')->name('forgot_pass');
-        Route::post('/forgot-password/send',                'sendResetLinkEmail')->name('forgot_pass.password.send');
-        Route::post('/forgot-password/update',                'confirmPassword')->name('forgot_pass.password.update');
+        Route::post('/forgot-password/send',          'sendResetLinkEmail')->name('forgot_pass.password.send');
+        Route::post('/forgot-password/update',        'confirmPassword')->name('forgot_pass.password.update');
     });
 });
 
@@ -46,11 +46,13 @@ Route::get('/sitemap/sub/{page}', [\App\Http\Controllers\HomeController::class, 
 Route::get('/admin/login', function (){
     return redirect(route('login'));
 });
-
-Route::get('/get-institutions', [CommonController::class, 'modalInstitutions'])->name('modal.institutions');
-Route::get('/file-preview-modal/{id}', [CommonController::class, 'previewModalFile'])->name('modal.file_preview');
-Route::get('/file-preview-modal-static-page', [CommonController::class, 'previewModalFileStaticPage'])->name('modal.file_preview_static_page');
-Route::get('/select2-ajax/{type}', [CommonController::class, 'getSelect2Ajax'])->name('select2.ajax');
+Route::controller(CommonController::class)->group(function () {
+    Route::get('/download/{file}',                  'downloadFile')->whereNumber('file')->name('download.file');
+    Route::get('/get-institutions',                 'modalInstitutions')->name('modal.institutions');
+    Route::get('/file-preview-modal/{id}',          'previewModalFile')->name('modal.file_preview');
+    Route::get('/file-preview-modal-static-page',   'previewModalFileStaticPage')->name('modal.file_preview_static_page');
+    Route::get('/select2-ajax/{type}',              'getSelect2Ajax')->name('select2.ajax');
+});
 
 Route::controller(\App\Http\Controllers\Templates::class)->group(function () {
     Route::get('/templates',                'index')->name('templates');

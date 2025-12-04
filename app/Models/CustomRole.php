@@ -28,7 +28,7 @@ class CustomRole extends Role
 
     const MODERATOR_PARTNERSHIP = 'moderator-partnership';
     const MODERATOR_PRIS = 'moderator-legal';
-    const MODERATOR_PUBLIC_CONSULTATION = 'moderator-advisory';
+    const MODERATOR_PUBLIC_CONSULTATION = 'moderator-public-consultation';
 
     /**
      * The attributes that are mass assignable.

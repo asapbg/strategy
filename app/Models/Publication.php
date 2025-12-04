@@ -164,6 +164,15 @@ class Publication extends ModelActivityExtend implements TranslatableContract, F
     }
 
     /**
+     * @return bool
+     */
+    public function isPublishedNewsOrLibrary(): bool
+    {
+        return $this->active && $this->published_at <= Carbon::now()->format('Y-m-d')
+            && in_array($this->type, [PublicationTypesEnum::TYPE_NEWS->value, PublicationTypesEnum::TYPE_LIBRARY->value]);
+    }
+
+    /**
      * Content
      */
     protected function advCategory(): Attribute

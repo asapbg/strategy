@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Validator;
 
 class AdvisoryBoardMessagesController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $items = DB::table('notifications')
             ->where('type', '=', 'App\Notifications\AdvBoardsMsgToModerator')
             ->orderBy('read_at', 'desc')
@@ -24,53 +25,55 @@ class AdvisoryBoardMessagesController extends Controller
         return $this->view('admin.advisory-boards.messages.list', compact('items'));
     }
 
-    public function show(Request $request, $item){
+    public function show(Request $request, $item)
+    {
         $notification = DB::table('notifications')
             ->where('id', '=', $item)
             ->first();
 
-        if(!$notification) {
+        if (!$notification) {
             return back()->with('warning', __('custom.record_not_found'));
         }
 
         return $this->view('admin.advisory-boards.messages.view', compact('notification'));
     }
 
-    public function send(Request $request){
+    public function send(Request $request)
+    {
 
-        if($request->isMethod('post')){
+        if ($request->isMethod('post')) {
             $rq = new AdvBoardStoreMessage();
             $validator = Validator::make($request->all(), $rq->rules());
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator->errors());
             }
 
-            if( !$request->user()->canAny(['manage.*', 'manage.advisory-boards']) ) {
-                return back()->withInput()->with('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
+            if (!$request->user()->canAny(['manage.*', 'manage.advisory-boards'])) {
+                return $this->backWithMessage('danger', 'Нямате достъп до тази функционалност. Моля свържете се с администратор.');
             }
 
             $validated = $validator->validated();
 
-            if(isset($validated['send_to_all'])) {
+            if (isset($validated['send_to_all'])) {
 
-                $users = User::whereHas('roles', function($q){
+                $users = User::whereHas('roles', function ($q) {
                     $q->where("name", CustomRole::MODERATOR_ADVISORY_BOARD);
-                })->get();
+                })
+                ->get();
 
-                if($users->count()){
-                    foreach ($users as $user){
-                        $this->sendMsg($user, $validated);
-                    }
-                } else{
-                    return back()->withInput()->with('warning', 'Не са открити потребители до които да бъде изпратено съобщението');
+                if (!$users->count()) {
+                    return $this->backWithMessage('warning', 'Не са открити потребители до които да бъде изпратено съобщението');
                 }
 
-            } else{
+                foreach ($users as $user) {
+                    $this->sendMsg($user, $validated);
+                }
+            } else {
 
-                if(isset($validated['recipient']) && sizeof($validated['recipient'])) {
-                    foreach ($validated['recipient'] as $userId){
+                if (isset($validated['recipient']) && sizeof($validated['recipient'])) {
+                    foreach ($validated['recipient'] as $userId) {
                         $user = User::find($userId);
-                        if($user){
+                        if ($user) {
                             $this->sendMsg($user, $validated);
                         }
                     }
@@ -81,9 +84,11 @@ class AdvisoryBoardMessagesController extends Controller
         }
 
 
-        $moderators = User::whereHas('roles', function($q){
+        $moderators = User::whereHas('roles', function ($q) {
             $q->where("name", CustomRole::MODERATOR_ADVISORY_BOARD);
-        })->get();
+        })
+        ->get();
+
         return $this->view('admin.advisory-boards.messages.edit', compact('moderators'));
     }
 
@@ -92,11 +97,12 @@ class AdvisoryBoardMessagesController extends Controller
      * @param $messageData
      * @return void
      */
-    private function sendMsg(User $user, $messageData){
+    private function sendMsg(User $user, $messageData)
+    {
         $user->notify(new AdvBoardsMsgToModerator($messageData));
         $lastMsg = $user->notifications()->latest()->limit(1)->get();
 
-        if($lastMsg->count() == 1){
+        if ($lastMsg->count() == 1) {
             $user->notify(new AdvBoardsEmailMsgToModerator($lastMsg[0]));
         }
     }

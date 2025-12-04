@@ -12,15 +12,14 @@ class OperationalProgramObserver
     /**
      * Handle the OperationalProgram "created" event.
      *
-     * @param  \App\Models\Consultations\OperationalProgram  $operationalProgram
+     * @param \App\Models\Consultations\OperationalProgram $operationalProgram
      * @return void
      */
     public function created(OperationalProgram $operationalProgram)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if (!env('DISABLE_OBSERVERS', false)) {
             if ($operationalProgram->public) {
                 $this->sendEmails($operationalProgram, 'created');
-                Log::info('Send subscribe email on creation');
             }
         }
     }
@@ -28,20 +27,18 @@ class OperationalProgramObserver
     /**
      * Handle the OperationalProgram "updated" event.
      *
-     * @param  \App\Models\Consultations\OperationalProgram  $operationalProgram
+     * @param \App\Models\Consultations\OperationalProgram $operationalProgram
      * @return void
      */
     public function updated(OperationalProgram $operationalProgram)
     {
-        if(!env('DISABLE_OBSERVERS', false)) {
+        if (!env('DISABLE_OBSERVERS', false)) {
             $old_public = (int)$operationalProgram->getOriginal('public');
-            //Check for real changes
-            $dirty = $operationalProgram->getDirty(); //return all changed fields
-            //skip some fields in specific cases
+            $dirty = $operationalProgram->getDirty();
             unset($dirty['updated_at']);
 
-            if (sizeof($dirty) && !$old_public && $operationalProgram->public) {
-                $this->sendEmails($operationalProgram, 'created');
+            if (sizeof($dirty) && $operationalProgram->public) {
+                $this->sendEmails($operationalProgram, $old_public ? "updated" : "created");
                 Log::info('Send subscribe email on update');
             }
         }
@@ -50,7 +47,7 @@ class OperationalProgramObserver
     /**
      * Handle the OperationalProgram "deleted" event.
      *
-     * @param  \App\Models\Consultations\OperationalProgram  $operationalProgram
+     * @param \App\Models\Consultations\OperationalProgram $operationalProgram
      * @return void
      */
     public function deleted(OperationalProgram $operationalProgram)
@@ -61,7 +58,7 @@ class OperationalProgramObserver
     /**
      * Handle the OperationalProgram "restored" event.
      *
-     * @param  \App\Models\Consultations\OperationalProgram  $operationalProgram
+     * @param \App\Models\Consultations\OperationalProgram $operationalProgram
      * @return void
      */
     public function restored(OperationalProgram $operationalProgram)
@@ -72,7 +69,7 @@ class OperationalProgramObserver
     /**
      * Handle the OperationalProgram "force deleted" event.
      *
-     * @param  \App\Models\Consultations\OperationalProgram  $operationalProgram
+     * @param \App\Models\Consultations\OperationalProgram $operationalProgram
      * @return void
      */
     public function forceDeleted(OperationalProgram $operationalProgram)
@@ -89,49 +86,11 @@ class OperationalProgramObserver
      */
     private function sendEmails(OperationalProgram $operationalProgram, $event): void
     {
-        if($event == 'created'){
-            $administrators = null;
-            $moderators = null;
-            $subscribedUsers = UserSubscribe::where('id', 0)->get();
+        $data['event'] = $event;
+        $data['modelInstance'] = $operationalProgram;
+        $data['modelName'] = $operationalProgram->name;
+        $data['markdown'] = 'op';
 
-            //get users by model ID
-//            $subscribedUsers = UserSubscribe::where('subscribable_type', OperationalProgram::class)
-//                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-//                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-//                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-//                ->where('subscribable_id', '=', $operationalProgram->id)
-//                ->get();
-
-            //get users by model filter
-            $filterSubscribtions = UserSubscribe::where('subscribable_type', OperationalProgram::class)
-                ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                ->whereNull('subscribable_id')
-                ->get();
-
-            if($filterSubscribtions->count()){
-                foreach ($filterSubscribtions as $fSubscribe){
-                    $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-                    $modelIds = OperationalProgram::list($filterArray)->pluck('id')->toArray();
-                    if(in_array($operationalProgram->id, $modelIds)){
-                        $subscribedUsers->add($fSubscribe);
-                    }
-                }
-            }
-            if (!$administrators && !$moderators && $subscribedUsers->count() == 0) {
-                return;
-            }
-
-            $data['event'] = $event;
-            $data['administrators'] = $administrators;
-            $data['moderators'] = $moderators;
-            $data['subscribedUsers'] = $subscribedUsers;
-            $data['modelInstance'] = $operationalProgram;
-            $data['modelName'] = $operationalProgram->name;
-            $data['markdown'] = 'op';
-
-            SendSubscribedUserEmailJob::dispatch($data);
-        }
+        SendSubscribedUserEmailJob::dispatch($data);
     }
 }

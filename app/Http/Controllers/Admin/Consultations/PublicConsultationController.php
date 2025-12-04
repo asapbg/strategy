@@ -41,6 +41,7 @@ use App\Models\Setting;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\Timeline;
 use App\Models\UserSubscribe;
+use App\Observers\PublicConsultationObserver;
 use App\Services\FileOcr;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -76,10 +77,15 @@ class PublicConsultationController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? PublicConsultation::PAGINATE;
 
-        $items = PublicConsultation::with(['translation', 'consultations'])
+        $items = PublicConsultation::select('public_consultation.*')
+            ->with(['translation', 'consultations'])
+            ->join('public_consultation_translations', function ($j) {
+                $j->on('public_consultation_translations.public_consultation_id', '=', 'public_consultation.id')
+                    ->where('public_consultation_translations.locale', '=', app()->getLocale());
+            })
             ->FilterBy($requestFilter)
             ->ByUser()
-            ->orderByDesc('id')
+            ->orderByDesc('public_consultation.id')
             ->paginate($paginate);
         $toggleBooleanModel = 'PublicConsultation';
         $editRouteName = self::EDIT_ROUTE;
@@ -278,6 +284,8 @@ class PublicConsultationController extends AdminController
                 $institution = $isAdmin ? Institution::find((int)$validated['institution_id']) : ($request->user()->institution ? $request->user()->institution : null);
                 $fillable['consultation_level_id'] = $institution ? $institution->level->nomenclature_level : 0;
             }
+            $real_update = false;
+            $translation = $item->translation;
             $item->fill($fillable);
             if (!$id) {
                 $item->user_id = $user->id;
@@ -293,13 +301,29 @@ class PublicConsultationController extends AdminController
 //            $from = $validated['open_from'] ? Carbon::parse($validated['open_from']) : null;
 //            $to = $validated['open_to'] ? Carbon::parse($validated['open_to']) : null;
             $item->active_in_days = $to && $from ? $to->diffInDays($from) : null;
-            $item->save();
+            $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
             if (!$id) {
                 $item->reg_num = $item->id . '-K';
             }
-            $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
+            $item->save();
 
-            $item->consultations()->sync($validated['connected_pc'] ?? []);
+            $dirty = !$id ? [] : $item->getChanges();
+            $t_dirty = $translation?->getChanges() ?? [];
+            unset($dirty['updated_at'], $t_dirty['updated_at']);
+            if (count($dirty) || count($t_dirty)) {
+                $real_update = true;
+            }
+
+            $connected_pc = $validated['connected_pc'] ?? [];
+            if ($item->consultations->count() != count($connected_pc)) {
+                $real_update = true;
+            }
+            $item->consultations()->sync($connected_pc ?? []);
+
+            if ($real_update && $item->active) {
+                $observer = new PublicConsultationObserver();
+                $observer->sendEmails($item, "updated");
+            }
 
             //START Timeline
             $delete = $update = false;

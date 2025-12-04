@@ -65,8 +65,8 @@ class PollController extends AdminController
 
         $item = $this->getRecord($id);
 
-        if( ($id && $request->user()->cannot('update', $item))
-            || (!$id && $request->user()->cannot('create', Poll::class)) ) {
+        if (($id && $request->user()->cannot('update', $item))
+            || (!$id && $request->user()->cannot('create', Poll::class))) {
             return redirect(route(self::LIST_ROUTE))->with('warning', __('messages.unauthorized'));
         }
         $storeRouteName = self::STORE_ROUTE;
@@ -76,14 +76,7 @@ class PollController extends AdminController
     }
 
     public function store(StorePollRequest $request)
-//    public function store(Request $request)
     {
-//        $r = new StorePollRequest();
-//        $v = Validator::make($request->all(), $r->rules());
-//        if($v->fails()) {
-//            dd($v->errors());
-//        }
-
         $validated = $request->validated();
         $id = $validated['id'];
         $stay = $validated['stay'] ?? 0;
@@ -93,12 +86,12 @@ class PollController extends AdminController
 
         $item = $id ? $this->getRecord($id) : new Poll();
 
-        if( !$item && $validated['id'] ) {
+        if (!$item && $validated['id']) {
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        if( ($id && $request->user()->cannot('update', $item))
-            || (!$id && $request->user()->cannot('create', $item)) ) {
+        if (($id && $request->user()->cannot('update', $item))
+            || (!$id && $request->user()->cannot('create', $item))) {
             return redirect(route(self::LIST_ROUTE))->with('warning', __('messages.unauthorized'));
         }
 
@@ -110,70 +103,42 @@ class PollController extends AdminController
             $item->status = (int)($request->input('status'));
             $item->is_once = (int)($request->filled('is_once'));
             $item->only_registered = (int)($request->filled('only_registered'));
-            if( !$id ){
+            if (!$id) {
                 $item->user_id = auth()->user()->id;
             }
             $item->save();
 
-            if($pc) {
+            if ($pc) {
                 $item->consultations()->syncWithoutDetaching([$pc->id]);
 //                public_consultation.open_from', '<=', Carbon::now()->format('Y-m-d')
 //                if(!$id && $pc->active && Carbon::parse($pc->open_from)->format('Y-m-d') <= Carbon::now()->format('Y-m-d') && Carbon::parse($pc->open_to)->format('Y-m-d') >= Carbon::now()->format('Y-m-d')){
-                if(!$id && $pc->active){
+                if (!$id && $pc->active) {
                     //Send PC Send notification
                     $data['event'] = 'pc_poll_created';
-                    $data['administrators'] = null;
-                    $data['moderators'] = null;
                     $data['modelInstance'] = $item;
+                    $data['modelName'] = $item->name;
                     $data['secondModelInstance'] = $pc;
                     $data['markdown'] = 'public-consultation-poll';
 
-                    //get users by model ID
-                    $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
-                        ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-                        ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-                        ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-                        ->where('subscribable_id', '=', $pc->id)
-                        ->get();
+                    SendSubscribedUserEmailJob::dispatch($data);
 
-//                    //get users by model filter
-//                    $filterSubscribtions = UserSubscribe::where('subscribable_type', PublicConsultation::class)
-//                        ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
-//                        ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
-//                        ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
-//                        ->whereNull('subscribable_id')
-//                        ->get();
-//
-//                    if($filterSubscribtions->count()){
-//                        foreach ($filterSubscribtions as $fSubscribe){
-//                            $filterArray = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
-//                            $modelIds = PublicConsultation::list($filterArray, 'title', 'desc', 0)->pluck('id')->toArray();
-//                            if(in_array($pc->id, $modelIds)){
-//                                $subscribedUsers->add($fSubscribe);
-//                            }
-//                        }
-//                    }
-                    $data['subscribedUsers'] = $subscribedUsers;
-                    if ($data['administrators'] || $data['moderators'] || $data['subscribedUsers']->count()) {
-                        SendSubscribedUserEmailJob::dispatch($data);
-                    }
                 }
             }
 
             DB::commit();
-            if( $stay ) {
-                return redirect(route(self::EDIT_ROUTE, ['id' => $item->id]).(isset($pc) && $pc ? '?pc='.$pc->id : '') )
-                    ->with('success', trans_choice('custom.polls', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
+            if ($stay) {
+                return redirect(route(self::EDIT_ROUTE, ['id' => $item->id]) . (isset($pc) && $pc ? '?pc=' . $pc->id : ''))
+                    ->with('success', trans_choice('custom.polls', 1) . " " . ($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
             } elseif ($saveToPc) {
-                return redirect(route('admin.consultations.public_consultations.edit', $pc).'#ct-polls' )
-                    ->with('success', trans_choice('custom.polls', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
+                return redirect(route('admin.consultations.public_consultations.edit', $pc) . '#ct-polls')
+                    ->with('success', trans_choice('custom.polls', 1) . " " . ($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
             }
 
             return to_route(self::LIST_ROUTE)
-                ->with('success', trans_choice('custom.polls', 1)." ".($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
+                ->with('success', trans_choice('custom.polls', 1) . " " . ($id ? __('messages.updated_successfully_f') : __('messages.created_successfully_f')));
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Save poll error: '.$e);
+            Log::error('Save poll error: ' . $e);
             return redirect()->back()->withInput(request()->all())->with('danger', __('messages.system_error'));
         }
     }
@@ -189,7 +154,7 @@ class PollController extends AdminController
         $poll = $this->getRecord($validated['poll_id']);
         $pc = isset($validated['pc']) && $validated['pc'] ? PublicConsultation::find((int)$validated['pc']) : null;
 
-        if( $request->user()->cannot('update', $poll) ) {
+        if ($request->user()->cannot('update', $poll)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
         DB::beginTransaction();
@@ -205,9 +170,9 @@ class PollController extends AdminController
             }
 
             DB::commit();
-            return redirect(route(self::EDIT_ROUTE, ['id' => $validated['poll_id']]).( $pc ? '?pc='.$pc->id : ''))->with('success', trans_choice('custom.questions', 1).' '.__('messages.created_successfully_m'));
+            return redirect(route(self::EDIT_ROUTE, ['id' => $validated['poll_id']]) . ($pc ? '?pc=' . $pc->id : ''))->with('success', trans_choice('custom.questions', 1) . ' ' . __('messages.created_successfully_m'));
         } catch (\Exception $e) {
-            Log::error('Create question :'.$e->getMessage());
+            Log::error('Create question :' . $e->getMessage());
             DB::rollBack();
             return back()->with('danger', __('messages.system_error'))->withInput();
         }
@@ -222,7 +187,7 @@ class PollController extends AdminController
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        if( $request->user()->cannot('update', $question->poll) ) {
+        if ($request->user()->cannot('update', $question->poll)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -245,9 +210,9 @@ class PollController extends AdminController
             }
 
             DB::commit();
-            return redirect(route(self::EDIT_ROUTE, ['id' => $question->poll_id]).( $pc ? '?pc='.$pc->id : ''))->with('success', trans_choice('custom.questions', 1).' '.__('messages.updated_successfully_m'));
+            return redirect(route(self::EDIT_ROUTE, ['id' => $question->poll_id]) . ($pc ? '?pc=' . $pc->id : ''))->with('success', trans_choice('custom.questions', 1) . ' ' . __('messages.updated_successfully_m'));
         } catch (\Exception $e) {
-            Log::error('Edit question :'.$e->getMessage());
+            Log::error('Edit question :' . $e->getMessage());
             DB::rollBack();
             return back()->with('danger', __('messages.system_error'))->withInput();
         }
@@ -260,7 +225,7 @@ class PollController extends AdminController
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        if( $request->user()->cannot('update', $question->poll) ) {
+        if ($request->user()->cannot('update', $question->poll)) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -279,7 +244,7 @@ class PollController extends AdminController
             abort(Response::HTTP_NOT_FOUND);
         }
 
-        if( $request->user()->cannot('update', $question->poll) ) {
+        if ($request->user()->cannot('update', $question->poll)) {
             return to_route('admin.polls.edit', ['id' => $question->poll->id])->with('warning', __('messages.unauthorized'));
         }
 
@@ -290,7 +255,7 @@ class PollController extends AdminController
         $question->answers()->delete();
         $question->delete();
 
-        return redirect(route('admin.polls.edit', ['id' => $question->poll_id]))->with('success', trans_choice('custom.questions', 1).' '.__('messages.deleted_successfully_m'));
+        return redirect(route('admin.polls.edit', ['id' => $question->poll_id]))->with('success', trans_choice('custom.questions', 1) . ' ' . __('messages.deleted_successfully_m'));
     }
 
     /**
@@ -301,15 +266,14 @@ class PollController extends AdminController
      */
     public function destroy(Request $request, Poll $item)
     {
-        if($request->user()->cannot('delete', $item)) {
+        if ($request->user()->cannot('delete', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
         try {
             $item->delete();
             return redirect(url()->previous())
-                ->with('success', trans_choice('custom.polls', 1)." ".__('messages.deleted_successfully_f'));
-        }
-        catch (\Exception $e) {
+                ->with('success', trans_choice('custom.polls', 1) . " " . __('messages.deleted_successfully_f'));
+        } catch (\Exception $e) {
             Log::error($e);
             return redirect(url()->previous())->with('danger', __('messages.system_error'));
 
@@ -323,7 +287,7 @@ class PollController extends AdminController
      */
     public function preview(Request $request, Poll $item)
     {
-        if($request->user()->cannot('preview', $item)) {
+        if ($request->user()->cannot('preview', $item)) {
             abort(Response::HTTP_FORBIDDEN);
         }
         $statistic = $item->getStats();
@@ -348,7 +312,7 @@ class PollController extends AdminController
             ),
             'active' => array(
                 'type' => 'select',
-                'options' => PollStatusEnum::statusOptions(__('custom.status').' ('.__('custom.any').')'),
+                'options' => PollStatusEnum::statusOptions(__('custom.status') . ' (' . __('custom.any') . ')'),
                 'default' => '',
                 'placeholder' => __('custom.status'),
                 'value' => $request->input('active'),
@@ -364,11 +328,11 @@ class PollController extends AdminController
     private function getRecord($id, array $with = []): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null
     {
         $qItem = Poll::withTrashed();
-        if( sizeof($with) ) {
+        if (sizeof($with)) {
             $qItem->with($with);
         }
         $item = $qItem->find((int)$id);
-        if( !$item ) {
+        if (!$item) {
             return new Poll();
         }
         return $item;

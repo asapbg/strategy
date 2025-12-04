@@ -54,7 +54,7 @@ class AdvisoryBoardController extends AdminController
         $items = AdvisoryBoard::query();
 
         $limitItems = false;
-        if (!(auth()->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE,CustomRole::MODERATOR_ADVISORY_BOARDS]))) {
+        if (!(auth()->user()->hasAnyRole([CustomRole::ADMIN_USER_ROLE, CustomRole::MODERATOR_ADVISORY_BOARDS]))) {
             $limitItems = true;
         }
         $items = $items->with(['policyArea', 'translations'])
@@ -62,11 +62,11 @@ class AdvisoryBoardController extends AdminController
 //                $query->when(!empty($keywords) && is_numeric($keywords), function ($query) use ($keywords) {
 //                    $query->where('id', $keywords);
 //                })
-                    $query->when(!empty($keywords) && !is_numeric($keywords), function ($query) use ($keywords) {
-                        $query->whereHas('translations', function ($query) use ($keywords) {
-                            $query->where('name', 'ilike', '%' . $keywords . '%');
-                        });
+                $query->when(!empty($keywords) && !is_numeric($keywords), function ($query) use ($keywords) {
+                    $query->whereHas('translations', function ($query) use ($keywords) {
+                        $query->where('name', 'ilike', '%' . $keywords . '%');
                     });
+                });
             })
             ->when($status != '' && $status > -1, function ($query) use ($status) {
                 $query->where('active', $status == '0' ? 'false' : 'true');
@@ -74,12 +74,12 @@ class AdvisoryBoardController extends AdminController
             ->when($only_deleted, function ($query) {
                 $query->onlyTrashed();
             })
-            ->when($limitItems, function ($query){
+            ->when($limitItems, function ($query) {
                 $query->whereHas('moderators', function ($query) {
                     $query->where('user_id', '=', auth()->user()->id);
                 });
             })
-            ->orderBy('active', 'desc')
+            ->orderBy('id', 'desc')
             ->orderByTranslation('name')
             ->paginate(AdvisoryBoard::PAGINATE);
 
@@ -109,8 +109,8 @@ class AdvisoryBoardController extends AdminController
             ->get();
 
         return $this->view('admin.advisory-boards.create', compact(
-            'item', 'field_of_actions', 'authorities', 'advisory_act_types',
-            'advisory_chairman_types', 'institutions', 'translatableFields', 'all_users',
+                'item', 'field_of_actions', 'authorities', 'advisory_act_types',
+                'advisory_chairman_types', 'institutions', 'translatableFields', 'all_users',
             )
         );
     }
@@ -137,9 +137,9 @@ class AdvisoryBoardController extends AdminController
             $item->save();
 
             // Upload File
-            if( $item && $itemImg ) {
+            if ($item && $itemImg) {
                 $file_name = Str::limit($itemImg->getClientOriginalName(), 70);
-                $fileNameToStore = $file_name.'.'.$itemImg->getClientOriginalExtension();
+                $fileNameToStore = $file_name . '.' . $itemImg->getClientOriginalExtension();
                 // Upload File
                 $itemImg->storeAs(File::ADVISORY_BOARD_UPLOAD_DIR, $fileNameToStore, 'public_uploads');
                 $file = new File([
@@ -147,12 +147,12 @@ class AdvisoryBoardController extends AdminController
                     'code_object' => File::CODE_AB,
                     'filename' => $fileNameToStore,
                     'content_type' => $itemImg->getClientMimeType(),
-                    'path' => 'files'.DIRECTORY_SEPARATOR.File::ADVISORY_BOARD_UPLOAD_DIR.$fileNameToStore,
+                    'path' => 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR . $fileNameToStore,
                     'sys_user' => $request->user()->id,
                 ]);
                 $file->save();
 
-                if( $file ) {
+                if ($file) {
                     $item->file_id = $file->id;
                     $item->save();
                 }
@@ -177,7 +177,7 @@ class AdvisoryBoardController extends AdminController
             if (!empty($validated['moderator_id'])) {
                 $moderator = AdvisoryBoardModerator::create([
                     'advisory_board_id' => $item->id,
-                    'user_id'           => $validated['moderator_id'],
+                    'user_id' => $validated['moderator_id'],
                 ]);
 
                 $moderator->user->assignRole(CustomRole::MODERATOR_ADVISORY_BOARD);
@@ -329,8 +329,8 @@ class AdvisoryBoardController extends AdminController
             ->with(['institution' => fn($q) => $q->with(['translations']), 'moderateAdvisoryBoards' => fn($q) => $q->with(['board' => fn($q) => $q->with(['translations'])])])
             ->orderByRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) ASC")
             ->where('user_type', '=', 1)
-            ->when($moderators, function ($q) use($moderators){
-                if($moderators->count()){
+            ->when($moderators, function ($q) use ($moderators) {
+                if ($moderators->count()) {
                     $q->whereNotIn('id', $moderators->pluck('user_id')->toArray());
                 }
             })->get();
@@ -354,8 +354,8 @@ class AdvisoryBoardController extends AdminController
         $secretariat_files = request()->get('show_deleted_secretariat_files', 0) == 1 ? $secretariat?->allFiles : $secretariat?->files;
         $regulatory_framework_files = request()->get('show_deleted_regulatory_files', 0) == 1 ? $item->regulatoryAllFiles : $item->regulatoryFiles;
         $translatableFields = AdvisoryBoard::translationFieldsProperties();
-        return $this->view(
-            'admin.advisory-boards.edit',
+
+        return $this->view('admin.advisory-boards.edit',
             compact(
                 'item',
                 'field_of_actions',
@@ -379,7 +379,7 @@ class AdvisoryBoardController extends AdminController
      * Update the specified resource in storage.
      *
      * @param UpdateAdvisoryBoardRequest $request
-     * @param AdvisoryBoard              $item
+     * @param AdvisoryBoard $item
      *
      * @return RedirectResponse
      */
@@ -402,31 +402,30 @@ class AdvisoryBoardController extends AdminController
             $item->save();
 
             // Upload File
-            if( $item && $itemImg ) {
+            if ($item && $itemImg) {
                 $file_name = Str::limit($itemImg->getClientOriginalName(), 70);
-                $fileNameToStore = $file_name.'.'.$itemImg->getClientOriginalExtension();
+                $fileNameToStore = $file_name . '.' . $itemImg->getClientOriginalExtension();
                 // Upload File
                 $itemImg->storeAs(File::ADVISORY_BOARD_UPLOAD_DIR, $fileNameToStore, 'public_uploads');
 
-                if($item->file_id) {
+                if ($item->file_id) {
                     $file = File::find($item->file_id);
                     $file->filename = $fileNameToStore;
                     $file->content_type = $itemImg->getClientMimeType();
-                    $file->path = 'files'.DIRECTORY_SEPARATOR.File::ADVISORY_BOARD_UPLOAD_DIR.$fileNameToStore;
+                    $file->path = 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR . $fileNameToStore;
                     $file->sys_user = $request->user()->id;
                     $file->save();
-                } else{
+                } else {
                     $file = new File([
                         'id_object' => $item->id,
                         'code_object' => File::CODE_AB,
                         'filename' => $fileNameToStore,
                         'content_type' => $itemImg->getClientMimeType(),
-                        'path' => 'files'.DIRECTORY_SEPARATOR.File::ADVISORY_BOARD_UPLOAD_DIR.$fileNameToStore,
+                        'path' => 'files' . DIRECTORY_SEPARATOR . File::ADVISORY_BOARD_UPLOAD_DIR . $fileNameToStore,
                         'sys_user' => $request->user()->id,
                     ]);
                     $file->save();
                     $item->file_id = $file->id;
-                    $item->save();
                 }
             }
 
@@ -435,29 +434,29 @@ class AdvisoryBoardController extends AdminController
             $npo_service = app(AdvisoryBoardNpoService::class, ['board' => $item]);
             //$npo_service->removeCompletely();
             $itemOldNpoIds = $item->npos->pluck('id', 'id')->toArray();
-            if(isset($validated['npo_id']) && sizeof($validated['npo_id'])) {
+            if (isset($validated['npo_id']) && sizeof($validated['npo_id'])) {
                 foreach ($validated['npo_id'] as $key => $kid) {
                     $npo = AdvisoryBoardNpo::find((int)$kid);
-                    if($npo){
-                        foreach (config('available_languages')  as $lang){
-                            $npo->translateOrNew($lang['code'])->name = $validated['npo_'.$lang['code']][$key] ?? '';
+                    if ($npo) {
+                        foreach (config('available_languages') as $lang) {
+                            $npo->translateOrNew($lang['code'])->name = $validated['npo_' . $lang['code']][$key] ?? '';
                         }
                         $npo->save();
-                    } else{
+                    } else {
                         $newNpo = $item->npos()->create();
-                        foreach (config('available_languages')  as $lang){
-                            $newNpo->translateOrNew($lang['code'])->name = $validated['npo_'.$lang['code']][$key] ?? '';
+                        foreach (config('available_languages') as $lang) {
+                            $newNpo->translateOrNew($lang['code'])->name = $validated['npo_' . $lang['code']][$key] ?? '';
                         }
                         $newNpo->save();
                     }
-                    if(isset($itemOldNpoIds[$kid])){
+                    if (isset($itemOldNpoIds[$kid])) {
                         unset($itemOldNpoIds[$kid]);
                     }
                 }
-                if(isset($itemOldNpoIds) && sizeof($itemOldNpoIds)){
+                if (isset($itemOldNpoIds) && sizeof($itemOldNpoIds)) {
                     $npo_service->removeCompletely($itemOldNpoIds);
                 }
-            } else{
+            } else {
                 $npo_service->removeCompletely();
             }
 
@@ -469,7 +468,7 @@ class AdvisoryBoardController extends AdminController
             DB::commit();
 
             //TODO alert adb board modeRATOR
-            if(sizeof($changes)){
+            if (sizeof($changes) && $item->public) {
                 $notifyService = new Notifications();
                 $notifyService->advChanges($item, request()->user(), __('custom.base_information'), $changes);
             }
@@ -487,7 +486,7 @@ class AdvisoryBoardController extends AdminController
      * Remove the specified resource from storage.
      *
      * @param DeleteAdvisoryBoardRequest $request
-     * @param AdvisoryBoard              $item
+     * @param AdvisoryBoard $item
      *
      * @return RedirectResponse
      */

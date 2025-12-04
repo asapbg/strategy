@@ -33,15 +33,17 @@ class NotifyPublicConsultationExpireSoon extends Command
     {
         $today = Carbon::now()->addDays(3)->format('Y-m-d');
         $pcs = PublicConsultation::ActivePublic()->where('open_to', '=', $today)->get();
-        if($pcs->count()){
-            foreach ($pcs as $pc){
+        if ($pcs->count()) {
+            foreach ($pcs as $pc) {
                 //Send PC Send notification
                 $data['event'] = 'expire';
-                $data['administrators'] = null;
-                $data['moderators'] = null;
                 $data['modelInstance'] = $pc;
+                $data['modelName'] = $pc->translation?->title;
                 $data['markdown'] = 'public-consultation-expire-soon';
 
+                SendSubscribedUserEmailJob::dispatch($data);
+
+                continue;
                 //get users by model ID
                 $subscribedUsers = UserSubscribe::where('subscribable_type', PublicConsultation::class)
                     ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)

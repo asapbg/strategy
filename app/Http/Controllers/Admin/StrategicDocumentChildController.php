@@ -10,6 +10,7 @@ use App\Models\StrategicActType;
 use App\Models\StrategicDocument;
 use App\Models\StrategicDocumentChildren;
 use App\Models\StrategicDocumentType;
+use App\Observers\StrategicDocumentChildObserver;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -140,10 +141,23 @@ class StrategicDocumentChildController extends AdminController
                 $validated['pris_act_id'] = null;
                 $validated['document_date'] = databaseDate($validated['document_date']);
             }
+            $real_update = false;
+            $translation = $item->translation;
             $fillable = $this->getFillableValidated($validated, $item);
             $item->fill($fillable);
-            $item->save();
             $this->storeTranslateOrNew(StrategicDocumentChildren::TRANSLATABLE_FIELDS, $item, $validated);
+            $item->save();
+            $dirty = $item->getChanges();
+            $t_dirty = $translation?->getChanges() ?? [];
+            unset($dirty['updated_at'], $t_dirty['updated_at']);
+            if (count($dirty) || count($t_dirty)) {
+                $real_update = true;
+            }
+            if ($real_update) {
+                $observer = new StrategicDocumentChildObserver();
+                $observer->sendEmails($item, "updated");
+            }
+
             DB::commit();
             return response()->json(['success' => 1, 'success_message' => trans_choice('custom.strategic_documents.documents', 1) . ' ' . $item->title . ' ' . __('messages.updated_successfully_m')]);
 

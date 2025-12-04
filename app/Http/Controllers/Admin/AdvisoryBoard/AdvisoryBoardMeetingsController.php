@@ -42,9 +42,9 @@ class AdvisoryBoardMeetingsController extends AdminController
         DB::beginTransaction();
         try {
 
-            $changes = $this->mainChanges(AdvisoryBoardMeeting::CHANGEABLE_FIELDS, $meeting, $validated);
+            //$changes = $this->mainChanges(AdvisoryBoardMeeting::CHANGEABLE_FIELDS, $meeting, $validated);
             $meeting->fill(['advisory_board_id' => $item->id, 'next_meeting' => Carbon::parse($validated['next_meeting'])]);
-            $changes = array_merge($this->translateChanges(AdvisoryBoardMeeting::TRANSLATABLE_FIELDS, $meeting, $validated), $changes);//use it to send detail changes in notification
+            //$changes = array_merge($this->translateChanges(AdvisoryBoardMeeting::TRANSLATABLE_FIELDS, $meeting, $validated), $changes);//use it to send detail changes in notification
             $meeting->save();
 
             $validated['advisory_board_meeting_id'] = $meeting->id;
@@ -52,11 +52,8 @@ class AdvisoryBoardMeetingsController extends AdminController
 
             DB::commit();
 
-            //alert adb board modeRATOR
-            if (sizeof($changes)) {
-                $notifyService = new Notifications();
-                $notifyService->advChanges($item, request()->user(), 'Заседания', $changes);
-            }
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user(), 'Заседания');
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
@@ -96,21 +93,28 @@ class AdvisoryBoardMeetingsController extends AdminController
             $meeting = AdvisoryBoardMeeting::find($validated['meeting_id']);
             $validated['next_meeting'] = Carbon::parse($validated['next_meeting']);
             $fillable = $this->getFillableValidated($validated, $meeting);
-            $changes = $this->mainChanges(AdvisoryBoardMeeting::CHANGEABLE_FIELDS, $meeting, $validated);
             $meeting->fill($fillable);
-            $changes = array_merge($this->translateChanges(AdvisoryBoardMeeting::TRANSLATABLE_FIELDS, $meeting, $validated), $changes);//use it to send detail changes in notification
-
             $meeting->save();
 
-            $this->storeTranslateOrNew(AdvisoryBoardMeeting::TRANSLATABLE_FIELDS, $meeting, $validated);
+            $real_update = false;
+            $dirty = $meeting->getDirty();
 
-            DB::commit();
+            $original_trans = $meeting->translation ? $meeting->translation->getOriginal() : [];
+            $this->storeTranslateOrNew(AdvisoryBoardMeeting::TRANSLATABLE_FIELDS, $meeting, $validated);
+            $new_trans = $meeting->translation ? $meeting->translation->toArray() : [];
+            $t_dirty = array_diff_assoc($original_trans, $new_trans);
+            unset($dirty['updated_at'], $t_dirty['updated_at']);
+            if (count($dirty) || count($t_dirty)) {
+                $real_update = true;
+            }
 
             //alert adb board modeRATOR
-            if (sizeof($changes)) {
+            if ($real_update) {
                 $notifyService = new Notifications();
-                $notifyService->advChanges($item, request()->user(), 'Заседания', $changes);
+                $notifyService->advChanges($item, request()->user(), 'Заседания');
             }
+
+            DB::commit();
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
