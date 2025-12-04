@@ -36,7 +36,7 @@ class StoreUsersRequest extends FormRequest
             'middle_name'   => ['nullable', 'string', 'max:255'],
             'email'         => ['nullable', 'string', 'email', 'max:255'],
             'user_type'     => ['required' ,'numeric'],
-            'active'        => ['required' ,'numeric'],
+            'active'        => ['nullable' ,'numeric'],
             'job'           => ['nullable', 'string', 'max:255'],
             'unit'          => ['nullable', 'string', 'max:255'],
             'phone'         => ['nullable', 'string', 'max:255'],
