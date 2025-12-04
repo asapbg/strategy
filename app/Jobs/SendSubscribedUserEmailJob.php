@@ -230,7 +230,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['url'] = $this->data['admin']['url'];
                 $mail = $admin->email;
 
-                Log::channel('emails')->info("Send email to administrator ".$admin->fullName(). " with email: $admin->email, for $log_email_subscription");
+                Log::channel('notifications')->info("Send email to administrator ".$admin->fullName(). " with email: $admin->email, for $log_email_subscription");
 
                 Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data, false));
                 //sleep(2);
@@ -243,7 +243,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['url'] = $this->data['moderator']['url'];
                 $mail = $moderator->email;
 
-                Log::channel('emails')->info("Send email to moderator ".$moderator->fullName(). " with email: $moderator->email, for $log_email_subscription");
+                Log::channel('notifications')->info("Send email to moderator ".$moderator->fullName(). " with email: $moderator->email, for $log_email_subscription");
 
                 Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data, false));
                 //sleep(2);
@@ -258,7 +258,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 if ($user) {
                     $mail = $user->notification_email ?? $user->email;
 
-                    Log::channel('emails')->info("Send email to subscribed user ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
+                    Log::channel('notifications')->info("Send email to subscribed user ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
 
                     Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
                     //sleep(2);
@@ -275,7 +275,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
             if ($user) {
                 $mail = $user->notification_email ?? $user->email;
 
-                Log::channel('emails')->info("Send email to spatial user ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
+                Log::channel('notifications')->info("Send email to spatial user ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
 
                 Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data, false));
             }
