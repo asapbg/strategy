@@ -35,7 +35,7 @@ class Notifications
                         $user->notify(new AdvBoardChanges($advisoryBoard, $section, $changes));
 
                         $log_email_subscription = __('notifications_msg.adv_board_changes').': '.$advisoryBoard->name;
-                        Log::channel('emails')->info("Send email to moderator ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
+                        Log::channel('notifications')->info("Send email to moderator ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
 
                     } catch (\Exception $e) {
                         Log::error('Send notification AdvBoardChanges error: ' . $e);

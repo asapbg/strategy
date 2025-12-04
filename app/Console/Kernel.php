@@ -39,6 +39,9 @@ class Kernel extends ConsoleKernel
 
         //OpenData
         $schedule->command('generate:open_data')->daily();
+
+        // Retry to send notifications failed jobs
+        $schedule->command('queue:retry all')->everyFiveMinutes();
     }
 
     /**

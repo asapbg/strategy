@@ -89,6 +89,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                     $this->data[$type]['subject_text'] = __("New consultation");
                 } else {
                     $this->data[$type]['text'] = __("Update consultation $type text");
+                    $this->data[$type]['text'] = __("Update consultation $type text");
                     $this->data[$type]['subject_text'] = __("Update consultation");
                 }
                 $this->data[$type]['url'] = match ($this) {
@@ -100,7 +101,8 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                     $this->data[$type]['text'] = __("Update strategic document $type text");
                     $this->data[$type]['subject_text'] = __("Update strategic document");
                     if (isset($this->data['secondModelInstance'])) {
-
+                        $this->data[$type]['text'] = __("Created strategic child document");
+                        $this->data[$type]['subject_text'] = __("Update strategic document");
                     }
                 } else {
                     $this->data[$type]['text'] = __("New strategic document $type text");
@@ -232,8 +234,9 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 
                 Log::channel('notifications')->info("Send email to administrator ".$admin->fullName(). " with email: $admin->email, for $log_email_subscription");
 
-                Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data, false));
-                //sleep(2);
+                if (app()->environment() != "local") {
+                    Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data, false));
+                }
             }
         }
         if ($moderators && $is_production) {
@@ -245,8 +248,9 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 
                 Log::channel('notifications')->info("Send email to moderator ".$moderator->fullName(). " with email: $moderator->email, for $log_email_subscription");
 
-                Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data, false));
-                //sleep(2);
+                if (app()->environment() != "local") {
+                    Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data, false));
+                }
             }
         }
         if ($subscribedUsers) {
@@ -260,8 +264,9 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 
                     Log::channel('notifications')->info("Send email to subscribed user ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
 
-                    Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
-                    //sleep(2);
+                    if (app()->environment() != "local") {
+                        Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
+                    }
                 }
             }
         }
@@ -277,7 +282,9 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 
                 Log::channel('notifications')->info("Send email to spatial user ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
 
-                Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data, false));
+                if (app()->environment() != "local") {
+                    Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data, false));
+                }
             }
         }
     }

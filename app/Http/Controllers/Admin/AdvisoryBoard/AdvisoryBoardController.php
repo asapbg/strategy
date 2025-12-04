@@ -97,9 +97,9 @@ class AdvisoryBoardController extends AdminController
 
         $item = new AdvisoryBoard();
         $field_of_actions = FieldOfAction::advisoryBoard()->orderByTranslation('name')->where('active', true)->get();
-        $authorities = AuthorityAdvisoryBoard::orderBy('id')->get();
-        $advisory_act_types = AdvisoryActType::orderBy('id')->get();
-        $advisory_chairman_types = AdvisoryChairmanType::orderBy('id')->get();
+        $authorities = AuthorityAdvisoryBoard::whereActive(true)->orderBy('id')->get();
+        $advisory_act_types = AdvisoryActType::whereActive(true)->orderBy('id')->get();
+        $advisory_chairman_types = AdvisoryChairmanType::whereActive(true)->orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $translatableFields = AdvisoryBoard::translationFieldsProperties();
         $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
@@ -317,12 +317,12 @@ class AdvisoryBoardController extends AdminController
         }])->find($item->id);
 
         $field_of_actions = FieldOfAction::advisoryBoard()->with('translations')->orderByTranslation('name')->where('active', true)->get();
-        $advisory_chairman_types = AdvisoryChairmanType::with('translations')->orderBy('id')->get();
-        $advisory_act_types = AdvisoryActType::with('translations')->orderBy('id')->get();
+        $advisory_chairman_types = AdvisoryChairmanType::whereActive(true)->with('translations')->orderBy('id')->get();
+        $advisory_act_types = AdvisoryActType::whereActive(true)->with('translations')->orderBy('id')->get();
         $institutions = Institution::with('translations')->select('id')->orderBy('id')->get();
         $consultation_levels = ConsultationLevel::with('translations')->orderBy('id')->get();
         $secretariat = $item->secretariat;
-        $authorities = AuthorityAdvisoryBoard::with('translations')->orderBy('id')->get();
+        $authorities = AuthorityAdvisoryBoard::whereActive(true)->with('translations')->orderBy('id')->get();
 
         $moderators = $item->moderators;
         $all_users = User::select(['id', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'job', 'unit', 'institution_id'])
