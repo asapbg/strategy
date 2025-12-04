@@ -289,7 +289,11 @@
                                                name="roles[]"
                                                id="role_{{ $role->id }}"
                                                value="{{ $role->id }}"
-                                               @if(isset($rolesRequiredInstitutions) && sizeof($rolesRequiredInstitutions) && in_array(rolesNames([$role->id])[0], $rolesRequiredInstitutions))
+                                               @if(
+                                                    isset($rolesRequiredInstitutions)
+                                                    && sizeof($rolesRequiredInstitutions)
+                                                    && in_array(rolesNames([$role->id])[0], $rolesRequiredInstitutions)
+                                                )
                                                    data-institution="1"
                                                @endif
                                                @if (in_array($role->id, $user_roles)) checked @endif

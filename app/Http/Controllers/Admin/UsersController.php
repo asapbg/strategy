@@ -124,17 +124,18 @@ class  UsersController extends Controller
     /**
      * Show create User form
      *
-     * @return Response JSON formatted string
+     * @return View|RedirectResponse
      */
     public function create()
     {
         if(auth()->user()->cannot('create', User::class)) {
-            return back()->with('danger', __('messages.no_rights_to_view_content'));
+            return $this->backWithMessage('danger', __('messages.no_rights_to_view_content'));
         }
 
         $roles = Role::whereActive(true)->orderBy('display_name', 'asc')->get();
         $rolesRequiredInstitutions = User::ROLES_WITH_INSTITUTION;
         $institutions = Institution::optionsList();
+
         return $this->view('admin.users.create', compact('roles', 'rolesRequiredInstitutions', 'institutions'));
     }
 

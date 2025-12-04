@@ -60,7 +60,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
     const COUNCIL_OF_MINSTERS_EIK = '000695025';
 
     const ROLES_WITH_INSTITUTION = [
-        'moderator-advisory',
+        'moderator-public-consultation',
         'moderator-strategic',
 //        'moderator-legal',
 //        'moderator-advisory-boards',

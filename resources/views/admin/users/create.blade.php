@@ -33,6 +33,25 @@
 {{--                                    </div>--}}
 {{--                                </div>--}}
 
+                                <div class="form-group @if(count(array_intersect(old('roles') ? rolesNames(old('roles')) : [], $rolesRequiredInstitutions)) === 0) d-none @endif" id="institution_select">
+                                    <label class="col-sm-12 control-label" for="email">
+                                        {{ __('validation.attributes.institution_id') }}
+                                    </label>
+                                    <div class="col-12">
+                                        <select class="form-control form-control-sm select2" id="institution_id" name="institution_id">
+                                            <option value="" @if(is_null(old('roles')) || !sizeof(old('roles'))) selected @endif>---</option>
+                                            @if(isset($institutions) && $institutions->count())
+                                                @foreach($institutions as $inst)
+                                                    <option value="{{ $inst->id }}" @if(old('institution_id', (isset($item) ? $item->institution_id : '')) == $inst->id) selected @endif>{{ $inst->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @error('institution_id')
+                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
                                     <label class="col-sm-12 control-label" for="first_name">
                                         {{ __('validation.attributes.first_name') }}<span class="required">*</span>
@@ -122,25 +141,6 @@
                                                value="{{ old('phone', '') }}"/>
 
                                         @error('phone')
-                                        <div class="alert alert-danger mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="form-group @if(count(array_intersect(old('roles') ? rolesNames(old('roles')) : [], $rolesRequiredInstitutions)) === 0) d-none @endif" id="institution_select">
-                                    <label class="col-sm-12 control-label" for="email">
-                                        {{ __('validation.attributes.institution_id') }}
-                                    </label>
-                                    <div class="col-12">
-                                        <select class="form-control form-control-sm select2" id="institution_id" name="institution_id">
-                                            <option value="" @if(is_null(old('roles')) || !sizeof(old('roles'))) selected @endif>---</option>
-                                            @if(isset($institutions) && $institutions->count())
-                                                @foreach($institutions as $inst)
-                                                    <option value="{{ $inst->id }}" @if(old('institution_id', (isset($item) ? $item->institution_id : '')) == $inst->id) selected @endif>{{ $inst->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                        @error('institution_id')
                                         <div class="alert alert-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
