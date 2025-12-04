@@ -234,8 +234,8 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 
                 Log::channel('emails')->info("Send email to administrator ".$admin->fullName(). " with email: $admin->email, for $log_email_subscription");
 
-//                Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data, false));
-//                sleep(2);
+                Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data, false));
+                //sleep(2);
             }
         }
         if ($moderators && $is_production) {
@@ -249,8 +249,8 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 
                 Log::channel('emails')->info("Send email to moderator ".$moderator->fullName(). " with email: $moderator->email, for $log_email_subscription");
 
-//                Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data, false));
-//                sleep(2);
+                Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data, false));
+                //sleep(2);
             }
         }
         if ($subscribedUsers) {
@@ -264,8 +264,8 @@ class SendSubscribedUserEmailJob implements ShouldQueue
 
                     Log::channel('emails')->info("Send email to subscribed user ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
 
-//                    Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
-//                    sleep(2);
+                    Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
+                    //sleep(2);
                 }
             }
         }
