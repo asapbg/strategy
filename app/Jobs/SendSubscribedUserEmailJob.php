@@ -99,7 +99,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 if ($this->data['event'] == "updated") {
                     $this->data[$type]['text'] = __("Update strategic document $type text");
                     $this->data[$type]['subject_text'] = __("Update strategic document");
-                    if ($this->data['secondModelInstance']) {
+                    if (isset($this->data['secondModelInstance'])) {
 
                     }
                 } else {
