@@ -435,13 +435,15 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 ->whereActivityStatus(User::STATUS_ACTIVE)
                 ->hasRole([CustomRole::MODERATOR_ADVISORY_BOARD])
                 ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
-                //->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
+                ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                 ->join('advisory_board_moderators as m', 'm.user_id', '=', 'users.id')
                 ->where('m.advisory_board_id', '=', $modelInstance->id)
                 ->whereNull('m.deleted_at');
             $moderatorsSection = User::select('users.*')
                 ->whereActive(true)
                 ->whereActivityStatus(User::STATUS_ACTIVE)
+                ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
+                ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                 ->hasRole([CustomRole::MODERATOR_ADVISORY_BOARDS]);
 
             $moderators = $moderatorsModel
@@ -452,6 +454,8 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         if ($modelInstance instanceof PublicConsultation) {
             $moderators = User::whereActive(true)
                 ->whereActivityStatus(User::STATUS_ACTIVE)
+                ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
+                ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                 ->hasRole([CustomRole::MODERATOR_PUBLIC_CONSULTATION])
                 ->where('users.institution_id', '=', $modelInstance->importer_institution_id)
                 ->get()
@@ -460,6 +464,8 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         if ($modelInstance instanceof OgpPlan) {
             $moderators = User::whereActive(true)
                 ->whereActivityStatus(User::STATUS_ACTIVE)
+                ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
+                ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                 ->hasRole([CustomRole::MODERATOR_PARTNERSHIP])
                 ->get()
                 ->unique('id');
@@ -470,11 +476,13 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 ->whereActivityStatus(User::STATUS_ACTIVE)
                 ->hasRole([CustomRole::MODERATOR_STRATEGIC_DOCUMENT])
                 ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
-                //->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
+                ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                 ->join('institution_field_of_action as pivot', 'pivot.institution_id', '=', 'users.institution_id')
                 ->where('pivot.field_of_action_id', $modelInstance->policy_area_id);
 
             $moderatorsSection = User::select('users.*')
+                ->whereNotIn('email', User::EXCLUDE_CONTACT_USER_BY_MAIL)
+                ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
                 ->whereActive(true)
                 ->whereActivityStatus(User::STATUS_ACTIVE)
                 ->hasRole([CustomRole::MODERATOR_STRATEGIC_DOCUMENTS]);
