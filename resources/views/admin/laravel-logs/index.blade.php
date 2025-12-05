@@ -13,19 +13,22 @@
                         <tr>
                             <th style="width: 10%">{{ __('custom.date') }}</th>
                             <th>{{ $title }}</th>
+                            <th style="width: 0.1%"></th>
                         </tr>
                         </thead>
                         <tbody>
                             @foreach($laravel_errors as $data)
                                 @continue($loop->iteration <= $start || $loop->iteration >= $start + $per_page)
-                                <tr>
-                                    <td>{{ displayDateTime($data['date']) }}</td>
-                                    <td>{{ $data['error'] }}</td>
-                                </tr>
+                                    <tr>
+                                        <td>{{ displayDateTime($data['date']) }}</td>
+                                        <td>{{ $data['error'] }}</td>
+                                        <td></td>
+                                    </tr>
                                 @isset($data['exception'])
                                     <tr>
                                         <td></td>
                                         <td>{{ $data['exception'] }}</td>
+                                        <td></td>
                                     </tr>
                                 @endisset
                             @endforeach
