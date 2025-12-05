@@ -214,7 +214,7 @@ class PublicConsultationController extends AdminController
         $user = $request->user();
         $isAdmin = $user->hasRole([CustomRole::SUPER_USER_ROLE, CustomRole::ADMIN_USER_ROLE]);
         if (!$isAdmin && !$user->institution_id) {
-            return back()->withInput($request->all())->with('danger', __('messages.you_are_not_associate_with_institution'));
+            return $this->backWithMessage('danger', __('messages.you_are_not_associate_with_institution'));
         }
 
         $storeRequest = new StorePublicConsultationRequest();
@@ -281,7 +281,9 @@ class PublicConsultationController extends AdminController
 
             $fillable = $this->getFillableValidated($validated, $item);
             if (!$id || $item->old_id) {
-                $institution = $isAdmin ? Institution::find((int)$validated['institution_id']) : ($request->user()->institution ? $request->user()->institution : null);
+                $institution = $isAdmin
+                    ? Institution::find((int)$validated['institution_id'])
+                    : ($request->user()->institution ? $request->user()->institution : null);
                 $fillable['consultation_level_id'] = $institution ? $institution->level->nomenclature_level : 0;
             }
             $real_update = false;
