@@ -240,9 +240,9 @@ class PrisController extends AdminController
             if ($real_update && $item->published_at) {
                 $observer = new PrisObserver();
                 $event = !$old_published_at && !empty($item->published_at) ? 'created' : 'updated';
-                //$observer->sendEmails($item, $event);
+                $observer->sendEmails($item, $event);
                 if (!$old_public_consultation_id && $item->public_consultation_id) {
-                    //$observer->sendEmails($item, 'updated_with_pc');
+                    $observer->sendEmails($item, 'updated_with_pc');
                 }
             }
 
@@ -637,6 +637,15 @@ class PrisController extends AdminController
 
             $item->published_at = now();
             $item->save();
+
+            $observer = new PrisObserver();
+            $old_public_consultation_id = $item->getOriginal('public_consultation_id');
+            $event = 'updated';
+            if (!$old_public_consultation_id && $item->public_consultation_id) {
+                $event = 'updated_with_pc';
+            }
+            $observer->sendEmails($item, $event);
+
             return redirect(route(self::LIST_ROUTE))
                 ->with('success', trans_choice('custom.public_consultations', 1) . " " . __('messages.updated_successfully_f'));
         } catch (\Exception $e) {

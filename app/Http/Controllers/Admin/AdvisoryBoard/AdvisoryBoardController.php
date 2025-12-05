@@ -531,6 +531,9 @@ class AdvisoryBoardController extends AdminController
             $item->public = true;
             $item->save();
 
+            $notifyService = new Notifications();
+            $notifyService->advChanges($item, request()->user(), __('custom.base_information'));
+
             //->route('admin.advisory-boards.index')
             return redirect(url()->previous())
                 ->with('success', trans_choice('custom.advisory_boards', 1) . " $item->name " . __('messages.updated_successfully_m'));

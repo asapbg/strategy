@@ -20,27 +20,9 @@ class PrisObserver
         if (!env('DISABLE_OBSERVERS', false)) {
             if (!empty($pris->published_at)) {
                 $this->sendEmails($pris, 'created');
-                Log::channel('info')->info('Send pris subscription email on creation');
                 if ($pris->public_consultation_id) {
                     $this->sendEmails($pris, 'created_with_pc');
-                    Log::channel('info')->info('Send pc subscription email on creation');
                 }
-            }
-        }
-    }
-
-    /**
-     * Handle the Pris "updated" event.
-     *
-     * @param \App\Models\Pris $pris
-     * @return void
-     */
-    public function updated(Pris $pris)
-    {
-        if (!env('DISABLE_OBSERVERS', false)) {
-            $old_public_consultation_id = (int)$pris->getOriginal('public_consultation_id');
-            if (!$old_public_consultation_id && $pris->public_consultation_id) {
-                $this->sendEmails($pris, 'updated_with_pc');
             }
         }
     }

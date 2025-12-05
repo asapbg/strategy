@@ -17,6 +17,7 @@ use App\Models\StrategicActType;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocumentType;
+use App\Observers\PublicConsultationObserver;
 use App\Observers\StrategicDocumentObserver;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\CommonService;
@@ -998,6 +999,9 @@ class StrategicDocumentsController extends AdminController
     public function unPublish(int $id, $stay = false)
     {
         $strategicDocument = StrategicDocument::findOrFail($id);
+
+        $observer = new StrategicDocumentObserver();
+        $observer->sendEmails($strategicDocument, "updated");
 
         return $this->publishUnPublish($strategicDocument, false, $stay);
     }
