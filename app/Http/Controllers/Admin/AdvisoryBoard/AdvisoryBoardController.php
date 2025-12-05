@@ -24,6 +24,7 @@ use App\Models\FieldOfAction;
 use App\Models\File;
 use App\Models\StrategicDocuments\Institution;
 use App\Models\User;
+use App\Observers\AdvisoryBoardObserver;
 use App\Services\AdvisoryBoard\AdvisoryBoardNpoService;
 use App\Services\AdvisoryBoard\AdvisoryBoardService;
 use App\Services\Notifications;
@@ -469,8 +470,8 @@ class AdvisoryBoardController extends AdminController
 
             //TODO alert adb board modeRATOR
             if (sizeof($changes) && $item->public) {
-                $notifyService = new Notifications();
-                $notifyService->advChanges($item, request()->user(), __('custom.base_information'), $changes);
+                $observer = new AdvisoryBoardObserver();
+                $observer->sendEmails($item, 'updated');
             }
 
             return redirect()->route('admin.advisory-boards.edit', $item)
@@ -531,8 +532,8 @@ class AdvisoryBoardController extends AdminController
             $item->public = true;
             $item->save();
 
-            $notifyService = new Notifications();
-            $notifyService->advChanges($item, request()->user(), __('custom.base_information'));
+            $observer = new AdvisoryBoardObserver();
+            $observer->sendEmails($item, 'updated');
 
             //->route('admin.advisory-boards.index')
             return redirect(url()->previous())

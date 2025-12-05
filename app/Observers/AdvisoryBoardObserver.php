@@ -58,7 +58,7 @@ class AdvisoryBoardObserver
      * @param $event
      * @return void
      */
-    private function sendEmails(AdvisoryBoard $advisoryBoard, $event): void
+    public function sendEmails(AdvisoryBoard $advisoryBoard, $event): void
     {
         $data['event'] = $event;
         $data['modelInstance'] = $advisoryBoard;

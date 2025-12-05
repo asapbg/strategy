@@ -389,7 +389,6 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $query->whereNull('subscribable_id');
             })
             ->get();
-        Log::info('UserSubscribe: '. $userSubscribe->count());
         return $userSubscribe;
     }
 
