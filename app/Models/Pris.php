@@ -272,6 +272,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     {
         return $this->belongsToMany(self::class, 'pris_change_pris', 'pris_id', 'changed_pris_id')
             ->withPivot(['id', 'changed_pris_id', 'connect_type', 'connect_text', 'old_connect_type'])
+            ->orderBy('doc_date', 'desc')
+            ->orderBy('doc_num', 'desc')
             ->withTrashed();
     }
 
@@ -284,6 +286,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
     {
         return $this->belongsToMany(self::class, 'pris_change_pris', 'changed_pris_id', 'pris_id')
             ->withPivot(['id', 'changed_pris_id', 'connect_type', 'connect_text', 'old_connect_type'])
+            ->orderBy('doc_date', 'desc')
+            ->orderBy('doc_num', 'desc')
             ->withTrashed();
     }
 

@@ -257,7 +257,7 @@ class PrisController extends Controller
             ->Published()
             ->with([
                 'translation', 'actType', 'actType.translation', 'tags', 'tags.translation', 'changedDocsWithoutRelation',
-                'changedDocs.actType.translation', 'changedDocs.institution.translation', 'files'
+                'changedDocs.actType.translation', 'changedDocs.institution.translation', 'files', 'changedByDocs', 'changedByDocsWithoutRelation'
             ])
             ->find($id);
 
