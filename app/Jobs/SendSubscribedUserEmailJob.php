@@ -273,7 +273,6 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         }
 
         if ($specialUser) {
-            Log::error($specialUser);
             $this->data['text'] = $this->data['user']['text'];
             $this->data['subject'] = '[Strategy.bg] ' . $this->data['user']['subject_text'] . (isset($this->data['modelName']) ? ': ' . $this->data['modelName'] : '');
             $this->data['url'] = $this->data['user']['url'];
@@ -299,7 +298,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
     {
         $administrators = User::whereActive(true)
             ->hasRole(CustomRole::ADMIN_USER_ROLE)
-            //->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
+            ->whereRaw("email::TEXT NOT LIKE '%@asap.bg%'")
             //->take(1)
             ->get();
         if (
