@@ -1,4 +1,4 @@
-@extends('layouts.site')
+@extends('layouts.site', ['fullwidth' => true])
 
 @section('content')
     <div class="row py-5">

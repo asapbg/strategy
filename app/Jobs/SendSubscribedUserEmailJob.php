@@ -47,6 +47,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
     public function __construct($data)
     {
         $this->data = $data;
+        $this->subscribedUsers = collect();
     }
 
     /**
@@ -232,7 +233,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['url'] = $this->data['admin']['url'];
                 $mail = $admin->email;
 
-                Log::channel('notifications')->info("Send email to administrator ".$admin->fullName(). " with email: $admin->email, for $log_email_subscription");
+                Log::channel('notifications')->info("Send email to administrator ".$admin->fullName(). " with email: $mail, for $log_email_subscription");
 
                 if (app()->environment() != "local") {
                     Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data, false));
@@ -246,7 +247,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['url'] = $this->data['moderator']['url'];
                 $mail = $moderator->email;
 
-                Log::channel('notifications')->info("Send email to moderator ".$moderator->fullName(). " with email: $moderator->email, for $log_email_subscription");
+                Log::channel('notifications')->info("Send email to moderator ".$moderator->fullName(). " with email: $mail, for $log_email_subscription");
 
                 if (app()->environment() != "local") {
                     Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data, false));
@@ -262,7 +263,7 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 if ($user) {
                     $mail = $user->notification_email ?? $user->email;
 
-                    Log::channel('notifications')->info("Send email to subscribed user ".$user->fullName(). " with email: $user->email, for $log_email_subscription");
+                    Log::channel('notifications')->info("Send email to subscribed user ".$user->fullName(). " with email: $mail, for $log_email_subscription");
 
                     if (app()->environment() != "local") {
                         Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
@@ -356,7 +357,6 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                     }
                 }
             }
-
         }
 
         //dd($this->subscribedUsers->toArray());
@@ -378,7 +378,8 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         if ($modelInstance instanceof AdvisoryBoardMeeting) {
             $model_class = AdvisoryBoard::class;
         }
-        return UserSubscribe::where('subscribable_type', $model_class)
+        $userSubscribe = UserSubscribe::with('user')
+            ->where('subscribable_type', $model_class)
             ->whereCondition(UserSubscribe::CONDITION_PUBLISHED)
             ->whereChannel(UserSubscribe::CHANNEL_EMAIL)
             ->where('is_subscribed', '=', UserSubscribe::SUBSCRIBED)
@@ -388,6 +389,8 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $query->whereNull('subscribable_id');
             })
             ->get();
+        Log::info('UserSubscribe: '. $userSubscribe->count());
+        return $userSubscribe;
     }
 
     /**
@@ -399,20 +402,21 @@ class SendSubscribedUserEmailJob implements ShouldQueue
     {
         $filterSubscriptions = $this->getSubscribedUsers($modelInstance);
         if ($filterSubscriptions->count()) {
-            $method = $modelInstance instanceof Pris ? "listIds" : "list";
             if ($modelInstance instanceof AdvisoryBoardMeeting) {
                 $model_class = AdvisoryBoard::class;
             }
             foreach ($filterSubscriptions as $fSubscribe) {
                 $filter_array = is_null($fSubscribe->search_filters) ? [] : json_decode($fSubscribe->search_filters, true);
                 $filter_array = array_merge($filter_array, ['id' => $modelInstance->id]);
-                if ($filter_array) {
-                    $filteredModel = $modelInstance instanceof Publication
-                        ? $model_class::$method($filter_array, $modelInstance->type)->whereIn('id', [$modelInstance->id])->first()
-                        : $model_class::$method($filter_array)->whereIn('id', [$modelInstance->id])->first() ;
-                    if ($filteredModel) {
-                        $this->subscribedUsers->add($fSubscribe);
-                    }
+                if ($modelInstance instanceof Pris) {
+                    $filteredModel = $model_class::listIds($filter_array)->first();
+                } elseif ($modelInstance instanceof Publication) {
+                    $filteredModel = $model_class::list($filter_array, $modelInstance->type)->first();
+                } else {
+                    $filteredModel = $model_class::list($filter_array)->first();
+                }
+                if ($filteredModel) {
+                    $this->subscribedUsers->push($fSubscribe);
                 }
             }
         }

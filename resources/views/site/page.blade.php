@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12 pt-5 pb-2 right-side-content">
+        <div class="col-12 pt-5 pb-2">
             @if(isset($item))
                 <h2 class="mb-2">{{ $item->name }}</h2>
                 @if(!empty($item->content))
