@@ -1427,5 +1427,6 @@ return [
     'login_administrators'             => 'Вход за администрации',
     'period_search'                    => 'Търсене по период',
     'source'                           => 'Източник',
-    'accept_terms_conditions'          => 'Запознат съм с <a href=":link">политиката за поверителност</a>'
+    'accept_privacy_policy'            => 'Запознат съм с <a href=":link" target="_blank">политиката за поверителност</a>',
+    'accept_terms_conditions'          => 'Съгласявам се с <a href=":link" target="_blank">условията за ползване</a>'
 ];

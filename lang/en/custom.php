@@ -1391,5 +1391,6 @@ return [
     'login_administrators'             => 'Administration login',
     'channel'                          => 'Channel',
     'source'                           => 'Source',
-    'accept_terms_conditions'          => 'I am familiar with the <a href=":link">privacy policy</a>',
+    'accept_terms_conditions'            => 'I accept the <a href=":link" target="_blank">terms of use</a>',
+    'accept_privacy_policy'          => 'I am familiar with the <a href=":link" target="_blank">privacy policy</a>',
 ];

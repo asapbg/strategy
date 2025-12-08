@@ -136,13 +136,30 @@
                     ->isActive()
                     ->where('system_name', \App\Models\Page::PRIVACY_POLICY)
                     ->first();
+                $termsPage = \App\Models\Page::with(['translations'])
+                    ->isActive()
+                    ->where('system_name', \App\Models\Page::TERMS)
+                    ->first();
                 @endphp
+                <div class="mb-1">
+                    <div class="input-group">
+                        <input type="checkbox" class="me-2" name="accept_privacy_policy" id="accept_privacy_policy" value="1">
+                        <label for="accept_privacy_policy">
+                            {!! __('custom.accept_privacy_policy', ['link' => ($privacyPolicyPage ? route('page.view', ['slug' => $privacyPolicyPage->slug]) : '#')]) !!}
+                        </label> <span class="text-danger">*</span>
+                        @error('accept_privacy_policy')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
                 <div class="mb-3">
                     <div class="input-group">
                         <input type="checkbox" class="me-2" name="accept_terms_conditions" id="accept_terms_conditions" value="1">
                         <label for="accept_terms_conditions">
-                            {!! __('custom.accept_terms_conditions', ['link' => ($privacyPolicyPage ? route('page.view', ['slug' => $privacyPolicyPage->slug]) : '#')]) !!}
-                        </label>
+                            {!! __('custom.accept_terms_conditions', ['link' => ($termsPage ? route('page.view', ['slug' => $termsPage->slug]) : '#')]) !!}
+                        </label> <span class="text-danger">*</span>
                         @error('accept_terms_conditions')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -157,13 +174,13 @@
                 </div>
 
                 <div class="row mb-0 ">
-                        <button class="col-md-6 offset-md-3 cstm-btn btn btn-lg  btn-primary mb-2" id="reg_btn" type="button"><i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('custom.register') }}</button>
+                    <button class="col-md-6 offset-md-3 cstm-btn btn btn-lg  btn-primary mb-2" id="reg_btn" type="button">
+                        <i class="fa-solid fa-right-to-bracket main-color me-1"></i>{{ __('custom.register') }}
+                    </button>
                 </div>
                 <div class="row">
                     <a class="col-md-6 offset-md-3 cstm-btn btn btn-primary btn-lg" href="{{ route('eauth.login') }}">
-                        <span class="btn-label"><i
-                                class="fa-solid fa-signature main-color "
-                            ></i></span>
+                        <span class="btn-label"><i class="fa-solid fa-signature main-color "></i></span>
                         {{ __('eauth.with_e_auth') }}
                     </a>
                 </div>
@@ -198,7 +215,11 @@
                 errorElement: 'div',
                 rules: formRules($('#is_org2').is(':checked') ? 'person' : 'company'),
                 errorPlacement: function (error, element) {
-                    error.insertAfter(element.parent().parent());
+                    if (element.attr('type') === 'checkbox') {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element.parent().parent());
+                    }
                 },
                 invalidHandler: function (e, validation) {
                     console.log("invalidHandler : event", e);
@@ -242,6 +263,9 @@
                     },
                     accept_terms_conditions: {
                         required: true,
+                    },
+                    accept_privacy_policy: {
+                        required: true,
                     }
                 },
                 company: {
@@ -265,6 +289,9 @@
                         maxlength: 16,
                     },
                     accept_terms_conditions: {
+                        required: true,
+                    },
+                    accept_privacy_policy: {
                         required: true,
                     }
                 }
