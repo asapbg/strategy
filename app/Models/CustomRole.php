@@ -27,7 +27,7 @@ class CustomRole extends Role
     const MODERATOR_STRATEGIC_DOCUMENTS = 'moderator-strategics';
 
     const MODERATOR_PARTNERSHIP = 'moderator-partnership';
-    const MODERATOR_PRIS = 'moderator-legal';
+    const MODERATOR_PRIS = 'moderator-pris';
     const MODERATOR_PUBLIC_CONSULTATION = 'moderator-public-consultation';
 
     /**

@@ -62,7 +62,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
     const ROLES_WITH_INSTITUTION = [
         'moderator-public-consultation',
         'moderator-strategic',
-//        'moderator-legal',
+//        'moderator-pris',
 //        'moderator-advisory-boards',
         'moderator-advisory-board',
         'moderator-partnership',
