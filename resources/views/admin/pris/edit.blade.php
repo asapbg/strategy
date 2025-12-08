@@ -418,11 +418,17 @@
                                             <div class="col-12"></div>
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label class="col-sm-12 control-label" for="tags[]">
-                                                    {{ trans_choice('custom.tags', 2) }} @if($item->id)<i class="fas fa-plus text-success ml-2 add-tag" role="button" title="{{ __('custom.add')  }}" data-url="{{ route('admin.pris.tag.ajax.form', $item) }}"></i>@endif
-                                                    </label>
+                                                    <div class="row">
+                                                        <label class="col-md-8 col-sm-6 control-label" for="tags[]">
+                                                            {{ trans_choice('custom.tags', 2) }} @if($item->id)<i class="fas fa-plus text-success ml-2 add-tag" role="button" title="{{ __('custom.add')  }}" data-url="{{ route('admin.pris.tag.ajax.form', $item) }}"></i>@endif
+                                                        </label>
+                                                        <div class="col-md-4 col-sm-6 text-right pb-1">
+                                                            <a href="{{ route('admin.nomenclature.tag') }}" target="_blank" class="btn btn-sm btn-default">
+                                                                Номенклатура термини <i class="fa fa-external-link"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-12">
-{{--                                                        @php($itemTagsIds = $item->tags->pluck('id')->toArray())--}}
                                                         <select id="tags" name="tags[]" multiple="multiple"
                                                                 class="form-control form-control-sm select2-autocomplete-ajax @error('tags'){{ 'is-invalid' }}@enderror"
                                                                 data-types2ajax="tag" data-urls2="{{ route('admin.select2.ajax', 'tag') }}"

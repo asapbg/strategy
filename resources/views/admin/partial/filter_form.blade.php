@@ -1,6 +1,9 @@
 @if(isset($filter) && count($filter))
     <div class="card @if(isset($filterClass)){{ $filterClass }}@endif">
         <form method="GET">
+            @if(request()->has('active'))
+                <input type="hidden" name="active" value="{{ request('active') }}">
+            @endif
             <div class="card-body">
                 <div class="row">
                     @foreach($filter as $key => $field)

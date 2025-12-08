@@ -23,7 +23,6 @@ class TagController extends AdminController
         $requestFilter = $request->all();
         $filter = $this->filters($request);
         $active = $request->get('active') ?? 1;
-        $filter['status']['value'] = $active;
         $requestFilter['status'] = $active;
 
         $paginate = $filter['paginate'] ?? Tag::PAGINATE;
@@ -91,14 +90,6 @@ class TagController extends AdminController
                 'placeholder' => __('validation.attributes.label'),
                 'value' => $request->input('title'),
                 'col' => 'col-md-4'
-            ),
-            'status' => array(
-                'type' => 'select',
-                'options' => optionsStatusesFilter(true, '', __('custom.status') . ' (' . __('custom.any') . ')'),
-                'default' => '',
-                'placeholder' => __('validation.attributes.status'),
-                'value' => $request->input('status'),
-                'col' => 'col-md-2'
             )
         );
     }

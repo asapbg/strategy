@@ -508,9 +508,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
     });
 
     Route::controller(\App\Http\Controllers\Admin\Nomenclature\TagController::class)->group(function () {
-        Route::get('/nomenclature/tag', 'index')->name('nomenclature.tag')->middleware('can:viewAny,App\Models\Tag');
-        Route::get('/nomenclature/tag/edit/{item?}', 'edit')->name('nomenclature.tag.edit');
-        Route::match(['post', 'put'], '/nomenclature/tag/store/{item?}', 'store')->name('nomenclature.tag.store');
+        Route::get('/nomenclature/tag',                                 'index')->name('nomenclature.tag')->middleware('can:viewAny,App\Models\Tag');
+        Route::get('/nomenclature/tag/edit/{item?}',                    'edit')->name('nomenclature.tag.edit');
+        Route::match(['post', 'put'], '/nomenclature/tag/store/{item?}','store')->name('nomenclature.tag.store');
     });
 
     Route::controller(\App\Http\Controllers\Admin\Nomenclature\FieldOfActionController::class)->group(function () {
