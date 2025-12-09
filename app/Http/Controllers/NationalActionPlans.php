@@ -89,7 +89,9 @@ class NationalActionPlans extends Controller
             array('title' => OldNationalPlanEnum::nameByValue($id), 'description' => $planData['ogDescription'], 'img' => OgpPlan::DEFAULT_IMG)
         );
 
-        return $this->view('site.ogp.old_plan_' . app()->getLocale() . '.' . $id, compact('pageTitle', 'status', 'planName', 'planId', 'planData'));
+        return $this->view('site.ogp.old_plan_' . app()->getLocale() . '.' . $id,
+            compact('pageTitle', 'status', 'planName', 'planId', 'planData')
+        );
     }
 
     public function export(Request $request, $id)

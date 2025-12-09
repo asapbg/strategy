@@ -30,6 +30,12 @@
                     </span>
                 </a>
             </div>
+            <div class="col-md-4 mb-4">
+                <h3 class="mb-2 fs-5">{{ __('custom.status') }}</h3>
+                <span class="main-color text-decoration-none fs-18">
+                    <span class="{{ $status->css_class }} fs-16">{{ $status->name }}</span>
+                </span>
+            </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-12 pt-3">

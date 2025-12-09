@@ -62,7 +62,7 @@ enum OldNationalPlanEnum: int
                     'en' => array(
                         [
                             'path' => 'old_ogp_plan/1/PLAN-BG-ENGlast_0-1.pdf',
-                            'name' => 'First Action Plan within the Framework of the Open Government Partnership Initiative 1 june 2012 - 31 december 2013',
+                            'name' => 'First National Action Plan within the Framework of the Open Government Partnership Initiative 1 june 2012 - 31 december 2013',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     )
@@ -698,31 +698,6 @@ enum OldNationalPlanEnum: int
                             'name' => 'Втори национален план за действие по инициативата „Партньорство за открито управление“ 1 юли 2014 - 30 юни 2016',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
-//                        [
-//                            'path' => 'old_ogp_plan/2/ОБОБЩЕНИ_КОМЕНТАРИ_ОТ_НПО_СЕКТОРА_И_ГРАЖДАНСКОТО_ОБЩЕСТВО_ПО_ПРОЕКТ_НА_ВТОРИ_ПЛАН_ЗА_ДЕЙСТВИЕ_ПОУ.pdf',
-//                            'name' => 'Обобщени коментари/предложения от неправителствения сектор и гражданското общество по проекта на Втори план за действие по инициативата „Партньорство за открито управление“, получени в процеса на неговото обсъждане',
-//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-//                        ],
-//                        [
-//                            'path' => 'old_ogp_plan/2/Proposals_BCNP.pdf',
-//                            'name' => 'Предложения на Българския център за нестопанско право',
-//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-//                        ],
-//                        [
-//                            'path' => 'old_ogp_plan/2/Proposals_FO.bg.pdf',
-//                            'name' => 'Предложения на Фондация "Общество.бг"',
-//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-//                        ],
-//                        [
-//                            'path' => 'old_ogp_plan/2/Proposals_Boyan_Yurukov.pdf',
-//                            'name' => 'Предложения на Боян Юруков',
-//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-//                        ],
-//                        [
-//                            'path' => 'old_ogp_plan/2/Proposals_PDOI.pdf',
-//                            'name' => 'Предложения на Програма за достъп до информация',
-//                            'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
-//                        ],
                         [
                             'path' => 'old_ogp_plan/2/15RH503.pdf',
                             'name' => 'Нови ангажименти в рамките на Втория план за действие на Република България за участие в Инициативата „Партньорство за открито управление“',
@@ -1887,7 +1862,7 @@ enum OldNationalPlanEnum: int
                     'bg' => array(
                         [
                             'path' => '/old_ogp_plan/3/Трети_план_ПОУ-2.pdf',
-                            'name' => 'Трети национален план за действие в рамките на инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018',
+                            'name' => 'Трети национален план за действие по инициативата „Партньорство за открито управление“ 1 юли 2016 – 30 юни 2018',
                             'icon' => '<i class="fas fa-file-pdf text-danger me-1"></i>'
                         ],
                     ),
