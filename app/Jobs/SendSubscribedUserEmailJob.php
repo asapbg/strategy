@@ -226,7 +226,8 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         $log_email_subscription = isset($variable) ? trans_choice($variable, 1). " - ". $this->data['modelName'] : "";
         $is_production = app()->environment() == "production";
         $emails_sent_to = [];
-        if ($administrators && $is_production) {
+        // According to the technical specification, there is no e-mail for the administrators when a new public consultation comment gets created
+        if ($administrators && $is_production && $this->data['event'] != 'new-comment') {
             foreach ($administrators as $admin) {
                 $this->data['text'] = $this->data['admin']['text'];
                 $this->data['subject'] = '[Strategy.bg] ' . $this->data['admin']['subject_text'] . (isset($this->data['modelName']) ? ': ' . $this->data['modelName'] : '');
