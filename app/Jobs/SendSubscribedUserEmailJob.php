@@ -225,19 +225,26 @@ class SendSubscribedUserEmailJob implements ShouldQueue
         }
         $log_email_subscription = isset($variable) ? trans_choice($variable, 1). " - ". $this->data['modelName'] : "";
         $is_production = app()->environment() == "production";
-        $is_production = true;
-        if ($administrators && $is_production) {
+        $emails_sent_to = [];
+        // According to the technical specification, there is no e-mail for the administrators when a new public consultation comment gets created
+        if ($administrators && $is_production && $this->data['event'] != 'new-comment') {
             foreach ($administrators as $admin) {
                 $this->data['text'] = $this->data['admin']['text'];
                 $this->data['subject'] = '[Strategy.bg] ' . $this->data['admin']['subject_text'] . (isset($this->data['modelName']) ? ': ' . $this->data['modelName'] : '');
                 $this->data['url'] = $this->data['admin']['url'];
                 $mail = $admin->email;
 
+                if (in_array($mail, $emails_sent_to)) {
+                    continue;
+                }
+
                 Log::channel('notifications')->info("Send email to administrator ".$admin->fullName(). " with email: $mail, for $log_email_subscription");
 
                 if (app()->environment() != "local") {
                     Mail::to($mail)->send(new NotifySubscribedUser($admin, $this->data, false));
                 }
+
+                $emails_sent_to[] = $mail;
             }
         }
         if ($moderators && $is_production) {
@@ -247,11 +254,17 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 $this->data['url'] = $this->data['moderator']['url'];
                 $mail = $moderator->email;
 
+                if (in_array($mail, $emails_sent_to)) {
+                    continue;
+                }
+
                 Log::channel('notifications')->info("Send email to moderator ".$moderator->fullName(). " with email: $mail, for $log_email_subscription");
 
                 if (app()->environment() != "local") {
                     Mail::to($mail)->send(new NotifySubscribedUser($moderator, $this->data, false));
                 }
+
+                $emails_sent_to[] = $mail;
             }
         }
         if ($subscribedUsers) {
@@ -263,11 +276,17 @@ class SendSubscribedUserEmailJob implements ShouldQueue
                 if ($user) {
                     $mail = $user->notification_email ?? $user->email;
 
+                    if (in_array($mail, $emails_sent_to)) {
+                        continue;
+                    }
+
                     Log::channel('notifications')->info("Send email to subscribed user ".$user->fullName(). " with email: $mail, for $log_email_subscription");
 
                     if (app()->environment() != "local") {
                         Mail::to($mail)->send(new NotifySubscribedUser($user, $this->data));
                     }
+
+                    $emails_sent_to[] = $mail;
                 }
             }
         }
