@@ -15,6 +15,6 @@ class NomenclatureController extends AdminController
      */
     public function index()
     {
-        return view('admin.nomenclatures');
+        return $this->view('admin.nomenclatures');
     }
 }

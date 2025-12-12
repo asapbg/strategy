@@ -112,22 +112,45 @@ class StrategicDocumentsController extends Controller
         $now = Carbon::now()->format('Y-m-d 00:00:00');
         $editRouteName = AdminStrategicDocumentsController::EDIT_ROUTE;
         $deleteRouteName = AdminStrategicDocumentsController::DELETE_ROUTE;
+        $cat_region = 5;
         $categories = isset($rf['level'])
             ? $rf['level']
-            : [InstitutionCategoryLevelEnum::CENTRAL->value, InstitutionCategoryLevelEnum::AREA->value, InstitutionCategoryLevelEnum::MUNICIPAL->value];
+            : [
+                InstitutionCategoryLevelEnum::CENTRAL->value,
+                $cat_region,
+                InstitutionCategoryLevelEnum::AREA->value,
+                InstitutionCategoryLevelEnum::MUNICIPAL->value
+            ];
         $items = [];
         $filter = $this->filtersTree($request, $rf);
         foreach ($categories as $cat) {
             if (!isset($items[$cat])) {
-                $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.' . \App\Enums\InstitutionCategoryLevelEnum::keyByValue($cat))];
+                if ($cat == $cat_region) {
+                    $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.REGION')];
+                } else {
+                    $items[$cat] = ['items' => [], 'name' => __('custom.strategic_document.category.' . \App\Enums\InstitutionCategoryLevelEnum::keyByValue($cat))];
+                }
             }
 
+            $where_condition = "strategic_document.strategic_document_level_id = $cat";
+            $group_by = ",strategic_document.policy_area_id,field_of_action_translations.name,strategic_document.region_id,regions.name";
+            $order_by = "field_of_action_translations.name";
+            if ($cat == $cat_region) {
+                $where_condition = "strategic_document.region_id is not null ";
+                $order_by = "regions.name";
+            }
             $items[$cat]['items'] = DB::select('
                 select
                     strategic_document.id as sd_id
-                    ,max(strategic_document_translations.title) as sd_title
-                    ,field_of_action_translations.name as sd_policy_title
-                     ,field_of_actions.id as sd_policy_id
+                    ,max(strategic_document_translations.title) as sd_title,
+                     CASE
+                        WHEN '.$cat.' = '.$cat_region.' THEN regions.name
+                        ELSE field_of_action_translations.name
+                    END AS sd_policy_title,
+                    CASE
+                        WHEN '.$cat.' = '.$cat_region.' THEN strategic_document.region_id
+                        ELSE strategic_document.policy_area_id
+                    END AS sd_policy_id
                     , max(children.id) as child_id
                     , max(children.strategic_document_id) as child_sd_id
                     , max(children.parent_id) as child_parent_id
@@ -138,8 +161,8 @@ class StrategicDocumentsController extends Controller
                     , max(children.path) as child_path
                 from strategic_document
                 join strategic_document_translations on strategic_document_translations.strategic_document_id = strategic_document.id and strategic_document_translations.locale = \'' . app()->getLocale() . '\'
-                join field_of_actions on field_of_actions.id = strategic_document.policy_area_id
-                join field_of_action_translations on field_of_action_translations.field_of_action_id = field_of_actions.id and field_of_action_translations.locale = \'' . app()->getLocale() . '\'
+                left join region_translations as regions on regions.region_id = strategic_document.region_id and regions.locale = \'' . app()->getLocale() . '\'
+                join field_of_action_translations on field_of_action_translations.field_of_action_id = strategic_document.policy_area_id and field_of_action_translations.locale = \'' . app()->getLocale() . '\'
                 left join public_consultation on strategic_document.public_consultation_id = public_consultation.id
                 left join (
                     select * from (
@@ -181,7 +204,7 @@ class StrategicDocumentsController extends Controller
                 where
                     strategic_document.active = true
                     and strategic_document.deleted_at is null
-                    and strategic_document.strategic_document_level_id = ' . $cat
+                    and '. $where_condition
                 . (match ($request->get('status', 'active')) {
                     'active' => 'and (strategic_document.document_date_expiring is null
                                     or strategic_document.document_date_expiring >= \'' . $now . '\')',
@@ -192,23 +215,10 @@ class StrategicDocumentsController extends Controller
 
                     default => ''
                 }) . ($request->filled('title') ? ('and strategic_document_translations.title ILIKE \'%' . $request->get('title') . '%\'') : '') . '
-                group by strategic_document.id, field_of_actions.id, field_of_action_translations.name, children.id, children.depth, children.path
-                order by field_of_action_translations.name, strategic_document.id, children.path, children.depth asc
+                group by strategic_document.id, children.id, children.depth, children.path '.$group_by.'
+                order by '.$order_by.', strategic_document.id, children.path, children.depth asc
+                limit 20
             ');
-
-//            $items[$cat]['items'] = StrategicDocument::select(['strategic_document.*',
-//                \DB::raw('case when max(field_of_actions.parentid) = '.InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::AREA->value). ' then \''.trans_choice('custom.areas', 1).'\' || \' \' || field_of_action_translations.name
-//                else (case when  max(field_of_actions.parentid) = '.InstitutionCategoryLevelEnum::fieldOfActionCategory(InstitutionCategoryLevelEnum::MUNICIPAL->value).' then \''.trans_choice('custom.municipalities', 1).'\' || \' \' || field_of_action_translations.name else field_of_action_translations.name end) end as policy')])
-//                ->Active()
-//                ->with(['translations', 'policyArea', 'policyArea.translations'])
-//                ->join('field_of_actions', 'field_of_actions.id', '=', 'strategic_document.policy_area_id')
-//                ->join('field_of_action_translations', function ($j){
-//                    $j->on('field_of_action_translations.field_of_action_id', '=', 'field_of_actions.id')
-//                        ->where('field_of_action_translations.locale', '=', app()->getLocale());
-//                })->where('strategic_document.strategic_document_level_id', '=', $cat)
-//                ->orderBy('field_of_action_translations.name', 'asc')
-//                ->GroupBy('strategic_document.id', 'field_of_action_translations.name')
-//                ->get();
         }
         if ($request->ajax()) {
             return view('site.strategic_documents.list_tree', compact('items', 'editRouteName', 'deleteRouteName', 'filter'));

@@ -36,10 +36,12 @@ class StrategicDocument extends ModelActivityExtend implements TranslatableContr
     //activity
     protected string $logName = "strategic_document";
 
-    protected $fillable = ['strategic_document_level_id', 'policy_area_id', 'strategic_document_type_id',
+    protected $fillable = [
+        'strategic_document_level_id', 'policy_area_id', 'strategic_document_type_id', 'region_id',
         'strategic_act_type_id', 'strategic_act_number', 'strategic_act_link', 'accept_act_institution_type_id',
         'pris_act_id', 'document_date', 'public_consultation_id', 'active', 'link_to_monitorstat',
-        'document_date_accepted', 'document_date_expiring', 'parent_document_id', 'ekatte_area_id', 'ekatte_municipality_id'];
+        'document_date_accepted', 'document_date_expiring', 'parent_document_id', 'ekatte_area_id', 'ekatte_municipality_id'
+    ];
 
 
     /**

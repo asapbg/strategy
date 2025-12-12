@@ -5,11 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\InstitutionCategoryLevelEnum;
 use App\Http\Requests\StoreStrategicDocumentRequest;
 use App\Http\Requests\StrategicDocumentFileUploadRequest;
-use App\Library\Facebook;
 use App\Models\Consultations\PublicConsultation;
 use App\Models\LegalActType;
 use App\Models\Pris;
-use App\Models\Setting;
+use App\Models\Region;
 use App\Models\StrategicDocument;
 use App\Models\AuthorityAcceptingStrategic;
 use App\Models\CustomRole;
@@ -17,7 +16,6 @@ use App\Models\StrategicActType;
 use App\Models\StrategicDocumentFile;
 use App\Models\StrategicDocumentLevel;
 use App\Models\StrategicDocumentType;
-use App\Observers\PublicConsultationObserver;
 use App\Observers\StrategicDocumentObserver;
 use App\Services\FileOcr;
 use App\Services\StrategicDocuments\CommonService;
@@ -132,6 +130,7 @@ class StrategicDocumentsController extends AdminController
 
             $strategicActTypes = StrategicActType::with('translations')->orderByTranslation('name')->get();
             $legalActTypes = LegalActType::StrategyCategories()->with('translations')->get();
+            $regions = Region::optionsList();
             $authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->whereNotNull('nomenclature_level_id')->get();
             $adminUser = $user->hasAnyRole(['service_user', 'super-admin', 'moderator-strategics']);
             if ($adminUser) {
@@ -175,6 +174,7 @@ class StrategicDocumentsController extends AdminController
                     'strategicDocumentTypes',
                     'strategicActTypes',
                     'authoritiesAcceptingStrategic',
+                    'regions',
                     'policyAreas',
                     'legalActTypes',
                     'ekateAreas',
@@ -420,7 +420,9 @@ class StrategicDocumentsController extends AdminController
                 $validated['document_date'] = null;
 
                 $prisActId = Arr::get($validated, 'pris_act_id');
-                $validated['document_date_accepted'] = $prisActId ? Pris::find($prisActId)->doc_date : ($validated['document_date_accepted'] ?? Carbon::now());
+                $validated['document_date_accepted'] = $prisActId
+                    ? Pris::find($prisActId)->doc_date
+                    : ($validated['document_date_accepted'] ?? Carbon::now());
                 $datesToBeParsedToCarbon = [
                     'document_date_accepted',
                     'document_date_expiring',
@@ -743,7 +745,14 @@ class StrategicDocumentsController extends AdminController
                 'placeholder' => trans_choice('custom.nomenclature.strategic_document_level', 1),
                 'value' => $request->input('category'),
                 'options' => enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', false, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]),
-                'col' => 'col-md-12'
+                'col' => 'col-md-6'
+            ),
+            'region' => array(
+                'type' => 'select',
+                'placeholder' => __('validation.attributes.nuts2_code'),
+                'value' => $request->input('region'),
+                'options' => optionsFromModel(Region::optionsList()),
+                'col' => 'col-md-6'
             ),
             'fieldOfActions' => array(
                 'type' => 'select',

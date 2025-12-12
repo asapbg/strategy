@@ -51,7 +51,7 @@
     @include('partials.top_bar_front')
     @include('partials.nav_bar_front')
 </header>
-@if(isset($pageTitle) && request()->route()->getName() != 'home' && !request()->input('sk'))
+@if(isset($pageTitle) && request()->route()?->getName() != 'home' && !request()->input('sk'))
 
     @php
     $current_url = url()->current();

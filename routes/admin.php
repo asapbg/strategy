@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\Nomenclature\LinkCategoryController;
 use App\Http\Controllers\Admin\Nomenclature\PolicyAreaController;
 use App\Http\Controllers\Admin\Nomenclature\ProgramProjectController;
 use App\Http\Controllers\Admin\Nomenclature\PublicationCategoryController;
+use App\Http\Controllers\Admin\Nomenclature\RegionController;
 use App\Http\Controllers\Admin\Nomenclature\RegulatoryActController;
 use App\Http\Controllers\Admin\Nomenclature\RegulatoryActTypeController;
 use App\Http\Controllers\Admin\Nomenclature\StrategicActTypeController;
@@ -520,6 +521,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
         Route::get('/nomenclature/field-of-actions/{item}/edit', 'edit')->name('nomenclature.field_of_actions.edit');
         Route::post('/nomenclatures/field-of-actions/{action}/update', 'update')->name('nomenclatures.field_of_actions.update');
         Route::post('/nomenclatures/field-of-actions/{action}/delete', 'destroy')->name('nomenclatures.field_of_actions.delete');
+    });
+
+    Route::controller(RegionController::class)->prefix('nomenclature')->as('nomenclatures.')->group(function () {
+        Route::get('/regions',                  'index')->name('regions.index');
+        Route::get('/regions/create',           'create')->name('regions.create');
+        Route::post('/regions/store',           'store')->name('regions.store');
+        Route::get('/regions/{region}/edit',    'edit')->name('regions.edit');
+        Route::post('/regions/{region}/update', 'update')->name('regions.update');
+        Route::post('/regions/{region}/delete', 'delete')->name('regions.delete');
     });
 
     Route::controller(\App\Http\Controllers\Admin\Nomenclature\LawController::class)->group(function () {

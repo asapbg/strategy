@@ -427,6 +427,8 @@ return [
         'investigation_year'       => 'Преписка година',
         'assignor_number'          => 'Възложител писмо №',
         'assignor_date'            => 'Възложител писмо дата',
+        'nuts2_code'               => 'Код по Nuts2',
+        'region_id'                => 'Код по Nuts2',
         'city_id'                  => 'Град',
         'court_id'                 => 'Съд',
         'police_office_id'         => 'МВР',

@@ -29,14 +29,14 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="strategic_document_level_id">
                                     {{ trans_choice('custom.strategic_document_level', 1) }}<span class="required">*</span>
                                 </label>
                                 <div class="col-12">
                                     <select id="strategic_document_level_id" name="strategic_document_level_id"
-                                            class="form-control form-control-sm select2 @error('strategic_document_level_id'){{ 'is-invalid' }}@enderror">
+                                            class="form-control form-control-sm @error('strategic_document_level_id'){{ 'is-invalid' }}@enderror">
                                             @if(isset($strategicDocumentLevels) && sizeof($strategicDocumentLevels))
                                                 @foreach($strategicDocumentLevels as $row)
                                                     <option value="{{ $row['value'] }}"
@@ -52,15 +52,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4" id="policy_area_div">
+                        <div class="col-md-3" id="policy_area_div">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="policy_area_id">
                                     {{ trans_choice('custom.policy_area', 1) }}<span class="required">*</span>
                                 </label>
                                 <div class="col-12">
-                                    <select id="policy_area_id" name="policy_area_id"
-                                            class="form-control form-control-sm select2 @error('policy_area_id'){{ 'is-invalid' }}@enderror">
-                                            <option value="" @if(old('policy_area_id', ($item->id ? $item->policy_area_id : '')) == '') selected @endif>---
+                                    <select id="policy_area_id" name="policy_area_id" class="form-control form-control-sm select2 @error('policy_area_id'){{ 'is-invalid' }}@enderror">
+                                            <option value="" @if(old('policy_area_id', ($item->id ? $item->policy_area_id : '')) == '') selected @endif>
+                                                ---
                                             </option>
                                         @if(isset($policyAreas) && $policyAreas->count())
                                             @foreach($policyAreas as $row)
@@ -76,7 +76,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" for="region_id">
+                                    {{ __('validation.attributes.nuts2_code') }}
+                                </label>
+                                <div class="col-12">
+                                    <select id="region_id" name="region_id" class="form-control form-control-sm @error('region_id'){{ 'is-invalid' }}@enderror">
+                                        <option value="">--</option>
+                                        @if(isset($regions) && sizeof($regions))
+                                            @foreach($regions as $region)
+                                                <option value="{{ $region->id }}" @if(old('region_id', $item->region_id) == $region->id) selected @endif>
+                                                    {{ $region->name }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @error('region_id')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="strategic_document_type_id">
                                     {{ trans_choice('custom.strategic_document_type', 1) }}<span class="required">*</span>
