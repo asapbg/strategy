@@ -153,7 +153,8 @@ class SyncIisda extends Command
 
                                 //update subject base info if need to
                                 if( (int)$localSubject->batch_id != (int)$subject['BatchID']
-                                    || $localSubject->section != $subject['AdmStructureKind']
+//                                    || $localSubject->section != $subject['AdmStructureKind']
+                                    || $localSubject->institution_level_id != $subject['AdmStructureKind']
                                     || $localSubject->eik != ($subject['UIC'] ?? 'N/A')
                                     || $localSubject->type != ($subject['Type'] ?? null)
                                     || ((int)$localSubject->active != (int)($subject['Status'] == 'Active'))
