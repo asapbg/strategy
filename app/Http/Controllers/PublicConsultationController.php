@@ -132,7 +132,10 @@ class PublicConsultationController extends Controller
         $hasSubscribeRss = true;
 
         return $this->view('site.public_consultations.view',
-            compact('item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail', 'hasSubscribeRss', 'rssUrl', 'otherComments')
+            compact(
+                'item', 'pageTitle', 'documents', 'timeline', 'pageTopContent', 'documentsImport', 'hasSubscribeEmail',
+                'hasSubscribeRss', 'rssUrl', 'otherComments'
+            )
         );
     }
 

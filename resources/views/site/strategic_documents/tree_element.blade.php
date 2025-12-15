@@ -125,9 +125,22 @@
                             @foreach($docFiles as $f)
                                 @if($f['id'] && $f['locale'] == app()->getLocale())
                                     <li class="list-group-item">
-                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f['id'] }}" data-url="{{ route('modal.file_preview', ['id' => $f['id']]) }}">
-                                            {!! fileIcon($f['type']) !!} {{ $f['description_'.$f['locale']] }}
-                                        </a>
+                                        @if(is_android() && $f['type'] == 'application/pdf')
+                                            @php
+                                                $path = (!str_contains($f['path'], 'files') ? 'files/' : '') . $f['path'];
+                                                $pdfUrl = asset($path);
+                                            @endphp
+                                            <a class="main-color text-decoration-none d-block" href="{{ $pdfUrl }}">
+                                                {!! fileIcon($f['type']) !!} {{ $f['description_'.$f['locale']] }}
+                                            </a>
+                                        @else
+                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)"
+                                               title="{{ __('custom.preview') }}" data-file="{{ $f['id'] }}"
+                                               data-url="{{ route('modal.file_preview', ['id' => $f['id']]) }}"
+                                            >
+                                                {!! fileIcon($f['type']) !!} {{ $f['description_'.$f['locale']] }}
+                                            </a>
+                                        @endif
                                     </li>
                                 @endif
                             @endforeach

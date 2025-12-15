@@ -23,9 +23,10 @@
                             @if(in_array($f->content_type, \App\Models\File::IMG_CONTENT_TYPE))
                                 {!! fileThumbnail($f) !!}
                             @else
-                                <a class="main-color text-decoration-none preview-file-modal d-block" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
-                                    {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} }}
-                                </a>
+                                @php
+                                    $file_name = fileIcon($f->content_type)." ".$f->{'description_'.$f->locale};
+                                @endphp
+                                @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
                             @endif
                         @endforeach
                     </div>

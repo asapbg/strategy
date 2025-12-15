@@ -77,9 +77,10 @@
                             {!! fileThumbnail($f) !!}
                         @else
                             <p>
-                                <a class="text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
-                                    {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} ?? $f->filename }}
-                                </a>
+                                @php
+                                    $file_name = fileIcon($f->content_type)." ".$f->{'description_'.$f->locale} ?? $f->filename;
+                                @endphp
+                                @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
                                 <a class="text-decoration-none" href="{{ route('download.file', ['file' => $f->id]) }}">
                                     | {{ __('custom.download') }}
                                 </a>

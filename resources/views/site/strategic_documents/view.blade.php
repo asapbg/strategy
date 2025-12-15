@@ -228,12 +228,22 @@
                                 <ul class="list-group list-group-flush">
                                     @foreach ($strategicDocumentFiles as $f)
                                         <li class="list-group-item">
-                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)"
-                                               title="{{ __('custom.preview') }}" data-file="{{ $f->id }}"
-                                               data-url="{{ route('strategy-document.preview.file_modal', ['id' => $f->id]) }}"
-                                            >
-                                                {!! fileIcon($f->content_type) !!} {{ $f->description ?? $f->filename }}
-                                            </a>
+                                            @if(is_android() && $f->content_type == 'application/pdf')
+                                                @php
+                                                    $path = (!str_contains($f->path, 'files') ? 'files/' : '') . $f->path;
+                                                    $pdfUrl = asset($path);
+                                                @endphp
+                                                <a class="main-color text-decoration-none d-block" href="{{ $pdfUrl }}">
+                                                    {!! fileIcon($f->content_type) !!} {{ $f->description ?? $f->filename }}
+                                                </a>
+                                            @else
+                                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)"
+                                                   title="{{ __('custom.preview') }}" data-file="{{ $f->id }}"
+                                                   data-url="{{ route('strategy-document.preview.file_modal', ['id' => $f->id]) }}"
+                                                >
+                                                    {!! fileIcon($f->content_type) !!} {{ $f->description ?? $f->filename }}
+                                                </a>
+                                            @endif
                                         </li>
                                     @endforeach
                                 </ul>

@@ -531,12 +531,15 @@ if (!function_exists('fileHtmlContent')) {
      * Check if string is a json format.
      *
      * @param $file
+     * @return string
      */
     function fileHtmlContent($file)
     {
-        $content = '';
         $downLoadRoute = $file instanceof \App\Models\File ? route('download.file', $file) : route('strategy-document.download-file', $file);
-        if (in_array($file->content_type, App\Models\File::CONTENT_TYPE_IMAGES) || in_array($file->content_type, \App\Models\File::IMG_CONTENT_TYPE)) {
+        if (
+            in_array($file->content_type, App\Models\File::CONTENT_TYPE_IMAGES)
+            || in_array($file->content_type, \App\Models\File::IMG_CONTENT_TYPE)
+        ) {
             return '<a class="mb-2 btn btn-sm btn-success" href="' . $downLoadRoute . '">' . __('custom.download') . '</a><br>' . $file->preview;
         }
 
@@ -546,19 +549,11 @@ if (!function_exists('fileHtmlContent')) {
                 $content = '<a class="mb-2 btn btn-sm btn-success" href="' . $downLoadRoute . '">' . __('custom.download') . '</a><embed src="' . asset($path) . '" width="100%" height="700px" />';
                 break;
             case 'application/msword': //doc
-            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': //xlsx
-            case 'application/vnd.ms-excel': //xls
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
-//                $downLoadRoute = $file instanceof \App\Models\File ? route('download.file', $file) : route('strategy-document.download-file', $file);
+            case 'application/vnd.ms-excel': //xls
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': //xlsx
                 $content = '<a class="mb-2 btn btn-sm btn-success" href="' . $downLoadRoute . '">' . __('custom.download') . '</a><iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . $downLoadRoute . '" width="100%" height="700px;"/></iframe>';
                 break;
-//            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': //docx
-//                //$content = '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . route('download.file', $file) . '" width="100%" height="700px;"/></iframe>';
-//                $content = \PhpOffice\PhpWord\IOFactory::load(Storage::disk('public_uploads')->path($file->path));
-//                $content->setDefaultFontName('Fira Sans BGR');
-//                $html = new \PhpOffice\PhpWord\Writer\HTML($content);
-//                $content = $html->getContent();
-//                break;
             default:
                 return '<a class="mb-2 btn btn-sm btn-success" href="' . $downLoadRoute . '">' . __('custom.download') . '</a><p>Документът не може да бъде визуализиран</p>';
         }
@@ -576,8 +571,6 @@ if (!function_exists('fileHtmlContentByPath')) {
      */
     function fileHtmlContentByPath(string $path, $type = 'pdf')
     {
-        $content = '';
-
         switch ($type) {
             case 'pdf':
                 $content = '<embed src="' . asset($path) . '" width="100%" height="700px" />';
@@ -994,6 +987,16 @@ if (!function_exists('fileThumbnail')) {
         }
 
         return $thumbnail;
+    }
+}
+
+if (!function_exists('is_android')) {
+    /**
+     * @return bool
+     */
+    function is_android()
+    {
+        return str_contains(request()->userAgent(), 'Android');
     }
 }
 

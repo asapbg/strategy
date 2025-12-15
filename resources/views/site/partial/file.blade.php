@@ -11,9 +11,22 @@
 {{--        {!! fileIcon($file_up_to_date->content_type) !!}--}}
 {{--        {{ $file_up_to_date->name }}--}}
 {{--    </a>--}}
-    <a class="main-color text-decoration-none preview-file-modal fs-18" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $file_up_to_date->id }}" data-url="{{ route('modal.file_preview', ['id' => $file_up_to_date->id]) }}">
-        {!! fileIcon($file_up_to_date->content_type) !!} {{ $file_up_to_date->name }}
-    </a>
+    @if(is_android() && $file_up_to_date->content_type == 'application/pdf')
+        @php
+            $path = (!str_contains($file_up_to_date->path, 'files') ? 'files/' : '') . $file_up_to_date->path;
+            $pdfUrl = asset($path);
+        @endphp
+        <a class="main-color text-decoration-none d-block" href="{{ $pdfUrl }}">
+            {!! fileIcon($file_up_to_date->content_type) !!} {{ $file_up_to_date->name }}
+        </a>
+    @else
+        <a class="main-color text-decoration-none preview-file-modal fs-18" role="button" href="javascript:void(0)"
+           title="{{ __('custom.preview') }}" data-file="{{ $file_up_to_date->id }}"
+           data-url="{{ route('modal.file_preview', ['id' => $file_up_to_date->id]) }}"
+        >
+            {!! fileIcon($file_up_to_date->content_type) !!} {{ $file_up_to_date->name }}
+        </a>
+    @endif
     @if(isset($file->description) && !empty($file->description))
         <div class="document-info-field">{!! $file->description !!}</div>
     @endif

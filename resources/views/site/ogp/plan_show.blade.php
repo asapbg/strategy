@@ -72,11 +72,8 @@
                     <ul class="p-0">
                         @foreach($plan->otherFilesByLang as $doc)
                             <li class="list-group-item">
-                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)"
-                                   title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}"
-                                >
-                                    {!! fileIcon($doc->content_type) !!} {{ $doc->description }} | {{ displayDate($doc->created_at) }}
-                                </a>
+                                @php($file_name = fileIcon($doc->content_type)." $doc->description | ".displayDate($doc->created_at))
+                                @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
                             </li>
                         @endforeach
                     </ul>
@@ -287,11 +284,8 @@
                             <ul class="list-group list-group-flush p-0">
                                 @foreach($plan->reportEvaluationByLang as $doc)
                                     <li class="list-group-item px-0">
-                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)"
-                                           title="{{ __('custom.preview') }}" data-file="{{ $doc->id }}" data-url="{{ route('modal.file_preview', ['id' => $doc->id]) }}"
-                                        >
-                                            {!! fileIcon($doc->content_type) !!} {{ $doc->description }} | {{ displayDate($doc->created_at) }}
-                                        </a>
+                                        @php($file_name = fileIcon($doc->content_type)." $doc->description | ".displayDate($doc->created_at))
+                                        @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
                                     </li>
                                 @endforeach
                             </ul>

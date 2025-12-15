@@ -126,11 +126,7 @@
                 </div>
                 <div class="col-md-12 pt-3">
                     @foreach($planData['evaluations'] as $f)
-                        <a class="main-color text-decoration-none preview-file-modal d-block" role="button" href="javascript:void(0)"
-                           title="{{ __('custom.preview') }}" data-url="{{ route('modal.file_preview_static_page').'?path='.$f['path'] }}"
-                        >
-                            {!! $f['icon'] !!} {{ $f['name'] }}
-                        </a>
+                        @include('site.partial.file-preview-static', ['file' => $f])
                     @endforeach
                 </div>
             </div>

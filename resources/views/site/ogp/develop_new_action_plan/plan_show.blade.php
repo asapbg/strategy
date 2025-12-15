@@ -61,9 +61,11 @@
                         <p class="fs-18 fw-600 main-color-light-bgr p-2 rounded mb-2">{{ trans_choice('custom.files', 2) }}</p>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
-                                <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $item->versionAfterConsultation()->id }}" data-url="{{ route('modal.file_preview', ['id' => $item->versionAfterConsultation()->id]) }}">
-                                    {!! fileIcon($item->versionAfterConsultation()->content_type) !!} {{ $item->versionAfterConsultation()->description }} - {{ displayDate($item->versionAfterConsultation()->created_at) }}
-                                </a>
+                                @php
+                                    $file = $item->versionAfterConsultation();
+                                    $file_name = fileIcon($file->content_type)." $file->description - ".displayDate($file->created_at);
+                                @endphp
+                                @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
                             </li>
                         </ul>
                     </div>
@@ -85,7 +87,11 @@
                                     <div class="consult-body">
                                         <div class="consul-item">
                                             <div class="consult-item-header d-flex justify-content-between">
-                                                @php($editRoute = isset($nationalPlanSection) ? route('ogp.national_action_plans.develop_plan.area', ['id' => $item->plan->id, 'planArea' => $area->id]) : route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->id]))
+                                                @php
+                                                    $editRoute = isset($nationalPlanSection)
+                                                        ? route('ogp.national_action_plans.develop_plan.area', ['id' => $item->plan->id, 'planArea' => $area->id])
+                                                        : route('ogp.develop_new_action_plans.area', ['plan' => $area->ogp_plan_id, 'planArea' => $area->id]);
+                                                @endphp
                                                 <div class="consult-item-header-link">
                                                     <a href="{{ $editRoute }}" class="text-decoration-none" title="{{ $area->name }}">
                                                         <h3>{{ $area->area->name }}</h3>

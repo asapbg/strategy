@@ -47,9 +47,8 @@
                                 <ul class="list-group list-group-flush">
                                     @foreach($item->filesLocale as $f)
                                         <li class="list-group-item">
-                                            <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
-                                                {!! fileIcon($f->content_type) !!} {{ !empty($f->{'description_'.$f->locale}) ? $f->{'description_'.$f->locale} : $f->filename }} | {{ displayDate($f->created_at) }}
-                                            </a>
+                                            @php($file_name = fileIcon($f->content_type)." ".!empty($f->{'description_'.$f->locale}) ? $f->{'description_'.$f->locale} : $f->filename." | ".displayDate($f->created_at))
+                                            @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
                                         </li>
                                     @endforeach
                                 </ul>
@@ -134,10 +133,8 @@
                                                                                             @if($f->pivot->row_num == $row->row_num && $f->pivot->row_month == $row->month)
                                                                                                 <div class="col-md-12 mb-2">
                                                                                                     <p class="mb-0">
-                                                                                                        <a class="main-color text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
-                                                                                                            {!! fileIcon($f->content_type) !!} {{ !empty($f->{'description_'.$f->locale}) ? $f->{'description_'.$f->locale} : $f->filename }} | {{ displayDate($f->created_at) }}
-                                                                                                        </a>
-                                                                                                        {{--                                                                                                            <a href="#" class="main-color text-decoration-none"><i class="fa-regular  fa-file-pdf main-color me-2 fs-5"></i>Изтегляне</a>--}}
+                                                                                                        @php($file_name = fileIcon($f->content_type)." ".!empty($f->{'description_'.$f->locale}) ? $f->{'description_'.$f->locale} : $f->filename." | ".displayDate($f->created_at))
+                                                                                                        @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
                                                                                                     </p>
                                                                                                 </div>
                                                                                             @endif

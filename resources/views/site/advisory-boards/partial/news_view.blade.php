@@ -46,7 +46,7 @@
         ->get();
 @endphp
 @if($files->count() > 0)
-    @php($fileFound = false)
+    @php $fileFound = false; @endphp
     <div class="mb-3 row w-100">
         @foreach($files as $f)
             @if($f->id != $publication->file_id)
@@ -57,17 +57,17 @@
                     {!! fileThumbnail($f) !!}
                 @else
                     <p>
-                        <a class="text-decoration-none preview-file-modal" role="button" href="javascript:void(0)" title="{{ __('custom.preview') }}" data-file="{{ $f->id }}" data-url="{{ route('modal.file_preview', ['id' => $f->id]) }}">
-                            {!! fileIcon($f->content_type) !!} {{ $f->{'description_'.$f->locale} ?? $f->filename }}
-                        </a> |
-                        {{--                        @if(!in_array($f->content_type, App\Models\File::CONTENT_TYPE_IMAGES))--}}
+                        @php
+                            $file_name = fileIcon($f->content_type)." ".$f->{'description_'.$f->locale} ?? $f->filename;
+                        @endphp
+                        @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
+                        |
                         <a class="text-decoration-none" href="{{ route('admin.download.file', ['file' => $f->id]) }}">
                             {{ __('custom.download') }}
                         </a>
-                        {{--                        @endif--}}
                     </p>
                 @endif
-                @php($fileFound = true)
+                @php $fileFound = true; @endphp
             @endif
         @endforeach
     </div>
