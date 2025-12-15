@@ -81,9 +81,9 @@
                                     $file_name = fileIcon($f->content_type)." ".$f->{'description_'.$f->locale} ?? $f->filename;
                                 @endphp
                                 @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
-                                <a class="text-decoration-none" href="{{ route('download.file', ['file' => $f->id]) }}">
-                                    | {{ __('custom.download') }}
-                                </a>
+{{--                                <a class="text-decoration-none" href="{{ route('download.file', ['file' => $f->id]) }}">--}}
+{{--                                    | {{ __('custom.download') }}--}}
+{{--                                </a>--}}
                             </p>
                         @endif
                     @endif
