@@ -408,9 +408,10 @@ class PublicConsultationController extends AdminController
     public function storeDocs(Request $request)
     {
         $storeRequest = new PublicConsultationDocStoreRequest();
-        $validator = Validator::make($request->all(), $storeRequest->rules());
+        $validator = Validator::make($request->all(), $storeRequest->rules(), $storeRequest->messages());
+
         if ($validator->fails()) {
-            return redirect(url()->previous() . '#ct-doc')->withInput($request->all())->withErrors($validator->errors());
+            return redirect(url()->previous() . '#ct-doc')->withInput()->withErrors($validator);
         }
 
         $validated = $validator->validated();

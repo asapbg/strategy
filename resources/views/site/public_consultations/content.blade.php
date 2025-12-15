@@ -231,7 +231,10 @@
                                 @php $import_docs_for_report[] = $doc; @endphp
                             @else
                                 <li class="list-group-item">
-                                    @include('site.partial.file_preview_or_download', ['file' => $doc])
+                                    @php
+                                        $file_name = fileIcon($doc->content_type). " $doc->description - ".displayDate($doc->created_at);
+                                    @endphp
+                                    @include('site.partial.file_preview_or_download', ['file' => $doc, 'file_name' => $file_name])
                                 </li>
                             @endif
                         @endforeach
@@ -292,7 +295,10 @@
                         @if(count($import_docs_for_report))
                             @foreach($import_docs_for_report as $doc)
                                 <li class="list-group-item">
-                                    @include('site.partial.file_preview_or_download', ['file' => $doc])
+                                    @php
+                                        $file_name = fileIcon($doc->content_type)." $doc->description | ".displayDate($doc->created_at);
+                                    @endphp
+                                    @include('site.partial.file_preview_or_download', ['file' => $doc, 'file_name' => $file_name])
                                 </li>
                             @endforeach
                             @php $foundReportDoc = true; @endphp

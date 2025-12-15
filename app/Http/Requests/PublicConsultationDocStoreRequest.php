@@ -39,4 +39,9 @@ class PublicConsultationDocStoreRequest extends FormRequest
 
         return $rules;
     }
+
+    public function messages()
+    {
+        return ['act_type.required' => 'Трябва да изберете "Вид акт" от "Основна информация" за да можете да качвате файлове.'];
+    }
 }

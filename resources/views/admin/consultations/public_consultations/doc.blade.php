@@ -5,6 +5,9 @@
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
     <input type="hidden" name="act_type" value="{{ $item->act_type_id }}">
+    @error('act_type')
+    <span class="text-danger">{{ $message }}</span>
+    @enderror
     @foreach(\App\Enums\DocTypesEnum::docsByActType($item->act_type_id) as $docType)
         @if($docType != \App\Enums\DocTypesEnum::PC_COMMENTS_REPORT->value)
             @foreach(config('available_languages') as $lang)
