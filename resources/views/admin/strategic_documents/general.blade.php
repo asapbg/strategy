@@ -29,22 +29,27 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="strategic_document_level_id">
                                     {{ trans_choice('custom.strategic_document_level', 1) }}<span class="required">*</span>
                                 </label>
                                 <div class="col-12">
                                     <select id="strategic_document_level_id" name="strategic_document_level_id"
-                                            class="form-control form-control-sm @error('strategic_document_level_id'){{ 'is-invalid' }}@enderror">
-                                            @if(isset($strategicDocumentLevels) && sizeof($strategicDocumentLevels))
-                                                @foreach($strategicDocumentLevels as $row)
-                                                    <option value="{{ $row['value'] }}"
-                                                            @if(old('strategic_document_level_id', ($item->id ? $item->strategic_document_level_id : '')) == $row['value']) selected @endif
-                                                            data-id="{{ $row['value'] }}">{{ $row['name'] }}</option>
-                                                @endforeach
-                                            @endif
-
+                                            class="form-control form-control-sm @error('strategic_document_level_id'){{ 'is-invalid' }}@enderror"
+                                            @if($item->id && !$item->strategic_document_level_id) disabled @endif
+                                    >
+                                        <option value="">--</option>
+                                        @if(isset($strategicDocumentLevels) && sizeof($strategicDocumentLevels))
+                                            @foreach($strategicDocumentLevels as $row)
+                                                <option value="{{ $row['value'] }}"
+                                                        @if(old('strategic_document_level_id', ($item->id ? $item->strategic_document_level_id : '')) == $row['value']) selected @endif
+                                                        data-id="{{ $row['value'] }}"
+                                                >
+                                                    {{ $row['name'] }}
+                                                </option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                     @error('strategic_document_level_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -52,7 +57,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3" id="policy_area_div">
+                        <div class="col-md-6" id="policy_area_div">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="policy_area_id">
                                     {{ trans_choice('custom.policy_area', 1) }}<span class="required">*</span>
@@ -76,13 +81,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="region_id">
-                                    {{ __('validation.attributes.nuts2_code') }}
+                                    {{ __('validation.attributes.nuts2_code') }}<span class="required">*</span>
                                 </label>
                                 <div class="col-12">
-                                    <select id="region_id" name="region_id" class="form-control form-control-sm @error('region_id'){{ 'is-invalid' }}@enderror">
+                                    <select id="region_id" name="region_id" class="form-control form-control-sm @error('region_id'){{ 'is-invalid' }}@enderror"
+                                            @if($item->id && !$item->region_id) disabled @endif
+                                    >
                                         <option value="">--</option>
                                         @if(isset($regions) && sizeof($regions))
                                             @foreach($regions as $region)
@@ -98,7 +105,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="strategic_document_type_id">
                                     {{ trans_choice('custom.strategic_document_type', 1) }}<span class="required">*</span>
@@ -638,7 +645,6 @@
                 acceptActInstitutionByLevel();
             });
 
-
             function acceptActInstitutionByLevel(init = false){
                 let selectedLevel = strategicDocumentLevel.val();
                 let acceptActInstitution = $('#accept_act_institution_type_id');
@@ -682,6 +688,22 @@
             } else{
                 $('#document_date_expiring').prop('disabled', false);
             }
+
+            $(document).on('change', '#strategic_document_level_id', function () {
+                if (!isEmpty($(this).val())) {
+                    $("#region_id").attr('disabled', true);
+                } else {
+                    $("#region_id").attr('disabled', false);
+                }
+            });
+
+            $(document).on('change', '#region_id', function () {
+                if (!isEmpty($(this).val())) {
+                    $("#strategic_document_level_id").attr('disabled', true);
+                } else {
+                    $("#strategic_document_level_id").attr('disabled', false);
+                }
+            });
         });
     </script>
 @endpush

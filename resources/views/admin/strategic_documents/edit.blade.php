@@ -40,12 +40,6 @@
                                  aria-labelledby="general-tab">
                                 @include('admin.strategic_documents.'.$section)
                             </div>
-
-                            {{--                            @if($item->id)--}}
-                            {{--                                <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">--}}
-                            {{--                                    @include('admin.strategic_documents.files')--}}
-                            {{--                                </div>--}}
-                            {{--                            @endif--}}
                         </div>
                     </div>
                 </div>

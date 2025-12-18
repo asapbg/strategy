@@ -427,7 +427,7 @@ return [
         'investigation_year'       => 'Преписка година',
         'assignor_number'          => 'Възложител писмо №',
         'assignor_date'            => 'Възложител писмо дата',
-        'nuts2_code'               => 'Код по Nuts2',
+        'nuts2_code'               => 'Стратегически документ на ниво регион за планиране',
         'region_id'                => 'Код по Nuts2',
         'city_id'                  => 'Град',
         'court_id'                 => 'Съд',

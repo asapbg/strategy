@@ -33,9 +33,9 @@ class StoreStrategicDocumentRequest extends FormRequest
         $rules = [
             'id' => ['required', 'numeric'],
             'stay' => ['nullable', 'numeric'],
-            'strategic_document_level_id' => ['required', 'numeric', 'in:' . implode(',', array_column(InstitutionCategoryLevelEnum::cases(), 'value'))],
+            'strategic_document_level_id' => ['required_without:region_id', 'numeric', 'in:' . implode(',', array_column(InstitutionCategoryLevelEnum::cases(), 'value'))],
             'policy_area_id' => ['nullable', 'numeric', 'exists:field_of_actions,id'],
-            'region_id' => ['nullable', 'numeric', 'exists:regions,id'],
+            'region_id' => ['required_without:strategic_document_type_id', 'numeric', 'exists:regions,id'],
             'strategic_document_type_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
 //            'strategic_document_type_file_main_id' => ['required', 'numeric', 'exists:strategic_document_type,id'],
             'strategic_act_type_id' => ['nullable', 'numeric', 'exists:strategic_act_type,id'],

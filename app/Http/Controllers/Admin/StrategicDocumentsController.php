@@ -135,7 +135,7 @@ class StrategicDocumentsController extends AdminController
             $adminUser = $user->hasAnyRole(['service_user', 'super-admin', 'moderator-strategics']);
             if ($adminUser) {
                 //$authoritiesAcceptingStrategic = AuthorityAcceptingStrategic::with('translations')->get();
-                $strategicDocumentLevels = enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', !$item->id, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]);
+                $strategicDocumentLevels = enumToSelectOptions(InstitutionCategoryLevelEnum::options(), 'strategic_document.dropdown', false, [InstitutionCategoryLevelEnum::CENTRAL_OTHER->value]);
 
                 //Field of actions split by parent categories
                 $ekateAreas = \App\Models\FieldOfAction::Active()->Area()->with(['translations'])->orderByTranslation('name')->get();
@@ -397,6 +397,9 @@ class StrategicDocumentsController extends AdminController
             DB::beginTransaction();
             //START Ugly fix for wrong fields and connections
             //!!! DO not change
+            if (!isset($validated['strategic_document_level_id'])) {
+                $validated['strategic_document_level_id'] = null;
+            }
             if ($validated['strategic_document_level_id'] == InstitutionCategoryLevelEnum::AREA->value) {
                 $validated['policy_area_id'] = $validated['ekatte_area_id'] ?? null;
             }
