@@ -33,7 +33,7 @@ class InstitutionController extends AdminController
         $filter = $this->filters($request);
         $paginate = $filter['paginate'] ?? Institution::PAGINATE;
 
-        $items = Institution::with(['translation'])
+        $items = Institution::with(['translation','level'])
             ->FilterBy($requestFilter)
             ->paginate($paginate);
         $toggleBooleanModel = 'Institution';
