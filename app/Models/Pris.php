@@ -331,8 +331,8 @@ class Pris extends ModelActivityExtend implements TranslatableContract, Feedable
             $q->where('pris.doc_num', 'ilike', '%' . $filters['doc_num'] . '%');
         }
         if (isset($filters['year']) && !empty($filters['year'])) {
-            $yearLength = strlen($filters['year']);
-            $year = $filters['year'];
+            $year = int($filters['year']);
+            $yearLength = mb_strlen($year);
             if ($yearLength < 4) {
                 while (strlen($year) < 4) {
                     $year .= '0';

@@ -151,17 +151,16 @@
                             <span class="required">*</span>
                         </label>
 
-
+                        @php $authority_id = old('authority_id', $item->authority_id ?? ''); @endphp
                         <select id="authority_id" name="authority_id"
                                 class="form-control form-control-sm select2-no-clear"
-                                onchange="this.value == @json(\App\Models\AuthorityAdvisoryBoard::getOtherAuthorityId()) ? $('#other_authority_container').show() : $('#other_authority_container').hide();">
+                                onchange="this.value == @json(\App\Models\AuthorityAdvisoryBoard::getOtherAuthorityId()) ? $('#other_authority_container').show() : $('#other_authority_container').hide();"
+                        >
                             <option value="">---</option>
                             @if(isset($authorities) && $authorities->count() > 0)
                                 @foreach($authorities as $authority)
-                                    @php $selected = old('authority_id', $item->authority_id) == $authority->id ? 'selected' : '' @endphp
-
-                                    <option
-                                        value="{{ $authority->id }}" {{ $selected }}>{{ $authority->name }}</option>
+                                    @php $selected = $authority_id == $authority->id ? 'selected' : '' @endphp
+                                    <option value="{{ $authority->id }}" {{ $selected }}>{{ $authority->name }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -170,7 +169,12 @@
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
 
-                        @php $display = !empty(old('other_authority_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none'; @endphp
+                        @php
+                            $display = !empty(old('other_authority_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none';
+                            if ($authority_id == App\Models\AuthorityAdvisoryBoard::getOtherAuthorityId()) {
+                                $display = 'masonry';
+                            }
+                        @endphp
                             <!-- Друг вид орган, към който е създаден съветът -->
                         <div class="row mt-1" id="other_authority_container" style="display: {{ $display }};">
                             @foreach(config('available_languages') as $lang)
@@ -182,7 +186,8 @@
                                     <input type="text" id="other_authority_name_{{ $lang['code'] }}"
                                            name="other_authority_name_{{ $lang['code']}}"
                                            class="form-control form-control-sm"
-                                           value="{{ old('other_authority_name_' . $lang['code'], '') }}" autocomplete="off">
+                                           value="{{ old('other_authority_name_' . $lang['code'], '') }}" autocomplete="off"
+                                    >
                                 </div>
                             @endforeach
                         </div>
@@ -198,18 +203,17 @@
                             {{ trans_choice('validation.attributes.act_of_creation', 1) }}
                         </label>
 
-
+                        @php $advisory_act_type_id = old('advisory_act_type_id', $item->advisory_act_type_id ?? ''); @endphp
                         <select id="advisory_act_type_id" name="advisory_act_type_id"
                                 class="form-control form-control-sm select2-no-clear"
-                                onchange="this.value == @json(\App\Models\AdvisoryActType::getOtherId()) ? $('#other_act_type_container').show() : $('#other_act_type_container').hide();">
+                                onchange="this.value == @json(\App\Models\AdvisoryActType::getOtherId()) ? $('#other_act_type_container').show() : $('#other_act_type_container').hide();"
+                        >
                             <option value="">---</option>
 
                             @if(isset($advisory_act_types) && $advisory_act_types->count() > 0)
                                 @foreach($advisory_act_types as $type)
-                                    @php $selected = old('advisory_act_type_id', $item->advisory_act_type_id ?? '') == $type->id ? 'selected' : '' @endphp
-
-                                    <option
-                                        value="{{ $type->id }}" {{ $selected }}>{{ $type->name }}</option>
+                                    @php $selected = $advisory_act_type_id == $type->id ? 'selected' : '' @endphp
+                                    <option value="{{ $type->id }}" {{ $selected }}>{{ $type->name }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -218,7 +222,12 @@
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
 
-                        @php $display = !empty(old('other_act_type_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none'; @endphp
+                        @php
+                            $display = !empty(old('other_act_type_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none';
+                            if ($advisory_act_type_id == App\Models\AdvisoryActType::getOtherId()) {
+                                $display = 'masonry';
+                            }
+                        @endphp
                             <!-- Друг вид акт на създаване -->
                         <div class="row mt-1" id="other_act_type_container" style="display: {{ $display }};">
                             @foreach(config('available_languages') as $lang)
@@ -230,7 +239,8 @@
                                     <input type="text" id="other_act_type_name_{{ $lang['code'] }}"
                                            name="other_act_type_name_{{ $lang['code']}}"
                                            class="form-control form-control-sm"
-                                           value="{{ old('other_act_type_name_' . $lang['code'], '') }}" autocomplete="off">
+                                           value="{{ old('other_act_type_name_' . $lang['code'], '') }}" autocomplete="off"
+                                    >
                                 </div>
                             @endforeach
                         </div>
@@ -247,17 +257,16 @@
                             <span class="required">*</span>
                         </label>
 
-
+                        @php $advisory_chairman_type_id = old('advisory_chairman_type_id', $item->advisory_chairman_type_id ?? ''); @endphp
                         <select id="advisory_chairman_type" name="advisory_chairman_type_id"
                                 class="form-control form-control-sm select2-no-clear"
-                                onchange="this.value == @json(\App\Models\AdvisoryChairmanType::getOtherId()) ? $('#other_chairman_type_container').show() : $('#other_chairman_type_container').hide();">
+                                onchange="this.value == @json(\App\Models\AdvisoryChairmanType::getOtherId()) ? $('#other_chairman_type_container').show() : $('#other_chairman_type_container').hide();"
+                        >
                             <option value="">---</option>
                             @if(isset($advisory_chairman_types) && $advisory_chairman_types->count() > 0)
                                 @foreach($advisory_chairman_types as $type)
-                                    @php $selected = old('advisory_chairman_type_id', $item->advisory_chairman_type_id) == $type->id ? 'selected' : '' @endphp
-
-                                    <option
-                                        value="{{ $type->id }}" {{ $selected }}>{{ $type->name }}</option>
+                                    @php $selected = $advisory_chairman_type_id == $type->id ? 'selected' : '' @endphp
+                                    <option value="{{ $type->id }}" {{ $selected }}>{{ $type->name }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -266,7 +275,12 @@
                         <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
 
-                        @php $display = !empty(old('other_chairman_type_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none'; @endphp
+                        @php
+                            $display = !empty(old('other_chairman_type_name_' . config('available_languages')[1]['code'], '')) ? 'masonry' : 'none';
+                            if ($advisory_chairman_type_id == App\Models\AdvisoryChairmanType::getOtherId()) {
+                                $display = 'masonry';
+                            }
+                        @endphp
                             <!-- Друг вид акт на създаване -->
                         <div class="row mt-1" id="other_chairman_type_container" style="display: {{ $display }};">
                             @foreach(config('available_languages') as $lang)
@@ -278,7 +292,8 @@
                                     <input type="text" id="other_chairman_type_name_{{ $lang['code'] }}"
                                            name="other_chairman_type_name_{{ $lang['code']}}"
                                            class="form-control form-control-sm"
-                                           value="{{ old('other_chairman_type_name_' . $lang['code'], '') }}" autocomplete="off">
+                                           value="{{ old('other_chairman_type_name_' . $lang['code'], '') }}" autocomplete="off"
+                                    >
                                 </div>
                             @endforeach
                         </div>

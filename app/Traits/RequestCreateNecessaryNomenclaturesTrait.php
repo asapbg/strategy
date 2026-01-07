@@ -17,7 +17,7 @@ trait RequestCreateNecessaryNomenclaturesTrait
         $selected_authority_id = $this->input('authority_id');
 
         // if other authority is selected, create nomenclature
-        if ($selected_authority_id == AuthorityAdvisoryBoard::getOtherAuthorityId()) {
+        if ($selected_authority_id == AuthorityAdvisoryBoard::getOtherAuthorityId() && $this->request->get('other_authority_name_bg')) {
             $authorityService = new AuthorityAdvisoryBoardService();
             $authority = $authorityService->create(
                 $this->request->get('other_authority_name_bg'),
@@ -32,7 +32,7 @@ trait RequestCreateNecessaryNomenclaturesTrait
 
         $selected_act_type_id = $this->input('advisory_act_type_id');
 
-        if ($selected_act_type_id == AdvisoryActType::getOtherId()) {
+        if ($selected_act_type_id == AdvisoryActType::getOtherId() && $this->request->get('other_act_type_name_bg')) {
             $actTypeService = new AdvisoryActTypeBoardService();
             $actType = $actTypeService->create(
                 $this->request->get('other_act_type_name_bg'),
@@ -47,7 +47,7 @@ trait RequestCreateNecessaryNomenclaturesTrait
 
         $selected_chairman_type_id = $this->input('advisory_chairman_type_id');
 
-        if ($selected_chairman_type_id == AdvisoryChairmanType::getOtherId()) {
+        if ($selected_chairman_type_id == AdvisoryChairmanType::getOtherId() && $this->request->get('other_chairman_type_name_bg')) {
             $chairmanTypeService = new AdvisoryChairmanTypeBoardService();
             $chairmanType = $chairmanTypeService->create(
                 $this->request->get('other_chairman_type_name_bg'),
