@@ -73,7 +73,7 @@
                         @foreach($plan->otherFilesByLang as $doc)
                             <li class="list-group-item">
                                 @php($file_name = fileIcon($doc->content_type)." $doc->description | ".displayDate($doc->created_at))
-                                @include('site.partial.file_preview_or_download', ['file' => $f, 'file_name' => $file_name])
+                                @include('site.partial.file_preview_or_download', ['file' => $doc, 'file_name' => $file_name])
                             </li>
                         @endforeach
                     </ul>
