@@ -23,13 +23,8 @@ class PublicConsultationObserver
                 //post on facebook
                 if (Setting::allowPostingToFacebook()) {
                     $facebookApi = new Facebook();
-                    $facebookApi->postOnPage(array(
-                        'message' => 'На Портала за обществени консултации е публикувана нова консултация. Срокът за коментари е: ' . displayDate($publicConsultation->open_to) . '. Вижте повече тук.',
-                        'link' => route('public_consultation.view', $publicConsultation->id),
-                        'published' => true
-                    ));
+                    $facebookApi->postToFacebook($publicConsultation);
                 }
-
                 $this->sendEmails($publicConsultation, 'created');
             }
         }
