@@ -38,14 +38,14 @@ class PublicConsultationObserver
      */
     public function updated(PublicConsultation $publicConsultation)
     {
-        if (!env('DISABLE_OBSERVERS', false)) {
-            $old_active = (int)$publicConsultation->getOriginal('active');
-
-            if (!$old_active && $publicConsultation->active && Setting::allowPostingToFacebook()) {
-                $facebookApi = new Facebook();
-                $facebookApi->postToFacebook($publicConsultation);
-            }
-        }
+//        if (!env('DISABLE_OBSERVERS', false)) {
+//            $old_active = (int)$publicConsultation->getOriginal('active');
+//
+//            if (!$old_active && $publicConsultation->active && Setting::allowPostingToFacebook()) {
+//                $facebookApi = new Facebook();
+//                $facebookApi->postToFacebook($publicConsultation);
+//            }
+//        }
     }
 
     /**

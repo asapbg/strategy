@@ -225,9 +225,14 @@ class PublicConsultationController extends AdminController
         }
 
         $id = $item->id;
+        if ($id) {
+            $old_active = $item->active;
+        }
 
-        if (($id && $request->user()->cannot('update', $item))
-            || $request->user()->cannot('create', PublicConsultation::class)) {
+        if (
+            ($id && $request->user()->cannot('update', $item))
+            || $request->user()->cannot('create', PublicConsultation::class)
+        ) {
             return back()->with('warning', __('messages.unauthorized'));
         }
 
@@ -239,7 +244,7 @@ class PublicConsultationController extends AdminController
             return back()->withInput()->withErrors(['open_from' => 'Минимланият период за обществена консултация е 14 дни']);
         }
 
-        if( $to->diffInDays($from) <= PublicConsultation::SHORT_DURATION_DAYS ) {
+        if ( $to->diffInDays($from) <= PublicConsultation::SHORT_DURATION_DAYS ) {
             if(!isset($validated['short_term_reason_bg']) || empty(isset($validated['short_term_reason_bg']))){
                 return back()->withInput()->withErrors(['short_term_reason_bg' => 'Моля да посочите \'Причина за кратък срок\'']);
             }
@@ -299,10 +304,6 @@ class PublicConsultationController extends AdminController
                 $item->responsible_institution_id = $institution ? $institution->id : null;
             }
 
-            //cache days
-//            $from = $validated['open_from'] ? Carbon::parse($validated['open_from']) : null;
-//            $to = $validated['open_to'] ? Carbon::parse($validated['open_to']) : null;
-            $item->active_in_days = $to && $from ? $to->diffInDays($from) : null;
             $this->storeTranslateOrNew(PublicConsultation::TRANSLATABLE_FIELDS, $item, $validated);
             if (!$id) {
                 $item->reg_num = $item->id . '-K';
@@ -325,6 +326,10 @@ class PublicConsultationController extends AdminController
             if ($real_update && $item->active) {
                 $observer = new PublicConsultationObserver();
                 $observer->sendEmails($item, "updated");
+                if (!$old_active && Setting::allowPostingToFacebook()) {
+                    $facebookApi = new Facebook();
+                    $facebookApi->postToFacebook($item);
+                }
             }
 
             //START Timeline
