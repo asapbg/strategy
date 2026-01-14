@@ -400,6 +400,9 @@ class StrategicDocumentsController extends AdminController
             if (!isset($validated['strategic_document_level_id'])) {
                 $validated['strategic_document_level_id'] = null;
             }
+            if (!isset($validated['region_id'])) {
+                $validated['region_id'] = null;
+            }
             if ($validated['strategic_document_level_id'] == InstitutionCategoryLevelEnum::AREA->value) {
                 $validated['policy_area_id'] = $validated['ekatte_area_id'] ?? null;
             }

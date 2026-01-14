@@ -428,7 +428,7 @@ return [
         'assignor_number'          => 'Възложител писмо №',
         'assignor_date'            => 'Възложител писмо дата',
         'nuts2_code'               => 'Стратегически документ на ниво регион за планиране',
-        'region_id'                => 'Код по Nuts2',
+        'region_id'                => 'Регион за планиране',
         'city_id'                  => 'Град',
         'court_id'                 => 'Съд',
         'police_office_id'         => 'МВР',

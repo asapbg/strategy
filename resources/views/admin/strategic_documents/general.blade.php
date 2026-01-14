@@ -43,8 +43,7 @@
                                     @if(isset($strategicDocumentLevels) && sizeof($strategicDocumentLevels))
                                         @foreach($strategicDocumentLevels as $row)
                                             <option value="{{ $row['value'] }}"
-                                                    @if(old('strategic_document_level_id', ($item->id ? $item->strategic_document_level_id : '')) == $row['value']) selected
-                                                    @endif
+                                                    @if(old('strategic_document_level_id', ($item->id ? $item->strategic_document_level_id : '')) == $row['value']) selected @endif
                                                     data-id="{{ $row['value'] }}"
                                             >
                                                 {{ $row['name'] }}
@@ -191,8 +190,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="col-sm-12 control-label" for="accept_act_institution_type_id">
-                                {{ trans_choice('custom.authority_accepting_strategic', 1) }} <span
-                                    class="required">*</span>
+                                {{ trans_choice('custom.authority_accepting_strategic', 1) }} <span class="required">*</span>
                             </label>
                             <div class="col-12">
                                 <select id="accept_act_institution_type_id" name="accept_act_institution_type_id"
@@ -206,8 +204,7 @@
                                     @if(isset($authoritiesAcceptingStrategic) && $authoritiesAcceptingStrategic->count())
                                         @foreach($authoritiesAcceptingStrategic as $row)
                                             <option value="{{ $row->id }}"
-                                                    @if(old('accept_act_institution_type_id', ($item->id ? $item->accept_act_institution_type_id : 0)) == $row->id) selected
-                                                    @endif
+                                                    @if(old('accept_act_institution_type_id', ($item->id ? $item->accept_act_institution_type_id : 0)) == $row->id) selected @endif
                                                     data-id="{{ $row->id }}"
                                                     data-level="{{ $row->nomenclature_level_id }}"
                                             >{{ $row->name }} </option>
@@ -684,13 +681,14 @@
                         if (isEmpty(selectedLevel)) {
                             $(this).removeAttr('disabled');
                         } else {
-                            $('#accept_act_institution_type_id').trigger('change')
+                            acceptActInstitution.trigger('change');
                             $(this).attr('disabled', 'disabled');
                         }
                     }
                 });
                 if (!init) {
                     acceptActInstitution.val('');
+                    acceptActInstitution.trigger('change')
                 }
             }
 
