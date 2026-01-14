@@ -349,7 +349,13 @@ class AdvisoryBoardController extends Controller
             ->FilterBy($requestFilter)
             ->orderBy('working_year', 'desc')
             ->paginate($paginate);
-        $customSections = AdvisoryBoardCustom::with(['translations'])->where('advisory_board_id', $item->id)->orderBy('order', 'asc')->get()->pluck('title', 'id')->toArray();
+        //dd($items);
+        $customSections = AdvisoryBoardCustom::with(['translations'])
+            ->where('advisory_board_id', $item->id)
+            ->orderBy('order')
+            ->get()
+            ->pluck('title', 'id')
+            ->toArray();
 
         if ($request->ajax()) {
             return view('site.advisory-boards.archive_wotk_programs_list', compact('filter', 'items', 'item'));

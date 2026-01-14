@@ -6,13 +6,9 @@
          * @param id
          */
         function goToArchive(id) {
-            const archive_url = @json(route('admin.advisory-boards.edit', $item) . '?archive_category=:id#archive');
-            let url = archive_url.replace(':id', id);
-            window.location.href = url;
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 100)
+            const archive_url = @json(route('admin.advisory-boards.edit', $item))+'?archive_category='+id+'#archive';
+            //console.log(archive_url);
+            window.location.href = archive_url;
         }
 
         /**

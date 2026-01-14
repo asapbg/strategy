@@ -245,8 +245,7 @@ class AdvisoryBoard extends ModelActivityExtend implements Feedable
 
     public function workingProgram(): HasOne
     {
-        return $this->hasOne(AdvisoryBoardFunction::class)
-            ->whereYear('working_year', '=', now()->year);
+        return $this->hasOne(AdvisoryBoardFunction::class)->whereYear('working_year', '=', now()->year);
     }
 
     public function workingProgramAll(): HasOne

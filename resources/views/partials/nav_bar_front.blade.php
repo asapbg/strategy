@@ -117,12 +117,13 @@
 
             </ul>
             <li class="nav-item d-flex list-unstyled text-end align-items-center social-lang">
-{{--                <a class="nav-link me-3" href="#"><i class="fa-brands fa-facebook text-light"><span--}}
-{{--                            class="d-none">Facebook</span></i></a>--}}
+                <a class="nav-link me-3" href="https://www.facebook.com/strategy.bg" target="_blank">
+                    <i class="fa-brands fa-facebook text-light"><span class="d-none">Facebook</span></i>
+                </a>
                 <div class="desktop-accessibility">
                     <button id="vo-option-btn" class="btn dropdown-toggle me-1" type="button" aria-label="VO Option button"
-                            data-toggle="dropdown"
-                            aria-expanded="false">
+                            data-toggle="dropdown" aria-expanded="false"
+                    >
                         <i class="fa-solid fa-wheelchair"></i>
                     </button>
 

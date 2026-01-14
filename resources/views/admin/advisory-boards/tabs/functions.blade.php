@@ -15,11 +15,12 @@
                         <div class="col-auto">
                             <div class="custom-control custom-switch">
                                 @php $checked = request()->get('show_deleted_functions', '0') == '1' ? 'checked' : '' @endphp
-                                <input type="checkbox" class="custom-control-input"
-                                       id="show_deleted_functions"
-                                       {{ $checked }} onchange="toggleDeleted(this, 'functions', 'show_deleted_functions')">
-                                <label class="custom-control-label"
-                                       for="show_deleted_functions">{{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}</label>
+                                <input type="checkbox" class="custom-control-input" id="show_deleted_functions"
+                                       {{ $checked }} onchange="toggleDeleted(this, 'functions', 'show_deleted_functions')"
+                                >
+                                <label class="custom-control-label" for="show_deleted_functions">
+                                    {{ __('custom.show') . ' ' . mb_strtolower(__('custom.all_deleted')) }}
+                                </label>
                             </div>
                         </div>
                     @endif
@@ -27,13 +28,12 @@
             </div>
 
             <div class="col-auto">
-                <button type="button" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-create-working-program">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-create-working-program">
                     {{ __('custom.add') . ' ' . trans_choice('custom.function', 1) }}
                 </button>
-                <button onclick="goToArchive(2)" role="tab"
-                        aria-controls="archive" class="btn btn-warning"
-                        aria-selected="false">{{ __('custom.belongs_to') . ' ' . __('custom.archive') }}</button>
+                <button onclick="goToArchive(2)" role="tab" aria-controls="archive" class="btn btn-warning" aria-selected="false">
+                    {{ __('custom.belongs_to') . ' ' . __('custom.archive') }}
+                </button>
             </div>
         </div>
 
